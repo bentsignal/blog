@@ -1,14 +1,7 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
-import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-  useHasParentContext,
-} from "@fluentui/react-context-selector";
+import { createContext, use, useMemo, useState } from "react";
 import * as Icons from "lucide-react";
-import { Icon } from "lucide-react";
 import { Separator as BaseSeparator } from "../ui/separator";
 import { Button } from "@/components/ui/button";
 
@@ -34,10 +27,6 @@ interface ComposerContextType extends ComposerInputProps {
 export const ComposerContext = createContext<ComposerContextType>(
   {} as ComposerContextType,
 );
-
-const useComposerContext = <T,>(
-  selector: ContextSelector<ComposerContextType, T>,
-) => useContextSelector(ComposerContext, selector);
 
 export const Provider = ({
   onSubmit,
@@ -67,11 +56,7 @@ export const Provider = ({
     [inputValue, onSubmit, style, submitDisabled],
   );
 
-  return (
-    <ComposerContext.Provider value={contextValue}>
-      {children}
-    </ComposerContext.Provider>
-  );
+  return <ComposerContext value={contextValue}>{children}</ComposerContext>;
 };
 
 export const Frame = ({ children }: { children: React.ReactNode }) => {
@@ -83,16 +68,8 @@ export const Frame = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const Input = () => {
-  const hasParentContext = useHasParentContext(ComposerContext);
-  if (!hasParentContext) {
-    throw new Error("ComposerContext not found");
-  }
-
-  const inputRef = useComposerContext((c) => c.inputRef);
-  const inputValue = useComposerContext((c) => c.inputValue);
-  const setInputValue = useComposerContext((c) => c.setInputValue);
-  const onSubmit = useComposerContext((c) => c.onSubmit);
-  const submitDisabled = useComposerContext((c) => c.submitDisabled);
+  const { inputRef, inputValue, setInputValue, onSubmit, submitDisabled } =
+    use(ComposerContext);
 
   return (
     <input
@@ -112,13 +89,7 @@ export const Input = () => {
 };
 
 export const Submit = () => {
-  const hasParentContext = useHasParentContext(ComposerContext);
-  if (!hasParentContext) {
-    throw new Error("ComposerContext not found");
-  }
-
-  const onSubmit = useComposerContext((c) => c.onSubmit);
-  const submitDisabled = useComposerContext((c) => c.inputValue.trim() === "");
+  const { onSubmit, submitDisabled } = use(ComposerContext);
 
   return (
     <Button onClick={onSubmit} size="icon" disabled={submitDisabled}>
@@ -175,8 +146,8 @@ export const CommonActions = () => {
 };
 
 export const BoldButton = () => {
-  const setStyle = useComposerContext((c) => c.setStyle);
-  const active = useComposerContext((c) => c.style.bold);
+  const { setStyle, style } = use(ComposerContext);
+  const active = style.bold;
 
   return (
     <Button
@@ -195,8 +166,8 @@ export const BoldButton = () => {
 };
 
 export const ItalicButton = () => {
-  const setStyle = useComposerContext((c) => c.setStyle);
-  const active = useComposerContext((c) => c.style.italic);
+  const { setStyle, style } = use(ComposerContext);
+  const active = style.italic;
 
   return (
     <Button
@@ -215,8 +186,8 @@ export const ItalicButton = () => {
 };
 
 export const StrikethroughButton = () => {
-  const setStyle = useComposerContext((c) => c.setStyle);
-  const active = useComposerContext((c) => c.style.strikethrough);
+  const { setStyle, style } = use(ComposerContext);
+  const active = style.strikethrough;
 
   return (
     <Button
