@@ -24,8 +24,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <script
+        crossOrigin="anonymous"
+        src="//unpkg.com/react-scan/dist/auto.global.js"
+      />
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white`}
       >
         {children}
       </body>
