@@ -7,8 +7,12 @@ export const SelectorComposer = () => {
   return (
     <Selector.Provider>
       <Selector.Frame>
+        <Selector.Header />
         <Selector.Input />
-        <Selector.Send />
+        <Selector.Footer>
+          <Selector.CommonActions />
+          <Selector.Submit />
+        </Selector.Footer>
       </Selector.Frame>
     </Selector.Provider>
   );
