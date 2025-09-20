@@ -42,8 +42,8 @@ export default function Home() {
               Without context selector
             </Card.CardTitle>
             <Card.CardDescription>
-              This version uses the bare react context api, which leads to
-              unnecessary re-renders.
+              This version uses the bare context api, which leads to unnecessary
+              re-renders.
             </Card.CardDescription>
           </Card.CardHeader>
           <Card.CardContent>

@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Composition is all you need",
-  description: "Building the slack composer in a maintainable manner",
+  title: "Slack Composer",
+  description: "How to build components in React",
 };
 
 export default function RootLayout({
