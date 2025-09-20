@@ -1,6 +1,6 @@
 <br />
 <div align="center">
-  <a href="">
+  <a href="https://composer-composition.vercel.app/" target="_blank">
     <img src="src/app/opengraph-image.jpg" width="500px">
   </a>
   <br />
