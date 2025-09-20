@@ -13,7 +13,7 @@ export const SelectorComposer = () => {
   const onSubmit = () => {
     const value = inputRef.current?.value || "";
     setInputValue("");
-    toast.success("Sent", {
+    toast.success("Sent with context selector", {
       description: value,
     });
   };
@@ -53,7 +53,7 @@ export const StandardComposer = () => {
   const onSubmit = () => {
     const value = inputRef.current?.value || "";
     setInputValue("");
-    toast.success("Sent", {
+    toast.success("Sent without context selector", {
       description: value,
     });
   };
