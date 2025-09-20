@@ -158,7 +158,7 @@ export const BoldButton = () => {
       }}
     >
       <Icons.Bold
-        className={active ? "text-primary" : "text-muted-foreground"}
+        className={active ? "text-primary" : ""}
         strokeWidth={active ? 4 : 2}
       />
     </Button>
@@ -178,7 +178,7 @@ export const ItalicButton = () => {
       }}
     >
       <Icons.Italic
-        className={active ? "text-primary" : "text-muted-foreground"}
+        className={active ? "text-primary" : ""}
         strokeWidth={active ? 4 : 2}
       />
     </Button>
@@ -198,7 +198,7 @@ export const StrikethroughButton = () => {
       }}
     >
       <Icons.Strikethrough
-        className={active ? "text-primary" : "text-muted-foreground"}
+        className={active ? "text-primary" : ""}
         strokeWidth={active ? 4 : 2}
       />
     </Button>
