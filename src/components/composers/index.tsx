@@ -1,10 +1,28 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { File } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import * as Composer from "./composer";
 import * as Selector from "./selector-composer";
+
+export const ViewFileButton = ({ url }: { url: string }) => {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Link href={url} target="_blank" className="absolute top-0 right-0 m-4">
+          <Button variant="ghost">
+            <File />
+          </Button>
+        </Link>
+      </TooltipTrigger>
+      <TooltipContent>View file</TooltipContent>
+    </Tooltip>
+  );
+};
 
 export const SelectorComposer = () => {
   const [inputValue, setInputValue] = useState("");
@@ -42,6 +60,7 @@ export const SelectorComposer = () => {
           <Button onClick={() => inputRef.current?.blur()}>Blur Input</Button>
         </div>
       </div>
+      <ViewFileButton url="https://github.com/bentsignal/slack-composer/blob/main/src/components/composers/selector-composer.tsx" />
     </div>
   );
 };
@@ -82,6 +101,7 @@ export const StandardComposer = () => {
           <Button onClick={() => inputRef.current?.blur()}>Blur Input</Button>
         </div>
       </div>
+      <ViewFileButton url="https://github.com/bentsignal/slack-composer/blob/main/src/components/composers/composer.tsx" />
     </div>
   );
 };
