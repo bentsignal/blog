@@ -13,7 +13,7 @@ export default function Home() {
       >
         <RepoButton />
       </Link>
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
         <Card.Card>
           <Card.CardHeader>
             <Card.CardTitle className="text-good">
