@@ -5,7 +5,7 @@
   </a>
   <br />
   <br />
-  An incomplete implementation of the Slack composer to demonstrate how to build maintabale and performant components in React.
+  An incomplete implementation of the Slack composer to demonstrate building maintabale and performant components in React.
   <br />
   <br />
 Inspired by
