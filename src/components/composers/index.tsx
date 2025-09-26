@@ -3,10 +3,8 @@
 import { useRef, useState } from "react";
 import { File } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import * as Composer from "./bad-composer";
 import * as Selector from "./composer";
 
 export const ViewFileButton = ({ url }: { url: string }) => {
@@ -31,9 +29,6 @@ export const MainComposer = () => {
   const onSubmit = () => {
     const value = inputRef.current?.value || "";
     setInputValue("");
-    toast.success("Sent with context selector", {
-      description: value,
-    });
   };
 
   return (
