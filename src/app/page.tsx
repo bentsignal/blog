@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SelectorComposer, StandardComposer } from "@/components/composers";
+import { MainComposer } from "@/components/composers";
 import { RepoButton } from "@/components/repo-button";
 import * as Card from "@/components/ui/card";
 
@@ -14,40 +14,17 @@ export default function Home() {
         <RepoButton />
       </Link>
       <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-        <Card.Card>
-          <Card.CardHeader>
-            <Card.CardTitle className="text-good">
-              With context selector
-            </Card.CardTitle>
-            <Card.CardDescription>
-              This version uses{" "}
-              <Link
-                className="text-link"
-                href="https://www.npmjs.com/package/@fluentui/react-context-selector"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                react-context-selector
-              </Link>{" "}
-              to avoid unnecessary re-renders.
-            </Card.CardDescription>
-          </Card.CardHeader>
-          <Card.CardContent>
-            <SelectorComposer />
-          </Card.CardContent>
-        </Card.Card>
-        <Card.Card>
-          <Card.CardHeader>
-            <Card.CardTitle className="text-bad">
-              Without context selector
-            </Card.CardTitle>
-            <Card.CardDescription>
-              This version uses the bare context api, which leads to unnecessary
-              re-renders.
-            </Card.CardDescription>
-          </Card.CardHeader>
-          <Card.CardContent>
-            <StandardComposer />
+        <Card.Card className="rounded-3xl p-2">
+          <Card.CardContent className="p-2">
+            <div className="align-start flex max-h-[500px] flex-col justify-start gap-2 overflow-y-auto bg-blue-500">
+              {Array.from({ length: 100 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-muted size-10 min-h-10 rounded-md"
+                />
+              ))}
+            </div>
+            <MainComposer />
           </Card.CardContent>
         </Card.Card>
       </div>
