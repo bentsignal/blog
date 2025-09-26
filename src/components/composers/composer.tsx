@@ -121,8 +121,13 @@ export const Submit = () => {
   const submitDisabled = useComposerContext((c) => c.inputValue.trim() === "");
 
   return (
-    <Button onClick={onSubmit} size="icon" disabled={submitDisabled}>
-      <Icons.Send className="text-background h-4 w-4" />
+    <Button
+      onClick={onSubmit}
+      size="icon"
+      disabled={submitDisabled}
+      className="bg-green-800 hover:bg-green-900"
+    >
+      <Icons.Send className="h-4 w-4 text-white" />
     </Button>
   );
 };

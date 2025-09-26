@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import * as Selector from "./composer";
+import { useMessages } from "@/hooks/use-messages";
 
 export const ViewFileButton = ({ url }: { url: string }) => {
   return (
@@ -25,10 +26,17 @@ export const ViewFileButton = ({ url }: { url: string }) => {
 export const MainComposer = () => {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const sendMessage = useMessages((state) => state.sendMessage);
 
   const onSubmit = () => {
     const value = inputRef.current?.value || "";
     setInputValue("");
+    sendMessage({
+      id: Date.now(),
+      user: "user",
+      content: value,
+      createdAt: new Date(),
+    });
   };
 
   return (
