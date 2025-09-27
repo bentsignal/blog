@@ -6,7 +6,6 @@ import { useConvexAuth, useMutation } from "convex/react";
 import * as Selector from "./composer";
 
 export const MainComposer = () => {
-  const { isAuthenticated } = useConvexAuth();
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const sendMessage = useMutation(api.messages.sendMessage);
@@ -25,7 +24,6 @@ export const MainComposer = () => {
       inputValue={inputValue}
       setInputValue={setInputValue}
       inputRef={inputRef}
-      authed={isAuthenticated}
     >
       <Selector.Frame>
         <Selector.Header />

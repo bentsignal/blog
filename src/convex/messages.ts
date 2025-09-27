@@ -17,11 +17,15 @@ export const sendMessage = authedMutation({
   },
   handler: async (ctx, args) => {
     const { content } = args;
-    if (!content) throw new ConvexError("Content is required");
-    if (content.length > 1000) throw new ConvexError("Content is too long");
-    if (content.length < 1) throw new ConvexError("Content is too short");
+    validateMessage(content);
     return await ctx.db.insert("messages", {
       content,
     });
   },
 });
+
+const validateMessage = (content: string) => {
+  if (!content) throw new ConvexError("Content is required");
+  if (content.length > 1000) throw new ConvexError("Content is too long");
+  if (content.length < 1) throw new ConvexError("Content is too short");
+};
