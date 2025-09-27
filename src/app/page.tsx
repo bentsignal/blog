@@ -2,21 +2,21 @@
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { MainComposer } from "@/components/composers";
-import { UserMessage } from "@/components/messages";
+import { Messages } from "@/components/messages";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import * as Card from "@/components/ui/card";
-import { useMessages } from "@/hooks/use-messages";
 
 export default function Home() {
-  const messages = useMessages((state) => state.messages);
   return (
     <div className="flex h-screen items-center justify-center py-4">
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
       <Card.Card className="h-[700px] max-h-full w-full max-w-md rounded-3xl p-0">
         <Card.CardContent className="flex h-full flex-col p-2">
           <div className="align-start flex min-h-0 flex-1 flex-col justify-start gap-2 overflow-y-auto overscroll-contain mask-t-from-97% mask-b-from-90% p-4 pb-12">
-            {messages.map((message) => (
-              <UserMessage key={message.id} message={message} />
-            ))}
+            <Messages />
           </div>
           <div className="px-2 pb-2">
             <MainComposer />

@@ -5,27 +5,23 @@ export const env = createEnv({
   server: {
     // clerk
     CLERK_SECRET_KEY: z.string().min(1),
-    // convex
-    // CONVEX_DEPLOYMENT: z.string().min(1),
+    CLERK_JWT_ISSUER_DOMAIN: z.string().min(1),
   },
   client: {
-    NEXT_PUBLIC_BASE_URL: z.string().min(1),
     // clerk
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
     NEXT_PUBLIC_CLERK_FRONTEND_API_URL: z.string().min(1),
     // convex
-    // NEXT_PUBLIC_CONVEX_URL: z.string().min(1),
+    NEXT_PUBLIC_CONVEX_URL: z.string().min(1),
   },
   runtimeEnv: {
-    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
     // clerk
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+    CLERK_JWT_ISSUER_DOMAIN: process.env.CLERK_JWT_ISSUER_DOMAIN,
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     NEXT_PUBLIC_CLERK_FRONTEND_API_URL:
       process.env.NEXT_PUBLIC_CLERK_FRONTEND_API_URL,
-    // convex
-    // CONVEX_DEPLOYMENT: process.env.CONVEX_DEPLOYMENT,
-    // NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
+    NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
   },
 });
