@@ -7,10 +7,12 @@ import {
   useContextSelector,
   useHasParentContext,
 } from "@fluentui/react-context-selector";
+import { useConvexAuth } from "convex/react";
 import * as Icons from "lucide-react";
 import { Icon } from "lucide-react";
 import { Separator as BaseSeparator } from "../ui/separator";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type Style = {
   bold: boolean;
@@ -23,6 +25,7 @@ interface ComposerInputProps {
   inputValue: string;
   setInputValue: (value: string) => void;
   onSubmit: () => void;
+  authed: boolean;
 }
 
 interface ComposerContextType extends ComposerInputProps {
@@ -45,14 +48,14 @@ export const Provider = ({
   setInputValue,
   inputRef,
   children,
+  authed,
 }: ComposerInputProps & { children: React.ReactNode }) => {
   const [style, setStyle] = useState<Style>({
     bold: false,
     italic: false,
     strikethrough: false,
   });
-
-  const submitDisabled = inputValue.trim() === "";
+  const submitDisabled = inputValue.trim() === "" || !authed;
 
   const contextValue = useMemo(
     () => ({
@@ -63,6 +66,7 @@ export const Provider = ({
       style,
       setStyle,
       submitDisabled,
+      authed,
     }),
     [inputValue, onSubmit, style, submitDisabled],
   );
@@ -93,13 +97,20 @@ export const Input = () => {
   const setInputValue = useComposerContext((c) => c.setInputValue);
   const onSubmit = useComposerContext((c) => c.onSubmit);
   const submitDisabled = useComposerContext((c) => c.submitDisabled);
+  const authed = useComposerContext((c) => c.authed);
 
   return (
     <input
       ref={inputRef}
-      className="mt-1 mb-2 w-full flex-1 rounded-md p-2 focus:outline-none"
+      className={cn(
+        "mt-1 mb-2 w-full flex-1 rounded-md p-2 duration-200 focus:outline-none",
+        authed
+          ? "placeholder-muted-foreground"
+          : "placeholder-muted-foreground/20",
+      )}
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
+      disabled={!authed}
       onKeyDown={(e) => {
         if (submitDisabled) return;
         if (e.key === "Enter") {
