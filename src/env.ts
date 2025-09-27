@@ -6,6 +6,8 @@ export const env = createEnv({
     // clerk
     CLERK_SECRET_KEY: z.string().min(1),
     CLERK_JWT_ISSUER_DOMAIN: z.string().min(1),
+    // convex
+    CONVEX_DEPLOY_KEY: z.string().min(1).optional(),
   },
   client: {
     // clerk
@@ -23,5 +25,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_FRONTEND_API_URL:
       process.env.NEXT_PUBLIC_CLERK_FRONTEND_API_URL,
     NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
+    // convex
+    CONVEX_DEPLOY_KEY: process.env.CONVEX_DEPLOY_KEY,
   },
 });
