@@ -13,7 +13,7 @@ export default function Home() {
     <div className="flex h-screen items-center justify-center py-4">
       <Card.Card className="h-[700px] max-h-full w-full max-w-md rounded-3xl p-0">
         <Card.CardContent className="flex h-full flex-col p-2">
-          <div className="align-start flex min-h-0 flex-1 flex-col justify-start gap-2 overflow-y-auto mask-t-from-97% mask-b-from-90% p-4 pb-12">
+          <div className="align-start flex min-h-0 flex-1 flex-col justify-start gap-2 overflow-y-auto overscroll-contain mask-t-from-97% mask-b-from-90% p-4 pb-12">
             {messages.map((message) => (
               <UserMessage key={message.id} message={message} />
             ))}
