@@ -6,7 +6,7 @@ export const env = createEnv({
     // clerk
     CLERK_SECRET_KEY: z.string().min(1),
     CLERK_JWT_ISSUER_DOMAIN: z.string().min(1),
-    // convex
+    // convex (deployment key only needed in prod)
     CONVEX_DEPLOY_KEY: z.string().min(1).optional(),
   },
   client: {
