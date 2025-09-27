@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Slack Composer",
+  title: "State of State",
   description: "How to build components in React",
 };
 
