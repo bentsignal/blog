@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Doc } from "@/convex/_generated/dataModel";
 import {
   ContextSelector,
