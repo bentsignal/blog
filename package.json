@@ -13,7 +13,9 @@
     "scan": "next dev & pnpx react-scan@latest http://localhost:3000"
   },
   "dependencies": {
+    "@clerk/elements": "^0.23.66",
     "@clerk/nextjs": "^6.33.0",
+    "@clerk/themes": "^2.4.22",
     "@fluentui/react-context-selector": "^9.2.7",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-separator": "^1.1.7",
