@@ -1,0 +1,4 @@
+{
+  "plugins": ["typescript", "react", "nextjs", "react-perf"],
+  "ignorePatterns": ["src/convex/_generated/**/*"]
+}
