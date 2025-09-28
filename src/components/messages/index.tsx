@@ -1,23 +1,21 @@
+import { memo } from "react";
 import { api } from "@/convex/_generated/api";
-import { useConvexAuth, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import * as Message from "./message";
 
 export const Messages = () => {
-  const { isAuthenticated } = useConvexAuth();
-  const args = isAuthenticated ? {} : "skip";
-  const messages = useQuery(api.messages.getMessages, args);
-  if (!isAuthenticated) return <div>log in to see messages</div>;
-  if (!messages || messages.length === 0) return <div>no messages</div>;
+  const messages = useQuery(api.messages.getMessages);
+  if (!messages || messages.length === 0) return null;
   return (
-    <div>
+    <div className="flex flex-col gap-3">
       {messages?.map((message) => (
-        <div key={message._id}>{message.content}</div>
+        <UserMessage key={message._id} message={message} />
       ))}
     </div>
   );
 };
 
-export const UserMessage = ({ message }: { message: Message.Message }) => {
+export const PureUserMessage = ({ message }: { message: Message.Message }) => {
   return (
     <Message.Provider message={message}>
       <Message.Frame>
@@ -30,3 +28,16 @@ export const UserMessage = ({ message }: { message: Message.Message }) => {
     </Message.Provider>
   );
 };
+
+const areMessagesEqual = (prev: Message.Message, next: Message.Message) => {
+  if (prev._id !== next._id) return false;
+  if (prev._creationTime !== next._creationTime) return false;
+  if (prev.username !== next.username) return false;
+  if (prev.pfp !== next.pfp) return false;
+  if (prev.content !== next.content) return false;
+  return true;
+};
+
+const UserMessage = memo(PureUserMessage, (prev, next) => {
+  return areMessagesEqual(prev.message, next.message);
+});
