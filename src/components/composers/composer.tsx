@@ -1,18 +1,15 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ContextSelector,
   createContext,
   useContextSelector,
   useHasParentContext,
 } from "@fluentui/react-context-selector";
-import { useConvexAuth } from "convex/react";
 import * as Icons from "lucide-react";
-import { Icon } from "lucide-react";
 import { Separator as BaseSeparator } from "../ui/separator";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 type Style = {
   bold: boolean;
@@ -31,7 +28,6 @@ interface ComposerContextType extends ComposerInputProps {
   style: Style;
   setStyle: React.Dispatch<React.SetStateAction<Style>>;
   submitDisabled: boolean;
-  isAuthenticated: boolean;
 }
 
 export const ComposerContext = createContext<ComposerContextType>(
@@ -49,13 +45,12 @@ export const Provider = ({
   inputRef,
   children,
 }: ComposerInputProps & { children: React.ReactNode }) => {
-  const { isAuthenticated } = useConvexAuth();
   const [style, setStyle] = useState<Style>({
     bold: false,
     italic: false,
     strikethrough: false,
   });
-  const submitDisabled = inputValue.trim() === "" || !isAuthenticated;
+  const submitDisabled = inputValue.trim() === "";
 
   const contextValue = useMemo(
     () => ({
@@ -66,9 +61,8 @@ export const Provider = ({
       style,
       setStyle,
       submitDisabled,
-      isAuthenticated,
     }),
-    [inputValue, onSubmit, style, submitDisabled, isAuthenticated],
+    [inputValue, onSubmit, style, submitDisabled],
   );
 
   return (
@@ -80,7 +74,7 @@ export const Provider = ({
 
 export const Frame = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="bg-muted flex flex-col justify-center rounded-xl p-3">
+    <div className="bg-muted flex flex-col justify-center rounded-2xl p-3">
       {children}
     </div>
   );
@@ -97,20 +91,13 @@ export const Input = () => {
   const setInputValue = useComposerContext((c) => c.setInputValue);
   const onSubmit = useComposerContext((c) => c.onSubmit);
   const submitDisabled = useComposerContext((c) => c.submitDisabled);
-  const isAuthenticated = useComposerContext((c) => c.isAuthenticated);
 
   return (
     <input
       ref={inputRef}
-      className={cn(
-        "mt-1 mb-2 w-full flex-1 rounded-md p-2 duration-200 focus:outline-none",
-        isAuthenticated
-          ? "placeholder-muted-foreground"
-          : "placeholder-muted-foreground/20",
-      )}
+      className="mt-1 mb-2 w-full flex-1 rounded-md p-2 duration-200 focus:outline-none"
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
-      disabled={!isAuthenticated}
       onKeyDown={(e) => {
         if (submitDisabled) return;
         if (e.key === "Enter") {
@@ -154,7 +141,7 @@ const Separator = () => {
 
 export const Header = () => {
   return (
-    <div className="text-muted-foreground flex items-center">
+    <div className="flex items-center">
       <BoldButton />
       <ItalicButton />
       <StrikethroughButton />
@@ -176,7 +163,7 @@ export const Footer = ({ children }: { children: React.ReactNode }) => {
 
 export const CommonActions = () => {
   return (
-    <div className="text-muted-foreground flex flex-1 items-center">
+    <div className="flex flex-1 items-center">
       <PlusMenu />
       <BaselineButton />
       <EmojiButton />
@@ -203,7 +190,7 @@ export const BoldButton = () => {
       }}
     >
       <Icons.Bold
-        className={active ? "text-primary" : ""}
+        className={active ? "text-primary" : "text-muted-foreground"}
         strokeWidth={active ? 4 : 2}
       />
     </Button>
@@ -223,7 +210,7 @@ export const ItalicButton = () => {
       }}
     >
       <Icons.Italic
-        className={active ? "text-primary" : ""}
+        className={active ? "text-primary" : "text-muted-foreground"}
         strokeWidth={active ? 4 : 2}
       />
     </Button>
@@ -243,7 +230,7 @@ export const StrikethroughButton = () => {
       }}
     >
       <Icons.Strikethrough
-        className={active ? "text-primary" : ""}
+        className={active ? "text-primary" : "text-muted-foreground"}
         strokeWidth={active ? 4 : 2}
       />
     </Button>
@@ -253,7 +240,7 @@ export const StrikethroughButton = () => {
 export const LinkButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.Link />
+      <Icons.Link className="text-muted-foreground" />
     </Button>
   );
 };
@@ -261,7 +248,7 @@ export const LinkButton = () => {
 export const ListOrderedButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.ListOrdered />
+      <Icons.ListOrdered className="text-muted-foreground" />
     </Button>
   );
 };
@@ -269,7 +256,7 @@ export const ListOrderedButton = () => {
 export const ListButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.List />
+      <Icons.List className="text-muted-foreground" />
     </Button>
   );
 };
@@ -277,7 +264,7 @@ export const ListButton = () => {
 export const QuoteButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.TextQuote />
+      <Icons.TextQuote className="text-muted-foreground" />
     </Button>
   );
 };
@@ -285,7 +272,7 @@ export const QuoteButton = () => {
 export const CodeButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.Code />
+      <Icons.Code className="text-muted-foreground" />
     </Button>
   );
 };
@@ -293,7 +280,7 @@ export const CodeButton = () => {
 export const BlockCodeButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.MessageSquareCode />
+      <Icons.MessageSquareCode className="text-muted-foreground" />
     </Button>
   );
 };
@@ -305,7 +292,7 @@ export const PlusMenu = () => {
       size="icon"
       className="mr-1 rounded-full border-none"
     >
-      <Icons.Plus />
+      <Icons.Plus className="text-muted-foreground" />
     </Button>
   );
 };
@@ -313,7 +300,7 @@ export const PlusMenu = () => {
 export const BaselineButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.Baseline />
+      <Icons.Baseline className="text-muted-foreground" />
     </Button>
   );
 };
@@ -321,7 +308,7 @@ export const BaselineButton = () => {
 export const EmojiButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.Smile />
+      <Icons.Smile className="text-muted-foreground" />
     </Button>
   );
 };
@@ -329,7 +316,7 @@ export const EmojiButton = () => {
 export const AtButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.AtSign />
+      <Icons.AtSign className="text-muted-foreground" />
     </Button>
   );
 };
@@ -337,7 +324,7 @@ export const AtButton = () => {
 export const VideoButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.Video />
+      <Icons.Video className="text-muted-foreground" />
     </Button>
   );
 };
@@ -345,7 +332,7 @@ export const VideoButton = () => {
 export const MicrophoneButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.Mic />
+      <Icons.Mic className="text-muted-foreground" />
     </Button>
   );
 };
@@ -353,7 +340,7 @@ export const MicrophoneButton = () => {
 export const CommandButton = () => {
   return (
     <Button variant="ghost" size="icon">
-      <Icons.SlashSquare />
+      <Icons.SlashSquare className="text-muted-foreground" />
     </Button>
   );
 };

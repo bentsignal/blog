@@ -2,37 +2,42 @@
 
 import { useRef, useState } from "react";
 import { api } from "@/convex/_generated/api";
-import { useConvexAuth, useMutation } from "convex/react";
-import * as Selector from "./composer";
+import { useAuth } from "@clerk/nextjs";
+import { useMutation } from "convex/react";
+import * as Composer from "./composer";
 
 export const MainComposer = () => {
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const sendMessage = useMutation(api.messages.sendMessage);
+  const { isSignedIn } = useAuth();
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    if (!isSignedIn) {
+      return;
+    }
     const value = inputRef.current?.value || "";
     setInputValue("");
-    sendMessage({
+    await sendMessage({
       content: value,
     });
   };
 
   return (
-    <Selector.Provider
+    <Composer.Provider
       onSubmit={onSubmit}
       inputValue={inputValue}
       setInputValue={setInputValue}
       inputRef={inputRef}
     >
-      <Selector.Frame>
-        <Selector.Header />
-        <Selector.Input />
-        <Selector.Footer>
-          <Selector.CommonActions />
-          <Selector.Submit />
-        </Selector.Footer>
-      </Selector.Frame>
-    </Selector.Provider>
+      <Composer.Frame>
+        <Composer.Header />
+        <Composer.Input />
+        <Composer.Footer>
+          <Composer.CommonActions />
+          <Composer.Submit />
+        </Composer.Footer>
+      </Composer.Frame>
+    </Composer.Provider>
   );
 };
