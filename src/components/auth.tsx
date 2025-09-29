@@ -51,7 +51,7 @@ export const Modal = () => {
           }}
         />
         <div className="absolute top-0 right-2">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" onClick={() => setOpen(false)}>
             <XIcon />
           </Button>
         </div>
