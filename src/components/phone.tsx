@@ -1,6 +1,6 @@
 "use client";
 
-import { JoinConversationButton, ProfileButton, SignInComponent } from "./auth";
+import * as Auth from "@/components/auth";
 import { MainComposer } from "@/components/composers";
 import { Messages } from "@/components/messages";
 import * as Card from "@/components/ui/card";
@@ -19,13 +19,7 @@ export const Phone = ({ authed }: { authed: boolean }) => {
               </span>
             </div>
           </div>
-          {authed ? (
-            <ProfileButton />
-          ) : (
-            <SignInComponent fallback={<JoinConversationButton />}>
-              <JoinConversationButton />
-            </SignInComponent>
-          )}
+          {authed ? <Auth.Profile /> : <Auth.SignIn />}
         </div>
         <div className="align-start flex min-h-0 flex-1 flex-col justify-start gap-2 overflow-y-auto overscroll-contain mask-t-from-97% mask-b-from-97% p-4">
           <Messages />
