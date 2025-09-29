@@ -72,7 +72,7 @@ export const PFP = () => {
       <img
         src={pfp}
         alt="pfp"
-        className="size-10 flex-shrink-0 rounded-md"
+        className="size-10 flex-shrink-0 rounded-full"
         onError={() => setImageState("error")}
         onLoad={() => setImageState("loaded")}
       />

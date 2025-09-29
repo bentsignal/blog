@@ -1,38 +1,16 @@
-"use client";
-
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { MainComposer } from "@/components/composers";
-import { Messages } from "@/components/messages";
+import { auth } from "@clerk/nextjs/server";
+import { Phone } from "@/components/phone";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
-import * as Card from "@/components/ui/card";
 
-export default function Home() {
+export default async function Home() {
+  const { userId } = await auth();
+  const authed = userId !== null;
   return (
-    <div className="flex h-screen items-center justify-center py-4">
+    <div className="flex h-screen flex-col items-center justify-center overflow-y-auto py-4">
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
       </div>
-      <Card.Card className="h-[700px] max-h-full w-full max-w-md rounded-3xl p-0">
-        <Card.CardContent className="flex h-full flex-col p-2">
-          <div className="align-start flex min-h-0 flex-1 flex-col justify-start gap-2 overflow-y-auto overscroll-contain mask-t-from-97% mask-b-from-97% p-4">
-            <Messages />
-          </div>
-          <div className="px-2 pb-2">
-            <MainComposer />
-          </div>
-        </Card.CardContent>
-      </Card.Card>
-      <div className="absolute top-4 left-4">
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-        <SignedOut>
-          <SignInButton>
-            <Button variant="outline">Sign In</Button>
-          </SignInButton>
-        </SignedOut>
-      </div>
+      <Phone authed={authed} />
     </div>
   );
 }
