@@ -9,6 +9,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
       appearance={{
         theme: dark,
       }}
+      signInFallbackRedirectUrl="/"
+      signUpFallbackRedirectUrl="/"
     >
       <ConvexProvider>
         <ThemeProvider

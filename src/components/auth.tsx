@@ -1,6 +1,6 @@
 "use client";
 
-import { SignIn as ClerkSignIn, UserButton } from "@clerk/nextjs";
+import { SignUp as ClerkSignUp, UserButton } from "@clerk/nextjs";
 import { shadcn } from "@clerk/themes";
 import { XIcon } from "lucide-react";
 import { create } from "zustand";
@@ -45,7 +45,7 @@ export const Modal = () => {
         <Dialog.DialogHeader className="sr-only">
           <Dialog.DialogTitle>Sign in</Dialog.DialogTitle>
         </Dialog.DialogHeader>
-        <ClerkSignIn
+        <ClerkSignUp
           appearance={{
             theme: shadcn,
           }}
