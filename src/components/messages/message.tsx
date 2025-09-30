@@ -8,7 +8,7 @@ import {
   useContextSelector,
 } from "@fluentui/react-context-selector";
 import { UserRound } from "lucide-react";
-import { getTimestamp } from "@/lib/utils";
+import { cn, getTimestamp } from "@/lib/utils";
 
 export interface Message {
   _id: Doc<"messages">["_id"];
@@ -97,5 +97,46 @@ export const Content = () => {
   const content = useMessage((c) => c.content);
   return (
     <div className="text-muted-foreground text-sm font-medium">{content}</div>
+  );
+};
+
+export const Skeleton = () => {
+  const nameWidth = Math.random() * 40 + 20;
+  const contentWidth = Math.random() * 70 + 10;
+  return (
+    <div className="flex animate-pulse gap-2">
+      <div className="bg-muted flex size-10 flex-shrink-0 items-center justify-center rounded-full" />
+      <div className="mt-1 flex w-full flex-col gap-1.5">
+        <div
+          className="bg-muted-foreground/10 h-3 rounded-md"
+          style={{
+            width: nameWidth + "%",
+          }}
+        />
+        <div
+          className="bg-muted-foreground/10 h-3 rounded-md"
+          style={{
+            width: contentWidth + "%",
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+export const List = ({ children }: { children: React.ReactNode }) => {
+  return <div className="flex flex-col gap-3">{children}</div>;
+};
+
+export const Error = () => {
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <div className="text-destructive text-sm font-bold">
+        Failed to load messages
+      </div>
+      <div className="text-muted-foreground text-xs">
+        Sorry about that, something went wrong. Please check back later.
+      </div>
+    </div>
   );
 };

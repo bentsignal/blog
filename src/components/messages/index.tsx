@@ -1,17 +1,36 @@
 import { memo } from "react";
 import { api } from "@/convex/_generated/api";
-import { useQuery } from "convex/react";
+import { convexQuery } from "@convex-dev/react-query";
+import { useQuery } from "@tanstack/react-query";
 import * as Message from "./message";
 
 export const Messages = () => {
-  const messages = useQuery(api.messages.getMessages);
-  if (!messages || messages.length === 0) return null;
+  const {
+    data: messages,
+    isPending,
+    error,
+  } = useQuery(convexQuery(api.messages.getMessages, {}));
+
+  if (isPending) {
+    return (
+      <Message.List>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <Message.Skeleton key={index} />
+        ))}
+      </Message.List>
+    );
+  }
+
+  if (error) {
+    return <Message.Error />;
+  }
+
   return (
-    <div className="flex flex-col gap-3">
-      {messages?.map((message) => (
+    <Message.List>
+      {messages.map((message) => (
         <UserMessage key={message._id} message={message} />
       ))}
-    </div>
+    </Message.List>
   );
 };
 
