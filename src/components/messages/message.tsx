@@ -14,8 +14,8 @@ import { getProfileUrl, getTimestamp } from "@/lib/utils";
 export interface Message {
   _id: Doc<"messages">["_id"];
   _creationTime: number;
-  username: Doc<"users">["username"];
-  pfp: Doc<"users">["pfp"];
+  username: string;
+  pfp: string;
   content: string;
 }
 
