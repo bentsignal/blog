@@ -14,7 +14,7 @@ export const getMessages = query({
         const { user: _, ...publicMessage } = message;
         return {
           ...publicMessage,
-          username: user.username,
+          name: user.name,
           pfp: user.image,
         };
       }),

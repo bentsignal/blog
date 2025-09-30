@@ -37,14 +37,13 @@ export const createAuth = (
     },
     baseURL: process.env.SITE_URL,
     database: authComponent.adapter(ctx),
-    // Configure simple, non-verified email/password to get started
     emailAndPassword: {
       enabled: false,
       requireEmailVerification: false,
     },
     user: {
       deleteUser: {
-        enabled: true,
+        enabled: false,
       },
     },
     plugins: [convex()],

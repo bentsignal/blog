@@ -8,13 +8,12 @@ import {
   useContextSelector,
 } from "@fluentui/react-context-selector";
 import { UserRound } from "lucide-react";
-import Link from "next/link";
-import { getProfileUrl, getTimestamp } from "@/lib/utils";
+import { getTimestamp } from "@/lib/utils";
 
 export interface Message {
   _id: Doc<"messages">["_id"];
   _creationTime: number;
-  username: string;
+  name: string;
   pfp: string;
   content: string;
 }
@@ -35,7 +34,7 @@ export const Provider = ({
     () => ({
       _id: message._id,
       _creationTime: message._creationTime,
-      username: message.username,
+      name: message.name,
       pfp: message.pfp,
       content: message.content,
     }),
@@ -54,7 +53,6 @@ export const Frame = ({ children }: { children: React.ReactNode }) => {
 
 export const PFP = () => {
   const pfp = useMessage((c) => c.pfp);
-  const username = useMessage((c) => c.username);
 
   const [imageState, setImageState] = useState<"loading" | "error" | "loaded">(
     "loading",
@@ -68,15 +66,13 @@ export const PFP = () => {
   }
 
   return (
-    <Link href={getProfileUrl(username)} target="_blank">
-      <img
-        src={pfp}
-        alt="pfp"
-        className="size-10 flex-shrink-0 rounded-full"
-        onError={() => setImageState("error")}
-        onLoad={() => setImageState("loaded")}
-      />
-    </Link>
+    <img
+      src={pfp}
+      alt="pfp"
+      className="size-10 flex-shrink-0 rounded-full"
+      onError={() => setImageState("error")}
+      onLoad={() => setImageState("loaded")}
+    />
   );
 };
 
@@ -85,13 +81,11 @@ export const Body = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const Header = () => {
-  const username = useMessage((c) => c.username);
+  const name = useMessage((c) => c.name);
   const _creationTime = useMessage((c) => c._creationTime);
   return (
     <div className="flex items-center gap-2">
-      <Link href={getProfileUrl(username)} target="_blank">
-        <div className="text-sm font-bold">{username || "Unknown"}</div>
-      </Link>
+      <div className="text-sm font-bold">{name || "Unknown"}</div>
       <div className="text-muted-foreground text-xs">
         {getTimestamp(_creationTime)}
       </div>
