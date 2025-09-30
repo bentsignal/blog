@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Doc } from "@/convex/_generated/dataModel";
 import {
   ContextSelector,
@@ -8,7 +8,7 @@ import {
   useContextSelector,
 } from "@fluentui/react-context-selector";
 import { UserRound } from "lucide-react";
-import { cn, getTimestamp } from "@/lib/utils";
+import { getTimestamp } from "@/lib/utils";
 
 export interface Message {
   _id: Doc<"messages">["_id"];
@@ -124,8 +124,52 @@ export const Skeleton = () => {
   );
 };
 
-export const List = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex flex-col gap-3">{children}</div>;
+export const List = ({
+  autoScroll = false,
+  children,
+}: {
+  autoScroll?: boolean;
+  children: React.ReactNode;
+}) => {
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const [isAtBottom, setIsAtBottom] = useState(true);
+
+  // determine if user is at the bottom of the list
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsAtBottom(entry.isIntersecting),
+      { threshold: 0.5 },
+    );
+
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // when user is at bottom and a new message comes in, scroll to the bottom
+  useEffect(() => {
+    if (isAtBottom && children && autoScroll) {
+      bottomRef.current?.scrollIntoView();
+    }
+  }, [children, isAtBottom, autoScroll]);
+
+  // when the component mounts, scroll to the bottom
+  useEffect(() => {
+    if (autoScroll) {
+      bottomRef.current?.scrollIntoView();
+    }
+  }, [autoScroll]);
+
+  return (
+    <div className="flex flex-col gap-3">
+      {children}
+      <div ref={bottomRef} />
+    </div>
+  );
 };
 
 export const Error = () => {

@@ -26,7 +26,7 @@ export const Messages = () => {
   }
 
   return (
-    <Message.List>
+    <Message.List autoScroll={true}>
       {messages.map((message) => (
         <UserMessage key={message._id} message={message} />
       ))}

@@ -23,7 +23,7 @@ export const Phone = () => {
           </div>
           {signedIn ? <Auth.Profile /> : <Auth.SignIn />}
         </div>
-        <div className="align-start flex min-h-0 flex-1 flex-col justify-start gap-2 overflow-y-auto overscroll-contain mask-t-from-97% mask-b-from-97% p-4">
+        <div className="align-start scrollbar-thin scrollbar-thumb-muted-foreground/10 scrollbar-track-transparent flex min-h-0 flex-1 flex-col justify-start gap-2 overflow-y-auto overscroll-contain mask-t-from-97% mask-b-from-97% px-4 pt-3">
           <Messages />
         </div>
         <div className="px-2 pb-2">
