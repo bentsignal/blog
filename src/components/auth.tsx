@@ -16,6 +16,7 @@ import { authClient } from "@/lib/auth-client";
 
 interface Auth {
   image: string | null | undefined;
+  name: string | undefined;
   signedIn: boolean;
   inProgress: boolean;
   signOut: () => Promise<void>;
@@ -45,6 +46,7 @@ export const Provider = ({
     queryFn: async () => await authClient.getSession(),
   });
   const image = useMemo(() => session?.data?.user.image, [session]);
+  const name = useMemo(() => session?.data?.user.name, [session]);
 
   const signOut = useCallback(async () => {
     if (inProgress) return;
@@ -93,14 +95,15 @@ export const Provider = ({
 
   const contextValue = useMemo(
     () => ({
-      image: image,
+      image,
       signedIn: authed,
+      name,
       inProgress,
       signOut,
       signIn,
       deleteAccount,
     }),
-    [authed, inProgress, signOut, signIn, deleteAccount, image],
+    [authed, inProgress, signOut, signIn, deleteAccount, image, name],
   );
 
   return (

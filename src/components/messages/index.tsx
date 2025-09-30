@@ -35,23 +35,26 @@ export const Messages = () => {
 
   return (
     <Message.List autoScroll={true}>
-      {results.reverse().map((message, index) => {
-        const loaderIndex =
-          status === "CanLoadMore"
-            ? Math.min(config.loadingIndex, results.length - 1)
-            : -1;
-        return index === loaderIndex || index === 0 ? (
-          <PageLoader
-            key={message._id}
-            status={status}
-            loadMore={() => loadMore(config.pageSize)}
-          >
-            <UserMessage message={message} />
-          </PageLoader>
-        ) : (
-          <UserMessage key={message._id} message={message} />
-        );
-      })}
+      {results
+        .slice()
+        .reverse()
+        .map((message, index) => {
+          const loaderIndex =
+            status === "CanLoadMore"
+              ? Math.min(config.loadingIndex, results.length - 1)
+              : -1;
+          return index === loaderIndex || index === 0 ? (
+            <PageLoader
+              key={message._id}
+              status={status}
+              loadMore={() => loadMore(config.pageSize)}
+            >
+              <UserMessage message={message} />
+            </PageLoader>
+          ) : (
+            <UserMessage key={message._id} message={message} />
+          );
+        })}
     </Message.List>
   );
 };
