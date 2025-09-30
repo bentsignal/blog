@@ -11,9 +11,10 @@ import {
   query,
   QueryCtx,
 } from "./_generated/server";
+import { authComponent } from "./auth";
 
 export const checkAuth = async (ctx: QueryCtx | MutationCtx | ActionCtx) => {
-  const user = await ctx.auth.getUserIdentity();
+  const user = await authComponent.getAuthUser(ctx);
   if (!user) {
     throw new ConvexError("Unauthenticated");
   }

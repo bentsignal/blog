@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { internalMutation, MutationCtx, query } from "./_generated/server";
+import { MutationCtx, query } from "./_generated/server";
 import { authComponent } from "./auth";
 import { authedMutation } from "./convex_helpers";
 
@@ -20,7 +20,6 @@ export const getMessages = query({
       }),
     );
     return messagesWithUserData;
-    return [];
   },
 });
 
@@ -31,10 +30,9 @@ export const sendMessage = authedMutation({
   handler: async (ctx, args) => {
     const { content } = args;
     validateMessage(content);
-    const user = await authComponent.getAuthUser(ctx);
     await ctx.db.insert("messages", {
       content,
-      user: user._id,
+      user: ctx.user._id,
     });
   },
 });
