@@ -18,6 +18,7 @@ interface Auth {
   inProgress: boolean;
   signOut: () => Promise<void>;
   signIn: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
 }
 
 export const AuthContext = createContext<Auth>({} as Auth);
@@ -38,6 +39,17 @@ export const Provider = ({
 
   const signOut = useCallback(async () => {
     await authClient.signOut(
+      {},
+      {
+        onResponse: () => {
+          router.refresh();
+        },
+      },
+    );
+  }, [router]);
+
+  const deleteAccount = useCallback(async () => {
+    await authClient.deleteUser(
       {},
       {
         onResponse: () => {
@@ -74,8 +86,9 @@ export const Provider = ({
       inProgress,
       signOut,
       signIn,
+      deleteAccount,
     }),
-    [authed, inProgress, signOut, signIn],
+    [authed, inProgress, signOut, signIn, deleteAccount],
   );
 
   return (
@@ -85,6 +98,7 @@ export const Provider = ({
 
 export const Profile = () => {
   const signOut = useAuth((c) => c.signOut);
+  const deleteAccount = useAuth((c) => c.deleteAccount);
   const [open, setOpen] = useState(false);
   return (
     <div
@@ -96,7 +110,7 @@ export const Profile = () => {
         <Popover.PopoverTrigger className="">
           <div className="bg-muted-foreground size-7 rounded-full" />
         </Popover.PopoverTrigger>
-        <Popover.PopoverContent className="mt-1 w-auto p-1">
+        <Popover.PopoverContent className="mt-1 flex w-auto flex-col p-1">
           <Button
             variant="link"
             onClick={async () => {
@@ -106,6 +120,15 @@ export const Profile = () => {
             className="focus-visible:ring-0"
           >
             Sign Out
+          </Button>
+          <Button
+            variant="link"
+            onClick={async () => {
+              setOpen(false);
+              await deleteAccount();
+            }}
+          >
+            Delete Account
           </Button>
         </Popover.PopoverContent>
       </Popover.Popover>

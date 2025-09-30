@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { query } from "./_generated/server";
+import { internalMutation, MutationCtx, query } from "./_generated/server";
 import { authComponent } from "./auth";
 import { authedMutation } from "./convex_helpers";
 
@@ -43,4 +43,17 @@ const validateMessage = (content: string) => {
   if (!content) throw new ConvexError("Content is required");
   if (content.length > 1000) throw new ConvexError("Content is too long");
   if (content.length < 1) throw new ConvexError("Content is too short");
+};
+
+export const deleteMessagesFromUser = async (
+  ctx: MutationCtx,
+  userId: string,
+) => {
+  const messages = await ctx.db
+    .query("messages")
+    .filter((q) => q.eq(q.field("user"), userId))
+    .collect();
+  for (const message of messages) {
+    await ctx.db.delete(message._id);
+  }
 };

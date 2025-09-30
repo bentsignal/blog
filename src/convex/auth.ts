@@ -1,13 +1,29 @@
-import { createClient, type GenericCtx } from "@convex-dev/better-auth";
+import {
+  AuthFunctions,
+  createClient,
+  type GenericCtx,
+} from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
 import { betterAuth } from "better-auth";
-import { components } from "./_generated/api";
+import { components, internal } from "./_generated/api";
 import { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
+import { deleteMessagesFromUser } from "./messages";
+
+const authFunctions: AuthFunctions = internal.auth;
 
 // The component client has methods needed for integrating Convex with Better Auth,
 // as well as helper methods for general use.
-export const authComponent = createClient<DataModel>(components.betterAuth);
+export const authComponent = createClient<DataModel>(components.betterAuth, {
+  authFunctions,
+  triggers: {
+    user: {
+      onDelete: async (ctx, authUser) => {
+        await deleteMessagesFromUser(ctx, authUser._id);
+      },
+    },
+  },
+});
 
 export const createAuth = (
   ctx: GenericCtx<DataModel>,
@@ -26,10 +42,12 @@ export const createAuth = (
       enabled: false,
       requireEmailVerification: false,
     },
-    plugins: [
-      // The Convex plugin is required for Convex compatibility
-      convex(),
-    ],
+    user: {
+      deleteUser: {
+        enabled: true,
+      },
+    },
+    plugins: [convex()],
     socialProviders: {
       github: {
         clientId: process.env.GITHUB_CLIENT_ID!,
@@ -47,3 +65,5 @@ export const getCurrentUser = query({
     return authComponent.getAuthUser(ctx);
   },
 });
+
+export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
