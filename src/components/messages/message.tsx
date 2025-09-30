@@ -90,7 +90,7 @@ export const Header = () => {
   return (
     <div className="flex items-center gap-2">
       <Link href={getProfileUrl(username)} target="_blank">
-        <div className="text-sm font-bold">{username}</div>
+        <div className="text-sm font-bold">{username || "Unknown"}</div>
       </Link>
       <div className="text-muted-foreground text-xs">
         {getTimestamp(_creationTime)}

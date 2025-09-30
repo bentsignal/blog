@@ -32,7 +32,7 @@ export const sendMessage = authedMutation({
     validateMessage(content);
     await ctx.db.insert("messages", {
       content,
-      user: ctx.user._id,
+      user: ctx.user.subject,
     });
   },
 });
