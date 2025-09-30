@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
-import { query } from "./_generated/server";
+import { MutationCtx, query } from "./_generated/server";
+import { authComponent } from "./auth";
 import { authedMutation } from "./convex_helpers";
 
 export const getMessages = query({
@@ -8,13 +9,13 @@ export const getMessages = query({
     const messages = await ctx.db.query("messages").collect();
     const messagesWithUserData = await Promise.all(
       messages.map(async (message) => {
-        const user = await ctx.db.get(message.user);
+        const user = await authComponent.getAnyUserById(ctx, message.user);
         if (!user) throw new ConvexError("User not found");
         const { user: _, ...publicMessage } = message;
         return {
           ...publicMessage,
-          username: user.username,
-          pfp: user.pfp,
+          name: user.name,
+          pfp: user.image,
         };
       }),
     );
@@ -29,15 +30,9 @@ export const sendMessage = authedMutation({
   handler: async (ctx, args) => {
     const { content } = args;
     validateMessage(content);
-    const userId = ctx.user.subject;
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_user_id", (q) => q.eq("userId", userId))
-      .unique();
-    if (!user) throw new ConvexError("User not found");
-    return await ctx.db.insert("messages", {
+    await ctx.db.insert("messages", {
       content,
-      user: user._id,
+      user: ctx.user.subject,
     });
   },
 });
@@ -46,4 +41,17 @@ const validateMessage = (content: string) => {
   if (!content) throw new ConvexError("Content is required");
   if (content.length > 1000) throw new ConvexError("Content is too long");
   if (content.length < 1) throw new ConvexError("Content is too short");
+};
+
+export const deleteMessagesFromUser = async (
+  ctx: MutationCtx,
+  userId: string,
+) => {
+  const messages = await ctx.db
+    .query("messages")
+    .filter((q) => q.eq(q.field("user"), userId))
+    .collect();
+  for (const message of messages) {
+    await ctx.db.delete(message._id);
+  }
 };

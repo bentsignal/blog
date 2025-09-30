@@ -34,9 +34,8 @@ export const ComposerContext = createContext<ComposerContextType>(
   {} as ComposerContextType,
 );
 
-const useComposerContext = <T,>(
-  selector: ContextSelector<ComposerContextType, T>,
-) => useContextSelector(ComposerContext, selector);
+const useComposer = <T,>(selector: ContextSelector<ComposerContextType, T>) =>
+  useContextSelector(ComposerContext, selector);
 
 export const Provider = ({
   onSubmit,
@@ -86,11 +85,11 @@ export const Input = () => {
     throw new Error("ComposerContext not found");
   }
 
-  const inputRef = useComposerContext((c) => c.inputRef);
-  const inputValue = useComposerContext((c) => c.inputValue);
-  const setInputValue = useComposerContext((c) => c.setInputValue);
-  const onSubmit = useComposerContext((c) => c.onSubmit);
-  const submitDisabled = useComposerContext((c) => c.submitDisabled);
+  const inputRef = useComposer((c) => c.inputRef);
+  const inputValue = useComposer((c) => c.inputValue);
+  const setInputValue = useComposer((c) => c.setInputValue);
+  const onSubmit = useComposer((c) => c.onSubmit);
+  const submitDisabled = useComposer((c) => c.submitDisabled);
 
   return (
     <input
@@ -115,8 +114,8 @@ export const Submit = () => {
     throw new Error("ComposerContext not found");
   }
 
-  const onSubmit = useComposerContext((c) => c.onSubmit);
-  const submitDisabled = useComposerContext((c) => c.inputValue.trim() === "");
+  const onSubmit = useComposer((c) => c.onSubmit);
+  const submitDisabled = useComposer((c) => c.inputValue.trim() === "");
 
   return (
     <Button
@@ -178,8 +177,8 @@ export const CommonActions = () => {
 };
 
 export const BoldButton = () => {
-  const setStyle = useComposerContext((c) => c.setStyle);
-  const active = useComposerContext((c) => c.style.bold);
+  const setStyle = useComposer((c) => c.setStyle);
+  const active = useComposer((c) => c.style.bold);
 
   return (
     <Button
@@ -198,8 +197,8 @@ export const BoldButton = () => {
 };
 
 export const ItalicButton = () => {
-  const setStyle = useComposerContext((c) => c.setStyle);
-  const active = useComposerContext((c) => c.style.italic);
+  const setStyle = useComposer((c) => c.setStyle);
+  const active = useComposer((c) => c.style.italic);
 
   return (
     <Button
@@ -218,8 +217,8 @@ export const ItalicButton = () => {
 };
 
 export const StrikethroughButton = () => {
-  const setStyle = useComposerContext((c) => c.setStyle);
-  const active = useComposerContext((c) => c.style.strikethrough);
+  const setStyle = useComposer((c) => c.setStyle);
+  const active = useComposer((c) => c.style.strikethrough);
 
   return (
     <Button

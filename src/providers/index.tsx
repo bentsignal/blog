@@ -1,18 +1,18 @@
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-import { ConvexProvider } from "./convex-provider";
+import { ConvexClientProvider } from "./convex-provider";
 import { ThemeProvider } from "./theme-provider";
+import * as Auth from "@/components/auth";
+import { getToken } from "@/lib/auth-server";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export const Providers = async ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const token = await getToken();
+  const authed = token !== undefined;
   return (
-    <ClerkProvider
-      appearance={{
-        theme: dark,
-      }}
-      signInFallbackRedirectUrl="/"
-      signUpFallbackRedirectUrl="/"
-    >
-      <ConvexProvider>
+    <ConvexClientProvider>
+      <Auth.Provider authed={authed}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -21,7 +21,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         >
           {children}
         </ThemeProvider>
-      </ConvexProvider>
-    </ClerkProvider>
+      </Auth.Provider>
+    </ConvexClientProvider>
   );
-}
+};
