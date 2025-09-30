@@ -7,7 +7,6 @@ import { convex } from "@convex-dev/better-auth/plugins";
 import { betterAuth } from "better-auth";
 import { components, internal } from "./_generated/api";
 import { DataModel } from "./_generated/dataModel";
-import { query } from "./_generated/server";
 import { deleteMessagesFromUser } from "./messages";
 
 const authFunctions: AuthFunctions = internal.auth;
@@ -46,6 +45,12 @@ export const createAuth = (
         enabled: false,
       },
     },
+    session: {
+      cookieCache: {
+        enabled: true,
+        maxAge: 60 * 5,
+      },
+    },
     plugins: [convex()],
     socialProviders: {
       github: {
@@ -55,14 +60,5 @@ export const createAuth = (
     },
   });
 };
-
-// Example function for getting the current user
-// Feel free to edit, omit, etc.
-export const getCurrentUser = query({
-  args: {},
-  handler: async (ctx) => {
-    return authComponent.getAuthUser(ctx);
-  },
-});
 
 export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();

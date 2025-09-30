@@ -6,6 +6,7 @@ import {
   createContext,
   useContextSelector,
 } from "@fluentui/react-context-selector";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Spinner } from "./spinner";
@@ -14,6 +15,7 @@ import * as Popover from "./ui/popover";
 import { authClient } from "@/lib/auth-client";
 
 interface Auth {
+  image: string | null | undefined;
   signedIn: boolean;
   inProgress: boolean;
   signOut: () => Promise<void>;
@@ -35,9 +37,17 @@ export const Provider = ({
 }) => {
   const router = useRouter();
 
+  // either a sign in or sign out is in progress
   const [inProgress, setInProgress] = useState(false);
 
+  const { data: session } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => await authClient.getSession(),
+  });
+  const image = useMemo(() => session?.data?.user.image, [session]);
+
   const signOut = useCallback(async () => {
+    if (inProgress) return;
     await authClient.signOut(
       {},
       {
@@ -46,7 +56,7 @@ export const Provider = ({
         },
       },
     );
-  }, [router]);
+  }, [router, inProgress]);
 
   const deleteAccount = useCallback(async () => {
     await authClient.deleteUser(
@@ -60,6 +70,7 @@ export const Provider = ({
   }, [router]);
 
   const signIn = useCallback(async () => {
+    if (inProgress) return;
     try {
       setInProgress(true);
       await authClient.signIn.social(
@@ -78,17 +89,18 @@ export const Provider = ({
       console.error(error);
       setInProgress(false);
     }
-  }, []);
+  }, [inProgress]);
 
   const contextValue = useMemo(
     () => ({
+      image: image,
       signedIn: authed,
       inProgress,
       signOut,
       signIn,
       deleteAccount,
     }),
-    [authed, inProgress, signOut, signIn, deleteAccount],
+    [authed, inProgress, signOut, signIn, deleteAccount, image],
   );
 
   return (
@@ -98,8 +110,11 @@ export const Provider = ({
 
 export const Profile = () => {
   const signOut = useAuth((c) => c.signOut);
+  const image = useAuth((c) => c.image);
   // const deleteAccount = useAuth((c) => c.deleteAccount);
+
   const [open, setOpen] = useState(false);
+
   return (
     <div
       onMouseEnter={() => setOpen(true)}
@@ -108,7 +123,11 @@ export const Profile = () => {
     >
       <Popover.Popover open={open} onOpenChange={setOpen}>
         <Popover.PopoverTrigger className="">
-          <div className="bg-muted-foreground size-7 rounded-full" />
+          {image ? (
+            <img src={image} alt="pfp" className="size-7 rounded-full" />
+          ) : (
+            <div className="bg-muted-foreground size-7 animate-pulse rounded-full" />
+          )}
         </Popover.PopoverTrigger>
         <Popover.PopoverContent className="mt-1 flex w-auto flex-col p-1">
           <Button
