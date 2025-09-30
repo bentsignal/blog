@@ -1,17 +1,25 @@
 import { memo } from "react";
 import { api } from "@/convex/_generated/api";
-import { convexQuery } from "@convex-dev/react-query";
-import { useQuery } from "@tanstack/react-query";
+import { usePaginatedQuery } from "convex/react";
+import PageLoader from "../page-loader";
 import * as Message from "./message";
 
-export const Messages = () => {
-  const {
-    data: messages,
-    isPending,
-    error,
-  } = useQuery(convexQuery(api.messages.getMessages, {}));
+const config = {
+  initialPageSize: 30,
+  pageSize: 30,
+  loadingIndex: 20,
+};
 
-  if (isPending) {
+export const Messages = () => {
+  const { results, status, loadMore } = usePaginatedQuery(
+    api.messages.getMessages,
+    {},
+    {
+      initialNumItems: config.initialPageSize,
+    },
+  );
+
+  if (status === "LoadingFirstPage") {
     return (
       <Message.List>
         {Array.from({ length: 10 }).map((_, index) => (
@@ -21,15 +29,29 @@ export const Messages = () => {
     );
   }
 
-  if (error) {
+  if (!results) {
     return <Message.Error />;
   }
 
   return (
     <Message.List autoScroll={true}>
-      {messages.map((message) => (
-        <UserMessage key={message._id} message={message} />
-      ))}
+      {results.reverse().map((message, index) => {
+        const loaderIndex =
+          status === "CanLoadMore"
+            ? Math.min(config.loadingIndex, results.length - 1)
+            : -1;
+        return index === loaderIndex || index === 0 ? (
+          <PageLoader
+            key={message._id}
+            status={status}
+            loadMore={() => loadMore(config.pageSize)}
+          >
+            <UserMessage message={message} />
+          </PageLoader>
+        ) : (
+          <UserMessage key={message._id} message={message} />
+        );
+      })}
     </Message.List>
   );
 };
