@@ -14,7 +14,7 @@ export interface Message {
   _id: Doc<"messages">["_id"];
   _creationTime: number;
   name: string;
-  pfp: string;
+  pfp: string | null | undefined;
   content: string;
 }
 
@@ -57,7 +57,7 @@ export const PFP = () => {
   const [imageState, setImageState] = useState<"loading" | "error" | "loaded">(
     "loading",
   );
-  if (imageState === "error") {
+  if (imageState === "error" || !pfp) {
     return (
       <div className="bg-muted flex size-10 flex-shrink-0 items-center justify-center rounded-md">
         <UserRound className="text-muted-foreground size-4" />
