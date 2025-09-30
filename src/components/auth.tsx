@@ -1,26 +1,40 @@
 "use client";
 
-import { SignUp as ClerkSignUp, UserButton } from "@clerk/nextjs";
-import { shadcn } from "@clerk/themes";
+import { useState } from "react";
 import { XIcon } from "lucide-react";
 import { create } from "zustand";
+import { Spinner } from "./spinner";
 import { Button } from "./ui/button";
 import * as Dialog from "@/components/ui/dialog";
+import { authClient } from "@/lib/auth-client";
 
 export const Profile = () => {
   return (
-    <UserButton
-      fallback={<div className="bg-muted-foreground size-7 rounded-full" />}
+    <div
+      className="bg-muted-foreground size-7 rounded-full hover:cursor-pointer"
+      onClick={async () => {
+        await authClient.signOut();
+      }}
     />
   );
 };
 
 export const SignIn = () => {
-  const setOpen = useAuthModal((state) => state.setOpen);
-
+  const [loading, setLoading] = useState(false);
   return (
-    <Button className="min-w-46 font-bold" onClick={() => setOpen(true)}>
-      Join the conversation
+    <Button
+      className="min-w-46 font-bold"
+      onClick={async () => {
+        try {
+          setLoading(true);
+          await authClient.signIn.social({ provider: "github" });
+        } catch (error) {
+          console.error(error);
+          setLoading(false);
+        }
+      }}
+    >
+      {loading ? <Spinner /> : "Join the conversation"}
     </Button>
   );
 };
@@ -35,21 +49,32 @@ const useAuthModal = create<{
 
 export const Modal = () => {
   const { open, setOpen } = useAuthModal();
+  const [loading, setLoading] = useState(false);
 
   return (
     <Dialog.Dialog open={open} onOpenChange={setOpen}>
       <Dialog.DialogContent
         showCloseButton={false}
-        className="reltative flex items-center justify-center border-none bg-transparent focus:outline-none"
+        className="reltative flex items-center justify-center focus:outline-none"
       >
         <Dialog.DialogHeader className="sr-only">
           <Dialog.DialogTitle>Sign in</Dialog.DialogTitle>
         </Dialog.DialogHeader>
-        <ClerkSignUp
-          appearance={{
-            theme: shadcn,
+        <span>Sign in to send messages</span>
+        <Button
+          onClick={async () => {
+            try {
+              setLoading(true);
+              await authClient.signIn.social({ provider: "github" });
+            } catch (error) {
+              console.error(error);
+            } finally {
+              setLoading(false);
+            }
           }}
-        />
+        >
+          {loading ? <Spinner /> : "Sign in with Github"}
+        </Button>
         <div className="absolute top-0 right-2">
           <Button variant="ghost" size="icon" onClick={() => setOpen(false)}>
             <XIcon />

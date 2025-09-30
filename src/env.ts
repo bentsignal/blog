@@ -15,6 +15,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_FRONTEND_API_URL: z.string().min(1),
     // convex
     NEXT_PUBLIC_CONVEX_URL: z.string().min(1),
+    NEXT_PUBLIC_CONVEX_SITE_URL: z.string().min(1),
   },
   runtimeEnv: {
     // clerk
@@ -25,6 +26,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_FRONTEND_API_URL:
       process.env.NEXT_PUBLIC_CLERK_FRONTEND_API_URL,
     NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
+    NEXT_PUBLIC_CONVEX_SITE_URL: process.env.NEXT_PUBLIC_CONVEX_SITE_URL,
     // convex
     CONVEX_DEPLOY_KEY: process.env.CONVEX_DEPLOY_KEY,
   },
