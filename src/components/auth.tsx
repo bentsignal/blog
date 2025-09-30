@@ -126,7 +126,7 @@ export const Profile = () => {
           {image ? (
             <img src={image} alt="pfp" className="size-7 rounded-full" />
           ) : (
-            <div className="bg-muted-foreground size-7 animate-pulse rounded-full" />
+            <div className="bg-muted-foreground/10 size-7 animate-pulse rounded-full" />
           )}
         </Popover.PopoverTrigger>
         <Popover.PopoverContent className="mt-1 flex w-auto flex-col p-1">

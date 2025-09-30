@@ -59,7 +59,7 @@ export const PFP = () => {
   );
   if (imageState === "error" || !pfp) {
     return (
-      <div className="bg-muted flex size-10 flex-shrink-0 items-center justify-center rounded-md">
+      <div className="bg-muted flex size-10 flex-shrink-0 items-center justify-center rounded-full">
         <UserRound className="text-muted-foreground size-4" />
       </div>
     );
