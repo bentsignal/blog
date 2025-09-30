@@ -21,7 +21,7 @@ export interface Message {
 
 export const MessageContext = createContext<Message>({} as Message);
 
-export const useMessageContext = <T,>(selector: ContextSelector<Message, T>) =>
+export const useMessage = <T,>(selector: ContextSelector<Message, T>) =>
   useContextSelector(MessageContext, selector);
 
 export const Provider = ({
@@ -53,8 +53,8 @@ export const Frame = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const PFP = () => {
-  const pfp = useMessageContext((c) => c.pfp);
-  const username = useMessageContext((c) => c.username);
+  const pfp = useMessage((c) => c.pfp);
+  const username = useMessage((c) => c.username);
 
   const [imageState, setImageState] = useState<"loading" | "error" | "loaded">(
     "loading",
@@ -85,8 +85,8 @@ export const Body = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const Header = () => {
-  const username = useMessageContext((c) => c.username);
-  const _creationTime = useMessageContext((c) => c._creationTime);
+  const username = useMessage((c) => c.username);
+  const _creationTime = useMessage((c) => c._creationTime);
   return (
     <div className="flex items-center gap-2">
       <Link href={getProfileUrl(username)} target="_blank">
@@ -100,7 +100,7 @@ export const Header = () => {
 };
 
 export const Content = () => {
-  const content = useMessageContext((c) => c.content);
+  const content = useMessage((c) => c.content);
   return (
     <div className="text-muted-foreground text-sm font-medium">{content}</div>
   );

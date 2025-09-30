@@ -1,17 +1,27 @@
 import { ConvexClientProvider } from "./convex-provider";
 import { ThemeProvider } from "./theme-provider";
+import * as Auth from "@/components/auth";
+import { getToken } from "@/lib/auth-server";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export const Providers = async ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const token = await getToken();
+  const authed = token !== undefined;
   return (
     <ConvexClientProvider>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem
-        disableTransitionOnChange
-      >
-        {children}
-      </ThemeProvider>
+      <Auth.Provider authed={authed}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </Auth.Provider>
     </ConvexClientProvider>
   );
-}
+};
