@@ -158,11 +158,17 @@ export const List = ({
   className?: string;
   children: React.ReactNode;
 }) => {
-  const bottomRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const isAtBottom = useRef(false);
   const [showScrollToBottomButton, setShowScrollToBottomButton] =
     useState(false);
+
+  const scrollToBottom = () => {
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current?.scrollHeight,
+      behavior: "instant",
+    });
+  };
 
   // determine if user is at the bottom of the list
   useEffect(() => {
@@ -185,14 +191,14 @@ export const List = ({
   // when user is at bottom and a new message comes in, scroll to the bottom
   useEffect(() => {
     if (isAtBottom.current && children && autoScroll) {
-      bottomRef.current?.scrollIntoView();
+      scrollToBottom();
     }
   }, [children, autoScroll]);
 
   // scroll to the bottom of the list before items are rendered
   useLayoutEffect(() => {
     if (autoScroll) {
-      bottomRef.current?.scrollIntoView();
+      scrollToBottom();
     }
   }, [autoScroll]);
 
@@ -211,18 +217,11 @@ export const List = ({
         {children}
         {showScrollToBottomButton && (
           <div className="absolute right-3 bottom-3 flex justify-end">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => {
-                bottomRef.current?.scrollIntoView();
-              }}
-            >
+            <Button variant="outline" size="icon" onClick={scrollToBottom}>
               <ArrowDown className="size-4" />
             </Button>
           </div>
         )}
-        <div ref={bottomRef} className="w-full" />
       </div>
     </div>
   );
