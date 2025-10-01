@@ -48,8 +48,14 @@ export const Provider = ({
   );
 };
 
-export const Frame = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex gap-3">{children}</div>;
+export const Frame = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
+  return <div className={cn("flex gap-3", className)}>{children}</div>;
 };
 
 export const PFP = () => {
@@ -105,7 +111,7 @@ export const Skeleton = () => {
   const nameWidth = Math.random() * 40 + 20;
   const contentWidth = Math.random() * 70 + 10;
   return (
-    <div className="flex animate-pulse gap-3">
+    <Frame className="animate-pulse">
       <div className="bg-muted flex size-10 flex-shrink-0 items-center justify-center rounded-full" />
       <div className="mt-1 flex w-full flex-col gap-1.5">
         <div
@@ -121,7 +127,7 @@ export const Skeleton = () => {
           }}
         />
       </div>
-    </div>
+    </Frame>
   );
 };
 
