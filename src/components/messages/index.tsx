@@ -6,8 +6,8 @@ import { Button } from "../ui/button";
 import * as Message from "./message";
 
 const config = {
-  initialPageSize: 30,
-  pageSize: 30,
+  initialPageSize: 40,
+  pageSize: 40,
   loadingIndex: 20,
 };
 

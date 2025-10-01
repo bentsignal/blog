@@ -10,6 +10,7 @@ import {
 import * as Icons from "lucide-react";
 import { Separator as BaseSeparator } from "../ui/separator";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type Style = {
   bold: boolean;
@@ -71,9 +72,20 @@ export const Provider = ({
   );
 };
 
-export const Frame = ({ children }: { children: React.ReactNode }) => {
+export const Frame = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
   return (
-    <div className="bg-muted flex flex-col justify-center rounded-2xl p-3">
+    <div
+      className={cn(
+        "bg-muted flex flex-col justify-center rounded-2xl p-3",
+        className,
+      )}
+    >
       {children}
     </div>
   );
