@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Doc } from "@/convex/_generated/dataModel";
 import {
   ContextSelector,
@@ -68,7 +68,6 @@ export const PFP = () => {
   return (
     <img
       src={pfp}
-      alt="pfp"
       className="size-10 flex-shrink-0 rounded-full"
       onError={() => setImageState("error")}
       onLoad={() => setImageState("loaded")}
@@ -157,8 +156,7 @@ export const List = ({
     }
   }, [children, isAtBottom, autoScroll]);
 
-  // when the component mounts, scroll to the bottom
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (autoScroll) {
       bottomRef.current?.scrollIntoView();
     }
