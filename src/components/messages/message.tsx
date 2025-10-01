@@ -66,9 +66,9 @@ export const PFP = () => {
   );
   if (imageState === "error" || !pfp) {
     return (
-      <div className="bg-muted flex size-10 flex-shrink-0 items-center justify-center rounded-full">
+      <SkeletonPFP>
         <UserRound className="text-muted-foreground size-4" />
-      </div>
+      </SkeletonPFP>
     );
   }
 
@@ -107,25 +107,43 @@ export const Content = () => {
   );
 };
 
+export const SkeletonPFP = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) => {
+  return (
+    <div
+      className={cn(
+        "bg-muted flex size-10 flex-shrink-0 items-center justify-center rounded-full",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const SkeletonBar = ({ width }: { width: number }) => {
+  return (
+    <div
+      className="bg-muted-foreground/10 h-3 rounded-md"
+      style={{ width: `${width}%` }}
+    />
+  );
+};
+
 export const Skeleton = () => {
   const nameWidth = Math.random() * 40 + 20;
   const contentWidth = Math.random() * 70 + 10;
   return (
     <Frame className="animate-pulse">
-      <div className="bg-muted flex size-10 flex-shrink-0 items-center justify-center rounded-full" />
+      <SkeletonPFP />
       <div className="mt-1 flex w-full flex-col gap-1.5">
-        <div
-          className="bg-muted-foreground/10 h-3 rounded-md"
-          style={{
-            width: nameWidth + "%",
-          }}
-        />
-        <div
-          className="bg-muted-foreground/10 h-3 rounded-md"
-          style={{
-            width: contentWidth + "%",
-          }}
-        />
+        <SkeletonBar width={nameWidth} />
+        <SkeletonBar width={contentWidth} />
       </div>
     </Frame>
   );
