@@ -26,8 +26,7 @@ export const useSendMessage = () => {
             pfp: image,
             _id: ("optimistic-" +
               Math.random().toString(36).slice(2)) as Id<"messages">,
-            // + 50 ms to account for delay in server saving message
-            _creationTime: Date.now() + 50,
+            _creationTime: Date.now(),
             content: args.content,
           },
           ...(current.value.page || []),

@@ -90,8 +90,6 @@ export const PureUserMessage = ({ message }: { message: Message.Message }) => {
 };
 
 const areMessagesEqual = (prev: Message.Message, next: Message.Message) => {
-  if (prev._id !== next._id) return false;
-  if (prev._creationTime !== next._creationTime) return false;
   if (prev.name !== next.name) return false;
   if (prev.pfp !== next.pfp) return false;
   if (prev.content !== next.content) return false;
