@@ -17,29 +17,27 @@ export default function PageLoader({
   const observer = useRef<IntersectionObserver | null>(null);
   const target = useRef<HTMLDivElement | null>(null);
 
+  // when the target element comes into view, load more messages when available
   useEffect(() => {
-    observer.current = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && status === "CanLoadMore") {
-          loadMore();
-        }
-      },
-      {
-        threshold: 0.1,
-      },
-    );
-
-    if (target.current) {
-      observer.current.observe(target.current);
+    const targetElement = target.current;
+    if (targetElement) {
+      observer.current = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && status === "CanLoadMore") {
+            loadMore();
+          }
+        },
+        {
+          threshold: 0.1,
+        },
+      );
+      observer.current.observe(targetElement);
+      return () => {
+        observer.current?.unobserve(targetElement);
+        observer.current?.disconnect();
+      };
     }
-
-    return () => {
-      if (observer.current && target.current) {
-        observer.current.unobserve(target.current);
-      }
-      observer.current?.disconnect();
-    };
-  }, [loadMore]);
+  }, [loadMore, status]);
 
   return (
     <div ref={target} className={cn("flex h-0 w-full flex-1", className)}>
