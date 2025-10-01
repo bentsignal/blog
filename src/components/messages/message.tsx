@@ -105,7 +105,7 @@ export const Skeleton = () => {
   const nameWidth = Math.random() * 40 + 20;
   const contentWidth = Math.random() * 70 + 10;
   return (
-    <div className="flex animate-pulse gap-2">
+    <div className="flex animate-pulse gap-3">
       <div className="bg-muted flex size-10 flex-shrink-0 items-center justify-center rounded-full" />
       <div className="mt-1 flex w-full flex-col gap-1.5">
         <div
@@ -176,7 +176,10 @@ export const List = ({
     <div className="relative flex flex-1 flex-col overflow-y-hidden">
       <div
         className={cn(
-          "align-start scrollbar-thin scrollbar-thumb-muted-foreground/10 scrollbar-track-transparent flex min-h-0 flex-1 flex-col justify-start gap-3 overflow-y-auto overscroll-contain mask-t-from-97% mask-b-from-97% px-4 pt-3 pb-3",
+          "align-start flex min-h-0 flex-1 flex-col justify-start gap-3 px-4 pt-3 pb-3",
+          "overflow-y-auto overscroll-contain",
+          "scrollbar-thin scrollbar-thumb-muted-foreground/10 scrollbar-track-transparent",
+          "mask-t-from-97% mask-b-from-97%",
           className,
         )}
         ref={scrollRef}
