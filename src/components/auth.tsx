@@ -115,7 +115,7 @@ export const Provider = ({
 export const Profile = () => {
   const signOut = useAuth((c) => c.signOut);
   const image = useAuth((c) => c.image);
-
+  const deleteAccount = useAuth((c) => c.deleteAccount);
   const [open, setOpen] = useState(false);
 
   return (
@@ -148,6 +148,15 @@ export const Profile = () => {
             className="focus-visible:ring-0"
           >
             Sign Out
+          </Button>
+          <Button
+            variant="link"
+            onClick={async () => {
+              setOpen(false);
+              await deleteAccount();
+            }}
+          >
+            Delete Account
           </Button>
         </Popover.PopoverContent>
       </Popover.Popover>

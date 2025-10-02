@@ -19,6 +19,20 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
     user: {
       onDelete: async (ctx, authUser) => {
         await deleteMessagesFromUser(ctx, authUser._id);
+        const profile = await ctx.db
+          .query("profiles")
+          .withIndex("by_user", (q) => q.eq("user", authUser._id))
+          .first();
+        if (profile) {
+          await ctx.db.delete(profile._id);
+        }
+      },
+      onCreate: async (ctx, authUser) => {
+        await ctx.db.insert("profiles", {
+          user: authUser._id,
+          name: authUser.name,
+          image: authUser.image || undefined,
+        });
       },
     },
   },
@@ -42,7 +56,7 @@ export const createAuth = (
     },
     user: {
       deleteUser: {
-        enabled: false,
+        enabled: true,
       },
     },
     session: {

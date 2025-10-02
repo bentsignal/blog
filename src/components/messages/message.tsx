@@ -65,6 +65,7 @@ export const PFP = () => {
   const [imageState, setImageState] = useState<"loading" | "error" | "loaded">(
     "loading",
   );
+
   if (imageState === "error" || !pfp) {
     return (
       <SkeletonPFP>
