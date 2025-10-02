@@ -7,6 +7,7 @@ import {
   useContextSelector,
 } from "@fluentui/react-context-selector";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Spinner } from "./spinner";
@@ -126,7 +127,13 @@ export const Profile = () => {
       <Popover.Popover open={open} onOpenChange={setOpen}>
         <Popover.PopoverTrigger className="">
           {image ? (
-            <img src={image} alt="pfp" className="size-7 rounded-full" />
+            <Image
+              src={image}
+              alt="pfp"
+              className="rounded-full"
+              width={28}
+              height={28}
+            />
           ) : (
             <div className="bg-muted-foreground/10 size-7 animate-pulse rounded-full" />
           )}

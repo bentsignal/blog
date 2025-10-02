@@ -8,6 +8,7 @@ import {
   useContextSelector,
 } from "@fluentui/react-context-selector";
 import { ArrowDown, UserRound } from "lucide-react";
+import Image from "next/image";
 import { Button } from "../ui/button";
 import { cn, getTimestamp } from "@/lib/utils";
 
@@ -73,10 +74,12 @@ export const PFP = () => {
   }
 
   return (
-    <img
+    <Image
       src={pfp}
       alt=""
-      className="size-10 flex-shrink-0 rounded-full"
+      width={40}
+      height={40}
+      className="flex-shrink-0 rounded-full"
       onError={() => setImageState("error")}
       onLoad={() => setImageState("loaded")}
     />
