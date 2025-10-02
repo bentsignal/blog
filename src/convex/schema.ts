@@ -4,8 +4,8 @@ import { v } from "convex/values";
 export default defineSchema({
   messages: defineTable({
     content: v.string(),
-    user: v.string(),
-    profile: v.optional(v.id("profiles")),
+    user: v.optional(v.string()),
+    profile: v.id("profiles"),
   }),
   profiles: defineTable({
     user: v.string(),

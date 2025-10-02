@@ -34,6 +34,17 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
           image: authUser.image || undefined,
         });
       },
+      onUpdate: async (ctx, authUser) => {
+        const profile = await ctx.db
+          .query("profiles")
+          .withIndex("by_user", (q) => q.eq("user", authUser._id))
+          .first();
+        if (!profile) return;
+        await ctx.db.patch(profile._id, {
+          name: authUser.name,
+          image: authUser.image || undefined,
+        });
+      },
     },
   },
 });

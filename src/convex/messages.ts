@@ -1,10 +1,9 @@
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { MutationCtx, query } from "./_generated/server";
-import { authComponent } from "./auth";
 import { authedMutation } from "./convex_helpers";
 
-type User = {
+type Profile = {
   name: string;
   image: string | null | undefined;
 };
@@ -18,27 +17,27 @@ export const getMessages = query({
       .query("messages")
       .order("desc")
       .paginate(args.paginationOpts);
-    const allUsers = messages.page.map((message) => message.user);
-    const dedupedUsers = [...new Set(allUsers)];
-    const usersData = await Promise.all(
-      dedupedUsers.map((user) => authComponent.getAnyUserById(ctx, user)),
+    const allProfiles = messages.page.map((message) => message.profile);
+    const dedupedProfiles = [...new Set(allProfiles)];
+    const profilesData = await Promise.all(
+      dedupedProfiles.map((profile) => ctx.db.get(profile)),
     );
-    const usersMap = dedupedUsers.reduce(
-      (acc, user, idx) => {
-        const data = usersData[idx];
+    const profilesMap = dedupedProfiles.reduce(
+      (acc, profile, idx) => {
+        const data = profilesData[idx];
         if (!data) return acc;
-        acc[user] = {
+        acc[profile] = {
           name: data.name,
           image: data.image,
         };
         return acc;
       },
-      {} as Record<string, User>,
+      {} as Record<string, Profile>,
     );
     return {
       ...messages,
       page: messages.page.map((message) => {
-        const user = usersMap[message.user];
+        const user = profilesMap[message.profile];
         if (!user) throw new ConvexError("User not found");
         const { user: _, ...publicMessage } = message;
         return {
@@ -58,9 +57,15 @@ export const sendMessage = authedMutation({
   handler: async (ctx, args) => {
     const { content } = args;
     validateMessage(content);
+    const profile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user", (q) => q.eq("user", ctx.user.subject))
+      .first();
+    if (!profile) throw new ConvexError("Profile not found");
     await ctx.db.insert("messages", {
       content,
       user: ctx.user.subject,
+      profile: profile._id,
     });
   },
 });
