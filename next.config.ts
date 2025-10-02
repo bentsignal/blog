@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
         pathname: "/u/**",
       },
     ],
+    // pfp's next to message are 40px, pfp for user in top right is 28px
+    imageSizes: [40, 28],
   },
 };
 
