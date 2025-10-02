@@ -8,6 +8,7 @@ import { betterAuth } from "better-auth";
 import { components, internal } from "./_generated/api";
 import { DataModel } from "./_generated/dataModel";
 import { deleteMessagesFromUser } from "./messages";
+import { getProfile } from "./user";
 
 const authFunctions: AuthFunctions = internal.auth;
 
@@ -19,10 +20,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
     user: {
       onDelete: async (ctx, authUser) => {
         await deleteMessagesFromUser(ctx, authUser._id);
-        const profile = await ctx.db
-          .query("profiles")
-          .withIndex("by_user", (q) => q.eq("user", authUser._id))
-          .first();
+        const profile = await getProfile(ctx, authUser._id);
         if (profile) {
           await ctx.db.delete(profile._id);
         }
@@ -35,10 +33,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
         });
       },
       onUpdate: async (ctx, authUser) => {
-        const profile = await ctx.db
-          .query("profiles")
-          .withIndex("by_user", (q) => q.eq("user", authUser._id))
-          .first();
+        const profile = await getProfile(ctx, authUser._id);
         if (!profile) return;
         await ctx.db.patch(profile._id, {
           name: authUser.name,

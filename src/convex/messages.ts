@@ -2,10 +2,12 @@ import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { MutationCtx, query } from "./_generated/server";
 import { authedMutation } from "./convex_helpers";
+import { getProfile, type Profile } from "./user";
 
-type Profile = {
-  name: string;
-  image: string | null | undefined;
+const validateMessage = (content: string) => {
+  if (!content) throw new ConvexError("Content is required");
+  if (content.length > 1000) throw new ConvexError("Content is too long");
+  if (content.length < 1) throw new ConvexError("Content is too short");
 };
 
 export const getMessages = query({
@@ -57,11 +59,7 @@ export const sendMessage = authedMutation({
   handler: async (ctx, args) => {
     const { content } = args;
     validateMessage(content);
-    const profile = await ctx.db
-      .query("profiles")
-      .withIndex("by_user", (q) => q.eq("user", ctx.user.subject))
-      .first();
-    if (!profile) throw new ConvexError("Profile not found");
+    const profile = await getProfile(ctx, ctx.user.subject);
     await ctx.db.insert("messages", {
       content,
       profile: profile._id,
@@ -69,21 +67,11 @@ export const sendMessage = authedMutation({
   },
 });
 
-const validateMessage = (content: string) => {
-  if (!content) throw new ConvexError("Content is required");
-  if (content.length > 1000) throw new ConvexError("Content is too long");
-  if (content.length < 1) throw new ConvexError("Content is too short");
-};
-
 export const deleteMessagesFromUser = async (
   ctx: MutationCtx,
   userId: string,
 ) => {
-  const profile = await ctx.db
-    .query("profiles")
-    .withIndex("by_user", (q) => q.eq("user", userId))
-    .first();
-  if (!profile) throw new ConvexError("Profile not found");
+  const profile = await getProfile(ctx, userId);
   const messages = await ctx.db
     .query("messages")
     .filter((q) => q.eq(q.field("profile"), profile._id))
