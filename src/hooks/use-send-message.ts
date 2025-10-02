@@ -28,8 +28,6 @@ export const useSendMessage = () => {
               Math.random().toString(36).slice(2)) as Id<"messages">,
             _creationTime: Date.now(),
             content: args.content,
-            profile: ("optimistic-" +
-              Math.random().toString(36).slice(2)) as Id<"profiles">,
           },
           ...(current.value.page || []),
         ],

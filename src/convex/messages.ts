@@ -39,7 +39,7 @@ export const getMessages = query({
       page: messages.page.map((message) => {
         const user = profilesMap[message.profile];
         if (!user) throw new ConvexError("User not found");
-        const { user: _, ...publicMessage } = message;
+        const { profile: _, ...publicMessage } = message;
         return {
           ...publicMessage,
           name: user.name,
@@ -64,7 +64,6 @@ export const sendMessage = authedMutation({
     if (!profile) throw new ConvexError("Profile not found");
     await ctx.db.insert("messages", {
       content,
-      user: ctx.user.subject,
       profile: profile._id,
     });
   },
@@ -80,9 +79,14 @@ export const deleteMessagesFromUser = async (
   ctx: MutationCtx,
   userId: string,
 ) => {
+  const profile = await ctx.db
+    .query("profiles")
+    .withIndex("by_user", (q) => q.eq("user", userId))
+    .first();
+  if (!profile) throw new ConvexError("Profile not found");
   const messages = await ctx.db
     .query("messages")
-    .filter((q) => q.eq(q.field("user"), userId))
+    .filter((q) => q.eq(q.field("profile"), profile._id))
     .collect();
   for (const message of messages) {
     await ctx.db.delete(message._id);
