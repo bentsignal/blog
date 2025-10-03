@@ -13,7 +13,7 @@ const config = {
 
 export const Messages = () => {
   const { results, status, loadMore } = usePaginatedQuery(
-    api.messages.getMessages,
+    api.messages.get,
     {},
     {
       initialNumItems: config.initialPageSize,

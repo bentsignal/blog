@@ -10,35 +10,35 @@ export const useSendMessage = () => {
   const name = useAuth((c) => c.name);
 
   const { mutate: sendMessage } = useMutation({
-    mutationFn: useConvexMutation(
-      api.messages.sendMessage,
-    ).withOptimisticUpdate((localStore, args) => {
-      const results = localStore.getAllQueries(api.messages.getMessages);
-      const current = results[0];
-      if (!current || !current.value) return;
-      localStore.setQuery(
-        api.messages.getMessages,
-        {
-          paginationOpts: current.args.paginationOpts,
-        },
-        {
-          ...current.value,
-          page: [
-            {
-              name: name || "",
-              pfp: image,
-              _id: ("optimistic-" +
-                Math.random().toString(36).slice(2)) as Id<"messages">,
-              _creationTime: Date.now(),
-              content: args.content,
-            },
-            ...(current.value.page || []),
-          ],
-          isDone: current.value.isDone ?? false,
-          continueCursor: current.value.continueCursor ?? "",
-        },
-      );
-    }),
+    mutationFn: useConvexMutation(api.messages.send).withOptimisticUpdate(
+      (localStore, args) => {
+        const results = localStore.getAllQueries(api.messages.get);
+        const current = results[0];
+        if (!current || !current.value) return;
+        localStore.setQuery(
+          api.messages.get,
+          {
+            paginationOpts: current.args.paginationOpts,
+          },
+          {
+            ...current.value,
+            page: [
+              {
+                name: name || "",
+                pfp: image,
+                _id: ("optimistic-" +
+                  Math.random().toString(36).slice(2)) as Id<"messages">,
+                _creationTime: Date.now(),
+                content: args.content,
+              },
+              ...(current.value.page || []),
+            ],
+            isDone: current.value.isDone ?? false,
+            continueCursor: current.value.continueCursor ?? "",
+          },
+        );
+      },
+    ),
     onError: (error) => {
       console.error(error);
       console.log(error.message);

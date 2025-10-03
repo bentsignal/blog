@@ -10,7 +10,7 @@ const validateMessage = (content: string) => {
   if (content.length < 1) throw new ConvexError("Content is too short");
 };
 
-export const getMessages = query({
+export const get = query({
   args: {
     paginationOpts: paginationOptsValidator,
   },
@@ -52,7 +52,7 @@ export const getMessages = query({
   },
 });
 
-export const sendMessage = authedMutation({
+export const send = authedMutation({
   args: {
     content: v.string(),
   },
