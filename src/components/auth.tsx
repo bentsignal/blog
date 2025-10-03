@@ -7,7 +7,7 @@ import {
   useContextSelector,
 } from "@fluentui/react-context-selector";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
+import { UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Spinner } from "./spinner";
@@ -114,7 +114,6 @@ export const Provider = ({
 
 export const Profile = () => {
   const signOut = useAuth((c) => c.signOut);
-  const image = useAuth((c) => c.image);
   // const deleteAccount = useAuth((c) => c.deleteAccount);
   const [open, setOpen] = useState(false);
 
@@ -122,23 +121,15 @@ export const Profile = () => {
     <div
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
-      className="flex items-center py-1 pr-1 pl-3"
+      className="flex items-center pr-1 pl-3"
     >
       <Popover.Popover open={open} onOpenChange={setOpen}>
-        <Popover.PopoverTrigger className="">
-          {image ? (
-            <Image
-              src={image}
-              alt="pfp"
-              className="rounded-full"
-              width={28}
-              height={28}
-            />
-          ) : (
-            <div className="bg-muted-foreground/10 size-7 animate-pulse rounded-full" />
-          )}
+        <Popover.PopoverTrigger className="py-1 outline-none!">
+          <div className="bg-muted-foreground/10 flex size-7 items-center justify-center rounded-full">
+            <UserRound className="text-muted-foreground size-3.5" />
+          </div>
         </Popover.PopoverTrigger>
-        <Popover.PopoverContent className="mt-1 flex w-auto flex-col p-1">
+        <Popover.PopoverContent className="-mt-1 flex w-auto flex-col p-1">
           <Button
             variant="link"
             onClick={async () => {

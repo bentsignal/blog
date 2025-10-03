@@ -3,6 +3,7 @@ import { ConvexError, v } from "convex/values";
 import { MutationCtx, query } from "./_generated/server";
 import { authedMutation } from "./convex_helpers";
 import { rateLimiter } from "./limiter";
+import { getFileURL } from "./uploadthing";
 import { getProfile, type Profile } from "./user";
 
 const validateMessage = (content: string) => {
@@ -31,7 +32,7 @@ export const get = query({
         if (!data) return acc;
         acc[profile] = {
           name: data.name,
-          image: data.image,
+          image: data.imageKey ? getFileURL(data.imageKey) : null,
         };
         return acc;
       },

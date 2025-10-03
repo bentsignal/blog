@@ -26,18 +26,22 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
         }
       },
       onCreate: async (ctx, authUser) => {
-        await ctx.db.insert("profiles", {
+        const profile = await ctx.db.insert("profiles", {
           user: authUser._id,
           name: authUser.name,
-          image: authUser.image || undefined,
         });
+        if (authUser.image) {
+          ctx.scheduler.runAfter(0, internal.uploadthing.uploadPFP, {
+            profileId: profile,
+            url: authUser.image || "",
+          });
+        }
       },
       onUpdate: async (ctx, authUser) => {
         const profile = await getProfile(ctx, authUser._id);
         if (!profile) return;
         await ctx.db.patch(profile._id, {
           name: authUser.name,
-          image: authUser.image || undefined,
         });
       },
     },

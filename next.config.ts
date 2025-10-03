@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -9,12 +10,13 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "avatars.githubusercontent.com",
-        pathname: "/u/**",
+        hostname: `${env.UPLOADTHING_ORG_ID}.ufs.sh`,
+        port: "",
+        pathname: "/f/**",
+        search: "",
       },
     ],
-    // pfp's next to message are 40px, pfp for user in top right is 28px
-    imageSizes: [40, 28],
+    imageSizes: [40],
   },
 };
 

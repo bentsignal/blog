@@ -10,5 +10,6 @@ export default defineSchema({
     user: v.string(),
     name: v.string(),
     image: v.optional(v.string()),
+    imageKey: v.optional(v.string()),
   }).index("by_user", ["user"]),
 });

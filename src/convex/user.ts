@@ -1,5 +1,5 @@
-import { ConvexError } from "convex/values";
-import { MutationCtx, QueryCtx } from "./_generated/server";
+import { ConvexError, v } from "convex/values";
+import { internalMutation, MutationCtx, QueryCtx } from "./_generated/server";
 
 export type Profile = {
   name: string;
@@ -17,3 +17,15 @@ export const getProfile = async (
   if (!profile) throw new ConvexError("Profile not found");
   return profile;
 };
+
+export const updatePFP = internalMutation({
+  args: {
+    profileId: v.id("profiles"),
+    key: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.profileId, {
+      imageKey: args.key,
+    });
+  },
+});

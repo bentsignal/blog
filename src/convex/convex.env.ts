@@ -1,8 +1,10 @@
 const vars = [
+  "SITE_URL",
   "BETTER_AUTH_SECRET",
   "GITHUB_CLIENT_ID",
   "GITHUB_CLIENT_SECRET",
-  "SITE_URL",
+  "UPLOADTHING_TOKEN",
+  "UPLOADTHING_ORG_ID",
 ] as const;
 
 export const verifyEnv = () => {
