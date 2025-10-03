@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@convex-dev/better-auth": "^0.8.6",
+    "@convex-dev/rate-limiter": "^0.2.13",
     "@convex-dev/react-query": "0.0.0-alpha.11",
     "@fluentui/react-context-selector": "^9.2.7",
     "@radix-ui/react-dialog": "^1.1.15",

@@ -3,7 +3,6 @@ const vars = [
   "GITHUB_CLIENT_ID",
   "GITHUB_CLIENT_SECRET",
   "SITE_URL",
-  "TESTING",
 ] as const;
 
 export const verifyEnv = () => {

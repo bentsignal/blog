@@ -2,6 +2,7 @@ import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { MutationCtx, query } from "./_generated/server";
 import { authedMutation } from "./convex_helpers";
+import { rateLimiter } from "./limiter";
 import { getProfile, type Profile } from "./user";
 
 const validateMessage = (content: string) => {
@@ -59,6 +60,11 @@ export const send = authedMutation({
   handler: async (ctx, args) => {
     const { content } = args;
     validateMessage(content);
+    // will throw a ConvexError if the rate limit is exceeded
+    await rateLimiter.limit(ctx, "sendMessage", {
+      key: ctx.user.subject,
+      throws: true,
+    });
     const profile = await getProfile(ctx, ctx.user.subject);
     await ctx.db.insert("messages", {
       content,
