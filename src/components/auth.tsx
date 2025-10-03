@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { api } from "@/convex/_generated/api";
 import {
   ContextSelector,
   createContext,
   useContextSelector,
 } from "@fluentui/react-context-selector";
-import { useQuery } from "@tanstack/react-query";
+import { useConvexAuth, useQuery } from "convex/react";
 import { UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -31,10 +32,10 @@ export const useAuth = <T,>(selector: ContextSelector<Auth, T>) =>
   useContextSelector(AuthContext, selector);
 
 export const Provider = ({
-  authed,
+  isAuthenticatedServerSide,
   children,
 }: {
-  authed: boolean;
+  isAuthenticatedServerSide: boolean;
   children: React.ReactNode;
 }) => {
   const router = useRouter();
@@ -42,12 +43,14 @@ export const Provider = ({
   // either a sign in or sign out is in progress
   const [inProgress, setInProgress] = useState(false);
 
-  const { data: session } = useQuery({
-    queryKey: ["user"],
-    queryFn: async () => await authClient.getSession(),
-  });
-  const image = useMemo(() => session?.data?.user.image, [session]);
-  const name = useMemo(() => session?.data?.user.name, [session]);
+  const { isAuthenticated: isAuthenticatedClientSide } = useConvexAuth();
+
+  const info = useQuery(
+    api.user.getInfo,
+    isAuthenticatedClientSide ? {} : "skip",
+  );
+  const image = useMemo(() => info?.image, [info]);
+  const name = useMemo(() => info?.name, [info]);
 
   const signOut = useCallback(async () => {
     if (inProgress) return;
@@ -97,14 +100,22 @@ export const Provider = ({
   const contextValue = useMemo(
     () => ({
       image,
-      signedIn: authed,
+      signedIn: isAuthenticatedServerSide,
       name,
       inProgress,
       signOut,
       signIn,
       deleteAccount,
     }),
-    [authed, inProgress, signOut, signIn, deleteAccount, image, name],
+    [
+      isAuthenticatedServerSide,
+      inProgress,
+      signOut,
+      signIn,
+      deleteAccount,
+      image,
+      name,
+    ],
   );
 
   return (

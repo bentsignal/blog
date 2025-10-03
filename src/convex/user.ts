@@ -1,5 +1,7 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation, MutationCtx, QueryCtx } from "./_generated/server";
+import { authedQuery } from "./convex_helpers";
+import { getFileURL } from "./uploadthing";
 
 export type Profile = {
   name: string;
@@ -17,6 +19,16 @@ export const getProfile = async (
   if (!profile) throw new ConvexError("Profile not found");
   return profile;
 };
+
+export const getInfo = authedQuery({
+  handler: async (ctx) => {
+    const profile = await getProfile(ctx, ctx.user.subject);
+    return {
+      name: profile.name,
+      image: profile.imageKey ? getFileURL(profile.imageKey) : null,
+    };
+  },
+});
 
 export const updatePFP = internalMutation({
   args: {

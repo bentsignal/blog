@@ -12,7 +12,7 @@ export const Providers = async ({
   const authed = token !== undefined;
   return (
     <ConvexClientProvider>
-      <Auth.Provider authed={authed}>
+      <Auth.Provider isAuthenticatedServerSide={authed}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
