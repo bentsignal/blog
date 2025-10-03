@@ -62,7 +62,7 @@ export const createAuth = (
     },
     user: {
       deleteUser: {
-        enabled: true,
+        enabled: false,
       },
     },
     session: {
