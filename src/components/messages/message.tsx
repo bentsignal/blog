@@ -80,7 +80,7 @@ export const PFP = () => {
       alt=""
       width={40}
       height={40}
-      className="size-10 flex-shrink-0 rounded-full"
+      className="flex-shrink-0 rounded-full"
       onError={() => setImageState("error")}
       onLoad={() => setImageState("loaded")}
     />
