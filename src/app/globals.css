@@ -130,3 +130,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+@utility text-xxs {
+  font-size: 0.625rem;
+  line-height: 1rem;
+}

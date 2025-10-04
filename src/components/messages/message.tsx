@@ -78,7 +78,7 @@ export const Frame = ({
   const setIsHovering = useMessage((c) => c.setIsHovering);
   return (
     <div
-      className={cn("hover:bg-muted flex gap-4 px-6 py-0.5", className)}
+      className={cn("hover:bg-muted flex gap-3 px-6 py-0.5", className)}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -126,7 +126,7 @@ export const Body = ({
 };
 
 export const Time = ({ time }: { time: string }) => {
-  return <div className="text-muted-foreground text-xs">{time}</div>;
+  return <div className="text-muted-foreground text-xxs">{time}</div>;
 };
 
 export const Header = () => {
@@ -151,7 +151,7 @@ export const Content = () => {
     <span className="text-muted-foreground text-sm font-medium">
       {snapshots[snapshots.length - 1].content}
       {snapshots?.length && snapshots.length > 1 && (
-        <span className="text-muted-foreground/50 ml-1 text-xs font-light">
+        <span className="text-muted-foreground/50 text-xxs ml-1 font-light">
           (edited)
         </span>
       )}
@@ -296,7 +296,7 @@ export const SideTime = () => {
   const isHovering = useMessage((c) => c.isHovering);
   const time = useMessage((c) => c._creationTime);
   return (
-    <div className="w-14 flex-shrink-0">
+    <div className="w-13 flex-shrink-0">
       {isHovering && <Time time={getTimeString(time)} />}
     </div>
   );
