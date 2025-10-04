@@ -191,7 +191,7 @@ export const Skeleton = () => {
   const nameWidth = Math.random() * 40 + 20;
   const contentWidth = Math.random() * 70 + 10;
   return (
-    <Frame className="mb-2 animate-pulse">
+    <Frame className="mb-3 animate-pulse">
       <SkeletonPFP />
       <div className="mt-1 flex w-full flex-col gap-1.5">
         <SkeletonBar width={nameWidth} />

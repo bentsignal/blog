@@ -108,7 +108,7 @@ export const PureUserMessage = ({
 
   return (
     <Message.Provider message={message}>
-      <Message.Frame className="mt-2">
+      <Message.Frame className="mt-3">
         <Message.PFP />
         <Message.Body>
           <Message.Header />
@@ -125,8 +125,9 @@ const areMessagesEqual = (prev: Message.Message, next: Message.Message) => {
   if (
     prev.snapshots[prev.snapshots.length - 1].content !==
     next.snapshots[next.snapshots.length - 1].content
-  )
+  ) {
     return false;
+  }
   return true;
 };
 
