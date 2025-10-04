@@ -22,13 +22,10 @@ export interface Message {
   _creationTime: number;
   name: string;
   pfp: string | null | undefined;
-  content?: string | null;
-  snapshots?:
-    | {
-        content: string;
-        timestamp: number;
-      }[]
-    | undefined;
+  snapshots: {
+    content: string;
+    timestamp: number;
+  }[];
 }
 
 interface MessageContextType extends Message {
@@ -58,7 +55,6 @@ export const Provider = ({
       _creationTime: message._creationTime,
       name: message.name,
       pfp: message.pfp,
-      content: message.content,
       snapshots: message.snapshots,
       isHovering,
       setIsHovering,
@@ -135,34 +131,29 @@ export const Time = ({ time }: { time: string }) => {
 
 export const Header = () => {
   const name = useMessage((c) => c.name);
+
   const _creationTime = useMessage((c) => c._creationTime);
-  const snapshots = useMessage((c) => c.snapshots);
   const timeStamp = isOverOneDayAgo(_creationTime)
     ? getFullTimestamp(_creationTime)
     : getTimeString(_creationTime);
+
   return (
     <div className="flex items-center gap-2">
       <div className="text-sm font-bold">{name || "Unknown"}</div>
       <Time time={timeStamp} />
-      {snapshots?.length && snapshots.length > 1 && (
-        <div className="text-muted-foreground text-xs font-bold">Edited</div>
-      )}
     </div>
   );
 };
 
 export const Content = () => {
-  const content = useMessage((c) => c.content);
   const snapshots = useMessage((c) => c.snapshots);
-  if (snapshots) {
-    return (
-      <div className="text-muted-foreground text-sm font-medium">
-        {snapshots[snapshots.length - 1].content}
-      </div>
-    );
-  }
   return (
-    <div className="text-muted-foreground text-sm font-medium">{content}</div>
+    <div className="text-muted-foreground text-sm font-medium">
+      {snapshots[snapshots.length - 1].content}{" "}
+      {snapshots?.length && snapshots.length > 1 && (
+        <div className="text-muted-foreground text-xs font-bold">Edited</div>
+      )}
+    </div>
   );
 };
 
