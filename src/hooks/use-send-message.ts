@@ -29,7 +29,12 @@ export const useSendMessage = () => {
                 _id: ("optimistic-" +
                   Math.random().toString(36).slice(2)) as Id<"messages">,
                 _creationTime: Date.now(),
-                content: args.content,
+                snapshots: [
+                  {
+                    content: args.content,
+                    timestamp: Date.now(),
+                  },
+                ],
               },
               ...(current.value.page || []),
             ],

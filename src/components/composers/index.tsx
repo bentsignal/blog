@@ -33,7 +33,7 @@ export const MainComposer = () => {
       setInputValue={setInputValue}
       inputRef={inputRef}
     >
-      <Composer.Frame className="mx-2 mb-2">
+      <Composer.Frame className="mx-4 mb-4">
         <Composer.Header />
         <Composer.Input />
         <Composer.Footer>

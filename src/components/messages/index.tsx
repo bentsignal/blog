@@ -34,6 +34,8 @@ export const Messages = () => {
     return <Message.Error />;
   }
 
+  const reversedResults = results.slice().reverse();
+
   return (
     <Message.List autoScroll={true}>
       {/* if the user scrolls too fast, they may scroll past the loader observer and be 
@@ -48,37 +50,65 @@ export const Messages = () => {
           Load More
         </Button>
       )}
-      {results
-        .slice()
-        .reverse()
-        .map((message, index) => {
-          // wrap a message in an invisible PageLoader component that contains
-          // an observer. when the message comes into view, the observer will load
-          // more messages.
-          const loaderIndex =
-            status === "CanLoadMore"
-              ? Math.min(config.loadingIndex, results.length - 1)
-              : -1;
-          return index === loaderIndex ? (
-            <PageLoader
-              key={message._id}
-              status={status}
-              loadMore={() => loadMore(config.pageSize)}
-            >
-              <UserMessage message={message} />
-            </PageLoader>
-          ) : (
-            <UserMessage key={message._id} message={message} />
-          );
-        })}
+      {reversedResults.map((message, index) => {
+        // wrap a message in an invisible PageLoader component that contains
+        // an observer. when the message comes into view, the observer will load
+        // more messages.
+        const loaderIndex =
+          status === "CanLoadMore"
+            ? Math.min(config.loadingIndex, results.length - 1)
+            : -1;
+        return index === loaderIndex ? (
+          <PageLoader
+            key={message._id}
+            status={status}
+            loadMore={() => loadMore(config.pageSize)}
+          >
+            <UserMessage
+              message={message}
+              previousMessage={index > 0 ? reversedResults[index - 1] : null}
+            />
+          </PageLoader>
+        ) : (
+          <UserMessage
+            key={message._id}
+            message={message}
+            previousMessage={index > 0 ? reversedResults[index - 1] : null}
+          />
+        );
+      })}
     </Message.List>
   );
 };
 
-export const PureUserMessage = ({ message }: { message: Message.Message }) => {
+export const PureUserMessage = ({
+  message,
+  previousMessage,
+}: {
+  message: Message.Message;
+  previousMessage: Message.Message | null;
+}) => {
+  // messages sent within 5 minutes of each other are chained together
+  const chainMessage =
+    previousMessage?.name === message.name &&
+    message._creationTime - previousMessage._creationTime < 1000 * 60 * 5;
+
+  if (previousMessage && chainMessage) {
+    return (
+      <Message.Provider message={message}>
+        <Message.Frame>
+          <Message.Body className="flex-row items-center">
+            <Message.SideTime />
+            <Message.Content />
+          </Message.Body>
+        </Message.Frame>
+      </Message.Provider>
+    );
+  }
+
   return (
     <Message.Provider message={message}>
-      <Message.Frame>
+      <Message.Frame className="mt-1">
         <Message.PFP />
         <Message.Body>
           <Message.Header />

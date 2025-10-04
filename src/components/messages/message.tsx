@@ -10,20 +10,39 @@ import {
 import { ArrowDown, UserRound } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { cn, getTimestamp } from "@/lib/utils";
+import {
+  cn,
+  getFullTimestamp,
+  getTimeString,
+  isOverOneDayAgo,
+} from "@/lib/utils";
 
 export interface Message {
   _id: Doc<"messages">["_id"];
   _creationTime: number;
   name: string;
   pfp: string | null | undefined;
-  content: string;
+  content?: string | null;
+  snapshots?:
+    | {
+        content: string;
+        timestamp: number;
+      }[]
+    | undefined;
 }
 
-export const MessageContext = createContext<Message>({} as Message);
+interface MessageContextType extends Message {
+  isHovering: boolean;
+  setIsHovering: (isHovering: boolean) => void;
+}
 
-export const useMessage = <T,>(selector: ContextSelector<Message, T>) =>
-  useContextSelector(MessageContext, selector);
+export const MessageContext = createContext<MessageContextType>(
+  {} as MessageContextType,
+);
+
+export const useMessage = <T,>(
+  selector: ContextSelector<MessageContextType, T>,
+) => useContextSelector(MessageContext, selector);
 
 export const Provider = ({
   message,
@@ -32,6 +51,7 @@ export const Provider = ({
   message: Message;
   children: React.ReactNode;
 }) => {
+  const [isHovering, setIsHovering] = useState(false);
   const contextValue = useMemo(
     () => ({
       _id: message._id,
@@ -39,8 +59,11 @@ export const Provider = ({
       name: message.name,
       pfp: message.pfp,
       content: message.content,
+      snapshots: message.snapshots,
+      isHovering,
+      setIsHovering,
     }),
-    [message],
+    [message, isHovering, setIsHovering],
   );
   return (
     <MessageContext.Provider value={contextValue}>
@@ -56,7 +79,16 @@ export const Frame = ({
   className?: string;
   children: React.ReactNode;
 }) => {
-  return <div className={cn("flex gap-3", className)}>{children}</div>;
+  const setIsHovering = useMessage((c) => c.setIsHovering);
+  return (
+    <div
+      className={cn("hover:bg-muted flex gap-3 px-6 py-0.5", className)}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      {children}
+    </div>
+  );
 };
 
 export const PFP = () => {
@@ -87,25 +119,48 @@ export const PFP = () => {
   );
 };
 
-export const Body = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex flex-col">{children}</div>;
+export const Body = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
+  return <div className={cn("flex flex-col", className)}>{children}</div>;
+};
+
+export const Time = ({ time }: { time: string }) => {
+  return <div className="text-muted-foreground text-xs">{time}</div>;
 };
 
 export const Header = () => {
   const name = useMessage((c) => c.name);
   const _creationTime = useMessage((c) => c._creationTime);
+  const snapshots = useMessage((c) => c.snapshots);
+  const timeStamp = isOverOneDayAgo(_creationTime)
+    ? getFullTimestamp(_creationTime)
+    : getTimeString(_creationTime);
   return (
     <div className="flex items-center gap-2">
       <div className="text-sm font-bold">{name || "Unknown"}</div>
-      <div className="text-muted-foreground text-xs">
-        {getTimestamp(_creationTime)}
-      </div>
+      <Time time={timeStamp} />
+      {snapshots?.length && snapshots.length > 1 && (
+        <div className="text-muted-foreground text-xs font-bold">Edited</div>
+      )}
     </div>
   );
 };
 
 export const Content = () => {
   const content = useMessage((c) => c.content);
+  const snapshots = useMessage((c) => c.snapshots);
+  if (snapshots) {
+    return (
+      <div className="text-muted-foreground text-sm font-medium">
+        {snapshots[snapshots.length - 1].content}
+      </div>
+    );
+  }
   return (
     <div className="text-muted-foreground text-sm font-medium">{content}</div>
   );
@@ -210,7 +265,7 @@ export const List = ({
     <div className="relative flex flex-1 flex-col overflow-y-hidden">
       <div
         className={cn(
-          "align-start flex min-h-0 flex-1 flex-col justify-start gap-3 px-4 pt-3 pb-3",
+          "align-start flex min-h-0 flex-1 flex-col justify-start pt-3 pb-3",
           "overflow-y-auto overscroll-contain",
           "scrollbar-thin scrollbar-thumb-muted-foreground/10 scrollbar-track-transparent",
           "mask-t-from-97% mask-b-from-97%",
@@ -240,6 +295,16 @@ export const Error = () => {
       <div className="text-muted-foreground text-xs">
         Sorry about that, something went wrong. Please check back later.
       </div>
+    </div>
+  );
+};
+
+export const SideTime = () => {
+  const isHovering = useMessage((c) => c.isHovering);
+  const time = useMessage((c) => c._creationTime);
+  return (
+    <div className="w-13 flex-shrink-0">
+      {isHovering && <Time time={getTimeString(time)} />}
     </div>
   );
 };

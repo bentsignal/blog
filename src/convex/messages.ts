@@ -68,7 +68,12 @@ export const send = authedMutation({
     });
     const profile = await getProfile(ctx, ctx.user.subject);
     await ctx.db.insert("messages", {
-      content,
+      snapshots: [
+        {
+          content,
+          timestamp: Date.now(),
+        },
+      ],
       profile: profile._id,
     });
   },

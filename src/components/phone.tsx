@@ -9,7 +9,7 @@ import * as Card from "@/components/ui/card";
 export const Phone = () => {
   return (
     <Card.Card className="h-[700px] max-h-full w-full max-w-md rounded-3xl p-0">
-      <Card.CardContent className="flex h-full flex-col p-2">
+      <Card.CardContent className="flex h-full flex-col p-0">
         <Header />
         <Messages />
         <MainComposer />
@@ -21,7 +21,7 @@ export const Phone = () => {
 const Header = () => {
   const signedIn = useAuth((c) => c.signedIn);
   return (
-    <div className="bg-muted mx-2 mt-2 flex items-center justify-between rounded-2xl p-3">
+    <div className="bg-muted m-4 mb-0 flex items-center justify-between rounded-2xl p-3">
       <div className="flex items-center gap-3 pl-1">
         <span className="font-semibol text-3xl">#</span>
         <div className="flex flex-col justify-center">
