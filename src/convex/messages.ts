@@ -61,7 +61,7 @@ export const send = authedMutation({
     const { content } = args;
     validateMessage(content);
     // will throw a ConvexError if the rate limit is exceeded
-    await rateLimiter.limit(ctx, "sendMessage", {
+    await rateLimiter.limit(ctx, "messageAction", {
       key: ctx.user.subject,
       throws: true,
     });
@@ -84,6 +84,13 @@ export const edit = authedMutation({
     content: v.string(),
   },
   handler: async (ctx, args) => {
+    const { content } = args;
+    validateMessage(content);
+    // will throw a ConvexError if the rate limit is exceeded
+    await rateLimiter.limit(ctx, "messageAction", {
+      key: ctx.user.subject,
+      throws: true,
+    });
     const userId = ctx.user.subject;
     const message = await ctx.db.get(args.messageId);
     if (!message) throw new ConvexError("Message not found");
@@ -106,6 +113,11 @@ export const deleteOne = authedMutation({
     messageId: v.id("messages"),
   },
   handler: async (ctx, args) => {
+    // will throw a ConvexError if the rate limit is exceeded
+    await rateLimiter.limit(ctx, "messageAction", {
+      key: ctx.user.subject,
+      throws: true,
+    });
     const userId = ctx.user.subject;
     const message = await ctx.db.get(args.messageId);
     if (!message) throw new ConvexError("Message not found");
