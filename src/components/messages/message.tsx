@@ -10,6 +10,7 @@ import {
 import { ArrowDown, Pencil, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "../auth";
+import * as Composer from "../composers/composer";
 import { Button } from "../ui/button";
 import { ButtonGroup } from "../ui/button-group";
 import {
@@ -20,21 +21,17 @@ import {
 } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
-export interface Message {
-  _id: Doc<"messages">["_id"];
-  profile: Doc<"profiles">["_id"];
-  _creationTime: number;
+export interface Message extends Doc<"messages"> {
   name: string;
   pfp: string | null | undefined;
-  snapshots: {
-    content: string;
-    timestamp: number;
-  }[];
 }
 
 interface MessageContextType extends Message {
   isHovering: boolean;
   setIsHovering: (isHovering: boolean) => void;
+  editInProgress: boolean;
+  setEditInProgress: (editInProgress: boolean) => void;
+  editComposerInputRef: React.RefObject<HTMLInputElement | null>;
 }
 
 export const MessageContext = createContext<MessageContextType>(
@@ -53,6 +50,8 @@ export const Provider = ({
   children: React.ReactNode;
 }) => {
   const [isHovering, setIsHovering] = useState(false);
+  const [editInProgress, setEditInProgress] = useState(false);
+  const editComposerInputRef = useRef<HTMLInputElement>(null);
   const contextValue = useMemo(
     () => ({
       _id: message._id,
@@ -63,13 +62,63 @@ export const Provider = ({
       snapshots: message.snapshots,
       isHovering,
       setIsHovering,
+      editInProgress,
+      setEditInProgress,
+      editComposerInputRef,
     }),
-    [message, isHovering, setIsHovering],
+    [message, isHovering, setIsHovering, editInProgress, setEditInProgress],
   );
+
   return (
     <MessageContext.Provider value={contextValue}>
-      {children}
+      {editInProgress ? <EditComposer /> : children}
     </MessageContext.Provider>
+  );
+};
+
+const EditComposer = () => {
+  const snapshots = useMessage((c) => c.snapshots);
+  const messageId = useMessage((c) => c._id);
+  const inputRef = useMessage((c) => c.editComposerInputRef);
+  const setEditInProgress = useMessage((c) => c.setEditInProgress);
+
+  const { editMessage } = useMessageActions();
+
+  const [inputValue, setInputValue] = useState(
+    snapshots[snapshots.length - 1].content,
+  );
+
+  return (
+    <Composer.Provider
+      inputValue={inputValue}
+      setInputValue={setInputValue}
+      inputRef={inputRef}
+      onSubmit={() => {
+        const previousContent = snapshots[snapshots.length - 1].content;
+        if (previousContent !== inputValue) {
+          editMessage({
+            messageId: messageId,
+            content: inputValue,
+          });
+        }
+        setEditInProgress(false);
+      }}
+      onCancel={() => {
+        setEditInProgress(false);
+      }}
+    >
+      <Composer.Frame className="mx-6 my-3">
+        <Composer.Header />
+        <Composer.Input />
+        <Composer.Footer>
+          <Composer.CommonActions />
+          <ButtonGroup>
+            <Composer.Cancel />
+            <Composer.Save />
+          </ButtonGroup>
+        </Composer.Footer>
+      </Composer.Frame>
+    </Composer.Provider>
   );
 };
 
@@ -346,8 +395,19 @@ const MyMessageActions = () => {
 };
 
 const EditButton = () => {
+  const setEditInProgress = useMessage((c) => c.setEditInProgress);
+  const editComposerInputRef = useMessage((c) => c.editComposerInputRef);
   return (
-    <Button variant="outline" size="actions" disabled>
+    <Button
+      variant="outline"
+      size="actions"
+      onClick={() => {
+        setEditInProgress(true);
+        setTimeout(() => {
+          editComposerInputRef.current?.focus();
+        }, 100);
+      }}
+    >
       <Pencil className="size-3" />
     </Button>
   );

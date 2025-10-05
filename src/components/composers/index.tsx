@@ -38,7 +38,7 @@ export const MainComposer = () => {
         <Composer.Input />
         <Composer.Footer>
           <Composer.CommonActions />
-          <Composer.Submit />
+          <Composer.Send />
         </Composer.Footer>
       </Composer.Frame>
     </Composer.Provider>

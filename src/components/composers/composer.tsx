@@ -23,6 +23,7 @@ interface ComposerInputProps {
   inputValue: string;
   setInputValue: (value: string) => void;
   onSubmit: () => void;
+  onCancel?: () => void;
 }
 
 interface ComposerContextType extends ComposerInputProps {
@@ -43,6 +44,7 @@ export const Provider = ({
   inputValue,
   setInputValue,
   inputRef,
+  onCancel,
   children,
 }: ComposerInputProps & { children: React.ReactNode }) => {
   const [style, setStyle] = useState<Style>({
@@ -58,11 +60,12 @@ export const Provider = ({
       inputValue,
       setInputValue,
       onSubmit,
+      onCancel,
       style,
       setStyle,
       submitDisabled,
     }),
-    [inputValue, onSubmit, style, submitDisabled],
+    [inputValue, onSubmit, onCancel, style, submitDisabled],
   );
 
   return (
@@ -120,7 +123,7 @@ export const Input = () => {
   );
 };
 
-export const Submit = () => {
+export const Send = () => {
   const hasParentContext = useHasParentContext(ComposerContext);
   if (!hasParentContext) {
     throw new Error("ComposerContext not found");
@@ -137,6 +140,30 @@ export const Submit = () => {
       className="bg-green-800 hover:bg-green-900"
     >
       <Icons.Send className="h-4 w-4 text-white" />
+    </Button>
+  );
+};
+
+export const Cancel = () => {
+  const onCancel = useComposer((c) => c.onCancel);
+  return (
+    <Button variant="destructive" size="icon" onClick={onCancel}>
+      <Icons.X className="text-white" />
+    </Button>
+  );
+};
+
+export const Save = () => {
+  const onSubmit = useComposer((c) => c.onSubmit);
+  const submitDisabled = useComposer((c) => c.submitDisabled);
+  return (
+    <Button
+      className="bg-green-800 hover:bg-green-900"
+      size="icon"
+      onClick={onSubmit}
+      disabled={submitDisabled}
+    >
+      <Icons.Save className="text-white" />
     </Button>
   );
 };
