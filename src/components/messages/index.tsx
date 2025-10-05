@@ -58,6 +58,11 @@ export const Messages = () => {
           status === "CanLoadMore"
             ? Math.min(config.loadingIndex, results.length - 1)
             : -1;
+        const previousMessage = index > 0 ? reversedResults[index - 1] : null;
+        // messages sent by the same userwithin 5 minutes of each other are chained together
+        const shouldChainMessages =
+          previousMessage?.profile === message.profile &&
+          message._creationTime - previousMessage._creationTime < 1000 * 60 * 5;
         return index === loaderIndex ? (
           <PageLoader
             key={message._id}
@@ -66,14 +71,14 @@ export const Messages = () => {
           >
             <UserMessage
               message={message}
-              previousMessage={index > 0 ? reversedResults[index - 1] : null}
+              shouldChainMessages={shouldChainMessages}
             />
           </PageLoader>
         ) : (
           <UserMessage
             key={message._id}
             message={message}
-            previousMessage={index > 0 ? reversedResults[index - 1] : null}
+            shouldChainMessages={shouldChainMessages}
           />
         );
       })}
@@ -83,17 +88,13 @@ export const Messages = () => {
 
 export const PureUserMessage = ({
   message,
-  previousMessage,
+  shouldChainMessages,
 }: {
   message: Message.Message;
-  previousMessage: Message.Message | null;
+  shouldChainMessages: boolean;
 }) => {
-  // messages sent within 5 minutes of each other are chained together
-  const chainMessage =
-    previousMessage?.name === message.name &&
-    message._creationTime - previousMessage._creationTime < 1000 * 60 * 5;
-
-  if (previousMessage && chainMessage) {
+  // messages sent by the same userwithin 5 minutes of each other are chained together
+  if (shouldChainMessages) {
     return (
       <Message.Provider message={message}>
         <Message.Frame>
@@ -101,6 +102,7 @@ export const PureUserMessage = ({
             <Message.SideTime />
             <Message.Content />
           </Message.Body>
+          <Message.Actions />
         </Message.Frame>
       </Message.Provider>
     );
@@ -114,23 +116,20 @@ export const PureUserMessage = ({
           <Message.Header />
           <Message.Content />
         </Message.Body>
+        <Message.Actions />
       </Message.Frame>
     </Message.Provider>
   );
 };
 
-const areMessagesEqual = (prev: Message.Message, next: Message.Message) => {
-  if (prev.name !== next.name) return false;
-  if (prev.pfp !== next.pfp) return false;
-  if (
-    prev.snapshots[prev.snapshots.length - 1].content !==
-    next.snapshots[next.snapshots.length - 1].content
-  ) {
-    return false;
-  }
-  return true;
-};
-
 const UserMessage = memo(PureUserMessage, (prev, next) => {
-  return areMessagesEqual(prev.message, next.message);
+  if (prev.message.name !== next.message.name) return false;
+  if (prev.message.pfp !== next.message.pfp) return false;
+  if (
+    prev.message.snapshots[prev.message.snapshots.length - 1].content !==
+    next.message.snapshots[next.message.snapshots.length - 1].content
+  )
+    return false;
+  if (prev.shouldChainMessages !== next.shouldChainMessages) return false;
+  return true;
 });

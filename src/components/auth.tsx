@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 import {
   ContextSelector,
   createContext,
@@ -19,6 +20,7 @@ import { authClient } from "@/lib/auth-client";
 interface Auth {
   image: string | null | undefined;
   name: string | undefined;
+  myProfileId: Id<"profiles"> | undefined;
   signedIn: boolean;
   inProgress: boolean;
   signOut: () => Promise<void>;
@@ -51,6 +53,7 @@ export const Provider = ({
   );
   const image = useMemo(() => info?.image, [info]);
   const name = useMemo(() => info?.name, [info]);
+  const myProfileId = useMemo(() => info?.profileId, [info]);
 
   const signOut = useCallback(async () => {
     if (inProgress) return;
@@ -101,6 +104,7 @@ export const Provider = ({
     () => ({
       image,
       signedIn: isAuthenticatedServerSide,
+      myProfileId,
       name,
       inProgress,
       signOut,
@@ -115,6 +119,7 @@ export const Provider = ({
       deleteAccount,
       image,
       name,
+      myProfileId,
     ],
   );
 

@@ -7,18 +7,22 @@ import {
   createContext,
   useContextSelector,
 } from "@fluentui/react-context-selector";
-import { ArrowDown, UserRound } from "lucide-react";
+import { ArrowDown, Pencil, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
+import { useAuth } from "../auth";
 import { Button } from "../ui/button";
+import { ButtonGroup } from "../ui/button-group";
 import {
   cn,
   getFullTimestamp,
   getTimeString,
   isOverOneDayAgo,
 } from "@/lib/utils";
+import { useMessageActions } from "@/hooks/use-message-actions";
 
 export interface Message {
   _id: Doc<"messages">["_id"];
+  profile: Doc<"profiles">["_id"];
   _creationTime: number;
   name: string;
   pfp: string | null | undefined;
@@ -53,6 +57,7 @@ export const Provider = ({
     () => ({
       _id: message._id,
       _creationTime: message._creationTime,
+      profile: message.profile,
       name: message.name,
       pfp: message.pfp,
       snapshots: message.snapshots,
@@ -78,7 +83,10 @@ export const Frame = ({
   const setIsHovering = useMessage((c) => c.setIsHovering);
   return (
     <div
-      className={cn("hover:bg-muted flex gap-3 px-6 py-0.5", className)}
+      className={cn(
+        "hover:bg-muted relative flex gap-3 px-6 py-0.5",
+        className,
+      )}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -299,5 +307,63 @@ export const SideTime = () => {
     <div className="w-13 flex-shrink-0">
       {isHovering && <Time time={getTimeString(time)} />}
     </div>
+  );
+};
+
+export const Actions = () => {
+  const isHovering = useMessage((c) => c.isHovering);
+  const isSignedIn = useAuth((c) => c.signedIn);
+  const myProfileId = useAuth((c) => c.myProfileId);
+  const messageProfileId = useMessage((c) => c.profile);
+
+  if (!isHovering) return null;
+  if (!isSignedIn) return null;
+
+  const isMyMessage = myProfileId === messageProfileId;
+
+  if (isMyMessage) {
+    return <MyMessageActions />;
+  }
+
+  return null;
+};
+
+const ActionFrame = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="absolute -top-5 right-2 flex">
+      <ButtonGroup>{children}</ButtonGroup>
+    </div>
+  );
+};
+
+const MyMessageActions = () => {
+  return (
+    <ActionFrame>
+      <EditButton />
+      <DeleteButton />
+    </ActionFrame>
+  );
+};
+
+const EditButton = () => {
+  return (
+    <Button variant="outline" size="actions" disabled>
+      <Pencil className="size-3" />
+    </Button>
+  );
+};
+
+const DeleteButton = () => {
+  const id = useMessage((c) => c._id);
+  const { deleteMessage } = useMessageActions();
+  return (
+    <Button
+      variant="outline"
+      size="actions"
+      onClick={() => deleteMessage({ messageId: id })}
+    >
+      {" "}
+      <Trash className="text-destructive size-3" />{" "}
+    </Button>
   );
 };

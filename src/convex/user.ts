@@ -26,6 +26,7 @@ export const getInfo = authedQuery({
     return {
       name: profile.name,
       image: profile.imageKey ? getFileURL(profile.imageKey) : null,
+      profileId: profile._id,
     };
   },
 });

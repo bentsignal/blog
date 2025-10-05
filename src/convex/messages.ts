@@ -43,9 +43,8 @@ export const get = query({
       page: messages.page.map((message) => {
         const user = profilesMap[message.profile];
         if (!user) throw new ConvexError("User not found");
-        const { profile: _, ...publicMessage } = message;
         return {
-          ...publicMessage,
+          ...message,
           name: user.name,
           pfp: user.image,
         };
@@ -79,10 +78,44 @@ export const send = authedMutation({
   },
 });
 
-export const deleteMessagesFromUser = async (
-  ctx: MutationCtx,
-  userId: string,
-) => {
+export const edit = authedMutation({
+  args: {
+    messageId: v.id("messages"),
+    content: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = ctx.user.subject;
+    const message = await ctx.db.get(args.messageId);
+    if (!message) throw new ConvexError("Message not found");
+    const profile = await getProfile(ctx, userId);
+    if (message.profile !== profile._id) throw new ConvexError("Unauthorized");
+    await ctx.db.patch(args.messageId, {
+      snapshots: [
+        ...message.snapshots,
+        {
+          content: args.content,
+          timestamp: Date.now(),
+        },
+      ],
+    });
+  },
+});
+
+export const deleteOne = authedMutation({
+  args: {
+    messageId: v.id("messages"),
+  },
+  handler: async (ctx, args) => {
+    const userId = ctx.user.subject;
+    const message = await ctx.db.get(args.messageId);
+    if (!message) throw new ConvexError("Message not found");
+    const profile = await getProfile(ctx, userId);
+    if (message.profile !== profile._id) throw new ConvexError("Unauthorized");
+    await ctx.db.delete(args.messageId);
+  },
+});
+
+export const deleteAllFromUser = async (ctx: MutationCtx, userId: string) => {
   const profile = await getProfile(ctx, userId);
   const messages = await ctx.db
     .query("messages")

@@ -7,7 +7,7 @@ import { convex } from "@convex-dev/better-auth/plugins";
 import { betterAuth } from "better-auth";
 import { components, internal } from "./_generated/api";
 import { DataModel } from "./_generated/dataModel";
-import { deleteMessagesFromUser } from "./messages";
+import { deleteAllFromUser } from "./messages";
 import { getProfile } from "./user";
 
 const authFunctions: AuthFunctions = internal.auth;
@@ -19,7 +19,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
   triggers: {
     user: {
       onDelete: async (ctx, authUser) => {
-        await deleteMessagesFromUser(ctx, authUser._id);
+        await deleteAllFromUser(ctx, authUser._id);
         const profile = await getProfile(ctx, authUser._id);
         if (profile) {
           await ctx.db.delete(profile._id);

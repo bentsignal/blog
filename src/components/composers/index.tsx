@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useAuth } from "../auth";
 import * as Composer from "./composer";
-import { useSendMessage } from "@/hooks/use-send-message";
+import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const MainComposer = () => {
   const [inputValue, setInputValue] = useState("");
@@ -12,7 +12,7 @@ export const MainComposer = () => {
   const signedIn = useAuth((c) => c.signedIn);
   const signIn = useAuth((c) => c.signIn);
 
-  const { sendMessage } = useSendMessage();
+  const { sendMessage } = useMessageActions();
 
   const onSubmit = async () => {
     if (!signedIn) {
