@@ -276,7 +276,7 @@ export const List = ({
       >
         {children}
         {showScrollToBottomButton && (
-          <div className="absolute right-3 bottom-3 flex justify-end">
+          <div className="absolute right-4 bottom-4 flex justify-end">
             <Button variant="outline" size="icon" onClick={scrollToBottom}>
               <ArrowDown className="size-4" />
             </Button>
