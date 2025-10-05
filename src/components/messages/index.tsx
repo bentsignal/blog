@@ -45,7 +45,7 @@ export const Messages = () => {
         <Button
           onClick={() => loadMore(config.pageSize)}
           disabled={status === "LoadingMore"}
-          className="text-sm font-bold"
+          className="mx-6 mt-3 text-sm font-bold"
         >
           Load More
         </Button>

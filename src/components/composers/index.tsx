@@ -21,7 +21,7 @@ export const MainComposer = () => {
     }
     const value = inputRef.current?.value || "";
     setInputValue("");
-    await sendMessage({
+    sendMessage({
       content: value,
     });
   };

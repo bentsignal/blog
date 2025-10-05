@@ -258,7 +258,7 @@ export const List = ({
     <div className="relative flex flex-1 flex-col overflow-y-hidden">
       <div
         className={cn(
-          "align-start flex min-h-0 flex-1 flex-col justify-start pt-3 pb-3",
+          "align-start flex min-h-0 flex-1 flex-col justify-start pb-3",
           "overflow-y-auto overscroll-contain",
           "scrollbar-thin scrollbar-thumb-muted-foreground/10 scrollbar-track-transparent",
           "mask-t-from-97% mask-b-from-97%",

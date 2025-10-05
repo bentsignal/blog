@@ -15,6 +15,19 @@ export const useSendMessage = () => {
         const results = localStore.getAllQueries(api.messages.get);
         const current = results[0];
         if (!current || !current.value) return;
+        const newMessage = {
+          name: name || "",
+          pfp: image,
+          _id: ("optimistic-" +
+            Math.random().toString(36).slice(2)) as Id<"messages">,
+          _creationTime: Date.now(),
+          snapshots: [
+            {
+              content: args.content,
+              timestamp: Date.now(),
+            },
+          ],
+        };
         localStore.setQuery(
           api.messages.get,
           {
@@ -22,22 +35,7 @@ export const useSendMessage = () => {
           },
           {
             ...current.value,
-            page: [
-              {
-                name: name || "",
-                pfp: image,
-                _id: ("optimistic-" +
-                  Math.random().toString(36).slice(2)) as Id<"messages">,
-                _creationTime: Date.now(),
-                snapshots: [
-                  {
-                    content: args.content,
-                    timestamp: Date.now(),
-                  },
-                ],
-              },
-              ...(current.value.page || []),
-            ],
+            page: [newMessage, ...(current.value.page || [])],
             isDone: current.value.isDone ?? false,
             continueCursor: current.value.continueCursor ?? "",
           },
@@ -46,7 +44,6 @@ export const useSendMessage = () => {
     ),
     onError: (error) => {
       console.error(error);
-      console.log(error.message);
       toast.error("Failed to send message", {
         description: "Something went wrong, see console for more details.",
       });
