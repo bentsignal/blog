@@ -286,7 +286,7 @@ export const Error = () => {
         Failed to load messages
       </div>
       <div className="text-muted-foreground text-xs">
-        Sorry about that, something went wrong. Please check back later.
+        Sorry about that, please check back later.
       </div>
     </div>
   );
