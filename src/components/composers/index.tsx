@@ -19,7 +19,7 @@ export const MainComposer = () => {
       await signIn();
       return;
     }
-    const value = inputRef.current?.value || "";
+    const value = inputRef.current?.value ?? "";
     setInputValue("");
     sendMessage({
       content: value,

@@ -33,7 +33,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
         if (authUser.image) {
           ctx.scheduler.runAfter(0, internal.uploadthing.uploadPFP, {
             profileId: profile,
-            url: authUser.image || "",
+            url: authUser.image,
           });
         }
       },

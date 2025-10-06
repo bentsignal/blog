@@ -24,7 +24,7 @@ export const useMessageActions = () => {
         const current = results[0];
         if (!current || !current.value) return;
         const newMessage = {
-          name: name || "",
+          name: name ?? "",
           pfp: image,
           _id: ("optimistic-" +
             Math.random().toString(36).slice(2)) as Id<"messages">,
@@ -44,7 +44,7 @@ export const useMessageActions = () => {
           },
           {
             ...current.value,
-            page: [newMessage, ...(current.value.page || [])],
+            page: [newMessage, ...current.value.page],
           },
         );
       },
