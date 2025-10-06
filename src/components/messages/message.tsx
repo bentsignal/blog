@@ -77,7 +77,7 @@ const EditComposer = () => {
   const messageId = useMessage((c) => c._id);
   const inputRef = useMessage((c) => c.editComposerInputRef);
   const setEditInProgress = useMessage((c) => c.setEditInProgress);
-
+  const setIsHovering = useMessage((c) => c.setIsHovering);
   const { editMessage } = useMessageActions();
 
   const [inputValue, setInputValue] = useState(
@@ -100,6 +100,7 @@ const EditComposer = () => {
         setEditInProgress(false);
       }}
       onCancel={() => {
+        setIsHovering(false);
         setEditInProgress(false);
       }}
     >
