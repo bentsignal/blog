@@ -28,37 +28,6 @@ export async function tryCatch<T, E = Error>(
   }
 }
 
-export const isOverOneDayAgo = (time: number) => {
-  const date = new Date(time);
-  const now = new Date();
-  return now.getTime() - date.getTime() > 1000 * 60 * 60 * 24;
-};
-
-export const getDateString = (time: number) => {
-  const date = new Date(time);
-  return date.toLocaleDateString(undefined, {
-    year: "2-digit",
-    month: "numeric",
-    day: "numeric",
-  });
-};
-
-export const getTimeString = (time: number) => {
-  const date = new Date(time);
-  return date.toLocaleTimeString(undefined, {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
-};
-
-export const getFullTimestamp = (time: number) => {
-  if (isOverOneDayAgo(time)) {
-    return `${getDateString(time)}, ${getTimeString(time)}`;
-  }
-  return getTimeString(time);
-};
-
 export const getProfileUrl = (username: string) => {
   return `https://www.github.com/${username}`;
 };

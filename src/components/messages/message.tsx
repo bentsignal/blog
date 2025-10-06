@@ -13,12 +13,8 @@ import { useAuth } from "../auth";
 import * as Composer from "../composers/composer";
 import { Button } from "../ui/button";
 import { ButtonGroup } from "../ui/button-group";
-import {
-  cn,
-  getFullTimestamp,
-  getTimeString,
-  isOverOneDayAgo,
-} from "@/lib/utils";
+import { getFullTimestamp, getTimeString, isOverOneDayAgo } from "@/lib/time";
+import { cn } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export interface Message extends Doc<"messages"> {

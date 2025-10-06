@@ -1,9 +1,11 @@
-import { memo } from "react";
+import { Fragment, memo } from "react";
 import { api } from "@/convex/_generated/api";
 import { usePaginatedQuery } from "convex/react";
+import { DateMarker } from "../date-marker";
 import PageLoader from "../page-loader";
 import { Button } from "../ui/button";
 import * as Message from "./message";
+import { areSameDay } from "@/lib/time";
 
 const config = {
   initialPageSize: 40,
@@ -63,23 +65,33 @@ export const Messages = () => {
         const shouldChainMessages =
           previousMessage?.profile === message.profile &&
           message._creationTime - previousMessage._creationTime < 1000 * 60 * 5;
+        // if neighboring messages are not sent on the same day, show the date to mark
+        // the start of a new day
+        const isSameDay = areSameDay(
+          message._creationTime,
+          previousMessage?._creationTime ?? 0,
+        );
+        const showDateMarker = !isSameDay && !shouldChainMessages;
         return index === loaderIndex ? (
           <PageLoader
             key={message._id}
             status={status}
             loadMore={() => loadMore(config.pageSize)}
           >
+            {showDateMarker && <DateMarker time={message._creationTime} />}
             <UserMessage
               message={message}
               shouldChainMessages={shouldChainMessages}
             />
           </PageLoader>
         ) : (
-          <UserMessage
-            key={message._id}
-            message={message}
-            shouldChainMessages={shouldChainMessages}
-          />
+          <Fragment key={message._id}>
+            {showDateMarker && <DateMarker time={message._creationTime} />}
+            <UserMessage
+              message={message}
+              shouldChainMessages={shouldChainMessages}
+            />
+          </Fragment>
         );
       })}
     </Message.List>
