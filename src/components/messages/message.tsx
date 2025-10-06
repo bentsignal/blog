@@ -107,7 +107,7 @@ const EditComposer = () => {
         setEditInProgress(false);
       }}
     >
-      <Composer.Frame className="mx-6 my-3">
+      <Composer.Frame className="my-3 rounded-none px-6">
         <Composer.Header />
         <Composer.Input />
         <Composer.Footer>
