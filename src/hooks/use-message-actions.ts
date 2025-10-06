@@ -56,30 +56,32 @@ export const useMessageActions = () => {
     mutationFn: useConvexMutation(api.messages.edit).withOptimisticUpdate(
       (localStore, args) => {
         const results = localStore.getAllQueries(api.messages.get);
-        const current = results[0];
-        if (!current || !current.value) return;
-        const message = current.value.page?.find(
-          (message) => message._id === args.messageId,
-        );
-        if (!message) return;
-        localStore.setQuery(
-          api.messages.get,
-          { paginationOpts: current.args.paginationOpts },
-          {
-            ...current.value,
-            page: current.value.page?.map((message) =>
-              message._id === args.messageId
-                ? {
-                    ...message,
-                    snapshots: [
-                      ...message.snapshots,
-                      { content: args.content, timestamp: Date.now() },
-                    ],
-                  }
-                : message,
-            ),
-          },
-        );
+        for (const result of results) {
+          if (!result || !result.value) continue;
+          const hasTargetMessage = result.value.page?.some(
+            (message) => message._id === args.messageId,
+          );
+          if (!hasTargetMessage) continue;
+          localStore.setQuery(
+            api.messages.get,
+            { paginationOpts: result.args.paginationOpts },
+            {
+              ...result.value,
+              page: result.value.page?.map((message) =>
+                message._id === args.messageId
+                  ? {
+                      ...message,
+                      snapshots: [
+                        ...message.snapshots,
+                        { content: args.content, timestamp: Date.now() },
+                      ],
+                    }
+                  : message,
+              ),
+            },
+          );
+          break;
+        }
       },
     ),
     onError: toastError,
@@ -89,18 +91,24 @@ export const useMessageActions = () => {
     mutationFn: useConvexMutation(api.messages.deleteOne).withOptimisticUpdate(
       (localStore, args) => {
         const results = localStore.getAllQueries(api.messages.get);
-        const current = results[0];
-        if (!current || !current.value) return;
-        localStore.setQuery(
-          api.messages.get,
-          { paginationOpts: current.args.paginationOpts },
-          {
-            ...current.value,
-            page: current.value.page?.filter(
-              (message) => message._id !== args.messageId,
-            ),
-          },
-        );
+        for (const result of results) {
+          if (!result || !result.value) continue;
+          const hasTargetMessage = result.value.page?.some(
+            (message) => message._id === args.messageId,
+          );
+          if (!hasTargetMessage) continue;
+          localStore.setQuery(
+            api.messages.get,
+            { paginationOpts: result.args.paginationOpts },
+            {
+              ...result.value,
+              page: result.value.page?.filter(
+                (message) => message._id !== args.messageId,
+              ),
+            },
+          );
+          break;
+        }
       },
     ),
     onError: toastError,

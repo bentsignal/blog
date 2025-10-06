@@ -98,6 +98,7 @@ const EditComposer = () => {
           });
         }
         setEditInProgress(false);
+        setIsHovering(false);
       }}
       onCancel={() => {
         setIsHovering(false);
