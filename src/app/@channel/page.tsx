@@ -30,7 +30,7 @@ const Header = () => {
   return (
     <div className="bg-muted m-4 mb-0 flex items-center justify-between rounded-2xl p-3">
       <div className="flex items-center gap-3 pl-1">
-        <span className="font-semibol text-3xl">#</span>
+        <span className="text-3xl font-semibold">#</span>
         <div className="flex flex-col justify-center">
           <span className="text-sm font-bold">General</span>
           <span className="text-muted-foreground text-xs">Text Channel</span>
