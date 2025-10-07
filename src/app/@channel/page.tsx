@@ -84,7 +84,7 @@ export const Messages = () => {
       loadMore={() => loadMore(config.pageSize)}
     >
       <List.Frame>
-        <List.Content className="pb-3">
+        <List.Content className="pb-4">
           {reversedResults.map((message, index) => {
             const previousMessage =
               index > 0 ? reversedResults[index - 1] : null;
