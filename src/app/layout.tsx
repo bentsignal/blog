@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/providers";
+import Link from "next/link";
+import { RepoButton } from "@/components/repo-button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
@@ -21,15 +24,37 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  channel,
 }: Readonly<{
   children: React.ReactNode;
+  channel: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="flex min-h-screen flex-col items-center justify-center gap-16 sm:flex-row">
+            <div className="fixed top-4 right-4 z-50">
+              <ThemeToggle />
+            </div>
+            <div className="flex flex-col items-start justify-center gap-1">
+              <span className="text-6xl font-bold">State of ...State?</span>
+              <span className="text-muted-foreground mb-1 text-xl">
+                A modern guide on managing state in React
+              </span>
+              <Link
+                href="https://github.com/bentsignal/state-of-state"
+                target="_blank"
+              >
+                <RepoButton />
+              </Link>
+            </div>
+            {channel}
+          </div>
+          {children}
+        </Providers>
         <Toaster />
       </body>
     </html>

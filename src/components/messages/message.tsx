@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Doc } from "@/convex/_generated/dataModel";
 import {
   ContextSelector,
   createContext,
   useContextSelector,
 } from "@fluentui/react-context-selector";
-import { ArrowDown, Pencil, Trash, UserRound } from "lucide-react";
+import { Pencil, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "../auth";
 import * as Composer from "../composers/composer";
@@ -48,6 +48,7 @@ export const Provider = ({
   const [isHovering, setIsHovering] = useState(false);
   const [editInProgress, setEditInProgress] = useState(false);
   const editComposerInputRef = useRef<HTMLInputElement>(null);
+
   const contextValue = useMemo(
     () => ({
       _id: message._id,
@@ -256,84 +257,6 @@ export const Skeleton = () => {
   );
 };
 
-export const List = ({
-  autoScroll = false,
-  className,
-  children,
-}: {
-  autoScroll?: boolean;
-  className?: string;
-  children: React.ReactNode;
-}) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const isAtBottom = useRef(false);
-  const [showScrollToBottomButton, setShowScrollToBottomButton] =
-    useState(false);
-
-  const scrollToBottom = () => {
-    scrollRef.current?.scrollTo({
-      top: scrollRef.current?.scrollHeight,
-      behavior: "instant",
-    });
-  };
-
-  // determine if user is at the bottom of the list
-  useEffect(() => {
-    const scrollElement = scrollRef.current;
-    if (scrollElement) {
-      scrollElement.addEventListener("scroll", () => {
-        const totalHeight = scrollElement.scrollHeight;
-        const windowHeight = scrollElement.clientHeight;
-        const distanceFromTop = scrollElement.scrollTop;
-        const distanceFromBottom = totalHeight - windowHeight - distanceFromTop;
-        isAtBottom.current = distanceFromBottom <= 100;
-        setShowScrollToBottomButton(distanceFromBottom >= 500);
-      });
-      return () => {
-        scrollElement.removeEventListener("scroll", () => {});
-      };
-    }
-  }, [children]);
-
-  // when user is at bottom and a new message comes in, scroll to the bottom
-  useEffect(() => {
-    if (isAtBottom.current && children && autoScroll) {
-      scrollToBottom();
-    }
-  }, [children, autoScroll]);
-
-  // scroll to the bottom of the list before items are rendered
-  useLayoutEffect(() => {
-    if (autoScroll) {
-      scrollToBottom();
-    }
-  }, [autoScroll]);
-
-  return (
-    <div className="relative flex flex-1 flex-col overflow-y-hidden">
-      <div
-        className={cn(
-          "align-start flex min-h-0 flex-1 flex-col justify-start pb-3",
-          "overflow-y-auto overscroll-contain",
-          "scrollbar-thin scrollbar-thumb-muted-foreground/10 scrollbar-track-transparent",
-          "mask-t-from-97% mask-b-from-97%",
-          className,
-        )}
-        ref={scrollRef}
-      >
-        {children}
-        {showScrollToBottomButton && (
-          <div className="absolute right-4 bottom-4 flex justify-end">
-            <Button variant="outline" size="icon" onClick={scrollToBottom}>
-              <ArrowDown className="size-4" />
-            </Button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
 export const Error = () => {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-1">
@@ -341,7 +264,7 @@ export const Error = () => {
         Failed to load messages
       </div>
       <div className="text-muted-foreground text-xs">
-        Sorry about that, please check back later.
+        Sorry about that, something went wrong.
       </div>
     </div>
   );
