@@ -105,6 +105,7 @@ export const Input = () => {
   const setInputValue = useComposer((c) => c.setInputValue);
   const onSubmit = useComposer((c) => c.onSubmit);
   const submitDisabled = useComposer((c) => c.submitDisabled);
+  const onCancel = useComposer((c) => c.onCancel);
 
   return (
     <input
@@ -116,6 +117,9 @@ export const Input = () => {
         if (submitDisabled) return;
         if (e.key === "Enter") {
           onSubmit();
+        }
+        if (e.key === "Escape") {
+          onCancel?.();
         }
       }}
       placeholder="Type your message here..."
