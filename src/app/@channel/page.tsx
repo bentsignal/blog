@@ -5,11 +5,11 @@ import { api } from "@/convex/_generated/api";
 import { usePaginatedQuery } from "convex/react";
 import * as Auth from "@/components/auth";
 import { useAuth } from "@/components/auth";
-import { MainComposer } from "@/components/composers";
+import { ChannelComposer } from "@/components/composers";
 import { DateMarker } from "@/components/date-marker";
 import * as List from "@/components/list";
+import { ChainedMessage, UserMessage } from "@/components/messages";
 import * as Message from "@/components/messages/message";
-import { UserMessage } from "@/components/messages/user-message";
 import * as Card from "@/components/ui/card";
 import { areSameDay } from "@/lib/time";
 
@@ -19,7 +19,7 @@ export default function Channel() {
       <Card.CardContent className="flex h-full flex-col p-0">
         <Header />
         <Messages />
-        <MainComposer />
+        <ChannelComposer />
       </Card.CardContent>
     </Card.Card>
   );
@@ -103,10 +103,11 @@ export const Messages = () => {
             return (
               <Fragment key={message._id}>
                 {showDateMarker && <DateMarker time={message._creationTime} />}
-                <UserMessage
-                  message={message}
-                  shouldChainMessages={shouldChainMessages}
-                />
+                {shouldChainMessages ? (
+                  <ChainedMessage message={message} />
+                ) : (
+                  <UserMessage message={message} />
+                )}
               </Fragment>
             );
           })}

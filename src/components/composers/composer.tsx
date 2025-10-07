@@ -149,7 +149,13 @@ export const Send = () => {
 };
 
 export const Cancel = () => {
+  const hasParentContext = useHasParentContext(ComposerContext);
+  if (!hasParentContext) {
+    throw new Error("ComposerContext not found");
+  }
+
   const onCancel = useComposer((c) => c.onCancel);
+
   return (
     <Button variant="destructive" size="icon" onClick={onCancel}>
       <Icons.X className="text-white" />
@@ -158,8 +164,14 @@ export const Cancel = () => {
 };
 
 export const Save = () => {
+  const hasParentContext = useHasParentContext(ComposerContext);
+  if (!hasParentContext) {
+    throw new Error("ComposerContext not found");
+  }
+
   const onSubmit = useComposer((c) => c.onSubmit);
   const submitDisabled = useComposer((c) => c.submitDisabled);
+
   return (
     <Button
       className="bg-green-800 hover:bg-green-900"
@@ -220,6 +232,11 @@ export const CommonActions = () => {
 };
 
 export const BoldButton = () => {
+  const hasParentContext = useHasParentContext(ComposerContext);
+  if (!hasParentContext) {
+    throw new Error("ComposerContext not found");
+  }
+
   const setStyle = useComposer((c) => c.setStyle);
   const active = useComposer((c) => c.style.bold);
 
@@ -240,6 +257,11 @@ export const BoldButton = () => {
 };
 
 export const ItalicButton = () => {
+  const hasParentContext = useHasParentContext(ComposerContext);
+  if (!hasParentContext) {
+    throw new Error("ComposerContext not found");
+  }
+
   const setStyle = useComposer((c) => c.setStyle);
   const active = useComposer((c) => c.style.italic);
 
@@ -260,6 +282,11 @@ export const ItalicButton = () => {
 };
 
 export const StrikethroughButton = () => {
+  const hasParentContext = useHasParentContext(ComposerContext);
+  if (!hasParentContext) {
+    throw new Error("ComposerContext not found");
+  }
+
   const setStyle = useComposer((c) => c.setStyle);
   const active = useComposer((c) => c.style.strikethrough);
 

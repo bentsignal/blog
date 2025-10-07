@@ -10,7 +10,7 @@ import {
 import { Pencil, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "../auth";
-import * as Composer from "../composers/composer";
+import { EditComposer } from "../composers";
 import { Button } from "../ui/button";
 import { ButtonGroup } from "../ui/button-group";
 import { getFullTimestamp, getTimeString, isOverOneDayAgo } from "@/lib/time";
@@ -70,54 +70,6 @@ export const Provider = ({
     <MessageContext.Provider value={contextValue}>
       {editInProgress ? <EditComposer /> : children}
     </MessageContext.Provider>
-  );
-};
-
-const EditComposer = () => {
-  const snapshots = useMessage((c) => c.snapshots);
-  const messageId = useMessage((c) => c._id);
-  const inputRef = useMessage((c) => c.editComposerInputRef);
-  const setEditInProgress = useMessage((c) => c.setEditInProgress);
-  const setIsHovering = useMessage((c) => c.setIsHovering);
-  const { editMessage } = useMessageActions();
-
-  const [inputValue, setInputValue] = useState(
-    snapshots[snapshots.length - 1].content,
-  );
-
-  return (
-    <Composer.Provider
-      inputValue={inputValue}
-      setInputValue={setInputValue}
-      inputRef={inputRef}
-      onSubmit={() => {
-        const previousContent = snapshots[snapshots.length - 1].content;
-        if (previousContent !== inputValue) {
-          editMessage({
-            messageId: messageId,
-            content: inputValue,
-          });
-        }
-        setEditInProgress(false);
-        setIsHovering(false);
-      }}
-      onCancel={() => {
-        setIsHovering(false);
-        setEditInProgress(false);
-      }}
-    >
-      <Composer.Frame className="my-3 rounded-none px-6">
-        <Composer.Header />
-        <Composer.Input />
-        <Composer.Footer>
-          <Composer.CommonActions />
-          <ButtonGroup>
-            <Composer.Cancel />
-            <Composer.Save />
-          </ButtonGroup>
-        </Composer.Footer>
-      </Composer.Frame>
-    </Composer.Provider>
   );
 };
 

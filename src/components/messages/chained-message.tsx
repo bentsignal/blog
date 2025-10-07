@@ -1,13 +1,12 @@
 import { memo } from "react";
 import * as Message from "./message";
 
-const PureUserMessage = ({ message }: { message: Message.Message }) => {
+const PureChainedMessage = ({ message }: { message: Message.Message }) => {
   return (
     <Message.Provider message={message}>
-      <Message.Frame className="mt-3">
-        <Message.PFP />
-        <Message.Body>
-          <Message.Header />
+      <Message.Frame>
+        <Message.Body className="flex-row items-center">
+          <Message.SideTime />
           <Message.Content />
         </Message.Body>
         <Message.Actions />
@@ -16,7 +15,7 @@ const PureUserMessage = ({ message }: { message: Message.Message }) => {
   );
 };
 
-export const UserMessage = memo(PureUserMessage, (prev, next) => {
+export const ChainedMessage = memo(PureChainedMessage, (prev, next) => {
   if (prev.message.name !== next.message.name) return false;
   if (prev.message.pfp !== next.message.pfp) return false;
   if (
