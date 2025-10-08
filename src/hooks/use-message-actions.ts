@@ -30,6 +30,7 @@ export const useMessageActions = () => {
             Math.random().toString(36).slice(2)) as Id<"messages">,
           _creationTime: Date.now(),
           profile: myProfileId as Id<"profiles">,
+          channel: "optimistic-channel" as Id<"channels">,
           snapshots: [
             {
               content: args.content,
