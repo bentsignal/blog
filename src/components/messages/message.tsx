@@ -11,6 +11,7 @@ import { Pencil, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "../auth";
 import { EditComposer } from "../composers";
+import * as Shapes from "../shapes";
 import { Button } from "../ui/button";
 import { ButtonGroup } from "../ui/button-group";
 import { getFullTimestamp, getTimeString, isOverOneDayAgo } from "@/lib/time";
@@ -105,9 +106,9 @@ export const PFP = () => {
 
   if (imageState === "error" || !pfp) {
     return (
-      <SkeletonPFP>
+      <Shapes.Circle className="size-10">
         <UserRound className="text-muted-foreground size-4" />
-      </SkeletonPFP>
+      </Shapes.Circle>
     );
   }
 
@@ -187,24 +188,15 @@ export const SkeletonPFP = ({
   );
 };
 
-export const SkeletonBar = ({ width }: { width: number }) => {
-  return (
-    <div
-      className="bg-muted-foreground/10 h-3 rounded-md"
-      style={{ width: `${width}%` }}
-    />
-  );
-};
-
 export const Skeleton = () => {
   const nameWidth = Math.random() * 40 + 20;
   const contentWidth = Math.random() * 70 + 10;
   return (
     <Frame className="mb-3 animate-pulse">
-      <SkeletonPFP />
+      <Shapes.Circle className="size-10" />
       <div className="mt-1 flex w-full flex-col gap-1.5">
-        <SkeletonBar width={nameWidth} />
-        <SkeletonBar width={contentWidth} />
+        <Shapes.HorizontalBar width={nameWidth} />
+        <Shapes.HorizontalBar width={contentWidth} />
       </div>
     </Frame>
   );
