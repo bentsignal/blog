@@ -2,7 +2,8 @@
 
 import { Fragment } from "react";
 import { api } from "@/convex/_generated/api";
-import { usePaginatedQuery } from "convex/react";
+import { ChannelProvider } from "@/providers/channel-provider";
+import { usePaginatedQuery, useQuery } from "convex/react";
 import * as Auth from "@/components/auth";
 import { useAuth } from "@/components/auth";
 import { ChannelComposer } from "@/components/composers";
@@ -14,12 +15,15 @@ import * as Card from "@/components/ui/card";
 import { areSameDay } from "@/lib/time";
 
 export default function Channel() {
+  const channel = useQuery(api.channel.getDefault);
   return (
     <Card.Card className="h-[700px] max-h-full w-full max-w-md rounded-3xl p-0">
       <Card.CardContent className="flex h-full flex-col p-0">
-        <Header />
-        <Messages />
-        <ChannelComposer />
+        <ChannelProvider channel={channel}>
+          <Header />
+          <Messages />
+          <ChannelComposer />
+        </ChannelProvider>
       </Card.CardContent>
     </Card.Card>
   );

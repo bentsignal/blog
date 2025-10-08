@@ -13,7 +13,7 @@ export default defineSchema({
   messages: defineTable({
     snapshots: v.array(snapshot),
     profile: v.id("profiles"),
-    channel: v.optional(v.id("channels")),
+    channel: v.id("channels"),
   }).index("by_channel", ["channel"]),
   profiles: defineTable({
     user: v.string(),

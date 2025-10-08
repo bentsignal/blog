@@ -56,6 +56,7 @@ export const get = query({
 export const send = authedMutation({
   args: {
     content: v.string(),
+    channel: v.id("channels"),
   },
   handler: async (ctx, args) => {
     const { content } = args;
@@ -74,6 +75,7 @@ export const send = authedMutation({
         },
       ],
       profile: profile._id,
+      channel: args.channel,
     });
   },
 });

@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as channel from "../channel.js";
 import type * as convex_helpers from "../convex_helpers.js";
 import type * as http from "../http.js";
 import type * as limiter from "../limiter.js";
@@ -32,6 +33,7 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  channel: typeof channel;
   convex_helpers: typeof convex_helpers;
   http: typeof http;
   limiter: typeof limiter;
