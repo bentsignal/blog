@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useHasParentContext } from "@fluentui/react-context-selector";
+import { toast } from "sonner";
 import { MessageContext, useMessage } from "../messages/message";
 import { ButtonGroup } from "../ui/button-group";
 import * as Composer from "./composer";
+import { validateMessage } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const EditComposer = () => {
@@ -29,6 +31,11 @@ export const EditComposer = () => {
       inputRef={inputRef}
       onSubmit={() => {
         const newValue = inputRef.current?.value ?? "";
+        const validation = validateMessage(newValue);
+        if (validation !== "Valid") {
+          toast.error(validation);
+          return;
+        }
         const previousContent = snapshots[snapshots.length - 1].content;
         if (previousContent !== newValue) {
           editMessage({

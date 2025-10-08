@@ -6,6 +6,7 @@ import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import { useAuth } from "../auth";
 import * as Composer from "./composer";
+import { validateMessage } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const ChannelComposer = () => {
@@ -33,6 +34,11 @@ export const ChannelComposer = () => {
       return;
     }
     const value = inputRef.current?.value ?? "";
+    const validation = validateMessage(value);
+    if (validation !== "Valid") {
+      toast.error(validation);
+      return;
+    }
     setInputValue("");
     sendMessage({
       content: value,

@@ -10,6 +10,7 @@ import {
 import * as Icons from "lucide-react";
 import { Separator as BaseSeparator } from "../ui/separator";
 import { Button } from "@/components/ui/button";
+import { MAX_MESSAGE_LENGTH, MIN_MESSAGE_LENGTH } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
 type Style = {
@@ -123,6 +124,8 @@ export const Input = () => {
         }
       }}
       placeholder="Type your message here..."
+      minLength={MIN_MESSAGE_LENGTH}
+      maxLength={MAX_MESSAGE_LENGTH}
     />
   );
 };

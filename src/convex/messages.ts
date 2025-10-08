@@ -5,12 +5,7 @@ import { authedMutation } from "./convex_helpers";
 import { rateLimiter } from "./limiter";
 import { getFileURL } from "./uploadthing";
 import { getProfile, type Profile } from "./user";
-
-const validateMessage = (content: string) => {
-  if (!content) throw new ConvexError("Content is required");
-  if (content.length > 1000) throw new ConvexError("Content is too long");
-  if (content.length < 1) throw new ConvexError("Content is too short");
-};
+import { validateMessage } from "@/lib/utils";
 
 export const get = query({
   args: {
@@ -60,7 +55,8 @@ export const send = authedMutation({
   },
   handler: async (ctx, args) => {
     const { content } = args;
-    validateMessage(content);
+    const validation = validateMessage(content);
+    if (validation !== "Valid") throw new ConvexError(validation);
     // will throw a ConvexError if the rate limit is exceeded
     await rateLimiter.limit(ctx, "messageAction", {
       key: ctx.user.subject,
@@ -87,7 +83,8 @@ export const edit = authedMutation({
   },
   handler: async (ctx, args) => {
     const { content } = args;
-    validateMessage(content);
+    const validation = validateMessage(content);
+    if (validation !== "Valid") throw new ConvexError(validation);
     // will throw a ConvexError if the rate limit is exceeded
     await rateLimiter.limit(ctx, "messageAction", {
       key: ctx.user.subject,
