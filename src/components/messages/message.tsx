@@ -57,6 +57,7 @@ export const Provider = ({
       name: message.name,
       pfp: message.pfp,
       snapshots: message.snapshots,
+      channel: message.channel,
       isHovering,
       setIsHovering,
       editInProgress,
