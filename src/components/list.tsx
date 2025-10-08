@@ -43,8 +43,9 @@ export const useList = <T,>(selector: ContextSelector<ListContextType, T>) =>
 
 interface ListProps {
   children: React.ReactNode;
-  scrollToBottomOnContentChange?: boolean;
+  stickToBottom?: boolean;
   scrollToBottomOnMount?: boolean;
+  maintainScrollPositionOnAppend?: boolean;
   loadingStatus?: PaginationStatus;
   isAtBottomThreshold?: number;
   showScrollToBottomButtonThreshold?: number;
@@ -55,8 +56,9 @@ interface ListProps {
 
 export const Provider = ({
   children,
-  scrollToBottomOnContentChange,
+  stickToBottom,
   scrollToBottomOnMount,
+  maintainScrollPositionOnAppend,
   loadingStatus,
   isAtBottomThreshold = 10,
   showScrollToBottomButtonThreshold = 500,
@@ -115,20 +117,25 @@ export const Provider = ({
 
   // when new content is loaded and appended to the top of the list, retain previous distance from bottom
   useEffect(() => {
-    if (!isAtBottom.current && children && scrollRef.current) {
+    if (
+      !isAtBottom.current &&
+      children &&
+      scrollRef.current &&
+      maintainScrollPositionOnAppend
+    ) {
       scrollRef.current.scrollTop =
         scrollRef.current.scrollHeight -
         scrollRef.current.clientHeight -
         distanceFromBottom.current;
     }
-  }, [children]);
+  }, [children, maintainScrollPositionOnAppend]);
 
   // when user is at the bottom of the list and the content change, scroll to the new bottom
   useEffect(() => {
-    if (isAtBottom.current && children && scrollToBottomOnContentChange) {
+    if (isAtBottom.current && children && stickToBottom) {
       scrollToBottom();
     }
-  }, [children, scrollToBottomOnContentChange]);
+  }, [children, stickToBottom]);
 
   // scroll to the bottom of the list before items are rendered
   useLayoutEffect(() => {

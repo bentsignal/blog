@@ -77,8 +77,9 @@ export const Messages = () => {
 
   return (
     <List.Provider
-      scrollToBottomOnContentChange={true}
+      stickToBottom={true}
       scrollToBottomOnMount={true}
+      maintainScrollPositionOnAppend={true}
       loadingStatus={status}
       skeletonComponent={<Message.Skeleton />}
       loadMore={() => loadMore(config.pageSize)}
