@@ -169,25 +169,6 @@ export const Content = () => {
   );
 };
 
-export const SkeletonPFP = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children?: React.ReactNode;
-}) => {
-  return (
-    <div
-      className={cn(
-        "bg-muted flex size-10 flex-shrink-0 items-center justify-center rounded-full",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
-};
-
 export const Skeleton = () => {
   const nameWidth = Math.random() * 40 + 20;
   const contentWidth = Math.random() * 70 + 10;
