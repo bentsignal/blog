@@ -7,10 +7,14 @@ const snapshot = v.object({
 });
 
 export default defineSchema({
+  channels: defineTable({
+    name: v.string(),
+  }),
   messages: defineTable({
     snapshots: v.array(snapshot),
     profile: v.id("profiles"),
-  }),
+    channel: v.optional(v.id("channels")),
+  }).index("by_channel", ["channel"]),
   profiles: defineTable({
     user: v.string(),
     name: v.string(),
