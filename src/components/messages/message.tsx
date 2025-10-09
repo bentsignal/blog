@@ -169,15 +169,16 @@ export const Content = () => {
   );
 };
 
-export const Skeleton = () => {
-  const nameWidth = Math.random() * 40 + 20;
-  const contentWidth = Math.random() * 70 + 10;
+export const Skeleton = ({ index }: { index?: number }) => {
+  const numberOfContentLines = index ? (index % 3) + 1 : 3;
   return (
-    <Frame className="mb-3 animate-pulse">
+    <Frame className="mb-4 animate-pulse">
       <Shapes.Circle className="size-10" />
       <div className="mt-1 flex w-full flex-col gap-1.5">
-        <Shapes.HorizontalBar width={nameWidth} />
-        <Shapes.HorizontalBar width={contentWidth} />
+        <Shapes.HorizontalBar width={Math.random() * 40 + 20} />
+        {Array.from({ length: numberOfContentLines }, (_, index) => (
+          <Shapes.HorizontalBar width={Math.random() * 70 + 10} key={index} />
+        ))}
       </div>
     </Frame>
   );

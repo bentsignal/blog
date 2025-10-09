@@ -63,9 +63,9 @@ export const Messages = () => {
     return (
       <List.Provider>
         <List.Frame>
-          <List.Content className="pb-3">
+          <List.Content className="py-4">
             {Array.from({ length: 10 }).map((_, index) => (
-              <Message.Skeleton key={index} />
+              <Message.Skeleton key={index} index={index} />
             ))}
           </List.Content>
         </List.Frame>
