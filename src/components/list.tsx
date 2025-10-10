@@ -252,7 +252,7 @@ export const ScrollToBottomButton = () => {
   if (!showScrollToBottomButton) return null;
 
   return (
-    <div className="absolute right-4 bottom-4 flex justify-end">
+    <div className="absolute right-0 bottom-0 flex justify-end p-4">
       <Button variant="outline" size="icon" onClick={() => scrollToBottom()}>
         <ArrowDown className="size-4" />
       </Button>
