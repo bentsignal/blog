@@ -7,10 +7,10 @@ import {
   createContext,
   useContextSelector,
 } from "@fluentui/react-context-selector";
-import { Pencil, Trash, UserRound } from "lucide-react";
+import { Pencil, Reply, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "../auth";
-import { EditComposer } from "../composers";
+import { EditComposer, ReplyComposer } from "../composers";
 import * as Shapes from "../shapes";
 import { Button } from "../ui/button";
 import { ButtonGroup } from "../ui/button-group";
@@ -21,14 +21,18 @@ import { useMessageActions } from "@/hooks/use-message-actions";
 export interface Message extends Doc<"messages"> {
   name: string;
   pfp: string | null | undefined;
+  reply?: Message;
 }
+
+type InteractionState = "idle" | "editing" | "replying";
 
 interface MessageContextType extends Message {
   isHovering: boolean;
   setIsHovering: (isHovering: boolean) => void;
-  editInProgress: boolean;
-  setEditInProgress: (editInProgress: boolean) => void;
+  interactionState: InteractionState;
+  setInteractionState: (interactionState: InteractionState) => void;
   editComposerInputRef: React.RefObject<HTMLInputElement | null>;
+  replyComposerInputRef: React.RefObject<HTMLInputElement | null>;
 }
 
 export const MessageContext = createContext<MessageContextType>(
@@ -47,8 +51,10 @@ export const Provider = ({
   children: React.ReactNode;
 }) => {
   const [isHovering, setIsHovering] = useState(false);
-  const [editInProgress, setEditInProgress] = useState(false);
   const editComposerInputRef = useRef<HTMLInputElement>(null);
+  const [interactionState, setInteractionState] =
+    useState<InteractionState>("idle");
+  const replyComposerInputRef = useRef<HTMLInputElement>(null);
 
   const contextValue = useMemo(
     () => ({
@@ -59,18 +65,20 @@ export const Provider = ({
       pfp: message.pfp,
       snapshots: message.snapshots,
       channel: message.channel,
+      reply: message.reply,
       isHovering,
       setIsHovering,
-      editInProgress,
-      setEditInProgress,
       editComposerInputRef,
+      replyComposerInputRef,
+      interactionState,
+      setInteractionState,
     }),
-    [message, isHovering, setIsHovering, editInProgress, setEditInProgress],
+    [message, isHovering, setIsHovering, interactionState, setInteractionState],
   );
 
   return (
     <MessageContext.Provider value={contextValue}>
-      {editInProgress ? <EditComposer /> : children}
+      {children}
     </MessageContext.Provider>
   );
 };
@@ -83,12 +91,18 @@ export const Frame = ({
   children: React.ReactNode;
 }) => {
   const setIsHovering = useMessage((c) => c.setIsHovering);
+  const interactionState = useMessage((c) => c.interactionState);
+
+  const bgColor =
+    interactionState === "editing"
+      ? "bg-red-300/20"
+      : interactionState === "replying"
+        ? "bg-blue-300/20"
+        : "transparent hover:bg-muted";
+
   return (
     <div
-      className={cn(
-        "hover:bg-muted relative flex gap-3 px-6 py-0.5",
-        className,
-      )}
+      className={cn("relative px-6 py-0.5", className, bgColor)}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -125,16 +139,6 @@ export const PFP = () => {
   );
 };
 
-export const Body = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => {
-  return <div className={cn("flex flex-col", className)}>{children}</div>;
-};
-
 export const Time = ({ time }: { time: string }) => {
   return <div className="text-muted-foreground text-xxs">{time}</div>;
 };
@@ -161,7 +165,7 @@ export const Content = () => {
     <span className="text-muted-foreground text-sm font-medium">
       {snapshots[snapshots.length - 1].content}
       {snapshots?.length && snapshots.length > 1 && (
-        <span className="text-muted-foreground/50 text-xxs ml-1 font-light">
+        <span className="text-muted-foreground/70 text-xxs ml-1 font-light">
           (edited)
         </span>
       )}
@@ -172,15 +176,17 @@ export const Content = () => {
 export const Skeleton = ({ index }: { index?: number }) => {
   const numberOfContentLines = index ? (index % 3) + 1 : 3;
   return (
-    <Frame className="mb-4 animate-pulse">
-      <Shapes.Circle className="size-10" />
-      <div className="mt-1 flex w-full flex-col gap-1.5">
-        <Shapes.HorizontalBar width={Math.random() * 40 + 20} />
-        {Array.from({ length: numberOfContentLines }, (_, index) => (
-          <Shapes.HorizontalBar width={Math.random() * 70 + 10} key={index} />
-        ))}
+    <div className="mb-4 animate-pulse px-6 py-0.5">
+      <div className="flex gap-3">
+        <Shapes.Circle className="size-10" />
+        <div className="mt-1 flex w-full flex-col gap-1.5">
+          <Shapes.HorizontalBar width={Math.random() * 40 + 20} />
+          {Array.from({ length: numberOfContentLines }, (_, index) => (
+            <Shapes.HorizontalBar width={Math.random() * 70 + 10} key={index} />
+          ))}
+        </div>
       </div>
-    </Frame>
+    </div>
   );
 };
 
@@ -222,7 +228,7 @@ export const Actions = () => {
     return <MyMessageActions />;
   }
 
-  return null;
+  return <OtherMessageActions />;
 };
 
 const ActionFrame = ({ children }: { children: React.ReactNode }) => {
@@ -236,27 +242,55 @@ const ActionFrame = ({ children }: { children: React.ReactNode }) => {
 const MyMessageActions = () => {
   return (
     <ActionFrame>
+      <ReplyButton />
       <EditButton />
       <DeleteButton />
     </ActionFrame>
   );
 };
 
+const OtherMessageActions = () => {
+  return (
+    <ActionFrame>
+      <ReplyButton />
+    </ActionFrame>
+  );
+};
+
 const EditButton = () => {
-  const setEditInProgress = useMessage((c) => c.setEditInProgress);
+  const setInteractionState = useMessage((c) => c.setInteractionState);
   const editComposerInputRef = useMessage((c) => c.editComposerInputRef);
   return (
     <Button
       variant="outline"
       size="actions"
       onClick={() => {
-        setEditInProgress(true);
+        setInteractionState("editing");
         setTimeout(() => {
           editComposerInputRef.current?.focus();
         }, 100);
       }}
     >
       <Pencil className="size-3" />
+    </Button>
+  );
+};
+
+const ReplyButton = () => {
+  const setInteractionState = useMessage((c) => c.setInteractionState);
+  const replyComposerInputRef = useMessage((c) => c.replyComposerInputRef);
+  return (
+    <Button
+      variant="outline"
+      size="actions"
+      onClick={() => {
+        setInteractionState("replying");
+        setTimeout(() => {
+          replyComposerInputRef.current?.focus();
+        }, 100);
+      }}
+    >
+      <Reply className="size-3" />
     </Button>
   );
 };
@@ -273,5 +307,42 @@ const DeleteButton = () => {
       {" "}
       <Trash className="text-destructive size-3" />{" "}
     </Button>
+  );
+};
+
+export const ReplyInline = () => {
+  const interactionState = useMessage((c) => c.interactionState);
+  if (interactionState !== "replying") return null;
+
+  return <ReplyComposer />;
+};
+
+export const EditInline = () => {
+  const interactionState = useMessage((c) => c.interactionState);
+  if (interactionState !== "editing") return null;
+
+  return <EditComposer />;
+};
+
+export const ReplyPreview = () => {
+  const reply = useMessage((c) => c.reply);
+  if (!reply) return null;
+
+  return (
+    <div className="mb-0.5 flex h-5 items-center">
+      <div className="border-muted-foreground mt-1.5 mr-1 ml-5 h-2.5 w-7 rounded-tl-sm border-t border-l" />
+      {reply.pfp && (
+        <Image
+          src={reply.pfp ?? ""}
+          alt={reply.name ?? ""}
+          width={40}
+          height={40}
+          className="mr-1 size-4 flex-shrink-0 rounded-full"
+        />
+      )}
+      <span className="text-muted-foreground max-w-80 truncate text-xs">
+        {reply.snapshots[reply.snapshots.length - 1].content}
+      </span>
+    </div>
   );
 };

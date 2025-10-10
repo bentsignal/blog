@@ -5,6 +5,7 @@ import { authedMutation } from "./convex_helpers";
 import { rateLimiter } from "./limiter";
 import { getFileURL } from "./uploadthing";
 import { getProfile, type Profile } from "./user";
+import { type Message } from "@/components/messages/message";
 import { validateMessage } from "@/lib/utils";
 
 export const get = query({
@@ -16,7 +17,16 @@ export const get = query({
       .query("messages")
       .order("desc")
       .paginate(args.paginationOpts);
-    const allProfiles = messages.page.map((message) => message.profile);
+    const repliedToMessages = await Promise.all(
+      messages.page.map((message) =>
+        message.replyTo ? ctx.db.get(message.replyTo) : null,
+      ),
+    );
+    const messageProfiles = messages.page.map((message) => message.profile);
+    const replyProfiles = repliedToMessages
+      .map((msg) => (msg ? msg.profile : null))
+      .filter((profile) => profile !== null);
+    const allProfiles = [...messageProfiles, ...replyProfiles];
     const dedupedProfiles = [...new Set(allProfiles)];
     const profilesData = await Promise.all(
       dedupedProfiles.map((profile) => ctx.db.get(profile)),
@@ -33,15 +43,30 @@ export const get = query({
       },
       {} as Record<string, Profile>,
     );
+
     return {
       ...messages,
-      page: messages.page.map((message) => {
+      page: messages.page.map((message, idx) => {
         const user = profilesMap[message.profile];
         if (!user) throw new ConvexError("User not found");
+
+        const repliedToMessage = repliedToMessages[idx];
+        let reply: Message | undefined;
+        if (repliedToMessage) {
+          const profile = profilesMap[repliedToMessage.profile];
+          if (!profile) throw new ConvexError("User not found");
+          reply = {
+            ...repliedToMessage,
+            name: profile.name,
+            pfp: profile.image,
+          };
+        }
+
         return {
           ...message,
           name: user.name,
           pfp: user.image,
+          reply,
         };
       }),
     };
@@ -52,6 +77,7 @@ export const send = authedMutation({
   args: {
     content: v.string(),
     channel: v.id("channels"),
+    replyTo: v.optional(v.id("messages")),
   },
   handler: async (ctx, args) => {
     const { content } = args;
@@ -72,6 +98,7 @@ export const send = authedMutation({
       ],
       profile: profile._id,
       channel: args.channel,
+      replyTo: args.replyTo,
     });
   },
 });

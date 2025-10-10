@@ -416,3 +416,11 @@ export const CommandButton = () => {
     </Button>
   );
 };
+
+export const InlineHeader = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="bg-muted/40 mt-3 flex w-full items-center gap-1 p-2">
+      <span className="text-muted-foreground text-sm">{children}</span>
+    </div>
+  );
+};

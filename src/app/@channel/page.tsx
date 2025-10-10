@@ -9,7 +9,11 @@ import { useAuth } from "@/components/auth";
 import { ChannelComposer } from "@/components/composers";
 import { DateMarker } from "@/components/date-marker";
 import * as List from "@/components/list";
-import { ChainedMessage, UserMessage } from "@/components/messages";
+import {
+  ChainedMessage,
+  ReplyMessage,
+  UserMessage,
+} from "@/components/messages";
 import * as Message from "@/components/messages/message";
 import * as Card from "@/components/ui/card";
 import { areSameDay } from "@/lib/time";
@@ -108,7 +112,9 @@ export const Messages = () => {
             return (
               <Fragment key={message._id}>
                 {showDateMarker && <DateMarker time={message._creationTime} />}
-                {shouldChainMessages ? (
+                {message.reply ? (
+                  <ReplyMessage message={message} />
+                ) : shouldChainMessages ? (
                   <ChainedMessage message={message} />
                 ) : (
                   <UserMessage message={message} />

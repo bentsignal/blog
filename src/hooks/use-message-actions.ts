@@ -23,6 +23,21 @@ export const useMessageActions = () => {
         const results = localStore.getAllQueries(api.messages.get);
         const current = results[0];
         if (!current || !current.value) return;
+
+        let reply = undefined;
+        if (args.replyTo) {
+          const replyToMessage = current.value.page.find(
+            (msg) => msg._id === args.replyTo,
+          );
+          if (replyToMessage) {
+            reply = {
+              ...replyToMessage,
+              name: replyToMessage.name,
+              pfp: replyToMessage.pfp ?? null,
+            };
+          }
+        }
+
         const newMessage = {
           name: name ?? "",
           pfp: image,
@@ -37,6 +52,7 @@ export const useMessageActions = () => {
               timestamp: Date.now(),
             },
           ],
+          reply,
         };
         localStore.setQuery(
           api.messages.get,

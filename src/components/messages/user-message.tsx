@@ -5,13 +5,17 @@ const PureUserMessage = ({ message }: { message: Message.Message }) => {
   return (
     <Message.Provider message={message}>
       <Message.Frame className="mt-3">
-        <Message.PFP />
-        <Message.Body>
-          <Message.Header />
-          <Message.Content />
-        </Message.Body>
+        <div className="flex gap-3">
+          <Message.PFP />
+          <div className="flex flex-col">
+            <Message.Header />
+            <Message.Content />
+          </div>
+        </div>
         <Message.Actions />
       </Message.Frame>
+      <Message.ReplyInline />
+      <Message.EditInline />
     </Message.Provider>
   );
 };

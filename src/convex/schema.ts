@@ -14,6 +14,7 @@ export default defineSchema({
     snapshots: v.array(snapshot),
     profile: v.id("profiles"),
     channel: v.id("channels"),
+    replyTo: v.optional(v.id("messages")),
   }).index("by_channel", ["channel"]),
   profiles: defineTable({
     user: v.string(),

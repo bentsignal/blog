@@ -5,12 +5,14 @@ const PureChainedMessage = ({ message }: { message: Message.Message }) => {
   return (
     <Message.Provider message={message}>
       <Message.Frame>
-        <Message.Body className="flex-row items-center">
+        <div className="flex items-center">
           <Message.SideTime />
           <Message.Content />
-        </Message.Body>
+        </div>
         <Message.Actions />
       </Message.Frame>
+      <Message.ReplyInline />
+      <Message.EditInline />
     </Message.Provider>
   );
 };

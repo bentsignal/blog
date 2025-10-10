@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
@@ -7,22 +9,21 @@ import * as Composer from "./composer";
 import { validateMessage } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
-export const EditComposer = () => {
-  const hasParentContext = useHasParentContext(MessageContext);
-  if (!hasParentContext) {
+export const ReplyComposer = () => {
+  const hasMessageContext = useHasParentContext(MessageContext);
+  if (!hasMessageContext) {
     throw new Error("MessageContext not found");
   }
 
-  const snapshots = useMessage((c) => c.snapshots);
   const messageId = useMessage((c) => c._id);
-  const inputRef = useMessage((c) => c.editComposerInputRef);
+  const channel = useMessage((c) => c.channel);
+  const inputRef = useMessage((c) => c.replyComposerInputRef);
   const setInteractionState = useMessage((c) => c.setInteractionState);
   const setIsHovering = useMessage((c) => c.setIsHovering);
-  const { editMessage } = useMessageActions();
+  const name = useMessage((c) => c.name);
 
-  const [inputValue, setInputValue] = useState(
-    snapshots[snapshots.length - 1].content,
-  );
+  const [inputValue, setInputValue] = useState("");
+  const { sendMessage } = useMessageActions();
 
   return (
     <Composer.Provider
@@ -36,13 +37,12 @@ export const EditComposer = () => {
           toast.error(validation);
           return;
         }
-        const previousContent = snapshots[snapshots.length - 1].content;
-        if (previousContent !== newValue) {
-          editMessage({
-            messageId: messageId,
-            content: newValue,
-          });
-        }
+        sendMessage({
+          content: newValue,
+          channel: channel,
+          replyTo: messageId,
+        });
+        setInputValue("");
         setInteractionState("idle");
         setIsHovering(false);
       }}
@@ -51,14 +51,17 @@ export const EditComposer = () => {
         setInteractionState("idle");
       }}
     >
-      <Composer.Frame className="my-3 rounded-none px-6">
+      <Composer.InlineHeader>
+        Replying to <span className="font-semibold">{name}</span>
+      </Composer.InlineHeader>
+      <Composer.Frame className="mb-3 rounded-none px-6">
         <Composer.Header />
         <Composer.Input />
         <Composer.Footer>
           <Composer.CommonActions />
           <ButtonGroup>
             <Composer.Cancel />
-            <Composer.Save />
+            <Composer.Send />
           </ButtonGroup>
         </Composer.Footer>
       </Composer.Frame>
