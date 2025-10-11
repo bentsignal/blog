@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ContextSelector,
   createContext,
@@ -8,7 +8,6 @@ import {
   useHasParentContext,
 } from "@fluentui/react-context-selector";
 import * as Icons from "lucide-react";
-import { Separator as BaseSeparator } from "../ui/separator";
 import { Button } from "@/components/ui/button";
 import { MAX_MESSAGE_LENGTH, MIN_MESSAGE_LENGTH } from "@/lib/config";
 import { cn } from "@/lib/utils";
@@ -20,7 +19,7 @@ type Style = {
 };
 
 interface ComposerInputProps {
-  inputRef: React.RefObject<HTMLInputElement | null>;
+  inputRef: React.RefObject<HTMLTextAreaElement | null>;
   inputValue: string;
   setInputValue: (value: string) => void;
   onSubmit: () => void;
@@ -66,7 +65,15 @@ export const Provider = ({
       setStyle,
       submitDisabled,
     }),
-    [inputValue, onSubmit, onCancel, style, submitDisabled],
+    [
+      inputRef,
+      inputValue,
+      setInputValue,
+      onSubmit,
+      onCancel,
+      style,
+      submitDisabled,
+    ],
   );
 
   return (
@@ -86,7 +93,7 @@ export const Frame = ({
   return (
     <div
       className={cn(
-        "bg-muted flex flex-col justify-center rounded-2xl p-3",
+        "bg-muted flex items-center justify-center rounded-2xl p-4",
         className,
       )}
     >
@@ -95,7 +102,13 @@ export const Frame = ({
   );
 };
 
-export const Input = () => {
+export const Input = ({
+  placeholder = "Aa",
+  className,
+}: {
+  placeholder?: string;
+  className?: string;
+}) => {
   const hasParentContext = useHasParentContext(ComposerContext);
   if (!hasParentContext) {
     throw new Error("ComposerContext not found");
@@ -108,22 +121,49 @@ export const Input = () => {
   const submitDisabled = useComposer((c) => c.submitDisabled);
   const onCancel = useComposer((c) => c.onCancel);
 
+  useEffect(() => {
+    const textarea = inputRef.current;
+    if (!textarea) return;
+
+    textarea.style.height = "auto";
+    const lineHeight = 20;
+    const maxLines = 5;
+    const maxHeight = lineHeight * maxLines;
+    const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+    textarea.style.height = `${newHeight}px`;
+  }, [inputValue, inputRef]);
+
   return (
-    <input
+    <textarea
+      id="composer-input"
       ref={inputRef}
-      className="mt-1 mb-2 w-full flex-1 rounded-md p-2 duration-200 focus:outline-none"
+      rows={1}
+      className={cn(
+        "mr-2 flex w-full min-w-0 flex-1",
+        "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+        "resize-none select-none",
+        "scrollbar-track-transparent scrollbar-thin scrollbar-thumb-card overflow-y-auto",
+        "text-sm transition-[color,box-shadow]",
+        "focus-visible:ring-ring/0 outline-none",
+        "selection:bg-primary selection:text-primary-foreground",
+        className,
+      )}
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
       onKeyDown={(e) => {
         if (submitDisabled) return;
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
           onSubmit();
+          if (inputRef.current) {
+            inputRef.current.style.height = "auto";
+          }
         }
-        if (e.key === "Escape") {
+        if (e.key === "Escape" && !e.shiftKey) {
           onCancel?.();
         }
       }}
-      placeholder="Type your message here..."
+      placeholder={placeholder}
       minLength={MIN_MESSAGE_LENGTH}
       maxLength={MAX_MESSAGE_LENGTH}
     />
@@ -183,236 +223,6 @@ export const Save = () => {
       disabled={submitDisabled}
     >
       <Icons.Save className="text-white" />
-    </Button>
-  );
-};
-
-const Separator = () => {
-  return (
-    <BaseSeparator
-      orientation="vertical"
-      className="bg-muted-foreground/20 mx-1 h-6!"
-    />
-  );
-};
-
-export const Header = () => {
-  return (
-    <div className="flex items-center">
-      <BoldButton />
-      <ItalicButton />
-      <StrikethroughButton />
-      <Separator />
-      <LinkButton />
-      <ListOrderedButton />
-      <ListButton />
-      <Separator />
-      <QuoteButton />
-      <CodeButton />
-      <BlockCodeButton />
-    </div>
-  );
-};
-
-export const Footer = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex items-center">{children}</div>;
-};
-
-export const CommonActions = () => {
-  return (
-    <div className="flex flex-1 items-center">
-      <PlusMenu />
-      <BaselineButton />
-      <EmojiButton />
-      <AtButton />
-      <Separator />
-      <VideoButton />
-      <MicrophoneButton />
-      <Separator />
-      <CommandButton />
-    </div>
-  );
-};
-
-export const BoldButton = () => {
-  const hasParentContext = useHasParentContext(ComposerContext);
-  if (!hasParentContext) {
-    throw new Error("ComposerContext not found");
-  }
-
-  const setStyle = useComposer((c) => c.setStyle);
-  const active = useComposer((c) => c.style.bold);
-
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => {
-        setStyle((prev) => ({ ...prev, bold: !prev.bold }));
-      }}
-    >
-      <Icons.Bold
-        className={active ? "text-primary" : "text-muted-foreground"}
-        strokeWidth={active ? 4 : 2}
-      />
-    </Button>
-  );
-};
-
-export const ItalicButton = () => {
-  const hasParentContext = useHasParentContext(ComposerContext);
-  if (!hasParentContext) {
-    throw new Error("ComposerContext not found");
-  }
-
-  const setStyle = useComposer((c) => c.setStyle);
-  const active = useComposer((c) => c.style.italic);
-
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => {
-        setStyle((prev) => ({ ...prev, italic: !prev.italic }));
-      }}
-    >
-      <Icons.Italic
-        className={active ? "text-primary" : "text-muted-foreground"}
-        strokeWidth={active ? 4 : 2}
-      />
-    </Button>
-  );
-};
-
-export const StrikethroughButton = () => {
-  const hasParentContext = useHasParentContext(ComposerContext);
-  if (!hasParentContext) {
-    throw new Error("ComposerContext not found");
-  }
-
-  const setStyle = useComposer((c) => c.setStyle);
-  const active = useComposer((c) => c.style.strikethrough);
-
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => {
-        setStyle((prev) => ({ ...prev, strikethrough: !prev.strikethrough }));
-      }}
-    >
-      <Icons.Strikethrough
-        className={active ? "text-primary" : "text-muted-foreground"}
-        strokeWidth={active ? 4 : 2}
-      />
-    </Button>
-  );
-};
-
-export const LinkButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.Link className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const ListOrderedButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.ListOrdered className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const ListButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.List className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const QuoteButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.TextQuote className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const CodeButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.Code className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const BlockCodeButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.MessageSquareCode className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const PlusMenu = () => {
-  return (
-    <Button
-      variant="outline"
-      size="icon"
-      className="mr-1 rounded-full border-none"
-    >
-      <Icons.Plus className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const BaselineButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.Baseline className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const EmojiButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.Smile className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const AtButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.AtSign className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const VideoButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.Video className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const MicrophoneButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.Mic className="text-muted-foreground" />
-    </Button>
-  );
-};
-
-export const CommandButton = () => {
-  return (
-    <Button variant="ghost" size="icon">
-      <Icons.SlashSquare className="text-muted-foreground" />
     </Button>
   );
 };

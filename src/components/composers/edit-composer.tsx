@@ -24,6 +24,8 @@ export const EditComposer = () => {
     snapshots[snapshots.length - 1].content,
   );
 
+  const previousContent = snapshots[snapshots.length - 1].content;
+
   return (
     <Composer.Provider
       inputValue={inputValue}
@@ -36,7 +38,6 @@ export const EditComposer = () => {
           toast.error(validation);
           return;
         }
-        const previousContent = snapshots[snapshots.length - 1].content;
         if (previousContent !== newValue) {
           editMessage({
             messageId: messageId,
@@ -52,15 +53,11 @@ export const EditComposer = () => {
       }}
     >
       <Composer.Frame className="my-3 rounded-none px-6">
-        <Composer.Header />
-        <Composer.Input />
-        <Composer.Footer>
-          <Composer.CommonActions />
-          <ButtonGroup>
-            <Composer.Cancel />
-            <Composer.Save />
-          </ButtonGroup>
-        </Composer.Footer>
+        <Composer.Input placeholder={previousContent} />
+        <ButtonGroup>
+          <Composer.Cancel />
+          <Composer.Save />
+        </ButtonGroup>
       </Composer.Frame>
     </Composer.Provider>
   );

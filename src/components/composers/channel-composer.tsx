@@ -16,7 +16,7 @@ export const ChannelComposer = () => {
   }
 
   const [inputValue, setInputValue] = useState("");
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
   const channel = useChannel((c) => c.channel);
   const signedIn = useAuth((c) => c.signedIn);
@@ -54,12 +54,8 @@ export const ChannelComposer = () => {
       inputRef={inputRef}
     >
       <Composer.Frame className="mx-4 mb-4">
-        <Composer.Header />
-        <Composer.Input />
-        <Composer.Footer>
-          <Composer.CommonActions />
-          <Composer.Send />
-        </Composer.Footer>
+        <Composer.Input className="ml-1" />
+        <Composer.Send />
       </Composer.Frame>
     </Composer.Provider>
   );

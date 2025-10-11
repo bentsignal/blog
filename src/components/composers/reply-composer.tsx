@@ -55,15 +55,11 @@ export const ReplyComposer = () => {
         Replying to <span className="font-semibold">{name}</span>
       </Composer.InlineHeader>
       <Composer.Frame className="mb-3 rounded-none px-6">
-        <Composer.Header />
         <Composer.Input />
-        <Composer.Footer>
-          <Composer.CommonActions />
-          <ButtonGroup>
-            <Composer.Cancel />
-            <Composer.Send />
-          </ButtonGroup>
-        </Composer.Footer>
+        <ButtonGroup>
+          <Composer.Cancel />
+          <Composer.Send />
+        </ButtonGroup>
       </Composer.Frame>
     </Composer.Provider>
   );

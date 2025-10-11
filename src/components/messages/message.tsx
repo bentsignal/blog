@@ -31,8 +31,8 @@ interface MessageContextType extends Message {
   setIsHovering: (isHovering: boolean) => void;
   interactionState: InteractionState;
   setInteractionState: (interactionState: InteractionState) => void;
-  editComposerInputRef: React.RefObject<HTMLInputElement | null>;
-  replyComposerInputRef: React.RefObject<HTMLInputElement | null>;
+  editComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
+  replyComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
 }
 
 export const MessageContext = createContext<MessageContextType>(
@@ -51,10 +51,10 @@ export const Provider = ({
   children: React.ReactNode;
 }) => {
   const [isHovering, setIsHovering] = useState(false);
-  const editComposerInputRef = useRef<HTMLInputElement>(null);
+  const editComposerInputRef = useRef<HTMLTextAreaElement>(null);
   const [interactionState, setInteractionState] =
     useState<InteractionState>("idle");
-  const replyComposerInputRef = useRef<HTMLInputElement>(null);
+  const replyComposerInputRef = useRef<HTMLTextAreaElement>(null);
 
   const contextValue = useMemo(
     () => ({
@@ -267,7 +267,12 @@ const EditButton = () => {
       onClick={() => {
         setInteractionState("editing");
         setTimeout(() => {
-          editComposerInputRef.current?.focus();
+          const input = editComposerInputRef.current;
+          if (input) {
+            input.focus();
+            const length = input.value.length;
+            input.setSelectionRange(length, length);
+          }
         }, 100);
       }}
     >
