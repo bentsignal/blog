@@ -139,7 +139,7 @@ export const Input = ({
       ref={inputRef}
       rows={1}
       className={cn(
-        "mr-3 flex w-full min-w-0 flex-1",
+        "mr-3 flex w-full min-w-0 flex-1 p-1",
         "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
         "resize-none select-none",
         "scrollbar-track-transparent scrollbar-thin scrollbar-thumb-card overflow-y-auto",
