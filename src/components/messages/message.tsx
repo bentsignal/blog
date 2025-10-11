@@ -159,16 +159,21 @@ export const Header = () => {
   );
 };
 
+const EditedIndicator = () => {
+  return (
+    <span className="text-muted-foreground/70 text-xxs ml-1 font-light">
+      (edited)
+    </span>
+  );
+};
+
 export const Content = () => {
   const snapshots = useMessage((c) => c.snapshots);
+  const isEdited = snapshots?.length && snapshots.length > 1;
   return (
     <span className="text-muted-foreground text-sm font-medium">
       {snapshots[snapshots.length - 1].content}
-      {snapshots?.length && snapshots.length > 1 && (
-        <span className="text-muted-foreground/70 text-xxs ml-1 font-light">
-          (edited)
-        </span>
-      )}
+      {isEdited && <EditedIndicator />}
     </span>
   );
 };
@@ -333,6 +338,8 @@ export const ReplyPreview = () => {
   const reply = useMessage((c) => c.reply);
   if (!reply) return null;
 
+  const isEdited = reply.snapshots.length > 1;
+
   return (
     <div className="mb-0.5 flex h-5 items-center">
       <div className="border-muted-foreground mt-1.5 mr-1 ml-5 h-2.5 w-7 rounded-tl-sm border-t border-l" />
@@ -345,9 +352,10 @@ export const ReplyPreview = () => {
           className="mr-1 size-4 flex-shrink-0 rounded-full"
         />
       )}
-      <span className="text-muted-foreground max-w-80 truncate text-xs">
+      <span className="text-muted-foreground max-w-64 truncate text-xs">
         {reply.snapshots[reply.snapshots.length - 1].content}
       </span>
+      {isEdited && <EditedIndicator />}
     </div>
   );
 };
