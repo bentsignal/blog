@@ -26,15 +26,19 @@ export const useMessageActions = () => {
 
         let reply = undefined;
         if (args.replyTo) {
-          const replyToMessage = current.value.page.find(
-            (msg) => msg._id === args.replyTo,
-          );
-          if (replyToMessage) {
-            reply = {
-              ...replyToMessage,
-              name: replyToMessage.name,
-              pfp: replyToMessage.pfp ?? null,
-            };
+          for (const result of results) {
+            if (!result || !result.value) continue;
+            const replyToMessage = result.value.page.find(
+              (msg) => msg._id === args.replyTo,
+            );
+            if (replyToMessage) {
+              reply = {
+                ...replyToMessage,
+                name: replyToMessage.name,
+                pfp: replyToMessage.pfp ?? null,
+              };
+              break;
+            }
           }
         }
 
