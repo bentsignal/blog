@@ -32,6 +32,7 @@ export interface ListContextType {
   scrollToBottom: (behavior?: "instant" | "smooth") => void;
   loadingStatus?: PaginationStatus;
   skeletonComponent?: React.ReactNode;
+  channelComposerInputRef?: RefObject<HTMLTextAreaElement | null>;
 }
 
 export const ListContext = createContext<ListContextType>(
@@ -52,6 +53,7 @@ interface ListProps {
   skeletonComponent?: React.ReactNode;
   loadMoreOnScrollThreshold?: number;
   loadMore?: () => void;
+  channelComposerInputRef?: RefObject<HTMLTextAreaElement | null>;
 }
 
 export const Provider = ({
@@ -65,6 +67,7 @@ export const Provider = ({
   loadMoreOnScrollThreshold = 1000,
   skeletonComponent,
   loadMore,
+  channelComposerInputRef,
 }: ListProps) => {
   const isAtBottom = useRef(false);
   const distanceFromBottom = useRef(0);
@@ -153,12 +156,14 @@ export const Provider = ({
       scrollToBottom,
       loadingStatus,
       skeletonComponent,
+      channelComposerInputRef,
     }),
     [
       showScrollToBottomButton,
       setShowScrollToBottomButton,
       loadingStatus,
       skeletonComponent,
+      channelComposerInputRef,
     ],
   );
 

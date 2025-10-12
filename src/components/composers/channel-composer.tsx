@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { ChannelContext, useChannel } from "@/providers/channel-provider";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
@@ -10,7 +10,11 @@ import * as Composer from "./composer";
 import { validateMessage } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
-export const ChannelComposer = () => {
+export const ChannelComposer = ({
+  inputRef,
+}: {
+  inputRef: React.RefObject<HTMLTextAreaElement | null>;
+}) => {
   const hasChannelContext = useHasParentContext(ChannelContext);
   const hasListContext = useHasParentContext(ListContext);
 
@@ -22,7 +26,6 @@ export const ChannelComposer = () => {
   }
 
   const [inputValue, setInputValue] = useState("");
-  const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
   const channel = useChannel((c) => c.channel);
   const signedIn = useAuth((c) => c.signedIn);

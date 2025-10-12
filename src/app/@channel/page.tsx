@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useRef } from "react";
 import { api } from "@/convex/_generated/api";
 import { ChannelProvider } from "@/providers/channel-provider";
 import { usePaginatedQuery, useQuery } from "convex/react";
@@ -49,6 +49,8 @@ const Header = () => {
 };
 
 export const Body = () => {
+  const channelComposerInputRef = useRef<HTMLTextAreaElement>(null);
+
   const config = {
     initialPageSize: 50,
     pageSize: 50,
@@ -78,6 +80,7 @@ export const Body = () => {
       loadingStatus={status}
       skeletonComponent={<Message.Skeleton />}
       loadMore={() => loadMore(config.pageSize)}
+      channelComposerInputRef={channelComposerInputRef}
     >
       <List.Frame>
         {status === "LoadingFirstPage" ? (
@@ -122,7 +125,7 @@ export const Body = () => {
           </List.Content>
         )}
       </List.Frame>
-      <ChannelComposer />
+      <ChannelComposer inputRef={channelComposerInputRef} />
     </List.Provider>
   );
 };

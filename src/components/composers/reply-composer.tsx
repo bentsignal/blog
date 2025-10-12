@@ -29,6 +29,7 @@ export const ReplyComposer = () => {
   const name = useMessage((c) => c.name);
 
   const scrollToBottom = useList((c) => c.scrollToBottom);
+  const channelComposerInputRef = useList((c) => c.channelComposerInputRef);
 
   const [inputValue, setInputValue] = useState("");
   const { sendMessage } = useMessageActions();
@@ -52,6 +53,7 @@ export const ReplyComposer = () => {
         });
         setInteractionState("idle");
         setIsHovering(false);
+        channelComposerInputRef?.current?.focus();
         setTimeout(() => {
           scrollToBottom();
         }, 0);
