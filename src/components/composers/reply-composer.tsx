@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
+import { ListContext, useList } from "../list";
 import { MessageContext, useMessage } from "../messages/message";
 import { ButtonGroup } from "../ui/button-group";
 import * as Composer from "./composer";
@@ -15,12 +16,19 @@ export const ReplyComposer = () => {
     throw new Error("MessageContext not found");
   }
 
+  const hasListContext = useHasParentContext(ListContext);
+  if (!hasListContext) {
+    throw new Error("ListContext not found");
+  }
+
   const messageId = useMessage((c) => c._id);
   const channel = useMessage((c) => c.channel);
   const inputRef = useMessage((c) => c.replyComposerInputRef);
   const setInteractionState = useMessage((c) => c.setInteractionState);
   const setIsHovering = useMessage((c) => c.setIsHovering);
   const name = useMessage((c) => c.name);
+
+  const scrollToBottom = useList((c) => c.scrollToBottom);
 
   const [inputValue, setInputValue] = useState("");
   const { sendMessage } = useMessageActions();
@@ -42,9 +50,11 @@ export const ReplyComposer = () => {
           channel: channel,
           replyTo: messageId,
         });
-        setInputValue("");
         setInteractionState("idle");
         setIsHovering(false);
+        setTimeout(() => {
+          scrollToBottom();
+        }, 0);
       }}
       onCancel={() => {
         setIsHovering(false);
