@@ -359,3 +359,12 @@ export const ReplyPreview = () => {
     </div>
   );
 };
+
+export const InlineComposers = () => {
+  return (
+    <>
+      <ReplyInline />
+      <EditInline />
+    </>
+  );
+};

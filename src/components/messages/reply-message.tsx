@@ -17,8 +17,7 @@ const PureReplyMessage = ({ message }: { message: Message.Message }) => {
         </div>
         <Message.Actions />
       </Message.Frame>
-      <Message.ReplyInline />
-      <Message.EditInline />
+      <Message.InlineComposers />
     </Message.Provider>
   );
 };
