@@ -25,8 +25,7 @@ export default function Channel() {
       <Card.CardContent className="flex h-full flex-col p-0">
         <ChannelProvider channel={channel}>
           <Header />
-          <Messages />
-          <ChannelComposer />
+          <Body />
         </ChannelProvider>
       </Card.CardContent>
     </Card.Card>
@@ -49,7 +48,7 @@ const Header = () => {
   );
 };
 
-export const Messages = () => {
+export const Body = () => {
   const config = {
     initialPageSize: 50,
     pageSize: 50,
@@ -63,68 +62,67 @@ export const Messages = () => {
     },
   );
 
-  if (status === "LoadingFirstPage") {
-    return (
-      <List.Provider>
-        <List.Frame>
-          <List.Content className="py-4">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <Message.Skeleton key={index} index={index} />
-            ))}
-          </List.Content>
-        </List.Frame>
-      </List.Provider>
-    );
-  }
-
   if (!results) {
     return <Message.Error />;
   }
 
   const reversedResults = results.slice().reverse();
 
+  const firstPageLoaded = status !== "LoadingFirstPage";
+
   return (
     <List.Provider
       stickToBottom={true}
-      scrollToBottomOnMount={true}
-      maintainScrollPositionOnAppend={true}
+      scrollToBottomOnMount={firstPageLoaded}
+      maintainScrollPositionOnAppend={firstPageLoaded}
       loadingStatus={status}
       skeletonComponent={<Message.Skeleton />}
       loadMore={() => loadMore(config.pageSize)}
     >
       <List.Frame>
-        <List.Content className="pb-4">
-          {reversedResults.map((message, index) => {
-            const previousMessage =
-              index > 0 ? reversedResults[index - 1] : null;
-            // messages sent by the same userwithin 5 minutes of each other are chained together
-            const shouldChainMessages =
-              previousMessage?.profile === message.profile &&
-              message._creationTime - previousMessage._creationTime <
-                1000 * 60 * 5;
-            // if neighboring messages are not sent on the same day, show the date to mark
-            // the start of a new day
-            const isSameDay = areSameDay(
-              message._creationTime,
-              previousMessage?._creationTime ?? 0,
-            );
-            const showDateMarker = !isSameDay && !shouldChainMessages;
-            return (
-              <Fragment key={message._id}>
-                {showDateMarker && <DateMarker time={message._creationTime} />}
-                {message.reply ? (
-                  <ReplyMessage message={message} />
-                ) : shouldChainMessages ? (
-                  <ChainedMessage message={message} />
-                ) : (
-                  <UserMessage message={message} />
-                )}
-              </Fragment>
-            );
-          })}
-          <List.ScrollToBottomButton />
-        </List.Content>
+        {status === "LoadingFirstPage" ? (
+          <List.Content className="py-4">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <Message.Skeleton key={index} index={index} />
+            ))}
+          </List.Content>
+        ) : (
+          <List.Content className="pb-4">
+            {reversedResults.map((message, index) => {
+              const previousMessage =
+                index > 0 ? reversedResults[index - 1] : null;
+              // messages sent by the same userwithin 5 minutes of each other are chained together
+              const shouldChainMessages =
+                previousMessage?.profile === message.profile &&
+                message._creationTime - previousMessage._creationTime <
+                  1000 * 60 * 5;
+              // if neighboring messages are not sent on the same day, show the date to mark
+              // the start of a new day
+              const isSameDay = areSameDay(
+                message._creationTime,
+                previousMessage?._creationTime ?? 0,
+              );
+              const showDateMarker = !isSameDay && !shouldChainMessages;
+              return (
+                <Fragment key={message._id}>
+                  {showDateMarker && (
+                    <DateMarker time={message._creationTime} />
+                  )}
+                  {message.reply ? (
+                    <ReplyMessage message={message} />
+                  ) : shouldChainMessages ? (
+                    <ChainedMessage message={message} />
+                  ) : (
+                    <UserMessage message={message} />
+                  )}
+                </Fragment>
+              );
+            })}
+            <List.ScrollToBottomButton />
+          </List.Content>
+        )}
       </List.Frame>
+      <ChannelComposer />
     </List.Provider>
   );
 };
