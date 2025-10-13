@@ -8,6 +8,7 @@ import {
   useHasParentContext,
 } from "@fluentui/react-context-selector";
 import * as Icons from "lucide-react";
+import * as ToolTip from "../ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { MAX_MESSAGE_LENGTH, MIN_MESSAGE_LENGTH } from "@/lib/config";
 import { cn } from "@/lib/utils";
@@ -182,14 +183,19 @@ export const Send = () => {
   const submitDisabled = useComposer((c) => c.inputValue.trim() === "");
 
   return (
-    <Button
-      onClick={onSubmit}
-      size="icon"
-      disabled={submitDisabled}
-      className="bg-green-800 hover:bg-green-900"
-    >
-      <Icons.Send className="h-4 w-4 text-white" />
-    </Button>
+    <ToolTip.Tooltip>
+      <ToolTip.TooltipTrigger asChild>
+        <Button
+          onClick={onSubmit}
+          size="icon"
+          disabled={submitDisabled}
+          className="bg-green-800 hover:bg-green-900"
+        >
+          <Icons.Send className="h-4 w-4 text-white" />
+        </Button>
+      </ToolTip.TooltipTrigger>
+      <ToolTip.TooltipContent>Send</ToolTip.TooltipContent>
+    </ToolTip.Tooltip>
   );
 };
 
@@ -202,9 +208,14 @@ export const Cancel = () => {
   const onCancel = useComposer((c) => c.onCancel);
 
   return (
-    <Button variant="destructive" size="icon" onClick={onCancel}>
-      <Icons.X className="text-white" />
-    </Button>
+    <ToolTip.Tooltip>
+      <ToolTip.TooltipTrigger asChild>
+        <Button variant="destructive" size="icon" onClick={onCancel}>
+          <Icons.X className="text-white" />
+        </Button>
+      </ToolTip.TooltipTrigger>
+      <ToolTip.TooltipContent>Cancel</ToolTip.TooltipContent>
+    </ToolTip.Tooltip>
   );
 };
 
@@ -218,14 +229,19 @@ export const Save = () => {
   const submitDisabled = useComposer((c) => c.submitDisabled);
 
   return (
-    <Button
-      className="bg-green-800 hover:bg-green-900"
-      size="icon"
-      onClick={onSubmit}
-      disabled={submitDisabled}
-    >
-      <Icons.Save className="text-white" />
-    </Button>
+    <ToolTip.Tooltip>
+      <ToolTip.TooltipTrigger asChild>
+        <Button
+          className="bg-green-800 hover:bg-green-900"
+          size="icon"
+          onClick={onSubmit}
+          disabled={submitDisabled}
+        >
+          <Icons.Save className="text-white" />
+        </Button>
+      </ToolTip.TooltipTrigger>
+      <ToolTip.TooltipContent>Save</ToolTip.TooltipContent>
+    </ToolTip.Tooltip>
   );
 };
 

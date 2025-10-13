@@ -16,6 +16,7 @@ import {
 } from "@fluentui/react-context-selector";
 import { ArrowDown } from "lucide-react";
 import { Button } from "./ui/button";
+import * as ToolTip from "./ui/tooltip";
 import { cn } from "@/lib/utils";
 
 export type PaginationStatus =
@@ -258,9 +259,18 @@ export const ScrollToBottomButton = () => {
 
   return (
     <div className="absolute right-0 bottom-0 flex justify-end p-4">
-      <Button variant="outline" size="icon" onClick={() => scrollToBottom()}>
-        <ArrowDown className="size-4" />
-      </Button>
+      <ToolTip.Tooltip>
+        <ToolTip.TooltipTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => scrollToBottom()}
+          >
+            <ArrowDown className="size-4" />
+          </Button>
+        </ToolTip.TooltipTrigger>
+        <ToolTip.TooltipContent>Scroll to bottom</ToolTip.TooltipContent>
+      </ToolTip.Tooltip>
     </div>
   );
 };

@@ -14,6 +14,7 @@ import { EditComposer, ReplyComposer } from "../composers";
 import * as Shapes from "../shapes";
 import { Button } from "../ui/button";
 import { ButtonGroup } from "../ui/button-group";
+import * as ToolTip from "../ui/tooltip";
 import { getFullTimestamp, getTimeString, isOverOneDayAgo } from "@/lib/time";
 import { cn } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
@@ -269,23 +270,28 @@ const EditButton = () => {
   const setInteractionState = useMessage((c) => c.setInteractionState);
   const editComposerInputRef = useMessage((c) => c.editComposerInputRef);
   return (
-    <Button
-      variant="outline"
-      size="actions"
-      onClick={() => {
-        setInteractionState("editing");
-        setTimeout(() => {
-          const input = editComposerInputRef.current;
-          if (input) {
-            input.focus();
-            const length = input.value.length;
-            input.setSelectionRange(length, length);
-          }
-        }, 100);
-      }}
-    >
-      <Pencil className="size-3" />
-    </Button>
+    <ToolTip.Tooltip>
+      <ToolTip.TooltipTrigger asChild>
+        <Button
+          variant="outline"
+          size="actions"
+          onClick={() => {
+            setInteractionState("editing");
+            setTimeout(() => {
+              const input = editComposerInputRef.current;
+              if (input) {
+                input.focus();
+                const length = input.value.length;
+                input.setSelectionRange(length, length);
+              }
+            }, 100);
+          }}
+        >
+          <Pencil className="size-3" />
+        </Button>
+      </ToolTip.TooltipTrigger>
+      <ToolTip.TooltipContent>Edit message</ToolTip.TooltipContent>
+    </ToolTip.Tooltip>
   );
 };
 
@@ -293,18 +299,23 @@ const ReplyButton = () => {
   const setInteractionState = useMessage((c) => c.setInteractionState);
   const replyComposerInputRef = useMessage((c) => c.replyComposerInputRef);
   return (
-    <Button
-      variant="outline"
-      size="actions"
-      onClick={() => {
-        setInteractionState("replying");
-        setTimeout(() => {
-          replyComposerInputRef.current?.focus();
-        }, 100);
-      }}
-    >
-      <Reply className="size-3" />
-    </Button>
+    <ToolTip.Tooltip>
+      <ToolTip.TooltipTrigger asChild>
+        <Button
+          variant="outline"
+          size="actions"
+          onClick={() => {
+            setInteractionState("replying");
+            setTimeout(() => {
+              replyComposerInputRef.current?.focus();
+            }, 100);
+          }}
+        >
+          <Reply className="size-3" />
+        </Button>
+      </ToolTip.TooltipTrigger>
+      <ToolTip.TooltipContent>Reply to message</ToolTip.TooltipContent>
+    </ToolTip.Tooltip>
   );
 };
 
@@ -312,14 +323,19 @@ const DeleteButton = () => {
   const id = useMessage((c) => c._id);
   const { deleteMessage } = useMessageActions();
   return (
-    <Button
-      variant="outline"
-      size="actions"
-      onClick={() => deleteMessage({ messageId: id })}
-    >
-      {" "}
-      <Trash className="text-destructive size-3" />{" "}
-    </Button>
+    <ToolTip.Tooltip>
+      <ToolTip.TooltipTrigger asChild>
+        <Button
+          variant="outline"
+          size="actions"
+          onClick={() => deleteMessage({ messageId: id })}
+        >
+          {" "}
+          <Trash className="text-destructive size-3" />{" "}
+        </Button>
+      </ToolTip.TooltipTrigger>
+      <ToolTip.TooltipContent>Delete message</ToolTip.TooltipContent>
+    </ToolTip.Tooltip>
   );
 };
 
