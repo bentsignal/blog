@@ -22,104 +22,6 @@ import { getFullTimestamp, getTimeString, isOverOneDayAgo } from "@/lib/time";
 import { cn, validateMessage } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
-export const UserMessage = memo(
-  ({ message }: { message: Message }) => {
-    return (
-      <Provider message={message}>
-        <Frame className="mt-3">
-          <div className="flex gap-3">
-            <PFP />
-            <div className="flex flex-col">
-              <Header />
-              <Content />
-            </div>
-          </div>
-          <Actions />
-        </Frame>
-        <InlineComposers />
-      </Provider>
-    );
-  },
-  (prev, next) => {
-    if (prev.message.name !== next.message.name) return false;
-    if (prev.message.pfp !== next.message.pfp) return false;
-    if (
-      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
-      next.message.snapshots[next.message.snapshots.length - 1].content
-    )
-      return false;
-    return true;
-  },
-);
-
-export const ChainedMessage = memo(
-  ({ message }: { message: Message }) => {
-    return (
-      <Provider message={message}>
-        <Frame>
-          <div className="flex items-center">
-            <SideTime />
-            <Content />
-          </div>
-          <Actions />
-        </Frame>
-        <InlineComposers />
-      </Provider>
-    );
-  },
-  (prev, next) => {
-    if (prev.message.name !== next.message.name) return false;
-    if (prev.message.pfp !== next.message.pfp) return false;
-    if (
-      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
-      next.message.snapshots[next.message.snapshots.length - 1].content
-    )
-      return false;
-    return true;
-  },
-);
-
-export const ReplyMessage = memo(
-  ({ message }: { message: Message }) => {
-    return (
-      <Provider message={message}>
-        <Frame className="mt-3">
-          <div className="flex flex-col">
-            <ReplyPreview />
-            <div className="flex gap-3">
-              <PFP />
-              <div className="flex flex-col">
-                <Header />
-                <Content />
-              </div>
-            </div>
-          </div>
-          <Actions />
-        </Frame>
-        <InlineComposers />
-      </Provider>
-    );
-  },
-  (prev, next) => {
-    if (prev.message.name !== next.message.name) return false;
-    if (prev.message.pfp !== next.message.pfp) return false;
-    if (
-      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
-      next.message.snapshots[next.message.snapshots.length - 1].content
-    )
-      return false;
-    if (
-      prev.message.reply?.snapshots[prev.message.reply?.snapshots.length - 1]
-        .content !==
-      next.message.reply?.snapshots[next.message.reply?.snapshots.length - 1]
-        .content
-    )
-      return false;
-    if (prev.message.reply?.name !== next.message.reply?.name) return false;
-    return true;
-  },
-);
-
 export interface Message extends Doc<"messages"> {
   name: string;
   pfp: string | null | undefined;
@@ -598,3 +500,101 @@ export const ReplyComposer = () => {
     </Composer.Provider>
   );
 };
+
+export const UserMessage = memo(
+  ({ message }: { message: Message }) => {
+    return (
+      <Provider message={message}>
+        <Frame className="mt-3">
+          <div className="flex gap-3">
+            <PFP />
+            <div className="flex flex-col">
+              <Header />
+              <Content />
+            </div>
+          </div>
+          <Actions />
+        </Frame>
+        <InlineComposers />
+      </Provider>
+    );
+  },
+  (prev, next) => {
+    if (prev.message.name !== next.message.name) return false;
+    if (prev.message.pfp !== next.message.pfp) return false;
+    if (
+      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
+      next.message.snapshots[next.message.snapshots.length - 1].content
+    )
+      return false;
+    return true;
+  },
+);
+
+export const ChainedMessage = memo(
+  ({ message }: { message: Message }) => {
+    return (
+      <Provider message={message}>
+        <Frame>
+          <div className="flex items-center">
+            <SideTime />
+            <Content />
+          </div>
+          <Actions />
+        </Frame>
+        <InlineComposers />
+      </Provider>
+    );
+  },
+  (prev, next) => {
+    if (prev.message.name !== next.message.name) return false;
+    if (prev.message.pfp !== next.message.pfp) return false;
+    if (
+      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
+      next.message.snapshots[next.message.snapshots.length - 1].content
+    )
+      return false;
+    return true;
+  },
+);
+
+export const ReplyMessage = memo(
+  ({ message }: { message: Message }) => {
+    return (
+      <Provider message={message}>
+        <Frame className="mt-3">
+          <div className="flex flex-col">
+            <ReplyPreview />
+            <div className="flex gap-3">
+              <PFP />
+              <div className="flex flex-col">
+                <Header />
+                <Content />
+              </div>
+            </div>
+          </div>
+          <Actions />
+        </Frame>
+        <InlineComposers />
+      </Provider>
+    );
+  },
+  (prev, next) => {
+    if (prev.message.name !== next.message.name) return false;
+    if (prev.message.pfp !== next.message.pfp) return false;
+    if (
+      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
+      next.message.snapshots[next.message.snapshots.length - 1].content
+    )
+      return false;
+    if (
+      prev.message.reply?.snapshots[prev.message.reply?.snapshots.length - 1]
+        .content !==
+      next.message.reply?.snapshots[next.message.reply?.snapshots.length - 1]
+        .content
+    )
+      return false;
+    if (prev.message.reply?.name !== next.message.reply?.name) return false;
+    return true;
+  },
+);
