@@ -10,11 +10,13 @@ import { validateMessage } from "@/lib/utils";
 
 export const get = query({
   args: {
+    channel: v.id("channels"),
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
     const messages = await ctx.db
       .query("messages")
+      .withIndex("by_channel", (q) => q.eq("channel", args.channel))
       .order("desc")
       .paginate(args.paginationOpts);
     const repliedToMessages = await Promise.all(

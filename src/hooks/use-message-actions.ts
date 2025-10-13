@@ -61,6 +61,7 @@ export const useMessageActions = () => {
         localStore.setQuery(
           api.messages.get,
           {
+            channel: current.args.channel,
             paginationOpts: current.args.paginationOpts,
           },
           {
@@ -85,7 +86,10 @@ export const useMessageActions = () => {
           if (!hasTargetMessage) continue;
           localStore.setQuery(
             api.messages.get,
-            { paginationOpts: result.args.paginationOpts },
+            {
+              channel: result.args.channel,
+              paginationOpts: result.args.paginationOpts,
+            },
             {
               ...result.value,
               page: result.value.page?.map((message) =>
@@ -120,7 +124,10 @@ export const useMessageActions = () => {
           if (!hasTargetMessage) continue;
           localStore.setQuery(
             api.messages.get,
-            { paginationOpts: result.args.paginationOpts },
+            {
+              channel: result.args.channel,
+              paginationOpts: result.args.paginationOpts,
+            },
             {
               ...result.value,
               page: result.value.page?.filter(

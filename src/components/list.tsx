@@ -18,7 +18,7 @@ import { ArrowDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 
-type PaginationStatus =
+export type PaginationStatus =
   | "LoadingFirstPage"
   | "CanLoadMore"
   | "LoadingMore"
@@ -32,7 +32,7 @@ export interface ListContextType {
   scrollToBottom: (behavior?: "instant" | "smooth") => void;
   loadingStatus?: PaginationStatus;
   skeletonComponent?: React.ReactNode;
-  channelComposerInputRef?: RefObject<HTMLTextAreaElement | null>;
+  mainComposerInputRef?: RefObject<HTMLTextAreaElement | null>;
 }
 
 export const ListContext = createContext<ListContextType>(
@@ -53,7 +53,7 @@ interface ListProps {
   skeletonComponent?: React.ReactNode;
   loadMoreOnScrollThreshold?: number;
   loadMore?: () => void;
-  channelComposerInputRef?: RefObject<HTMLTextAreaElement | null>;
+  mainComposerInputRef?: RefObject<HTMLTextAreaElement | null>;
 }
 
 export const Provider = ({
@@ -64,10 +64,10 @@ export const Provider = ({
   loadingStatus,
   isAtBottomThreshold = 10,
   showScrollToBottomButtonThreshold = 500,
-  loadMoreOnScrollThreshold = 1000,
+  loadMoreOnScrollThreshold = 1500,
   skeletonComponent,
   loadMore,
-  channelComposerInputRef,
+  mainComposerInputRef,
 }: ListProps) => {
   const isAtBottom = useRef(false);
   const distanceFromBottom = useRef(0);
@@ -156,14 +156,14 @@ export const Provider = ({
       scrollToBottom,
       loadingStatus,
       skeletonComponent,
-      channelComposerInputRef,
+      mainComposerInputRef,
     }),
     [
       showScrollToBottomButton,
       setShowScrollToBottomButton,
       loadingStatus,
       skeletonComponent,
-      channelComposerInputRef,
+      mainComposerInputRef,
     ],
   );
 

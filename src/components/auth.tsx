@@ -128,7 +128,7 @@ export const Provider = ({
   );
 };
 
-export const Profile = () => {
+export const ProfileButton = () => {
   const signOut = useAuth((c) => c.signOut);
   // const deleteAccount = useAuth((c) => c.deleteAccount);
   const [open, setOpen] = useState(false);
@@ -171,7 +171,7 @@ export const Profile = () => {
   );
 };
 
-export const SignIn = () => {
+export const SignInButton = () => {
   const inProgress = useAuth((c) => c.inProgress);
   const signIn = useAuth((c) => c.signIn);
   return (

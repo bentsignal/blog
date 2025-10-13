@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/providers";
+import { GlobalProviders } from "@/providers";
 import Link from "next/link";
 import { RepoButton } from "@/components/repo-button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -34,29 +34,32 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
+        <GlobalProviders>
+          <Toaster />
           <div className="flex min-h-screen flex-col items-center justify-center gap-16 sm:flex-row">
             <div className="fixed top-4 right-4 z-50">
               <ThemeToggle />
             </div>
-            <div className="flex flex-col items-start justify-center gap-1">
-              <span className="text-6xl font-bold">State of ...State?</span>
-              <span className="text-muted-foreground mb-1 text-xl">
-                A modern guide on managing state in React
-              </span>
-              <Link
-                href="https://github.com/bentsignal/state-of-state"
-                target="_blank"
-              >
-                <RepoButton />
-              </Link>
-            </div>
+            <Hero />
             {channel}
           </div>
           {children}
-        </Providers>
-        <Toaster />
+        </GlobalProviders>
       </body>
     </html>
   );
 }
+
+const Hero = () => {
+  return (
+    <div className="flex flex-col items-start justify-center gap-1">
+      <span className="text-6xl font-bold">State of ...State?</span>
+      <span className="text-muted-foreground mb-1 text-xl">
+        A modern guide on managing state in React
+      </span>
+      <Link href="https://github.com/bentsignal/state-of-state" target="_blank">
+        <RepoButton />
+      </Link>
+    </div>
+  );
+};

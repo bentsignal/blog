@@ -179,15 +179,18 @@ export const Content = () => {
 };
 
 export const Skeleton = ({ index }: { index?: number }) => {
-  const numberOfContentLines = index ? (index % 3) + 1 : 3;
+  const numberOfContentLines = index ? (index % 4) + 1 : 3;
   return (
     <div className="mb-4 animate-pulse px-6 py-0.5">
       <div className="flex gap-3">
         <Shapes.Circle className="size-10" />
         <div className="mt-1 flex w-full flex-col gap-1.5">
-          <Shapes.HorizontalBar width={Math.random() * 40 + 20} />
+          <Shapes.HorizontalBar width={Math.random() * 150 + 50} />
           {Array.from({ length: numberOfContentLines }, (_, index) => (
-            <Shapes.HorizontalBar width={Math.random() * 70 + 10} key={index} />
+            <Shapes.HorizontalBar
+              width={Math.random() * 150 + 50}
+              key={index}
+            />
           ))}
         </div>
       </div>

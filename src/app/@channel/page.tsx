@@ -1,131 +1,18 @@
-"use client";
-
-import { Fragment, useRef } from "react";
 import { api } from "@/convex/_generated/api";
-import { ChannelProvider } from "@/providers/channel-provider";
-import { usePaginatedQuery, useQuery } from "convex/react";
-import * as Auth from "@/components/auth";
-import { useAuth } from "@/components/auth";
-import { ChannelComposer } from "@/components/composers";
-import { DateMarker } from "@/components/date-marker";
-import * as List from "@/components/list";
-import {
-  ChainedMessage,
-  ReplyMessage,
-  UserMessage,
-} from "@/components/messages";
-import * as Message from "@/components/messages/message";
+import { fetchQuery } from "convex/nextjs";
+import * as Channel from "@/components/channel";
 import * as Card from "@/components/ui/card";
-import { areSameDay } from "@/lib/time";
 
-export default function Channel() {
-  const channel = useQuery(api.channel.getDefault);
+export default async function ChannelPage() {
+  const channel = await fetchQuery(api.channel.getDefault);
   return (
     <Card.Card className="h-[700px] max-h-full w-full max-w-md rounded-3xl p-0">
       <Card.CardContent className="flex h-full flex-col p-0">
-        <ChannelProvider channel={channel}>
-          <Header />
-          <Body />
-        </ChannelProvider>
+        <Channel.Provider channel={channel}>
+          <Channel.Header />
+          <Channel.Body />
+        </Channel.Provider>
       </Card.CardContent>
     </Card.Card>
   );
 }
-
-const Header = () => {
-  const signedIn = useAuth((c) => c.signedIn);
-  return (
-    <div className="bg-muted m-4 mb-0 flex items-center justify-between rounded-2xl p-3">
-      <div className="flex items-center gap-3 pl-1">
-        <span className="text-3xl font-semibold">#</span>
-        <div className="flex flex-col justify-center">
-          <span className="text-sm font-bold">General</span>
-          <span className="text-muted-foreground text-xs">Text Channel</span>
-        </div>
-      </div>
-      {signedIn ? <Auth.Profile /> : <Auth.SignIn />}
-    </div>
-  );
-};
-
-export const Body = () => {
-  const channelComposerInputRef = useRef<HTMLTextAreaElement>(null);
-
-  const config = {
-    initialPageSize: 50,
-    pageSize: 50,
-  };
-
-  const { results, status, loadMore } = usePaginatedQuery(
-    api.messages.get,
-    {},
-    {
-      initialNumItems: config.initialPageSize,
-    },
-  );
-
-  if (!results) {
-    return <Message.Error />;
-  }
-
-  const reversedResults = results.slice().reverse();
-
-  const firstPageLoaded = status !== "LoadingFirstPage";
-
-  return (
-    <List.Provider
-      stickToBottom={true}
-      scrollToBottomOnMount={firstPageLoaded}
-      maintainScrollPositionOnAppend={firstPageLoaded}
-      loadingStatus={status}
-      skeletonComponent={<Message.Skeleton />}
-      loadMore={() => loadMore(config.pageSize)}
-      channelComposerInputRef={channelComposerInputRef}
-    >
-      <List.Frame>
-        {status === "LoadingFirstPage" ? (
-          <List.Content className="py-4">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <Message.Skeleton key={index} index={index} />
-            ))}
-          </List.Content>
-        ) : (
-          <List.Content className="pb-4">
-            {reversedResults.map((message, index) => {
-              const previousMessage =
-                index > 0 ? reversedResults[index - 1] : null;
-              // messages sent by the same userwithin 5 minutes of each other are chained together
-              const shouldChainMessages =
-                previousMessage?.profile === message.profile &&
-                message._creationTime - previousMessage._creationTime <
-                  1000 * 60 * 5;
-              // if neighboring messages are not sent on the same day, show the date to mark
-              // the start of a new day
-              const isSameDay = areSameDay(
-                message._creationTime,
-                previousMessage?._creationTime ?? 0,
-              );
-              const showDateMarker = !isSameDay && !shouldChainMessages;
-              return (
-                <Fragment key={message._id}>
-                  {showDateMarker && (
-                    <DateMarker time={message._creationTime} />
-                  )}
-                  {message.reply ? (
-                    <ReplyMessage message={message} />
-                  ) : shouldChainMessages ? (
-                    <ChainedMessage message={message} />
-                  ) : (
-                    <UserMessage message={message} />
-                  )}
-                </Fragment>
-              );
-            })}
-            <List.ScrollToBottomButton />
-          </List.Content>
-        )}
-      </List.Frame>
-      <ChannelComposer inputRef={channelComposerInputRef} />
-    </List.Provider>
-  );
-};

@@ -1,8 +1,17 @@
 import { cn } from "@/lib/utils";
 
-export const HorizontalBar = ({ width }: { width: number }) => {
+export const HorizontalBar = ({
+  width,
+  className,
+}: {
+  width: number;
+  className?: string;
+}) => {
   return (
-    <div className="bg-muted h-3 rounded-md" style={{ width: `${width}%` }} />
+    <div
+      className={cn("bg-muted h-3 rounded-md", className)}
+      style={{ width: `${width}px` }}
+    />
   );
 };
 

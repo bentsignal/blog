@@ -3,7 +3,7 @@ import { ThemeProvider } from "./theme-provider";
 import * as Auth from "@/components/auth";
 import { getToken } from "@/lib/auth-server";
 
-export const Providers = async ({
+export const GlobalProviders = async ({
   children,
 }: {
   children: React.ReactNode;

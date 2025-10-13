@@ -160,6 +160,8 @@ export const Input = ({
           }
         }
         if (e.key === "Escape" && !e.shiftKey) {
+          e.preventDefault();
+          inputRef.current?.blur();
           onCancel?.();
         }
       }}
