@@ -13,16 +13,11 @@ import { PaginationStatus, usePaginatedQuery } from "convex/react";
 import { toast } from "sonner";
 import * as Auth from "@/components/auth";
 import { useAuth } from "@/components/auth";
-import * as Composer from "@/components/composers/composer";
+import * as Composer from "@/components/composer";
 import { DateMarker } from "@/components/date-marker";
 import * as List from "@/components/list";
 import { ListContext, useList } from "@/components/list";
-import {
-  ChainedMessage,
-  ReplyMessage,
-  UserMessage,
-} from "@/components/messages";
-import * as Message from "@/components/messages/message";
+import * as Message from "@/components/message";
 import * as CFG from "@/lib/config";
 import { areSameDay } from "@/lib/time";
 import { validateMessage } from "@/lib/utils";
@@ -161,11 +156,11 @@ const Messages = () => {
             <Fragment key={message._id}>
               {showDateMarker && <DateMarker time={message._creationTime} />}
               {message.reply ? (
-                <ReplyMessage message={message} />
+                <Message.ReplyMessage message={message} />
               ) : shouldChainMessages ? (
-                <ChainedMessage message={message} />
+                <Message.ChainedMessage message={message} />
               ) : (
-                <UserMessage message={message} />
+                <Message.UserMessage message={message} />
               )}
             </Fragment>
           );
@@ -173,6 +168,19 @@ const Messages = () => {
         <List.ScrollToBottomButton />
       </List.Content>
     </List.Frame>
+  );
+};
+
+export const ChannelError = () => {
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center gap-1">
+      <div className="text-destructive text-sm font-bold">
+        Failed to load messages
+      </div>
+      <div className="text-muted-foreground text-xs">
+        Sorry about that, something went wrong.
+      </div>
+    </div>
   );
 };
 

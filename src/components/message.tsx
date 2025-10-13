@@ -1,23 +1,124 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { memo, useMemo, useRef, useState } from "react";
 import { Doc } from "@/convex/_generated/dataModel";
 import {
   ContextSelector,
   createContext,
   useContextSelector,
+  useHasParentContext,
 } from "@fluentui/react-context-selector";
 import { Pencil, Reply, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
-import { useAuth } from "../auth";
-import { EditComposer, ReplyComposer } from "../composers";
-import * as Shapes from "../shapes";
-import { Button } from "../ui/button";
-import { ButtonGroup } from "../ui/button-group";
-import * as ToolTip from "../ui/tooltip";
+import { toast } from "sonner";
+import { useAuth } from "./auth";
+import * as Composer from "./composer";
+import { ListContext, useList } from "./list";
+import * as Shapes from "./shapes";
+import { Button } from "./ui/button";
+import { ButtonGroup } from "./ui/button-group";
+import * as ToolTip from "./ui/tooltip";
 import { getFullTimestamp, getTimeString, isOverOneDayAgo } from "@/lib/time";
-import { cn } from "@/lib/utils";
+import { cn, validateMessage } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
+
+export const UserMessage = memo(
+  ({ message }: { message: Message }) => {
+    return (
+      <Provider message={message}>
+        <Frame className="mt-3">
+          <div className="flex gap-3">
+            <PFP />
+            <div className="flex flex-col">
+              <Header />
+              <Content />
+            </div>
+          </div>
+          <Actions />
+        </Frame>
+        <InlineComposers />
+      </Provider>
+    );
+  },
+  (prev, next) => {
+    if (prev.message.name !== next.message.name) return false;
+    if (prev.message.pfp !== next.message.pfp) return false;
+    if (
+      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
+      next.message.snapshots[next.message.snapshots.length - 1].content
+    )
+      return false;
+    return true;
+  },
+);
+
+export const ChainedMessage = memo(
+  ({ message }: { message: Message }) => {
+    return (
+      <Provider message={message}>
+        <Frame>
+          <div className="flex items-center">
+            <SideTime />
+            <Content />
+          </div>
+          <Actions />
+        </Frame>
+        <InlineComposers />
+      </Provider>
+    );
+  },
+  (prev, next) => {
+    if (prev.message.name !== next.message.name) return false;
+    if (prev.message.pfp !== next.message.pfp) return false;
+    if (
+      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
+      next.message.snapshots[next.message.snapshots.length - 1].content
+    )
+      return false;
+    return true;
+  },
+);
+
+export const ReplyMessage = memo(
+  ({ message }: { message: Message }) => {
+    return (
+      <Provider message={message}>
+        <Frame className="mt-3">
+          <div className="flex flex-col">
+            <ReplyPreview />
+            <div className="flex gap-3">
+              <PFP />
+              <div className="flex flex-col">
+                <Header />
+                <Content />
+              </div>
+            </div>
+          </div>
+          <Actions />
+        </Frame>
+        <InlineComposers />
+      </Provider>
+    );
+  },
+  (prev, next) => {
+    if (prev.message.name !== next.message.name) return false;
+    if (prev.message.pfp !== next.message.pfp) return false;
+    if (
+      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
+      next.message.snapshots[next.message.snapshots.length - 1].content
+    )
+      return false;
+    if (
+      prev.message.reply?.snapshots[prev.message.reply?.snapshots.length - 1]
+        .content !==
+      next.message.reply?.snapshots[next.message.reply?.snapshots.length - 1]
+        .content
+    )
+      return false;
+    if (prev.message.reply?.name !== next.message.reply?.name) return false;
+    return true;
+  },
+);
 
 export interface Message extends Doc<"messages"> {
   name: string;
@@ -199,19 +300,6 @@ export const Skeleton = ({ index }: { index?: number }) => {
   );
 };
 
-export const Error = () => {
-  return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-1">
-      <div className="text-destructive text-sm font-bold">
-        Failed to load messages
-      </div>
-      <div className="text-muted-foreground text-xs">
-        Sorry about that, something went wrong.
-      </div>
-    </div>
-  );
-};
-
 export const SideTime = () => {
   const isHovering = useMessage((c) => c.isHovering);
   const time = useMessage((c) => c._creationTime);
@@ -385,5 +473,128 @@ export const InlineComposers = () => {
       <ReplyInline />
       <EditInline />
     </>
+  );
+};
+
+export const EditComposer = () => {
+  const hasParentContext = useHasParentContext(MessageContext);
+  if (!hasParentContext) {
+    throw new Error("MessageContext not found");
+  }
+
+  const snapshots = useMessage((c) => c.snapshots);
+  const messageId = useMessage((c) => c._id);
+  const inputRef = useMessage((c) => c.editComposerInputRef);
+  const setInteractionState = useMessage((c) => c.setInteractionState);
+  const setIsHovering = useMessage((c) => c.setIsHovering);
+  const { editMessage } = useMessageActions();
+
+  const [inputValue, setInputValue] = useState(
+    snapshots[snapshots.length - 1].content,
+  );
+
+  const previousContent = snapshots[snapshots.length - 1].content;
+
+  return (
+    <Composer.Provider
+      inputValue={inputValue}
+      setInputValue={setInputValue}
+      inputRef={inputRef}
+      onSubmit={() => {
+        const newValue = inputRef.current?.value ?? "";
+        const validation = validateMessage(newValue);
+        if (validation !== "Valid") {
+          toast.error(validation);
+          return;
+        }
+        if (previousContent !== newValue) {
+          editMessage({
+            messageId: messageId,
+            content: newValue,
+          });
+        }
+        setInteractionState("idle");
+        setIsHovering(false);
+      }}
+      onCancel={() => {
+        setIsHovering(false);
+        setInteractionState("idle");
+      }}
+    >
+      <Composer.Frame className="my-3 rounded-none px-6">
+        <Composer.Input placeholder={previousContent} />
+        <ButtonGroup>
+          <Composer.Cancel />
+          <Composer.Save />
+        </ButtonGroup>
+      </Composer.Frame>
+    </Composer.Provider>
+  );
+};
+
+export const ReplyComposer = () => {
+  const hasMessageContext = useHasParentContext(MessageContext);
+  if (!hasMessageContext) {
+    throw new Error("MessageContext not found");
+  }
+
+  const hasListContext = useHasParentContext(ListContext);
+  if (!hasListContext) {
+    throw new Error("ListContext not found");
+  }
+
+  const messageId = useMessage((c) => c._id);
+  const channel = useMessage((c) => c.channel);
+  const inputRef = useMessage((c) => c.replyComposerInputRef);
+  const setInteractionState = useMessage((c) => c.setInteractionState);
+  const setIsHovering = useMessage((c) => c.setIsHovering);
+  const name = useMessage((c) => c.name);
+
+  const scrollToBottom = useList((c) => c.scrollToBottom);
+  const mainComposerInputRef = useList((c) => c.mainComposerInputRef);
+
+  const [inputValue, setInputValue] = useState("");
+  const { sendMessage } = useMessageActions();
+
+  return (
+    <Composer.Provider
+      inputValue={inputValue}
+      setInputValue={setInputValue}
+      inputRef={inputRef}
+      onSubmit={() => {
+        const newValue = inputRef.current?.value ?? "";
+        const validation = validateMessage(newValue);
+        if (validation !== "Valid") {
+          toast.error(validation);
+          return;
+        }
+        sendMessage({
+          content: newValue,
+          channel: channel,
+          replyTo: messageId,
+        });
+        setInteractionState("idle");
+        setIsHovering(false);
+        mainComposerInputRef?.current?.focus();
+        setTimeout(() => {
+          scrollToBottom();
+        }, 0);
+      }}
+      onCancel={() => {
+        setIsHovering(false);
+        setInteractionState("idle");
+      }}
+    >
+      <Composer.InlineHeader>
+        Replying to <span className="font-semibold">{name}</span>
+      </Composer.InlineHeader>
+      <Composer.Frame className="mb-3 rounded-none px-6">
+        <Composer.Input />
+        <ButtonGroup>
+          <Composer.Cancel />
+          <Composer.Send />
+        </ButtonGroup>
+      </Composer.Frame>
+    </Composer.Provider>
   );
 };

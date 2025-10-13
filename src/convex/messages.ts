@@ -5,7 +5,7 @@ import { authedMutation } from "./convex_helpers";
 import { rateLimiter } from "./limiter";
 import { getFileURL } from "./uploadthing";
 import { getProfile, type Profile } from "./user";
-import { type Message } from "@/components/messages/message";
+import { type Message } from "@/components/message";
 import { validateMessage } from "@/lib/utils";
 
 export const get = query({

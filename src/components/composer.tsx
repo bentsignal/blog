@@ -8,7 +8,7 @@ import {
   useHasParentContext,
 } from "@fluentui/react-context-selector";
 import * as Icons from "lucide-react";
-import * as ToolTip from "../ui/tooltip";
+import * as ToolTip from "./ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { MAX_MESSAGE_LENGTH, MIN_MESSAGE_LENGTH } from "@/lib/config";
 import { cn } from "@/lib/utils";
