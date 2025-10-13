@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import {
   ContextSelector,
   createContext,
@@ -13,12 +13,6 @@ import { Button } from "@/components/ui/button";
 import { MAX_MESSAGE_LENGTH, MIN_MESSAGE_LENGTH } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
-type Style = {
-  bold: boolean;
-  italic: boolean;
-  strikethrough: boolean;
-};
-
 interface ComposerInputProps {
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
   inputValue: string;
@@ -28,8 +22,6 @@ interface ComposerInputProps {
 }
 
 interface ComposerContextType extends ComposerInputProps {
-  style: Style;
-  setStyle: React.Dispatch<React.SetStateAction<Style>>;
   submitDisabled: boolean;
 }
 
@@ -48,11 +40,6 @@ export const Provider = ({
   onCancel,
   children,
 }: ComposerInputProps & { children: React.ReactNode }) => {
-  const [style, setStyle] = useState<Style>({
-    bold: false,
-    italic: false,
-    strikethrough: false,
-  });
   const submitDisabled = inputValue.trim() === "";
 
   const contextValue = useMemo(
@@ -62,19 +49,9 @@ export const Provider = ({
       setInputValue,
       onSubmit,
       onCancel,
-      style,
-      setStyle,
       submitDisabled,
     }),
-    [
-      inputRef,
-      inputValue,
-      setInputValue,
-      onSubmit,
-      onCancel,
-      style,
-      submitDisabled,
-    ],
+    [inputRef, inputValue, setInputValue, onSubmit, onCancel, submitDisabled],
   );
 
   return (
