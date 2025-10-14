@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { GlobalProviders } from "@/providers";
+import { GlobalProviders } from "@/context/global-context";
 import Link from "next/link";
 import { RepoButton } from "@/components/repo-button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -55,7 +55,7 @@ const Hero = () => {
     <div className="flex flex-col items-start justify-center gap-1">
       <span className="text-6xl font-bold">State of ...State?</span>
       <span className="text-muted-foreground mb-1 text-xl">
-        A modern guide on managing state in React
+        A modern approach to managing state in React
       </span>
       <Link href="https://github.com/bentsignal/state-of-state" target="_blank">
         <RepoButton />

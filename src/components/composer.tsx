@@ -1,65 +1,16 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-  useHasParentContext,
-} from "@fluentui/react-context-selector";
+  MAX_MESSAGE_LENGTH,
+  MIN_MESSAGE_LENGTH,
+} from "@/config/message-config";
+import { ComposerContext, useComposer } from "@/context/composer-context";
+import { cn } from "@/utils/utils";
+import { useHasParentContext } from "@fluentui/react-context-selector";
 import * as Icons from "lucide-react";
 import * as ToolTip from "./ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { MAX_MESSAGE_LENGTH, MIN_MESSAGE_LENGTH } from "@/lib/config";
-import { cn } from "@/lib/utils";
-
-interface ComposerInputProps {
-  inputRef: React.RefObject<HTMLTextAreaElement | null>;
-  inputValue: string;
-  setInputValue: (value: string) => void;
-  onSubmit: () => void;
-  onCancel?: () => void;
-}
-
-interface ComposerContextType extends ComposerInputProps {
-  submitDisabled: boolean;
-}
-
-export const ComposerContext = createContext<ComposerContextType>(
-  {} as ComposerContextType,
-);
-
-const useComposer = <T,>(selector: ContextSelector<ComposerContextType, T>) =>
-  useContextSelector(ComposerContext, selector);
-
-export const Provider = ({
-  onSubmit,
-  inputValue,
-  setInputValue,
-  inputRef,
-  onCancel,
-  children,
-}: ComposerInputProps & { children: React.ReactNode }) => {
-  const submitDisabled = inputValue.trim() === "";
-
-  const contextValue = useMemo(
-    () => ({
-      inputRef,
-      inputValue,
-      setInputValue,
-      onSubmit,
-      onCancel,
-      submitDisabled,
-    }),
-    [inputRef, inputValue, setInputValue, onSubmit, onCancel, submitDisabled],
-  );
-
-  return (
-    <ComposerContext.Provider value={contextValue}>
-      {children}
-    </ComposerContext.Provider>
-  );
-};
 
 export const Frame = ({
   className,

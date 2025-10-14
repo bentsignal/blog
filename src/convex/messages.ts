@@ -1,3 +1,5 @@
+import { MessageDataWithUserInfo } from "@/types/message-types";
+import { validateMessage } from "@/utils/message-utils";
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { MutationCtx, query } from "./_generated/server";
@@ -5,8 +7,6 @@ import { authedMutation } from "./convex_helpers";
 import { rateLimiter } from "./limiter";
 import { getFileURL } from "./uploadthing";
 import { getProfile, type Profile } from "./user";
-import { MessageDataWithUserInfo } from "@/lib/types";
-import { validateMessage } from "@/lib/utils";
 
 export const get = query({
   args: {

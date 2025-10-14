@@ -1,81 +1,24 @@
 "use client";
 
-import { Fragment, RefObject, useMemo, useRef, useState } from "react";
-import { api } from "@/convex/_generated/api";
-import { Doc } from "@/convex/_generated/dataModel";
+import { Fragment, useState } from "react";
+import { useAuth } from "@/context/auth-context";
+import { ChannelContext, useChannel } from "@/context/channel-context";
+import { Provider as ComposerProvider } from "@/context/composer-context";
 import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-  useHasParentContext,
-} from "@fluentui/react-context-selector";
-import { PaginationStatus, usePaginatedQuery } from "convex/react";
+  ListContext,
+  Provider as ListProvider,
+  useList,
+} from "@/context/list-context";
+import { validateMessage } from "@/utils/message-utils";
+import { areSameDay } from "@/utils/time-utils";
+import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as Auth from "@/components/auth";
-import { useAuth } from "@/components/auth";
 import * as Composer from "@/components/composer";
 import { DateMarker } from "@/components/date-marker";
 import * as List from "@/components/list";
-import { ListContext, useList } from "@/components/list";
 import * as Message from "@/components/message";
-import * as CFG from "@/lib/config";
-import { areSameDay } from "@/lib/time";
-import { MessageDataWithUserInfo } from "@/lib/types";
-import { validateMessage } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
-
-type ChannelProps = {
-  channel: Doc<"channels">;
-};
-
-interface ChannelContextType extends ChannelProps {
-  channelComposerInputRef: RefObject<HTMLTextAreaElement | null>;
-  messages: MessageDataWithUserInfo[];
-  loadingStatus: PaginationStatus;
-  loadMoreMessages: () => void;
-}
-
-export const ChannelContext = createContext<ChannelContextType>(
-  {} as ChannelContextType,
-);
-
-export const useChannel = <T,>(
-  selector: ContextSelector<ChannelContextType, T>,
-) => useContextSelector(ChannelContext, selector);
-
-export const Provider = ({
-  channel,
-  children,
-}: ChannelProps & {
-  children: React.ReactNode;
-}) => {
-  const channelComposerInputRef = useRef<HTMLTextAreaElement>(null);
-
-  const { results, status, loadMore } = usePaginatedQuery(
-    api.messages.get,
-    { channel: channel._id },
-    {
-      initialNumItems: CFG.INITIAL_MESSAGE_PAGE_SIZE,
-    },
-  );
-
-  const contextValue = useMemo(
-    () => ({
-      channel,
-      channelComposerInputRef,
-      loadingStatus: status,
-      loadMoreMessages: () => loadMore(CFG.MESSAGE_PAGE_SIZE),
-      messages: results.slice().reverse(),
-    }),
-    [channel, channelComposerInputRef, results, status, loadMore],
-  );
-
-  return (
-    <ChannelContext.Provider value={contextValue}>
-      {children}
-    </ChannelContext.Provider>
-  );
-};
 
 export const Header = () => {
   const signedIn = useAuth((c) => c.signedIn);
@@ -104,7 +47,7 @@ export const Body = () => {
   }
 
   return (
-    <List.Provider
+    <ListProvider
       stickToBottom={true}
       scrollToBottomOnMount={true}
       maintainScrollPositionOnAppend={true}
@@ -115,13 +58,13 @@ export const Body = () => {
     >
       <Messages />
       <ChannelComposer />
-    </List.Provider>
+    </ListProvider>
   );
 };
 
 const Skeleton = () => {
   return (
-    <List.Provider>
+    <ListProvider>
       <List.Frame>
         <List.Content className="py-4">
           {Array.from({ length: 10 }).map((_, index) => (
@@ -130,7 +73,7 @@ const Skeleton = () => {
         </List.Content>
       </List.Frame>
       <ChannelComposer />
-    </List.Provider>
+    </ListProvider>
   );
 };
 
@@ -172,7 +115,7 @@ const Messages = () => {
   );
 };
 
-export const ChannelError = () => {
+export const ErrorMessage = () => {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-1">
       <div className="text-destructive text-sm font-bold">
@@ -231,7 +174,7 @@ const ChannelComposer = () => {
   };
 
   return (
-    <Composer.Provider
+    <ComposerProvider
       onSubmit={onSubmit}
       inputValue={inputValue}
       setInputValue={setInputValue}
@@ -241,6 +184,6 @@ const ChannelComposer = () => {
         <Composer.Input className="ml-1" />
         <Composer.Send />
       </Composer.Frame>
-    </Composer.Provider>
+    </ComposerProvider>
   );
 };

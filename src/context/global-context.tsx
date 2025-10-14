@@ -1,6 +1,6 @@
-import { ConvexClientProvider } from "./convex-provider";
-import { ThemeProvider } from "./theme-provider";
-import * as Auth from "@/components/auth";
+import { Provider as AuthProvider } from "./auth-context";
+import { ConvexClientProvider } from "./convex-context";
+import { ThemeProvider } from "./theme-context";
 import { getToken } from "@/lib/auth-server";
 
 export const GlobalProviders = async ({
@@ -12,7 +12,7 @@ export const GlobalProviders = async ({
   const authed = token !== undefined;
   return (
     <ConvexClientProvider>
-      <Auth.Provider isAuthenticatedServerSide={authed}>
+      <AuthProvider isAuthenticatedServerSide={authed}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -21,7 +21,7 @@ export const GlobalProviders = async ({
         >
           {children}
         </ThemeProvider>
-      </Auth.Provider>
+      </AuthProvider>
     </ConvexClientProvider>
   );
 };

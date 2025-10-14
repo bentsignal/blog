@@ -1,85 +1,130 @@
 "use client";
 
-import { memo, useMemo, useRef, useState } from "react";
+import { memo, useState } from "react";
+import { useAuth } from "@/context/auth-context";
+import { Provider as ComposerProvider } from "@/context/composer-context";
+import { ListContext, useList } from "@/context/list-context";
 import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-  useHasParentContext,
-} from "@fluentui/react-context-selector";
+  MessageContext,
+  Provider,
+  useMessage,
+} from "@/context/message-context";
+import { MessageDataWithUserInfo } from "@/types/message-types";
+import { validateMessage } from "@/utils/message-utils";
+import {
+  getFullTimestamp,
+  getTimeString,
+  isOverOneDayAgo,
+} from "@/utils/time-utils";
+import { cn } from "@/utils/utils";
+import { useHasParentContext } from "@fluentui/react-context-selector";
 import { Pencil, Reply, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
-import { useAuth } from "./auth";
 import * as Composer from "./composer";
-import { ListContext, useList } from "./list";
 import * as Shapes from "./shapes";
 import { Button } from "./ui/button";
 import { ButtonGroup } from "./ui/button-group";
 import * as ToolTip from "./ui/tooltip";
-import { getFullTimestamp, getTimeString, isOverOneDayAgo } from "@/lib/time";
-import { MessageDataWithUserInfo } from "@/lib/types";
-import { cn, validateMessage } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
-type InteractionState = "idle" | "editing" | "replying";
-
-interface MessageContextType extends MessageDataWithUserInfo {
-  isHovering: boolean;
-  setIsHovering: (isHovering: boolean) => void;
-  interactionState: InteractionState;
-  setInteractionState: (interactionState: InteractionState) => void;
-  editComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
-  replyComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
-}
-
-export const MessageContext = createContext<MessageContextType>(
-  {} as MessageContextType,
+export const UserMessage = memo(
+  ({ message }: { message: MessageDataWithUserInfo }) => {
+    return (
+      <Provider message={message}>
+        <Frame className="mt-3">
+          <div className="flex gap-3">
+            <PFP />
+            <div className="flex flex-col">
+              <Header />
+              <Content />
+            </div>
+          </div>
+          <Actions />
+        </Frame>
+        <InlineComposers />
+      </Provider>
+    );
+  },
+  (prev, next) => {
+    if (prev.message.name !== next.message.name) return false;
+    if (prev.message.pfp !== next.message.pfp) return false;
+    if (
+      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
+      next.message.snapshots[next.message.snapshots.length - 1].content
+    )
+      return false;
+    return true;
+  },
 );
 
-export const useMessage = <T,>(
-  selector: ContextSelector<MessageContextType, T>,
-) => useContextSelector(MessageContext, selector);
+export const ChainedMessage = memo(
+  ({ message }: { message: MessageDataWithUserInfo }) => {
+    return (
+      <Provider message={message}>
+        <Frame>
+          <div className="flex items-center">
+            <SideTime />
+            <Content />
+          </div>
+          <Actions />
+        </Frame>
+        <InlineComposers />
+      </Provider>
+    );
+  },
+  (prev, next) => {
+    if (prev.message.name !== next.message.name) return false;
+    if (prev.message.pfp !== next.message.pfp) return false;
+    if (
+      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
+      next.message.snapshots[next.message.snapshots.length - 1].content
+    )
+      return false;
+    return true;
+  },
+);
 
-export const Provider = ({
-  message,
-  children,
-}: {
-  message: MessageDataWithUserInfo;
-  children: React.ReactNode;
-}) => {
-  const [isHovering, setIsHovering] = useState(false);
-  const editComposerInputRef = useRef<HTMLTextAreaElement>(null);
-  const [interactionState, setInteractionState] =
-    useState<InteractionState>("idle");
-  const replyComposerInputRef = useRef<HTMLTextAreaElement>(null);
-
-  const contextValue = useMemo(
-    () => ({
-      _id: message._id,
-      _creationTime: message._creationTime,
-      profile: message.profile,
-      name: message.name,
-      pfp: message.pfp,
-      snapshots: message.snapshots,
-      channel: message.channel,
-      reply: message.reply,
-      isHovering,
-      setIsHovering,
-      editComposerInputRef,
-      replyComposerInputRef,
-      interactionState,
-      setInteractionState,
-    }),
-    [message, isHovering, setIsHovering, interactionState, setInteractionState],
-  );
-
-  return (
-    <MessageContext.Provider value={contextValue}>
-      {children}
-    </MessageContext.Provider>
-  );
-};
+export const ReplyMessage = memo(
+  ({ message }: { message: MessageDataWithUserInfo }) => {
+    return (
+      <Provider message={message}>
+        <Frame className="mt-3">
+          <div className="flex flex-col">
+            <ReplyPreview />
+            <div className="flex gap-3">
+              <PFP />
+              <div className="flex flex-col">
+                <Header />
+                <Content />
+              </div>
+            </div>
+          </div>
+          <Actions />
+        </Frame>
+        <InlineComposers />
+      </Provider>
+    );
+  },
+  (prev, next) => {
+    if (prev.message.name !== next.message.name) return false;
+    if (prev.message.pfp !== next.message.pfp) return false;
+    if (
+      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
+      next.message.snapshots[next.message.snapshots.length - 1].content
+    )
+      return false;
+    if (
+      prev.message.reply?.snapshots[prev.message.reply?.snapshots.length - 1]
+        .content !==
+      next.message.reply?.snapshots[next.message.reply?.snapshots.length - 1]
+        .content
+    )
+      return false;
+    if (prev.message.reply?.name !== next.message.reply?.name) return false;
+    return true;
+  },
+);
 
 export const Frame = ({
   className,
@@ -224,7 +269,7 @@ export const Actions = () => {
   return <OtherMessageActions />;
 };
 
-const ActionFrame = ({ children }: { children: React.ReactNode }) => {
+const ActionsFrame = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="absolute -top-5 right-2 flex">
       <ButtonGroup>{children}</ButtonGroup>
@@ -234,19 +279,19 @@ const ActionFrame = ({ children }: { children: React.ReactNode }) => {
 
 const MyMessageActions = () => {
   return (
-    <ActionFrame>
+    <ActionsFrame>
       <ReplyButton />
       <EditButton />
       <DeleteButton />
-    </ActionFrame>
+    </ActionsFrame>
   );
 };
 
 const OtherMessageActions = () => {
   return (
-    <ActionFrame>
+    <ActionsFrame>
       <ReplyButton />
-    </ActionFrame>
+    </ActionsFrame>
   );
 };
 
@@ -392,7 +437,7 @@ export const EditComposer = () => {
   const previousContent = snapshots[snapshots.length - 1].content;
 
   return (
-    <Composer.Provider
+    <ComposerProvider
       inputValue={inputValue}
       setInputValue={setInputValue}
       inputRef={inputRef}
@@ -424,7 +469,7 @@ export const EditComposer = () => {
           <Composer.Save />
         </ButtonGroup>
       </Composer.Frame>
-    </Composer.Provider>
+    </ComposerProvider>
   );
 };
 
@@ -453,7 +498,7 @@ export const ReplyComposer = () => {
   const { sendMessage } = useMessageActions();
 
   return (
-    <Composer.Provider
+    <ComposerProvider
       inputValue={inputValue}
       setInputValue={setInputValue}
       inputRef={inputRef}
@@ -491,104 +536,6 @@ export const ReplyComposer = () => {
           <Composer.Send />
         </ButtonGroup>
       </Composer.Frame>
-    </Composer.Provider>
+    </ComposerProvider>
   );
 };
-
-export const UserMessage = memo(
-  ({ message }: { message: MessageDataWithUserInfo }) => {
-    return (
-      <Provider message={message}>
-        <Frame className="mt-3">
-          <div className="flex gap-3">
-            <PFP />
-            <div className="flex flex-col">
-              <Header />
-              <Content />
-            </div>
-          </div>
-          <Actions />
-        </Frame>
-        <InlineComposers />
-      </Provider>
-    );
-  },
-  (prev, next) => {
-    if (prev.message.name !== next.message.name) return false;
-    if (prev.message.pfp !== next.message.pfp) return false;
-    if (
-      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
-      next.message.snapshots[next.message.snapshots.length - 1].content
-    )
-      return false;
-    return true;
-  },
-);
-
-export const ChainedMessage = memo(
-  ({ message }: { message: MessageDataWithUserInfo }) => {
-    return (
-      <Provider message={message}>
-        <Frame>
-          <div className="flex items-center">
-            <SideTime />
-            <Content />
-          </div>
-          <Actions />
-        </Frame>
-        <InlineComposers />
-      </Provider>
-    );
-  },
-  (prev, next) => {
-    if (prev.message.name !== next.message.name) return false;
-    if (prev.message.pfp !== next.message.pfp) return false;
-    if (
-      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
-      next.message.snapshots[next.message.snapshots.length - 1].content
-    )
-      return false;
-    return true;
-  },
-);
-
-export const ReplyMessage = memo(
-  ({ message }: { message: MessageDataWithUserInfo }) => {
-    return (
-      <Provider message={message}>
-        <Frame className="mt-3">
-          <div className="flex flex-col">
-            <ReplyPreview />
-            <div className="flex gap-3">
-              <PFP />
-              <div className="flex flex-col">
-                <Header />
-                <Content />
-              </div>
-            </div>
-          </div>
-          <Actions />
-        </Frame>
-        <InlineComposers />
-      </Provider>
-    );
-  },
-  (prev, next) => {
-    if (prev.message.name !== next.message.name) return false;
-    if (prev.message.pfp !== next.message.pfp) return false;
-    if (
-      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
-      next.message.snapshots[next.message.snapshots.length - 1].content
-    )
-      return false;
-    if (
-      prev.message.reply?.snapshots[prev.message.reply?.snapshots.length - 1]
-        .content !==
-      next.message.reply?.snapshots[next.message.reply?.snapshots.length - 1]
-        .content
-    )
-      return false;
-    if (prev.message.reply?.name !== next.message.reply?.name) return false;
-    return true;
-  },
-);

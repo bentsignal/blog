@@ -38,10 +38,6 @@ export const getFullTimestamp = (time: number) => {
   return getTimeString(time);
 };
 
-export const getProfileUrl = (username: string) => {
-  return `https://www.github.com/${username}`;
-};
-
 export const areSameDay = (time1: number, time2: number) => {
   const date1 = new Date(time1);
   const date2 = new Date(time2);

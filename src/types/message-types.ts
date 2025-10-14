@@ -6,8 +6,4 @@ export interface MessageDataWithUserInfo extends Doc<"messages"> {
   reply?: MessageDataWithUserInfo;
 }
 
-export type PaginationStatus =
-  | "LoadingFirstPage"
-  | "CanLoadMore"
-  | "LoadingMore"
-  | "Exhausted";
+export type MessageInteractionState = "idle" | "editing" | "replying";

@@ -1,10 +1,10 @@
 "use node";
 
+import { tryCatch } from "@/utils/error-utils";
 import { v } from "convex/values";
 import { UTApi, UTFile } from "uploadthing/server";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
-import { tryCatch } from "@/lib/utils";
 
 export const utapi = new UTApi({
   token: process.env.UPLOADTHING_TOKEN,
