@@ -77,11 +77,14 @@ export const useMessageActions = () => {
   const { mutate: editMessage } = useMutation({
     mutationFn: useConvexMutation(api.messages.edit).withOptimisticUpdate(
       (localStore, args) => {
+        const newSnapshot = { content: args.content, timestamp: Date.now() };
         const results = localStore.getAllQueries(api.messages.get);
         for (const result of results) {
           if (!result || !result.value) continue;
           const hasTargetMessage = result.value.page?.some(
-            (message) => message._id === args.messageId,
+            (message) =>
+              message._id === args.messageId ||
+              message.reply?._id === args.messageId,
           );
           if (!hasTargetMessage) continue;
           localStore.setQuery(
@@ -96,16 +99,20 @@ export const useMessageActions = () => {
                 message._id === args.messageId
                   ? {
                       ...message,
-                      snapshots: [
-                        ...message.snapshots,
-                        { content: args.content, timestamp: Date.now() },
-                      ],
+                      snapshots: [...message.snapshots, newSnapshot],
                     }
-                  : message,
+                  : message.reply?._id === args.messageId
+                    ? {
+                        ...message,
+                        reply: {
+                          ...message.reply,
+                          snapshots: [...message.reply.snapshots, newSnapshot],
+                        },
+                      }
+                    : message,
               ),
             },
           );
-          break;
         }
       },
     ),
@@ -119,23 +126,29 @@ export const useMessageActions = () => {
         for (const result of results) {
           if (!result || !result.value) continue;
           const hasTargetMessage = result.value.page?.some(
-            (message) => message._id === args.messageId,
+            (message) =>
+              message._id === args.messageId ||
+              message.reply?._id === args.messageId,
           );
-          if (!hasTargetMessage) continue;
-          localStore.setQuery(
-            api.messages.get,
-            {
-              channel: result.args.channel,
-              paginationOpts: result.args.paginationOpts,
-            },
-            {
-              ...result.value,
-              page: result.value.page?.filter(
-                (message) => message._id !== args.messageId,
-              ),
-            },
-          );
-          break;
+          if (hasTargetMessage) {
+            localStore.setQuery(
+              api.messages.get,
+              {
+                channel: result.args.channel,
+                paginationOpts: result.args.paginationOpts,
+              },
+              {
+                ...result.value,
+                page: result.value.page
+                  ?.filter((message) => message._id !== args.messageId)
+                  .map((message) =>
+                    message.reply?._id === args.messageId
+                      ? { ...message, reply: undefined }
+                      : message,
+                  ),
+              },
+            );
+          }
         }
       },
     ),
