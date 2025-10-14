@@ -31,7 +31,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
           name: authUser.name,
         });
         if (authUser.image) {
-          ctx.scheduler.runAfter(0, internal.uploadthing.uploadPFP, {
+          await ctx.scheduler.runAfter(0, internal.uploadthing.uploadPFP, {
             profileId: profile,
             url: authUser.image,
           });

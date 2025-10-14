@@ -17,13 +17,8 @@ import {
 import { ArrowDown } from "lucide-react";
 import { Button } from "./ui/button";
 import * as ToolTip from "./ui/tooltip";
+import { PaginationStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
-
-export type PaginationStatus =
-  | "LoadingFirstPage"
-  | "CanLoadMore"
-  | "LoadingMore"
-  | "Exhausted";
 
 export interface ListContextType {
   isAtBottom: RefObject<boolean>;

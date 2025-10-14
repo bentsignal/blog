@@ -20,6 +20,7 @@ import { ListContext, useList } from "@/components/list";
 import * as Message from "@/components/message";
 import * as CFG from "@/lib/config";
 import { areSameDay } from "@/lib/time";
+import { MessageDataWithUserInfo } from "@/lib/types";
 import { validateMessage } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
@@ -29,7 +30,7 @@ type ChannelProps = {
 
 interface ChannelContextType extends ChannelProps {
   channelComposerInputRef: RefObject<HTMLTextAreaElement | null>;
-  messages: Message.Message[];
+  messages: MessageDataWithUserInfo[];
   loadingStatus: PaginationStatus;
   loadMoreMessages: () => void;
 }

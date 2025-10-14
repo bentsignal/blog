@@ -5,7 +5,7 @@ import { authedMutation } from "./convex_helpers";
 import { rateLimiter } from "./limiter";
 import { getFileURL } from "./uploadthing";
 import { getProfile, type Profile } from "./user";
-import { type Message } from "@/components/message";
+import { MessageDataWithUserInfo } from "@/lib/types";
 import { validateMessage } from "@/lib/utils";
 
 export const get = query({
@@ -53,7 +53,7 @@ export const get = query({
         if (!user) throw new ConvexError("User not found");
 
         const repliedToMessage = repliedToMessages[idx];
-        let reply: Message | undefined;
+        let reply: MessageDataWithUserInfo | undefined;
         if (repliedToMessage) {
           const profile = profilesMap[repliedToMessage.profile];
           if (!profile) throw new ConvexError("User not found");

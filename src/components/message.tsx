@@ -1,7 +1,6 @@
 "use client";
 
 import { memo, useMemo, useRef, useState } from "react";
-import { Doc } from "@/convex/_generated/dataModel";
 import {
   ContextSelector,
   createContext,
@@ -19,18 +18,13 @@ import { Button } from "./ui/button";
 import { ButtonGroup } from "./ui/button-group";
 import * as ToolTip from "./ui/tooltip";
 import { getFullTimestamp, getTimeString, isOverOneDayAgo } from "@/lib/time";
+import { MessageDataWithUserInfo } from "@/lib/types";
 import { cn, validateMessage } from "@/lib/utils";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
-export interface Message extends Doc<"messages"> {
-  name: string;
-  pfp: string | null | undefined;
-  reply?: Message;
-}
-
 type InteractionState = "idle" | "editing" | "replying";
 
-interface MessageContextType extends Message {
+interface MessageContextType extends MessageDataWithUserInfo {
   isHovering: boolean;
   setIsHovering: (isHovering: boolean) => void;
   interactionState: InteractionState;
@@ -51,7 +45,7 @@ export const Provider = ({
   message,
   children,
 }: {
-  message: Message;
+  message: MessageDataWithUserInfo;
   children: React.ReactNode;
 }) => {
   const [isHovering, setIsHovering] = useState(false);
@@ -502,7 +496,7 @@ export const ReplyComposer = () => {
 };
 
 export const UserMessage = memo(
-  ({ message }: { message: Message }) => {
+  ({ message }: { message: MessageDataWithUserInfo }) => {
     return (
       <Provider message={message}>
         <Frame className="mt-3">
@@ -532,7 +526,7 @@ export const UserMessage = memo(
 );
 
 export const ChainedMessage = memo(
-  ({ message }: { message: Message }) => {
+  ({ message }: { message: MessageDataWithUserInfo }) => {
     return (
       <Provider message={message}>
         <Frame>
@@ -559,7 +553,7 @@ export const ChainedMessage = memo(
 );
 
 export const ReplyMessage = memo(
-  ({ message }: { message: Message }) => {
+  ({ message }: { message: MessageDataWithUserInfo }) => {
     return (
       <Provider message={message}>
         <Frame className="mt-3">
