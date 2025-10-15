@@ -47,15 +47,17 @@ export const Provider = ({
     },
   );
 
+  const orderedResults = useMemo(() => results.slice().reverse(), [results]);
+
   const contextValue = useMemo(
     () => ({
       channel,
       channelComposerInputRef,
       loadingStatus: status,
       loadMoreMessages: () => loadMore(PAGE_SIZE),
-      messages: results.slice().reverse(),
+      messages: orderedResults,
     }),
-    [channel, channelComposerInputRef, results, status, loadMore],
+    [channel, channelComposerInputRef, orderedResults, status, loadMore],
   );
 
   return (
