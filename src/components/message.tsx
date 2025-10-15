@@ -211,11 +211,13 @@ const EditedIndicator = () => {
 };
 
 export const Content = () => {
-  const snapshots = useMessage((c) => c.snapshots);
-  const isEdited = snapshots?.length && snapshots.length > 1;
+  const latestContent = useMessage(
+    (c) => c.snapshots[c.snapshots.length - 1].content,
+  );
+  const isEdited = useMessage((c) => c.snapshots.length > 1);
   return (
     <span className="text-muted-foreground text-sm font-medium">
-      {snapshots[snapshots.length - 1].content}
+      {latestContent}
       {isEdited && <EditedIndicator />}
     </span>
   );
@@ -383,25 +385,29 @@ export const EditInline = () => {
 };
 
 export const ReplyPreview = () => {
-  const reply = useMessage((c) => c.reply);
-  if (!reply) return null;
-
-  const isEdited = reply.snapshots.length > 1;
+  const name = useMessage((c) => c.reply?.name);
+  const pfp = useMessage((c) => c.reply?.pfp);
+  const latestContent = useMessage(
+    (c) => c.reply?.snapshots[c.reply?.snapshots.length - 1].content,
+  );
+  const isEdited = useMessage(
+    (c) => c.reply?.snapshots.length && c.reply?.snapshots.length > 1,
+  );
 
   return (
     <div className="mb-0.5 flex h-5 items-center">
       <div className="border-muted-foreground mt-1.5 mr-1 ml-5 h-2.5 w-7 rounded-tl-sm border-t border-l" />
-      {reply.pfp && (
+      {pfp && (
         <Image
-          src={reply.pfp ?? ""}
-          alt={reply.name ?? ""}
+          src={pfp ?? ""}
+          alt={name ?? ""}
           width={40}
           height={40}
           className="mr-1 size-4 flex-shrink-0 rounded-full"
         />
       )}
       <span className="text-muted-foreground max-w-64 truncate text-xs">
-        {reply.snapshots[reply.snapshots.length - 1].content}
+        {latestContent}
       </span>
       {isEdited && <EditedIndicator />}
     </div>
@@ -423,18 +429,17 @@ export const EditComposer = () => {
     throw new Error("MessageContext not found");
   }
 
-  const snapshots = useMessage((c) => c.snapshots);
   const messageId = useMessage((c) => c._id);
   const inputRef = useMessage((c) => c.editComposerInputRef);
   const setInteractionState = useMessage((c) => c.setInteractionState);
   const setIsHovering = useMessage((c) => c.setIsHovering);
-  const { editMessage } = useMessageActions();
-
-  const [inputValue, setInputValue] = useState(
-    snapshots[snapshots.length - 1].content,
+  const previousContent = useMessage(
+    (c) => c.snapshots[c.snapshots.length - 1].content,
   );
 
-  const previousContent = snapshots[snapshots.length - 1].content;
+  const [inputValue, setInputValue] = useState(previousContent);
+
+  const { editMessage } = useMessageActions();
 
   return (
     <ComposerProvider
