@@ -32,11 +32,8 @@ export const useMessageActions = () => {
               (msg) => msg._id === args.replyTo,
             );
             if (replyToMessage) {
-              reply = {
-                ...replyToMessage,
-                name: replyToMessage.name,
-                pfp: replyToMessage.pfp ?? null,
-              };
+              const { replyTo: _, ...messageWithoutReplyTo } = replyToMessage;
+              reply = messageWithoutReplyTo;
               break;
             }
           }
