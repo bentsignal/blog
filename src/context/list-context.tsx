@@ -101,7 +101,6 @@ export const Provider = ({
       };
     }
   }, [
-    children,
     isAtBottomThreshold,
     showScrollToBottomButtonThreshold,
     loadMore,
