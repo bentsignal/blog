@@ -12,8 +12,6 @@ import {
 } from "@fluentui/react-context-selector";
 
 interface MessageContextType extends MessageDataWithUserInfo {
-  isHovering: boolean;
-  setIsHovering: (isHovering: boolean) => void;
   interactionState: MessageInteractionState;
   setInteractionState: (interactionState: MessageInteractionState) => void;
   editComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
@@ -35,7 +33,6 @@ export const Provider = ({
   message: MessageDataWithUserInfo;
   children: React.ReactNode;
 }) => {
-  const [isHovering, setIsHovering] = useState(false);
   const editComposerInputRef = useRef<HTMLTextAreaElement>(null);
   const [interactionState, setInteractionState] =
     useState<MessageInteractionState>("idle");
@@ -51,14 +48,12 @@ export const Provider = ({
       snapshots: message.snapshots,
       channel: message.channel,
       reply: message.reply,
-      isHovering,
-      setIsHovering,
       editComposerInputRef,
       replyComposerInputRef,
       interactionState,
       setInteractionState,
     }),
-    [message, isHovering, setIsHovering, interactionState, setInteractionState],
+    [message, interactionState, setInteractionState],
   );
 
   return (

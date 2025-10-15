@@ -133,7 +133,6 @@ export const Frame = ({
   className?: string;
   children: React.ReactNode;
 }) => {
-  const setIsHovering = useMessage((c) => c.setIsHovering);
   const interactionState = useMessage((c) => c.interactionState);
 
   const bgColor =
@@ -144,11 +143,7 @@ export const Frame = ({
         : "transparent hover:bg-muted";
 
   return (
-    <div
-      className={cn("relative px-6 py-0.5", className, bgColor)}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-    >
+    <div className={cn("group relative px-6 py-0.5", className, bgColor)}>
       {children}
     </div>
   );
@@ -244,22 +239,19 @@ export const Skeleton = ({ index }: { index?: number }) => {
 };
 
 export const SideTime = () => {
-  const isHovering = useMessage((c) => c.isHovering);
   const time = useMessage((c) => c._creationTime);
   return (
-    <div className="w-13 flex-shrink-0">
-      {isHovering && <Time time={getTimeString(time)} />}
+    <div className="invisible w-13 flex-shrink-0 group-hover:visible">
+      <Time time={getTimeString(time)} />
     </div>
   );
 };
 
 export const Actions = () => {
-  const isHovering = useMessage((c) => c.isHovering);
   const isSignedIn = useAuth((c) => c.signedIn);
   const myProfileId = useAuth((c) => c.myProfileId);
   const messageProfileId = useMessage((c) => c.profile);
 
-  if (!isHovering) return null;
   if (!isSignedIn) return null;
 
   const isMyMessage = myProfileId === messageProfileId;
@@ -273,7 +265,13 @@ export const Actions = () => {
 
 const ActionsFrame = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="absolute -top-5 right-2 flex">
+    <div
+      className={cn(
+        "absolute top-0 right-2 flex -translate-y-5",
+        "opacity-0 group-hover:opacity-100",
+        "pointer-events-none group-hover:pointer-events-auto",
+      )}
+    >
       <ButtonGroup>{children}</ButtonGroup>
     </div>
   );
@@ -432,7 +430,6 @@ export const EditComposer = () => {
   const messageId = useMessage((c) => c._id);
   const inputRef = useMessage((c) => c.editComposerInputRef);
   const setInteractionState = useMessage((c) => c.setInteractionState);
-  const setIsHovering = useMessage((c) => c.setIsHovering);
   const previousContent = useMessage(
     (c) => c.snapshots[c.snapshots.length - 1].content,
   );
@@ -460,10 +457,8 @@ export const EditComposer = () => {
           });
         }
         setInteractionState("idle");
-        setIsHovering(false);
       }}
       onCancel={() => {
-        setIsHovering(false);
         setInteractionState("idle");
       }}
     >
@@ -493,7 +488,6 @@ export const ReplyComposer = () => {
   const channel = useMessage((c) => c.channel);
   const inputRef = useMessage((c) => c.replyComposerInputRef);
   const setInteractionState = useMessage((c) => c.setInteractionState);
-  const setIsHovering = useMessage((c) => c.setIsHovering);
   const name = useMessage((c) => c.name);
 
   const scrollToBottom = useList((c) => c.scrollToBottom);
@@ -520,14 +514,12 @@ export const ReplyComposer = () => {
           replyTo: messageId,
         });
         setInteractionState("idle");
-        setIsHovering(false);
         mainComposerInputRef?.current?.focus();
         setTimeout(() => {
           scrollToBottom();
         }, 0);
       }}
       onCancel={() => {
-        setIsHovering(false);
         setInteractionState("idle");
       }}
     >
