@@ -18,8 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "State of State",
-  description: "How to build components in React",
+  title: "How I Code",
+  description:
+    "An evolving space to document my preferred methods of building software",
 };
 
 export default function RootLayout({
