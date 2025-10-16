@@ -10,9 +10,6 @@ import { Spinner } from "./spinner";
 export const ProfileButton = () => {
   const [open, setOpen] = useState(false);
 
-  const signOut = useAuth((c) => c.signOut);
-  // const deleteAccount = useAuth((c) => c.deleteAccount);
-
   return (
     <div
       onMouseEnter={() => setOpen(true)}
@@ -26,28 +23,49 @@ export const ProfileButton = () => {
           </div>
         </Popover.Trigger>
         <Popover.Content className="-mt-1 flex w-auto flex-col p-1">
-          <Button
-            variant="link"
-            onClick={async () => {
-              setOpen(false);
-              await signOut();
-            }}
-            className="focus-visible:ring-0"
-          >
-            Sign Out
-          </Button>
-          {/* <Button
-            variant="link"
-            onClick={async () => {
-              setOpen(false);
-              await deleteAccount();
-            }}
-          >
-            Delete Account
-          </Button> */}
+          <SignOutButton closePopover={() => setOpen(false)} />
         </Popover.Content>
       </Popover.Frame>
     </div>
+  );
+};
+
+export const SignOutButton = ({
+  closePopover,
+}: {
+  closePopover: () => void;
+}) => {
+  const signOut = useAuth((c) => c.signOut);
+  return (
+    <Button
+      variant="link"
+      onClick={async () => {
+        closePopover();
+        await signOut();
+      }}
+      className="focus-visible:ring-0"
+    >
+      Sign Out
+    </Button>
+  );
+};
+
+export const DeleteAccountButton = ({
+  closePopover,
+}: {
+  closePopover: () => void;
+}) => {
+  const deleteAccount = useAuth((c) => c.deleteAccount);
+  return (
+    <Button
+      variant="link"
+      onClick={async () => {
+        closePopover();
+        await deleteAccount();
+      }}
+    >
+      Delete Account
+    </Button>
   );
 };
 
