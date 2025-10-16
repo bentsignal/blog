@@ -1,8 +1,8 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { SimpleIcons } from "./simple-icons";
-import { Button } from "./ui/button";
+import { SimpleIcons } from "../atoms/icons";
+import { Button } from "../external/button";
 
 export const RepoButton = () => {
   const { resolvedTheme } = useTheme();

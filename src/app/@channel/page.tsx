@@ -1,8 +1,8 @@
 import { Provider as ChannelProvider } from "@/context/channel-context";
 import { api } from "@/convex/_generated/api";
+import * as Channel from "@/ui/atoms/channel";
+import * as Card from "@/ui/external/card";
 import { fetchQuery } from "convex/nextjs";
-import * as Channel from "@/components/channel";
-import * as Card from "@/components/ui/card";
 
 export default async function ChannelPage() {
   const channel = await fetchQuery(api.channel.getDefault);

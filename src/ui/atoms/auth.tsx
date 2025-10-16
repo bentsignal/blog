@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { UserRound } from "lucide-react";
+import { Button } from "../external/button";
+import * as Popover from "../external/popover";
 import { Spinner } from "./spinner";
-import { Button } from "./ui/button";
-import * as Popover from "./ui/popover";
 
 export const ProfileButton = () => {
   const [open, setOpen] = useState(false);

@@ -4,8 +4,8 @@ import { ListContext, useList } from "@/context/list-context";
 import { cn } from "@/utils/utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { ArrowDown } from "lucide-react";
-import { Button } from "./ui/button";
-import * as ToolTip from "./ui/tooltip";
+import { Button } from "../external/button";
+import * as ToolTip from "../external/tooltip";
 
 export const Frame = ({
   children,
