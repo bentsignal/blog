@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { UserRound } from "lucide-react";
-import { Button } from "../external/button";
-import * as Popover from "../external/popover";
+import { Button } from "./button";
+import * as Popover from "./popover";
 import { Spinner } from "./spinner";
 
 export const ProfileButton = () => {
@@ -19,13 +19,13 @@ export const ProfileButton = () => {
       onMouseLeave={() => setOpen(false)}
       className="flex items-center pr-1 pl-3"
     >
-      <Popover.Popover open={open} onOpenChange={setOpen}>
-        <Popover.PopoverTrigger className="py-1 outline-none!">
+      <Popover.Frame open={open} onOpenChange={setOpen}>
+        <Popover.Trigger className="py-1 outline-none!">
           <div className="bg-muted-foreground/10 flex size-7 items-center justify-center rounded-full">
             <UserRound className="text-muted-foreground size-3.5" />
           </div>
-        </Popover.PopoverTrigger>
-        <Popover.PopoverContent className="-mt-1 flex w-auto flex-col p-1">
+        </Popover.Trigger>
+        <Popover.Content className="-mt-1 flex w-auto flex-col p-1">
           <Button
             variant="link"
             onClick={async () => {
@@ -45,8 +45,8 @@ export const ProfileButton = () => {
           >
             Delete Account
           </Button> */}
-        </Popover.PopoverContent>
-      </Popover.Popover>
+        </Popover.Content>
+      </Popover.Frame>
     </div>
   );
 };

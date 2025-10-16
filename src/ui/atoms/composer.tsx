@@ -9,8 +9,8 @@ import { ComposerContext, useComposer } from "@/context/composer-context";
 import { cn } from "@/utils/utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import * as Icons from "lucide-react";
-import * as ToolTip from "../external/tooltip";
-import { Button } from "@/ui/external/button";
+import * as ToolTip from "./tooltip";
+import { Button } from "@/ui/atoms/button";
 
 export const Frame = ({
   className,
@@ -111,8 +111,8 @@ export const Send = () => {
   const submitDisabled = useComposer((c) => c.inputValue.trim() === "");
 
   return (
-    <ToolTip.Tooltip>
-      <ToolTip.TooltipTrigger asChild>
+    <ToolTip.Frame>
+      <ToolTip.Trigger asChild>
         <Button
           onClick={onSubmit}
           size="icon"
@@ -121,9 +121,9 @@ export const Send = () => {
         >
           <Icons.Send className="h-4 w-4 text-white" />
         </Button>
-      </ToolTip.TooltipTrigger>
-      <ToolTip.TooltipContent>Send</ToolTip.TooltipContent>
-    </ToolTip.Tooltip>
+      </ToolTip.Trigger>
+      <ToolTip.Content>Send</ToolTip.Content>
+    </ToolTip.Frame>
   );
 };
 
@@ -136,14 +136,14 @@ export const Cancel = () => {
   const onCancel = useComposer((c) => c.onCancel);
 
   return (
-    <ToolTip.Tooltip>
-      <ToolTip.TooltipTrigger asChild>
+    <ToolTip.Frame>
+      <ToolTip.Trigger asChild>
         <Button variant="destructive" size="icon" onClick={onCancel}>
           <Icons.X className="text-white" />
         </Button>
-      </ToolTip.TooltipTrigger>
-      <ToolTip.TooltipContent>Cancel</ToolTip.TooltipContent>
-    </ToolTip.Tooltip>
+      </ToolTip.Trigger>
+      <ToolTip.Content>Cancel</ToolTip.Content>
+    </ToolTip.Frame>
   );
 };
 
@@ -157,8 +157,8 @@ export const Save = () => {
   const submitDisabled = useComposer((c) => c.submitDisabled);
 
   return (
-    <ToolTip.Tooltip>
-      <ToolTip.TooltipTrigger asChild>
+    <ToolTip.Frame>
+      <ToolTip.Trigger asChild>
         <Button
           className="bg-green-800 hover:bg-green-900"
           size="icon"
@@ -167,9 +167,9 @@ export const Save = () => {
         >
           <Icons.Save className="text-white" />
         </Button>
-      </ToolTip.TooltipTrigger>
-      <ToolTip.TooltipContent>Save</ToolTip.TooltipContent>
-    </ToolTip.Tooltip>
+      </ToolTip.Trigger>
+      <ToolTip.Content>Save</ToolTip.Content>
+    </ToolTip.Frame>
   );
 };
 

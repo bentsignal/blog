@@ -1,5 +1,5 @@
 import { getTextDateString, isToday, isYesterday } from "@/utils/time-utils";
-import { Separator } from "../external/separator";
+import { Separator } from "@/ui/atoms/separator";
 
 export const DateMarker = ({ time }: { time: number }) => {
   const label = isToday(time)

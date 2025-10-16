@@ -1,7 +1,7 @@
 import { cn } from "@/utils/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Separator } from "@/ui/external/separator";
+import { Separator as BaseSeparator } from "@/ui/atoms/separator";
 
 const buttonGroupVariants = cva(
   "flex w-fit items-stretch [&>*]:focus-visible:z-10 [&>*]:focus-visible:relative [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[>[data-slot=button-group]]:gap-2",
@@ -20,7 +20,7 @@ const buttonGroupVariants = cva(
   },
 );
 
-function ButtonGroup({
+export function Frame({
   className,
   orientation,
   ...props
@@ -36,7 +36,7 @@ function ButtonGroup({
   );
 }
 
-function ButtonGroupText({
+export function Text({
   className,
   asChild = false,
   ...props
@@ -56,13 +56,13 @@ function ButtonGroupText({
   );
 }
 
-function ButtonGroupSeparator({
+export function Separator({
   className,
   orientation = "vertical",
   ...props
-}: React.ComponentProps<typeof Separator>) {
+}: React.ComponentProps<typeof BaseSeparator>) {
   return (
-    <Separator
+    <BaseSeparator
       data-slot="button-group-separator"
       orientation={orientation}
       className={cn(
@@ -73,10 +73,3 @@ function ButtonGroupSeparator({
     />
   );
 }
-
-export {
-  ButtonGroup,
-  ButtonGroupSeparator,
-  ButtonGroupText,
-  buttonGroupVariants,
-};

@@ -4,8 +4,8 @@ import { ListContext, useList } from "@/context/list-context";
 import { cn } from "@/utils/utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { ArrowDown } from "lucide-react";
-import { Button } from "../external/button";
-import * as ToolTip from "../external/tooltip";
+import { Button } from "./button";
+import * as ToolTip from "./tooltip";
 
 export const Frame = ({
   children,
@@ -93,8 +93,8 @@ export const ScrollToBottomButton = () => {
 
   return (
     <div className="absolute right-0 bottom-0 flex justify-end p-4">
-      <ToolTip.Tooltip>
-        <ToolTip.TooltipTrigger asChild>
+      <ToolTip.Frame>
+        <ToolTip.Trigger asChild>
           <Button
             variant="outline"
             size="icon"
@@ -102,9 +102,9 @@ export const ScrollToBottomButton = () => {
           >
             <ArrowDown className="size-4" />
           </Button>
-        </ToolTip.TooltipTrigger>
-        <ToolTip.TooltipContent>Scroll to bottom</ToolTip.TooltipContent>
-      </ToolTip.Tooltip>
+        </ToolTip.Trigger>
+        <ToolTip.Content>Scroll to bottom</ToolTip.Content>
+      </ToolTip.Frame>
     </div>
   );
 };

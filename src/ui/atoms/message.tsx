@@ -11,10 +11,10 @@ import {
 import { cn } from "@/utils/utils";
 import { Pencil, Reply, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
-import { Button } from "../external/button";
-import { ButtonGroup } from "../external/button-group";
-import * as ToolTip from "../external/tooltip";
+import { Button } from "./button";
+import * as ButtonGroup from "./button-group";
 import * as Shapes from "./shapes";
+import * as ToolTip from "./tooltip";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const Frame = ({
@@ -163,7 +163,7 @@ const ActionsFrame = ({ children }: { children: React.ReactNode }) => {
         "pointer-events-none group-hover:pointer-events-auto",
       )}
     >
-      <ButtonGroup>{children}</ButtonGroup>
+      <ButtonGroup.Frame>{children}</ButtonGroup.Frame>
     </div>
   );
 };
@@ -190,8 +190,8 @@ const EditButton = () => {
   const setInteractionState = useMessage((c) => c.setInteractionState);
   const editComposerInputRef = useMessage((c) => c.editComposerInputRef);
   return (
-    <ToolTip.Tooltip>
-      <ToolTip.TooltipTrigger asChild>
+    <ToolTip.Frame>
+      <ToolTip.Trigger asChild>
         <Button
           variant="outline"
           size="actions"
@@ -209,9 +209,9 @@ const EditButton = () => {
         >
           <Pencil className="size-3" />
         </Button>
-      </ToolTip.TooltipTrigger>
-      <ToolTip.TooltipContent>Edit message</ToolTip.TooltipContent>
-    </ToolTip.Tooltip>
+      </ToolTip.Trigger>
+      <ToolTip.Content>Edit message</ToolTip.Content>
+    </ToolTip.Frame>
   );
 };
 
@@ -219,8 +219,8 @@ const ReplyButton = () => {
   const setInteractionState = useMessage((c) => c.setInteractionState);
   const replyComposerInputRef = useMessage((c) => c.replyComposerInputRef);
   return (
-    <ToolTip.Tooltip>
-      <ToolTip.TooltipTrigger asChild>
+    <ToolTip.Frame>
+      <ToolTip.Trigger asChild>
         <Button
           variant="outline"
           size="actions"
@@ -233,9 +233,9 @@ const ReplyButton = () => {
         >
           <Reply className="size-3" />
         </Button>
-      </ToolTip.TooltipTrigger>
-      <ToolTip.TooltipContent>Reply to message</ToolTip.TooltipContent>
-    </ToolTip.Tooltip>
+      </ToolTip.Trigger>
+      <ToolTip.Content>Reply to message</ToolTip.Content>
+    </ToolTip.Frame>
   );
 };
 
@@ -243,8 +243,8 @@ const DeleteButton = () => {
   const id = useMessage((c) => c._id);
   const { deleteMessage } = useMessageActions();
   return (
-    <ToolTip.Tooltip>
-      <ToolTip.TooltipTrigger asChild>
+    <ToolTip.Frame>
+      <ToolTip.Trigger asChild>
         <Button
           variant="outline"
           size="actions"
@@ -253,9 +253,9 @@ const DeleteButton = () => {
           {" "}
           <Trash className="text-destructive size-3" />{" "}
         </Button>
-      </ToolTip.TooltipTrigger>
-      <ToolTip.TooltipContent>Delete message</ToolTip.TooltipContent>
-    </ToolTip.Tooltip>
+      </ToolTip.Trigger>
+      <ToolTip.Content>Delete message</ToolTip.Content>
+    </ToolTip.Frame>
   );
 };
 

@@ -4,8 +4,8 @@ import { MessageContext, useMessage } from "@/context/message-context";
 import { validateMessage } from "@/utils/message-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
+import * as ButtonGroup from "@/ui/atoms/button-group";
 import * as Composer from "@/ui/atoms/composer";
-import { ButtonGroup } from "@/ui/external/button-group";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const EditComposer = () => {
@@ -51,10 +51,10 @@ export const EditComposer = () => {
     >
       <Composer.Frame className="my-3 rounded-none px-6">
         <Composer.Input placeholder={previousContent} />
-        <ButtonGroup>
+        <ButtonGroup.Frame>
           <Composer.Cancel />
           <Composer.Save />
-        </ButtonGroup>
+        </ButtonGroup.Frame>
       </Composer.Frame>
     </ComposerContext.Provider>
   );

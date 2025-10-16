@@ -5,8 +5,8 @@ import { MessageContext, useMessage } from "@/context/message-context";
 import { validateMessage } from "@/utils/message-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
+import * as ButtonGroup from "@/ui/atoms/button-group";
 import * as Composer from "@/ui/atoms/composer";
-import { ButtonGroup } from "@/ui/external/button-group";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const ReplyComposer = () => {
@@ -64,10 +64,10 @@ export const ReplyComposer = () => {
       </Composer.InlineHeader>
       <Composer.Frame className="mb-3 rounded-none px-6">
         <Composer.Input />
-        <ButtonGroup>
+        <ButtonGroup.Frame>
           <Composer.Cancel />
           <Composer.Send />
-        </ButtonGroup>
+        </ButtonGroup.Frame>
       </Composer.Frame>
     </ComposerContext.Provider>
   );
