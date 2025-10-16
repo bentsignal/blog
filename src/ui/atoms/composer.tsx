@@ -6,11 +6,11 @@ import {
   MIN_MESSAGE_LENGTH,
 } from "@/config/message-config";
 import { ComposerContext, useComposer } from "@/context/composer-context";
-import { Button } from "@/ui/external/button";
 import { cn } from "@/utils/utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import * as Icons from "lucide-react";
 import * as ToolTip from "../external/tooltip";
+import { Button } from "@/ui/external/button";
 
 export const Frame = ({
   className,
