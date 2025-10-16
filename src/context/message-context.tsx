@@ -53,7 +53,20 @@ export const Provider = ({
       interactionState,
       setInteractionState,
     }),
-    [message, interactionState, setInteractionState],
+    [
+      message._id,
+      message._creationTime,
+      message.profile,
+      message.name,
+      message.pfp,
+      message.snapshots,
+      message.channel,
+      message.reply,
+      editComposerInputRef,
+      replyComposerInputRef,
+      interactionState,
+      setInteractionState,
+    ],
   );
 
   return (
