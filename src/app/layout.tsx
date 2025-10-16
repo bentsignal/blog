@@ -53,11 +53,11 @@ export default function RootLayout({
 const Hero = () => {
   return (
     <div className="flex flex-col items-start justify-center gap-1">
-      <span className="text-6xl font-bold">State of ...State?</span>
-      <span className="text-muted-foreground mb-1 text-xl">
-        A modern approach to managing state in React
+      <span className="text-6xl font-bold">How I Code</span>
+      <span className="text-muted-foreground mb-1 max-w-md text-xl">
+        An evolving space to document my preferred methods of building software
       </span>
-      <Link href="https://github.com/bentsignal/state-of-state" target="_blank">
+      <Link href="https://github.com/bentsignal/how-i-code" target="_blank">
         <RepoButton />
       </Link>
     </div>

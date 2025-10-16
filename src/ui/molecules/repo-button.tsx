@@ -10,7 +10,7 @@ export const RepoButton = () => {
   return (
     <div className="transition-opacity duration-300">
       <Button variant="outline">
-        Code
+        Repo
         <SimpleIcons
           icon="siGithub"
           color={resolvedTheme === "light" ? "black" : "white"}
