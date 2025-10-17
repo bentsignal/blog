@@ -1,20 +1,31 @@
 "use client";
 
-import { Fragment } from "react";
 import { useAuth } from "@/context/auth-context";
-import { useChannel } from "@/context/channel-context";
+import {
+  Provider as ChannelProvider,
+  useChannel,
+} from "@/context/channel-context";
 import { Provider as ListProvider } from "@/context/list-context";
-import { areSameDay } from "@/utils/time-utils";
+import { Doc } from "@/convex/_generated/dataModel";
+import { MessageList } from "../molecules/message-list";
 import * as Auth from "@/ui/atoms/auth";
+import * as Card from "@/ui/atoms/card";
 import * as List from "@/ui/atoms/list";
 import * as Message from "@/ui/atoms/message";
 import { ChannelComposer } from "@/ui/molecules/composers";
-import { DateMarker } from "@/ui/molecules/date-marker";
-import {
-  ChainedMessage,
-  ReplyMessage,
-  StandardMessage,
-} from "@/ui/molecules/messages";
+
+export const ChannelTemplate = ({ channel }: { channel: Doc<"channels"> }) => {
+  return (
+    <Card.Frame className="h-[700px] max-h-full w-full max-w-md rounded-3xl p-0">
+      <Card.Content className="flex h-full flex-col p-0">
+        <ChannelProvider channel={channel}>
+          <Header />
+          <Body />
+        </ChannelProvider>
+      </Card.Content>
+    </Card.Frame>
+  );
+};
 
 export const Header = () => {
   const signedIn = useAuth((c) => c.signedIn);
@@ -52,8 +63,7 @@ export const Body = () => {
       loadMore={loadMoreMessages}
       mainComposerInputRef={channelComposerInputRef}
     >
-      <Messages />
-      <ChannelComposer />
+      <Content />
     </ListProvider>
   );
 };
@@ -73,41 +83,13 @@ const Skeleton = () => {
   );
 };
 
-const Messages = () => {
+const Content = () => {
   const messages = useChannel((c) => c.messages);
   return (
-    <List.Frame>
-      <List.Content className="pb-4">
-        {messages.map((message, index) => {
-          const previousMessage = index > 0 ? messages[index - 1] : null;
-          // messages sent by the same user within 5 minutes of each other are chained together
-          const shouldChainMessages =
-            previousMessage?.profile === message.profile &&
-            message._creationTime - previousMessage._creationTime <
-              1000 * 60 * 5;
-          // if neighboring messages are not sent on the same day, show the date to mark
-          // the start of a new day
-          const isSameDay = areSameDay(
-            message._creationTime,
-            previousMessage?._creationTime ?? 0,
-          );
-          const showDateMarker = !isSameDay && !shouldChainMessages;
-          return (
-            <Fragment key={message._id}>
-              {showDateMarker && <DateMarker time={message._creationTime} />}
-              {message.reply ? (
-                <ReplyMessage message={message} />
-              ) : shouldChainMessages ? (
-                <ChainedMessage message={message} />
-              ) : (
-                <StandardMessage message={message} />
-              )}
-            </Fragment>
-          );
-        })}
-        <List.ScrollToBottomButton />
-      </List.Content>
-    </List.Frame>
+    <>
+      <MessageList messages={messages} />
+      <ChannelComposer />
+    </>
   );
 };
 
