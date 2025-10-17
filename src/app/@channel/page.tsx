@@ -56,7 +56,7 @@ const Body = () => {
       mainComposerInputRef={channelComposerInputRef}
       contentVersion={messageCount}
     >
-      <Content />
+      <MessagesAndComposer />
     </ListProvider>
   );
 };
@@ -76,7 +76,7 @@ const Skeleton = () => {
   );
 };
 
-const Content = () => {
+const MessagesAndComposer = () => {
   const messages = useChannel((c) => c.messages);
   return (
     <>
