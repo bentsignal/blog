@@ -29,13 +29,13 @@ export const ChannelTemplate = ({ channel }: { channel: Doc<"channels"> }) => {
 
 export const Header = () => {
   const signedIn = useAuth((c) => c.signedIn);
-  const channel = useChannel((c) => c.channel);
+  const channelName = useChannel((c) => c.channel.name);
   return (
     <div className="bg-muted m-4 mb-0 flex items-center justify-between rounded-2xl p-3">
       <div className="flex flex-1 items-center gap-3 pl-1">
         <span className="text-3xl font-semibold">#</span>
         <div className="flex flex-1 flex-col justify-center">
-          <span className="text-sm font-bold">{channel.name}</span>
+          <span className="text-sm font-bold">{channelName}</span>
           <span className="text-muted-foreground text-xs">Text Channel</span>
         </div>
       </div>
