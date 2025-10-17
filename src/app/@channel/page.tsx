@@ -39,6 +39,7 @@ export const Body = () => {
   const loadingStatus = useChannel((c) => c.loadingStatus);
   const channelComposerInputRef = useChannel((c) => c.channelComposerInputRef);
   const loadMoreMessages = useChannel((c) => c.loadMoreMessages);
+  const messageCount = useChannel((c) => c.messages.length);
 
   if (loadingStatus === "LoadingFirstPage") {
     return <Skeleton />;
@@ -53,6 +54,7 @@ export const Body = () => {
       skeletonComponent={<Message.Skeleton />}
       loadMore={loadMoreMessages}
       mainComposerInputRef={channelComposerInputRef}
+      contentVersion={messageCount}
     >
       <Content />
     </ListProvider>

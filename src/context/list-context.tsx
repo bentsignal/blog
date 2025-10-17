@@ -45,6 +45,7 @@ interface ListProps {
   loadMoreOnScrollThreshold?: number;
   loadMore?: () => void;
   mainComposerInputRef?: RefObject<HTMLTextAreaElement | null>;
+  contentVersion?: number;
 }
 
 export const Provider = ({
@@ -59,6 +60,7 @@ export const Provider = ({
   skeletonComponent,
   loadMore,
   mainComposerInputRef,
+  contentVersion,
 }: ListProps) => {
   const isAtBottom = useRef(false);
   const distanceFromBottom = useRef(0);
@@ -112,7 +114,6 @@ export const Provider = ({
   useEffect(() => {
     if (
       !isAtBottom.current &&
-      children &&
       scrollRef.current &&
       maintainScrollPositionOnAppend
     ) {
@@ -121,14 +122,14 @@ export const Provider = ({
         scrollRef.current.clientHeight -
         distanceFromBottom.current;
     }
-  }, [children, maintainScrollPositionOnAppend]);
+  }, [contentVersion, maintainScrollPositionOnAppend]);
 
-  // when user is at the bottom of the list and the content change, scroll to the new bottom
+  // when user is at the bottom of the list and the content changes, scroll to the new bottom
   useEffect(() => {
-    if (isAtBottom.current && children && stickToBottom) {
+    if (isAtBottom.current && stickToBottom) {
       scrollToBottom();
     }
-  }, [children, stickToBottom]);
+  }, [contentVersion, stickToBottom]);
 
   // scroll to the bottom of the list before items are rendered
   useLayoutEffect(() => {
