@@ -18,7 +18,7 @@ export default function ChannelPage() {
   );
 }
 
-export const Header = () => {
+const Header = () => {
   const signedIn = useAuth((c) => c.signedIn);
   const channelName = useChannel((c) => c.channel.name);
   return (
@@ -35,7 +35,7 @@ export const Header = () => {
   );
 };
 
-export const Body = () => {
+const Body = () => {
   const loadingStatus = useChannel((c) => c.loadingStatus);
   const channelComposerInputRef = useChannel((c) => c.channelComposerInputRef);
   const loadMoreMessages = useChannel((c) => c.loadMoreMessages);
@@ -83,18 +83,5 @@ const Content = () => {
       <MessageList messages={messages} />
       <ChannelComposer />
     </>
-  );
-};
-
-export const ErrorMessage = () => {
-  return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-1">
-      <div className="text-destructive text-sm font-bold">
-        Failed to load messages
-      </div>
-      <div className="text-muted-foreground text-xs">
-        Sorry about that, something went wrong.
-      </div>
-    </div>
   );
 };
