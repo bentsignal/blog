@@ -23,7 +23,7 @@ export interface ListContextType {
   scrollToBottom: (behavior?: "instant" | "smooth") => void;
   loadingStatus?: PaginationStatus;
   skeletonComponent?: React.ReactNode;
-  mainComposerInputRef?: RefObject<HTMLTextAreaElement | null>;
+  composerInputRef?: RefObject<HTMLTextAreaElement | null>;
 }
 
 export const ListContext = createContext<ListContextType>(
@@ -36,30 +36,30 @@ export const useList = <T,>(selector: ContextSelector<ListContextType, T>) =>
 interface ListProps {
   children: React.ReactNode;
   stickToBottom?: boolean;
-  scrollToBottomOnMount?: boolean;
-  maintainScrollPositionOnAppend?: boolean;
+  startAt?: "bottom" | "top";
+  maintainScrollOnContentChange?: boolean;
   loadingStatus?: PaginationStatus;
   isAtBottomThreshold?: number;
   showScrollToBottomButtonThreshold?: number;
   skeletonComponent?: React.ReactNode;
   loadMoreOnScrollThreshold?: number;
   loadMore?: () => void;
-  mainComposerInputRef?: RefObject<HTMLTextAreaElement | null>;
+  composerInputRef?: RefObject<HTMLTextAreaElement | null>;
   contentVersion?: number;
 }
 
 export const Provider = ({
   children,
   stickToBottom,
-  scrollToBottomOnMount,
-  maintainScrollPositionOnAppend,
+  startAt,
+  maintainScrollOnContentChange,
   loadingStatus,
   isAtBottomThreshold = 10,
   showScrollToBottomButtonThreshold = 500,
   loadMoreOnScrollThreshold = 1500,
   skeletonComponent,
   loadMore,
-  mainComposerInputRef,
+  composerInputRef,
   contentVersion,
 }: ListProps) => {
   const isAtBottom = useRef(false);
@@ -71,6 +71,13 @@ export const Provider = ({
   const scrollToBottom = (behavior: "instant" | "smooth" = "instant") => {
     scrollRef.current?.scrollTo({
       top: scrollRef.current?.scrollHeight,
+      behavior,
+    });
+  };
+
+  const scrollToTop = (behavior: "instant" | "smooth" = "instant") => {
+    scrollRef.current?.scrollTo({
+      top: 0,
       behavior,
     });
   };
@@ -115,14 +122,14 @@ export const Provider = ({
     if (
       !isAtBottom.current &&
       scrollRef.current &&
-      maintainScrollPositionOnAppend
+      maintainScrollOnContentChange
     ) {
       scrollRef.current.scrollTop =
         scrollRef.current.scrollHeight -
         scrollRef.current.clientHeight -
         distanceFromBottom.current;
     }
-  }, [contentVersion, maintainScrollPositionOnAppend]);
+  }, [contentVersion, maintainScrollOnContentChange]);
 
   // when user is at the bottom of the list and the content changes, scroll to the new bottom
   useEffect(() => {
@@ -133,10 +140,12 @@ export const Provider = ({
 
   // scroll to the bottom of the list before items are rendered
   useLayoutEffect(() => {
-    if (scrollToBottomOnMount) {
+    if (startAt === "bottom") {
       scrollToBottom();
+    } else if (startAt === "top") {
+      scrollToTop();
     }
-  }, [scrollToBottomOnMount]);
+  }, [startAt]);
 
   const contextValue = useMemo(
     () => ({
@@ -147,14 +156,14 @@ export const Provider = ({
       scrollToBottom,
       loadingStatus,
       skeletonComponent,
-      mainComposerInputRef,
+      composerInputRef,
     }),
     [
       showScrollToBottomButton,
       setShowScrollToBottomButton,
       loadingStatus,
       skeletonComponent,
-      mainComposerInputRef,
+      composerInputRef,
     ],
   );
 

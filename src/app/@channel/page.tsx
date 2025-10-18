@@ -48,12 +48,12 @@ const Body = () => {
   return (
     <ListProvider
       stickToBottom={true}
-      scrollToBottomOnMount={true}
-      maintainScrollPositionOnAppend={true}
+      startAt="top"
+      maintainScrollOnContentChange={true}
       loadingStatus={loadingStatus}
       skeletonComponent={<Message.Skeleton />}
       loadMore={loadMoreMessages}
-      mainComposerInputRef={channelComposerInputRef}
+      composerInputRef={channelComposerInputRef}
       contentVersion={messageCount}
     >
       <MessagesAndComposer />

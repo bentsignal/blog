@@ -27,7 +27,7 @@ export const ReplyComposer = () => {
   const name = useMessage((c) => c.name);
 
   const scrollToBottom = useList((c) => c.scrollToBottom);
-  const mainComposerInputRef = useList((c) => c.mainComposerInputRef);
+  const listComposer = useList((c) => c.composerInputRef);
 
   const [inputValue, setInputValue] = useState("");
   const { sendMessage } = useMessageActions();
@@ -50,7 +50,7 @@ export const ReplyComposer = () => {
           replyTo: messageId,
         });
         setInteractionState("idle");
-        mainComposerInputRef?.current?.focus();
+        listComposer?.current?.focus();
         setTimeout(() => {
           scrollToBottom();
         }, 0);
