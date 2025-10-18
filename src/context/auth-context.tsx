@@ -78,24 +78,19 @@ export const Provider = ({
 
   const signIn = useCallback(async () => {
     if (inProgress) return;
-    try {
-      setInProgress(true);
-      await authClient.signIn.social(
-        { provider: "github" },
-        {
-          onError: (error) => {
-            setInProgress(false);
-            console.error(error);
-            toast.error(
-              "Ran into an error trying to sign in, see console for more details.",
-            );
-          },
+    setInProgress(true);
+    await authClient.signIn.social(
+      { provider: "github" },
+      {
+        onError: (error) => {
+          setInProgress(false);
+          console.error(error);
+          toast.error(
+            "Ran into an error trying to sign in, see console for more details.",
+          );
         },
-      );
-    } catch (error) {
-      console.error(error);
-      setInProgress(false);
-    }
+      },
+    );
   }, [inProgress]);
 
   const contextValue = useMemo(

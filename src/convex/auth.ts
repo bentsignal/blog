@@ -24,6 +24,11 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
         if (profile) {
           await ctx.db.delete(profile._id);
         }
+        if (profile.imageKey) {
+          await ctx.scheduler.runAfter(0, internal.uploadthing.deleteFile, {
+            key: profile.imageKey,
+          });
+        }
       },
       onCreate: async (ctx, authUser) => {
         const profile = await ctx.db.insert("profiles", {

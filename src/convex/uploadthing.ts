@@ -1,6 +1,5 @@
 "use node";
 
-import { tryCatch } from "@/utils/error-utils";
 import { v } from "convex/values";
 import { UTApi, UTFile } from "uploadthing/server";
 import { internal } from "./_generated/api";
@@ -32,23 +31,12 @@ export const getFileURL = (key: string) => {
 };
 
 export const downloadImage = async (url: string) => {
-  const download = await tryCatch(fetch(url));
-  if (download.error) {
-    throw new Error(`Error downloading image: ${download.error.message}`);
-  }
-  const conversion = await tryCatch(download.data.arrayBuffer());
-  if (conversion.error) {
-    throw new Error(
-      `Error converting image to uint8Array: ${conversion.error.message}`,
-    );
-  }
-  const uint8Array = new Uint8Array(conversion.data);
-
-  return uint8Array;
+  return await fetch(url)
+    .then((res) => res.arrayBuffer())
+    .then((buffer) => new Uint8Array(buffer));
 };
 
 export const uploadImage = async (image: Uint8Array, fileName: string) => {
-  // upload image to uploadthing
   const arrayBuffer = new ArrayBuffer(image.length);
   const view = new Uint8Array(arrayBuffer);
   view.set(image);
@@ -56,9 +44,18 @@ export const uploadImage = async (image: Uint8Array, fileName: string) => {
   const file = new UTFile([blob], fileName, { type: "image/png" });
   const uploadedFile = await utapi.uploadFiles(file);
   if (uploadedFile.error) {
-    throw new Error(
-      `Error uploading image to uploadthing: ${uploadedFile.error.message}`,
-    );
+    throw new Error(`Error uploading image to uploadthing`, {
+      cause: uploadedFile.error,
+    });
   }
   return uploadedFile.data.key;
 };
+
+export const deleteFile = internalAction({
+  args: {
+    key: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return await utapi.deleteFiles([args.key]);
+  },
+});
