@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { useMessage } from "@/context/message-context";
+import { cn } from "@/utils/style-utils";
 import {
   getFullTimestamp,
   getTimeString,
   isOverOneDayAgo,
 } from "@/utils/time-utils";
-import { cn } from "@/utils/utils";
 import { Pencil, Reply, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
 import { Button } from "./button";

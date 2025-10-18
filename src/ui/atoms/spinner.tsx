@@ -1,4 +1,4 @@
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/style-utils";
 import { Loader2 } from "lucide-react";
 
 export const Spinner = ({ className }: { className?: string }) => {

@@ -6,7 +6,7 @@ import {
   MIN_MESSAGE_LENGTH,
 } from "@/config/message-config";
 import { ComposerContext, useComposer } from "@/context/composer-context";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/style-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import * as Icons from "lucide-react";
 import * as ToolTip from "./tooltip";
