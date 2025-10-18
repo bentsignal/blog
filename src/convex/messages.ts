@@ -63,9 +63,9 @@ export const get = query({
             pfp: profile.image,
           };
         }
-
         return {
           ...message,
+          snapshots: message.snapshots.slice(-2),
           name: user.name,
           pfp: user.image,
           reply,
@@ -124,14 +124,16 @@ export const edit = authedMutation({
     if (!message) throw new ConvexError("Message not found");
     const profile = await getProfile(ctx, userId);
     if (message.profile !== profile._id) throw new ConvexError("Unauthorized");
+    // only keep the most recent 10 snapshots
+    const updatedSnapshots = [
+      ...message.snapshots,
+      {
+        content: args.content,
+        timestamp: Date.now(),
+      },
+    ].slice(-10);
     await ctx.db.patch(args.messageId, {
-      snapshots: [
-        ...message.snapshots,
-        {
-          content: args.content,
-          timestamp: Date.now(),
-        },
-      ],
+      snapshots: updatedSnapshots,
     });
   },
 });
