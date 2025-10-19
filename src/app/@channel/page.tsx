@@ -11,10 +11,10 @@ import { MessageList } from "@/ui/molecules/message-list";
 
 export default function ChannelPage() {
   return (
-    <>
+    <div className="flex h-full w-full flex-col">
       <Header />
       <Body />
-    </>
+    </div>
   );
 }
 
@@ -66,7 +66,7 @@ const Skeleton = () => {
     <ListProvider>
       <List.Frame>
         <List.Content className="py-4">
-          {Array.from({ length: 10 }).map((_, index) => (
+          {Array.from({ length: 20 }).map((_, index) => (
             <Message.Skeleton key={index} index={index} />
           ))}
         </List.Content>

@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { GlobalProviders } from "@/context/global-context";
-import Link from "next/link";
+import * as Sidebar from "@/ui/atoms/sidebar";
 import { Toaster } from "@/ui/atoms/toast";
-import { RepoButton } from "@/ui/molecules/repo-button";
-import { ThemeToggle } from "@/ui/molecules/theme-toggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,30 +35,14 @@ export default function RootLayout({
       >
         <GlobalProviders>
           <Toaster />
-          <div className="flex min-h-screen flex-col items-center justify-center gap-16 sm:flex-row">
-            <div className="fixed top-4 right-4 z-50">
-              <ThemeToggle />
-            </div>
-            <Hero />
-            {channel}
-          </div>
+          <Sidebar.Frame>
+            <Sidebar.Content className="flex items-center justify-center">
+              {channel}
+            </Sidebar.Content>
+          </Sidebar.Frame>
           {children}
         </GlobalProviders>
       </body>
     </html>
   );
 }
-
-const Hero = () => {
-  return (
-    <div className="flex flex-col items-start justify-center gap-1">
-      <span className="text-6xl font-bold">How I Code</span>
-      <span className="text-muted-foreground mb-1 max-w-md text-xl">
-        An evolving space to document my preferred methods of building software
-      </span>
-      <Link href="https://github.com/bentsignal/how-i-code" target="_blank">
-        <RepoButton />
-      </Link>
-    </div>
-  );
-};

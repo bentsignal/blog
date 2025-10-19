@@ -2,18 +2,13 @@ import { SVGProps } from "react";
 import * as simpleIcons from "simple-icons";
 import type { SimpleIcon as SimpleIconType } from "simple-icons";
 
-interface SimpleIconsProps extends SVGProps<SVGSVGElement> {
+interface IconProps extends SVGProps<SVGSVGElement> {
   icon: keyof typeof simpleIcons;
   color?: string;
   size?: number | string;
 }
 
-export const SimpleIcons = ({
-  icon,
-  color,
-  size = "1em",
-  ...rest
-}: SimpleIconsProps) => {
+export const Icon = ({ icon, color, size = "1em", ...rest }: IconProps) => {
   const iconData = simpleIcons[icon] as SimpleIconType;
 
   if (!iconData) {

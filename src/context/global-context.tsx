@@ -1,6 +1,7 @@
 import { Provider as AuthProvider } from "./auth-context";
 import { ConvexClientProvider } from "./convex-context";
 import { ThemeProvider } from "./theme-context";
+import { Provider as SidebarProvider } from "@/ui/atoms/sidebar";
 import { getToken } from "@/lib/auth-server";
 
 export const GlobalProviders = async ({
@@ -19,7 +20,7 @@ export const GlobalProviders = async ({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
       </AuthProvider>
     </ConvexClientProvider>

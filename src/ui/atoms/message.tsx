@@ -34,7 +34,9 @@ export const Frame = ({
         : "transparent hover:bg-muted";
 
   return (
-    <div className={cn("group relative px-6 py-0.5", className, bgColor)}>
+    <div
+      className={cn("group/message relative px-6 py-0.5", className, bgColor)}
+    >
       {children}
     </div>
   );
@@ -132,7 +134,7 @@ export const Skeleton = ({ index }: { index?: number }) => {
 export const SideTime = () => {
   const time = useMessage((c) => c._creationTime);
   return (
-    <div className="invisible w-13 flex-shrink-0 group-hover:visible">
+    <div className="invisible w-13 flex-shrink-0 group-hover/message:visible">
       <Time time={getTimeString(time)} />
     </div>
   );
@@ -159,8 +161,8 @@ const ActionsFrame = ({ children }: { children: React.ReactNode }) => {
     <div
       className={cn(
         "absolute top-0 right-2 flex -translate-y-5",
-        "opacity-0 group-hover:opacity-100",
-        "pointer-events-none group-hover:pointer-events-auto",
+        "opacity-0 group-hover/message:opacity-100",
+        "pointer-events-none group-hover/message:pointer-events-auto",
       )}
     >
       <ButtonGroup.Frame>{children}</ButtonGroup.Frame>
