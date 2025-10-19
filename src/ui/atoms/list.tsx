@@ -3,7 +3,7 @@
 import { ListContext, useList } from "@/context/list-context";
 import { cn } from "@/utils/style-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "./button";
 import * as ToolTip from "./tooltip";
 
@@ -80,19 +80,21 @@ export const Content = ({
   );
 };
 
-export const ScrollToBottomButton = () => {
+export const ScrollToBottomButton = ({ className }: { className?: string }) => {
   const hasScrollContext = useHasParentContext(ListContext);
   if (!hasScrollContext) {
     throw new Error("ListContext not found");
   }
 
-  const showScrollToBottomButton = useList((c) => c.showScrollToBottomButton);
+  const showScrollToBottomButton = useList(
+    (c) => c.vagueScrollPosition !== "bottom",
+  );
   const scrollToBottom = useList((c) => c.scrollToBottom);
 
   if (!showScrollToBottomButton) return null;
 
   return (
-    <div className="absolute right-0 bottom-0 flex justify-end p-4">
+    <div className={cn(className)}>
       <ToolTip.Frame>
         <ToolTip.Trigger asChild>
           <Button
@@ -104,6 +106,30 @@ export const ScrollToBottomButton = () => {
           </Button>
         </ToolTip.Trigger>
         <ToolTip.Content>Scroll to bottom</ToolTip.Content>
+      </ToolTip.Frame>
+    </div>
+  );
+};
+
+export const ScrollToTopButton = ({ className }: { className?: string }) => {
+  const hasScrollContext = useHasParentContext(ListContext);
+  if (!hasScrollContext) {
+    throw new Error("ListContext not found");
+  }
+
+  const showScrollToTopButton = useList((c) => c.vagueScrollPosition !== "top");
+  const scrollToTop = useList((c) => c.scrollToTop);
+
+  if (!showScrollToTopButton) return null;
+  return (
+    <div className={cn(className)}>
+      <ToolTip.Frame>
+        <ToolTip.Trigger asChild>
+          <Button variant="outline" size="icon" onClick={() => scrollToTop()}>
+            <ArrowUp className="size-4" />
+          </Button>
+        </ToolTip.Trigger>
+        <ToolTip.Content>Scroll to top</ToolTip.Content>
       </ToolTip.Frame>
     </div>
   );

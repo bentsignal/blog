@@ -35,7 +35,7 @@ export default function RootLayout({
       >
         <GlobalProviders>
           <Toaster />
-          <Sidebar.Frame>
+          <Sidebar.Frame className="max-w-screen sm:max-w-lg">
             <Sidebar.Content className="flex items-center justify-center">
               {channel}
             </Sidebar.Content>

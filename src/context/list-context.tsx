@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { VagueScrollPosition } from "@/types/list-types";
 import {
   ContextSelector,
   createContext,
@@ -16,11 +17,10 @@ import {
 import { type PaginationStatus } from "convex/react";
 
 export interface ListContextType {
-  isAtBottom: RefObject<boolean>;
   scrollRef: RefObject<HTMLDivElement | null>;
-  showScrollToBottomButton: boolean;
-  setShowScrollToBottomButton: (newValue: boolean) => void;
   scrollToBottom: (behavior?: "instant" | "smooth") => void;
+  scrollToTop: (behavior?: "instant" | "smooth") => void;
+  vagueScrollPosition: VagueScrollPosition;
   loadingStatus?: PaginationStatus;
   skeletonComponent?: React.ReactNode;
   composerInputRef?: RefObject<HTMLTextAreaElement | null>;
@@ -39,8 +39,7 @@ interface ListProps {
   startAt?: "bottom" | "top";
   maintainScrollOnContentChange?: boolean;
   loadingStatus?: PaginationStatus;
-  isAtBottomThreshold?: number;
-  showScrollToBottomButtonThreshold?: number;
+  isNearBoundaryThreshold?: number;
   skeletonComponent?: React.ReactNode;
   loadMoreOnScrollThreshold?: number;
   loadMore?: () => void;
@@ -51,22 +50,24 @@ interface ListProps {
 export const Provider = ({
   children,
   stickToBottom,
-  startAt,
+  startAt = "top",
   maintainScrollOnContentChange,
   loadingStatus,
-  isAtBottomThreshold = 10,
-  showScrollToBottomButtonThreshold = 500,
+  isNearBoundaryThreshold = 10,
   loadMoreOnScrollThreshold = 1500,
   skeletonComponent,
   loadMore,
   composerInputRef,
   contentVersion,
 }: ListProps) => {
-  const isAtBottom = useRef(false);
   const distanceFromBottom = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [showScrollToBottomButton, setShowScrollToBottomButton] =
-    useState(false);
+  const vagueScrollPositionRef = useRef<VagueScrollPosition>(
+    startAt === "bottom" ? "bottom" : "top",
+  );
+
+  const [vagueScrollPosition, setVagueScrollPosition] =
+    useState<VagueScrollPosition>(startAt === "bottom" ? "bottom" : "top");
 
   const scrollToBottom = (behavior: "instant" | "smooth" = "instant") => {
     scrollRef.current?.scrollTo({
@@ -89,20 +90,25 @@ export const Provider = ({
       const handleScroll = () => {
         const totalHeight = scrollElement.scrollHeight;
         const windowHeight = scrollElement.clientHeight;
-        const distanceFromTop = scrollElement.scrollTop;
-        distanceFromBottom.current =
-          totalHeight - windowHeight - distanceFromTop;
+        const newDistanceFromTop = scrollElement.scrollTop;
+        const newDistanceFromBottom =
+          totalHeight - windowHeight - newDistanceFromTop;
+        distanceFromBottom.current = newDistanceFromBottom;
         if (
-          distanceFromTop < loadMoreOnScrollThreshold &&
+          newDistanceFromBottom < loadMoreOnScrollThreshold &&
           loadMore &&
           loadingStatus === "CanLoadMore"
         ) {
           loadMore();
         }
-        isAtBottom.current = distanceFromBottom.current <= isAtBottomThreshold;
-        setShowScrollToBottomButton(
-          distanceFromBottom.current >= showScrollToBottomButtonThreshold,
-        );
+        const newVagueScrollPosition =
+          newDistanceFromTop <= isNearBoundaryThreshold
+            ? "top"
+            : newDistanceFromBottom <= isNearBoundaryThreshold
+              ? "bottom"
+              : "middle";
+        vagueScrollPositionRef.current = newVagueScrollPosition;
+        setVagueScrollPosition(newVagueScrollPosition);
       };
       scrollElement.addEventListener("scroll", handleScroll);
       return () => {
@@ -110,8 +116,7 @@ export const Provider = ({
       };
     }
   }, [
-    isAtBottomThreshold,
-    showScrollToBottomButtonThreshold,
+    isNearBoundaryThreshold,
     loadMore,
     loadingStatus,
     loadMoreOnScrollThreshold,
@@ -120,7 +125,7 @@ export const Provider = ({
   // when new content is loaded and appended to the top of the list, retain previous distance from bottom
   useEffect(() => {
     if (
-      !isAtBottom.current &&
+      vagueScrollPositionRef.current !== "bottom" &&
       scrollRef.current &&
       maintainScrollOnContentChange
     ) {
@@ -133,38 +138,29 @@ export const Provider = ({
 
   // when user is at the bottom of the list and the content changes, scroll to the new bottom
   useEffect(() => {
-    if (isAtBottom.current && stickToBottom) {
+    if (vagueScrollPositionRef.current === "bottom" && stickToBottom) {
       scrollToBottom();
     }
   }, [contentVersion, stickToBottom]);
 
-  // scroll to the bottom of the list before items are rendered
+  // optionally scroll to the bottom of the list before items are rendered
   useLayoutEffect(() => {
     if (startAt === "bottom") {
       scrollToBottom();
-    } else if (startAt === "top") {
-      scrollToTop();
     }
   }, [startAt]);
 
   const contextValue = useMemo(
     () => ({
-      isAtBottom,
       scrollRef,
-      showScrollToBottomButton,
-      setShowScrollToBottomButton,
       scrollToBottom,
+      scrollToTop,
       loadingStatus,
       skeletonComponent,
       composerInputRef,
+      vagueScrollPosition,
     }),
-    [
-      showScrollToBottomButton,
-      setShowScrollToBottomButton,
-      loadingStatus,
-      skeletonComponent,
-      composerInputRef,
-    ],
+    [loadingStatus, skeletonComponent, composerInputRef, vagueScrollPosition],
   );
 
   return (

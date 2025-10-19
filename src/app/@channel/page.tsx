@@ -8,10 +8,12 @@ import * as List from "@/ui/atoms/list";
 import * as Message from "@/ui/atoms/message";
 import { ChannelComposer } from "@/ui/molecules/composers";
 import { MessageList } from "@/ui/molecules/message-list";
+import { TopControls } from "@/ui/molecules/top-controls";
 
 export default function ChannelPage() {
   return (
     <div className="flex h-full w-full flex-col">
+      <TopControls className="md:hidden" />
       <Header />
       <Body />
     </div>
@@ -48,7 +50,7 @@ const Body = () => {
   return (
     <ListProvider
       stickToBottom={true}
-      startAt="top"
+      startAt="bottom"
       maintainScrollOnContentChange={true}
       loadingStatus={loadingStatus}
       skeletonComponent={<Message.Skeleton />}
