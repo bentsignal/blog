@@ -39,7 +39,7 @@ interface ListProps {
   startAt?: "bottom" | "top";
   maintainScrollOnContentChange?: boolean;
   loadingStatus?: PaginationStatus;
-  isNearBoundaryThreshold?: number;
+  nearBoundaryThreshold?: number;
   skeletonComponent?: React.ReactNode;
   loadMoreOnScrollThreshold?: number;
   loadMore?: () => void;
@@ -53,7 +53,7 @@ export const Provider = ({
   startAt = "top",
   maintainScrollOnContentChange,
   loadingStatus,
-  isNearBoundaryThreshold = 10,
+  nearBoundaryThreshold = 10,
   loadMoreOnScrollThreshold = 1500,
   skeletonComponent,
   loadMore,
@@ -65,6 +65,11 @@ export const Provider = ({
   const vagueScrollPositionRef = useRef<VagueScrollPosition>(
     startAt === "bottom" ? "bottom" : "top",
   );
+
+  // avoid re mounting scroll listener ever time loading status changes
+  // TODO: use useEffectEvent to avoid this ( after upgrading to React 19.2+)
+  const loadingStatusRef = useRef(loadingStatus);
+  loadingStatusRef.current = loadingStatus;
 
   const [vagueScrollPosition, setVagueScrollPosition] =
     useState<VagueScrollPosition>(startAt === "bottom" ? "bottom" : "top");
@@ -95,16 +100,16 @@ export const Provider = ({
           totalHeight - windowHeight - newDistanceFromTop;
         distanceFromBottom.current = newDistanceFromBottom;
         if (
-          newDistanceFromBottom < loadMoreOnScrollThreshold &&
+          newDistanceFromTop < loadMoreOnScrollThreshold &&
           loadMore &&
-          loadingStatus === "CanLoadMore"
+          loadingStatusRef.current === "CanLoadMore"
         ) {
           loadMore();
         }
         const newVagueScrollPosition =
-          newDistanceFromTop <= isNearBoundaryThreshold
+          newDistanceFromTop <= nearBoundaryThreshold
             ? "top"
-            : newDistanceFromBottom <= isNearBoundaryThreshold
+            : newDistanceFromBottom <= nearBoundaryThreshold
               ? "bottom"
               : "middle";
         vagueScrollPositionRef.current = newVagueScrollPosition;
@@ -115,12 +120,7 @@ export const Provider = ({
         scrollElement.removeEventListener("scroll", handleScroll);
       };
     }
-  }, [
-    isNearBoundaryThreshold,
-    loadMore,
-    loadingStatus,
-    loadMoreOnScrollThreshold,
-  ]);
+  }, [nearBoundaryThreshold, loadMore, loadMoreOnScrollThreshold]);
 
   // when new content is loaded and appended to the top of the list, retain previous distance from bottom
   useEffect(() => {
