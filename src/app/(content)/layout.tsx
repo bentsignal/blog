@@ -13,7 +13,11 @@ export default function ContentLayout({
       <List.Frame>
         <TopControls className="absolute top-0 left-0 z-6" />
         <Abyss.Top />
-        <List.Content className="prose max-h-screen">{children}</List.Content>
+        <List.Content className="max-h-screen">
+          <div className="prose mx-auto my-16 flex max-w-3xl flex-col items-center gap-8 px-4 text-lg">
+            {children}
+          </div>
+        </List.Content>
         <div className="absolute right-0 bottom-0 z-6 flex flex-col gap-2 p-4">
           <List.ScrollToTopButton />
           <List.ScrollToBottomButton />
