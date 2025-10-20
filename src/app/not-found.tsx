@@ -9,6 +9,7 @@ export default function NotFound() {
       <p className="text-muted-foreground mb-1 text-lg">
         We couldn't find the page you were looking for. Sorry about that.
       </p>
+      {/* this weird routing is due to a known issue in next.js that occurs when using parallel routes */}
       <Button variant="outline" onClick={() => (window.location.href = "/")}>
         Back to Home
       </Button>
