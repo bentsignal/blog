@@ -2,7 +2,7 @@ import { Fragment } from "react";
 
 export default function ContentPage() {
   return (
-    <div className="mx-auto my-12 flex max-w-3xl flex-col items-center gap-8 px-4 text-lg">
+    <div className="mx-auto my-16 flex max-w-3xl flex-col items-center gap-8 px-4 text-lg">
       <Hero />
       <Content />
     </div>
