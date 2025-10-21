@@ -1,4 +1,5 @@
 import * as ListContext from "@/context/list-context";
+import { cn } from "@/utils/style-utils";
 import * as Abyss from "@/ui/atoms/abyss";
 import * as List from "@/ui/atoms/list";
 import { TopControls } from "@/ui/molecules/top-controls";
@@ -14,7 +15,13 @@ export default function ContentLayout({
         <TopControls className="absolute top-0 left-0 z-6" />
         <Abyss.Top />
         <List.Content className="max-h-screen">
-          <div className="prose mx-auto my-16 flex max-w-3xl flex-col items-center gap-8 px-4 text-lg">
+          <div
+            className={cn(
+              "mx-auto my-16 max-w-3xl px-4",
+              "prose dark:prose-invert prose-headings:mt-8 prose-headings:font-semibold",
+              "prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl prose-h4:text-2xl prose-h5:text-xl prose-h6:text-lg",
+            )}
+          >
             {children}
           </div>
         </List.Content>
