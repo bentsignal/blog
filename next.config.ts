@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
@@ -24,4 +25,9 @@ const nextConfig: NextConfig = {
 
 const withMDX = createMDX({});
 
-export default withMDX(nextConfig);
+// doesn't work with turbopack currently
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
+
+export default withMDX(withBundleAnalyzer(nextConfig));
