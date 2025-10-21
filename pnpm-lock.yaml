@@ -89,9 +89,6 @@ importers:
       react-dom:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
-      simple-icons:
-        specifier: ^15.15.0
-        version: 15.15.0
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2400,10 +2397,6 @@ packages:
   shell-quote@1.8.3:
     resolution: {integrity: sha512-ObmnIF4hXNg1BqhnHmgbDETF8dLPCggZWBjkQfhZpbszZnYur5DUljTcCHii5LC3J5E0yeO/1LIMyH+UvHQgyw==}
     engines: {node: '>= 0.4'}
-
-  simple-icons@15.15.0:
-    resolution: {integrity: sha512-ohh1Uo9AjH10WN5wpPmtjnmbSLv6MjiULHS4dYA821uIsPAp0Q3XoluPnjBnQAFsztasmM6z2dezJBrQbtserg==}
-    engines: {node: '>=0.12.18'}
 
   sirv@2.0.4:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
@@ -4935,8 +4928,6 @@ snapshots:
     optional: true
 
   shell-quote@1.8.3: {}
-
-  simple-icons@15.15.0: {}
 
   sirv@2.0.4:
     dependencies:

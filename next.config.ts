@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
   typedRoutes: true,
   experimental: {
     reactCompiler: true,
-    optimizePackageImports: ["simple-icons"],
   },
   images: {
     remotePatterns: [

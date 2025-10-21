@@ -1,13 +1,8 @@
-"use client";
-
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import { Button } from "@/ui/atoms/button";
-import { Icon } from "@/ui/atoms/icon";
+import * as Icons from "@/ui/atoms/icon";
 
 export const RepoButton = () => {
-  const { resolvedTheme } = useTheme();
-
   return (
     <Link
       href="https://github.com/bentsignal/how-i-code"
@@ -16,10 +11,7 @@ export const RepoButton = () => {
     >
       <Button variant="outline">
         Repo
-        <Icon
-          icon="siGithub"
-          color={resolvedTheme === "light" ? "black" : "white"}
-        />
+        <Icons.Github />
       </Button>
     </Link>
   );
