@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import ChannelLayout from "@/app/channel/layout";
+import ChannelPage from "@/app/channel/page";
 import { GlobalProviders } from "@/context/global-context";
 import * as Sidebar from "@/ui/atoms/sidebar";
 import { Toaster } from "@/ui/atoms/toast";
@@ -23,10 +25,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  channel,
 }: Readonly<{
   children: React.ReactNode;
-  channel: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -37,7 +37,9 @@ export default function RootLayout({
           <Toaster />
           <Sidebar.Frame className="max-w-screen sm:max-w-lg">
             <Sidebar.Content className="flex items-center justify-center">
-              {channel}
+              <ChannelLayout>
+                <ChannelPage />
+              </ChannelLayout>
             </Sidebar.Content>
           </Sidebar.Frame>
           {children}
