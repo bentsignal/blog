@@ -2,6 +2,7 @@ import { env } from "@/env";
 import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
+import remarkGfm from "remark-gfm";
 
 const nextConfig: NextConfig = {
   typedRoutes: true,
@@ -23,7 +24,11 @@ const nextConfig: NextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
 };
 
-const withMDX = createMDX({});
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [remarkGfm],
+  },
+});
 
 // doesn't work with turbopack currently
 const withBundleAnalyzer = bundleAnalyzer({

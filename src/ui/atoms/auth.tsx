@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { UserRound } from "lucide-react";
-import { useTheme } from "next-themes";
 import { Button } from "./button";
 import * as Icons from "./icon";
 import * as Popover from "./popover";
