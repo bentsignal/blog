@@ -26,29 +26,6 @@ export const Frame = ({
   );
 };
 
-export const Skeleton = () => {
-  const hasScrollContext = useHasParentContext(ListContext);
-  if (!hasScrollContext) {
-    throw new Error("ListContext not found");
-  }
-
-  const skeletonComponent = useList((c) => c.skeletonComponent);
-  const loadingStatus = useList((c) => c.loadingStatus);
-
-  const showSkeleton =
-    loadingStatus && skeletonComponent && loadingStatus !== "Exhausted";
-
-  if (!showSkeleton) return null;
-
-  return (
-    <div className="mt-3">
-      {Array.from({ length: 10 }).map((_, index) => (
-        <div key={index}>{skeletonComponent}</div>
-      ))}
-    </div>
-  );
-};
-
 export const Content = ({
   children,
   className,
@@ -69,13 +46,35 @@ export const Content = ({
         "overflow-y-auto overscroll-contain",
         "scrollbar-thin scrollbar-thumb-muted-foreground/10 scrollbar-track-transparent",
         "mask-t-from-97% mask-b-from-97%",
-        "align-start flex min-h-0 flex-1 flex-col justify-start",
         className,
       )}
       ref={scrollRef}
     >
       <Skeleton />
       {children}
+    </div>
+  );
+};
+
+export const Skeleton = () => {
+  const hasScrollContext = useHasParentContext(ListContext);
+  if (!hasScrollContext) {
+    throw new Error("ListContext not found");
+  }
+
+  const skeletonComponent = useList((c) => c.skeletonComponent);
+  const loadingStatus = useList((c) => c.loadingStatus);
+
+  const showSkeleton =
+    loadingStatus && skeletonComponent && loadingStatus !== "Exhausted";
+
+  if (!showSkeleton) return null;
+
+  return (
+    <div className="mt-3">
+      {Array.from({ length: 10 }).map((_, index) => (
+        <div key={index}>{skeletonComponent}</div>
+      ))}
     </div>
   );
 };
@@ -121,6 +120,7 @@ export const ScrollToTopButton = ({ className }: { className?: string }) => {
   const scrollToTop = useList((c) => c.scrollToTop);
 
   if (!showScrollToTopButton) return null;
+
   return (
     <div className={cn(className)}>
       <ToolTip.Frame>
