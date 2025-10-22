@@ -1,64 +1,129 @@
-# Heading 1: The Project Style Guide
+## How I Like To Code
 
-## Heading 2: Typography and Text Elements
+As divisive as the topic of best practices in code can be, I think we all can
+agree that we don't like working with what we consider bad code. Whatever that
+definition means to each of us, no one likes working in a code base that feels
+messy, unorganized, and just unpleasant. And like a lot of other people, I have
+very strong opinions on what I think good code looks like.
 
-### Heading 3: Standard Text
+These aren't set in stone by any means. I'm actively every day trying to change
+them and make them better so that my code bases stay maintainable, scalable, and
+pleasant to work in. But over the years I have formulated some rather strong
+opinions on what I think good code looks like. So I figured for my benefit and
+for everyone else's, it would be fun to document them and write them down.
 
-**Bold text** is used for strong emphasis. _Italic text_ is used for mild emphasis. You can also combine **_bold and italic_**. Strikethrough is used for deleted content: ~~This is old information.~~
+#### Naming
 
-This is a regular paragraph of text. It should wrap nicely and show how line-height and alignment are handled. We can also include an inline link to [an external resource](https://example.com) for testing link styles, and some `inline code` for technical terms.
+I think generally when you're naming variables, files, whatever it is, the best
+course to follow is typically to be as verbose as possible. It's not...it feels
+a little messy sometimes when variable names get really long, and I know that
+feeling isn't great, but I think that in the end, like when you six months from
+now is to come back and actually read that code and try to figure out what's
+going on, you're not going to care as much if your variable name has ten words
+in it as you do right now about that it doesn't look as minified and neat as it
+possibly could.
 
----
+Typically, my route I like to go is verbosity except for a few cases, namely
+math. If you're working with math, it usually makes the most sense to use the
+variable names with superscripts and subscripts, whatever keeps it as close to
+the formula as possible, but other than that, yeah, long variable names are the
+way to go in my opinion.
 
-### Heading 4: Block Quotes
+#### State Management
 
-> This is a blockquote. It's often used to cite external sources or highlight important information. It can span multiple lines to test indentation and padding.
->
-> > You can also nest blockquotes for deeper context.
->
-> The quote is now finished.
+This is a particularly fun one because as trivial as this may seem, this is
+still largely an unsolved problem, especially in React, which is what I like to
+build in for the web and mobile, and pretty much every platform building
+applications for users. There's, you know, over the years, a lot of different
+solutions have come and gone. Redux was great when it was first introduced and
+then better things have replaced it that require less bulk. And it feels like
+right now there isn't like a decided winner. And I guess that's kind of how it
+should be right because there isn't a best. There isn't one solution that fits
+all cases. But I do think that generally there are some good ways. I think there
+are some winners for specific use cases now they don't work for everything but I
+think depending on like your scope. There are maybe not objectively the best
+options but there are better ways than others to handle things.
 
-#### Heading 5: Lists
+Now I know you might read the next few words and immediately dismiss what I have
+to say, but please hear me out because this is more promising than it might
+sound. The way that I've actually found most enjoyable to manage State With
+React is with context. And I know context has gotten a lot of slack over the
+years because there are some pretty significant performance issues inherent to
+the way it works, just because whatever subscribes to that context will
+re-render if any piece of it changes, even if it's not a piece of the component
+itself depends on. But there are actually some ways that you can get around
+this, which make it really nice because context is incredibly composable, which
+makes it a great way to manage state because the state is tied heavily to
+whatever level your component lives at.
 
-**Unordered List:**
+And the way to do this is with selectors, which you might be familiar with if
+you've worked with, I'd say probably one of the most popular state management
+solutions right now is Zustand. And the way Zustand tracks state updates with
+your Zustand stores is by using selectors in your components. And that way the
+component only re-renders if the piece of the store depends on changes. So you
+get that same level of granularity, but the composability of context, which is
+kind of a win-win. And it's not...
 
-- First item in a standard list.
-- Second item.
-  - A nested unordered item.
-  - Another nested item.
-- Third item.
+And to be clear, it's not a complete placement for Zustan. Zustan still has its
+place, but Zustan is best for use as a truly global store, right? Because it's
+not composable, you have to define the store for every case you want a new
+store, which isn't very composable, but for a global store where you have one,
+because it's global, or, you know, you might have multiple global stores, but
+you don't need multiple of each type, right? So it's great for that. But if I
+have like a, I don't know, in the example messenger app, my composer, I want
+each composer to have its own state that can be accessed by all of the
+components below it. Now, if I were to use Zustan, I'd have to create however
+many different separate Zustan stores for each composer. But with context, I can
+just create the component in one line as the provider, where you define the
+provider, each provider is the same for each composer. And that way they all
+have the same shape of state, but different actual states.
 
-**Ordered List:**
+#### Styling
 
-1.  First numbered item.
-2.  Second numbered item.
-    1.  A nested ordered item.
-    2.  Another one.
-3.  Third numbered item.
+Styling is one of those things that does kind of feel like it's solved a little
+bit. I don't know, well, I don't know if solved is the right way to put it, but
+it seems like we've kind of converged to a solution which obviously is tailwind.
+Tailwind is great. You know, I think it solves a ton of problems, performance,
+bundle size, whatever. It's not, there are times where it feels a little bulky
+to use it like if you have a component that has a lot of styles it starts to
+feel a little overwhelming and my usual way around that is just to use the CN
+utility and kind of create new lines for each kind of group of styles and then I
+always have the tailwind prettier plug and running so that'll sort them so
+they're in the recognizable and easily compressible order. But I don't know.
+Yeah, I tailwind works for me. I don't love how long some class names get
+because of just so many utility classes packed into one string but it works fine
+and in cases like that typically it just means you should probably be making an
+actual class in CSS but I tend to not. It doesn't bother me too much.
 
-**Task List:**
+#### Fun vs. Boring
 
-- [x] Completed task one.
-- [ ] Task two, pending completion.
-- [ ] Task three, still open.
+This is an interesting one because I don't think there is ever going to be a
+right answer that we all decide on. But I think I've come to... I'm not super
+set on my opinion on this, but I think I've come to a conclusion I'm fairly
+happy with.
 
-##### Heading 6: Code Samples
+Simply put, I think tools should be pretty damn boring and just get out of my
+way so I can get what I need to do done. And experiences should be fun.
 
-Here is an example of a full code block for syntax highlighting.
+Now, the line is hard to draw. Like, well, okay, then what's a tool and what's
+an experience? You know, where how fun should experiences be? How boring should
+tools be? Right? And that's and that's a harder line to draw. But, you know, I
+think, you know, when you're dealing with things like excessive use of colors,
+animations, fonts, whatever, I think. Going over the line with tools, like
+there's a very clear line where you're just getting in my way and like it's
+great, but I'm not here to use your art project. I'm here to use your tool. So I
+think using things only when they make sense, like doing as little as possible
+while delivering a great experience should be the goal for tools.
 
-```typescript
-// File: example.ts
-interface Config {
-  theme: string;
-  version: number;
-}
-
-const config: Config = {
-  theme: "dark",
-  version: 1.0,
-};
-
-function getConfig(key: keyof Config) {
-  return config[key];
-}
-```
+Now experiences on the other hand, I think that's where you should really just
+go to town have a great time You know, I'm not here on a constrained timeline.
+I'm not trying to just get in and get out and do something I'm just here to
+experience something right? So things like games things like I Don't know. I
+mean there are things to that kind of teeter on the line of tools and experience
+that are more leisurely Like yeah, dude cool animations awesome Fonts that
+aren't super readable great. I don't care if it looks pretty I want to have a
+good experience Music awesome, but like yes, I guess that's a good point, right?
+So sounds and music right every time a tool Today I was on LinkedIn and I sent a
+message and it made a little ding. No, absolutely not get out of here But you
+know like a more leisurely thing that's loading up if it has a cool sound or
+makes and has some nice music Yeah, awesome
