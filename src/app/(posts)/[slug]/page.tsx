@@ -1,28 +1,31 @@
 import { api } from "@/convex/_generated/api";
-import { Doc } from "@/convex/_generated/dataModel";
 import { cn } from "@/utils/style-utils";
 import { fetchQuery } from "convex/nextjs";
 import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Button } from "@/ui/atoms/button";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<Doc<"posts">>;
-}) {
-  const { slug, title } = await params;
+export default async function Page({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+
+  const post = await fetchQuery(api.posts.getBySlug, { slug });
+  if (!post) {
+    notFound();
+  }
+
   const { default: Post } = await import(`@/posts/${slug}.mdx`);
 
   return (
-    <div className="mx-auto my-16 flex max-w-xl flex-col px-4">
-      <h1 className="text-4xl font-semibold">{title}</h1>
+    <div className="mx-auto my-16 flex max-w-xl flex-col gap-2 px-4">
       <Link href="/">
         <Button variant="ghost">
           <MoveLeft /> Back to Home
         </Button>
       </Link>
+      <h2 className="text-3xl font-semibold">{post.title}</h2>
+      <p className="text-muted-foreground">{post.subtitle}</p>
       <div
         className={cn(
           "prose dark:prose-invert",
@@ -39,17 +42,21 @@ export default async function Page({
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<Doc<"posts">>;
+  params: { slug: string };
 }): Promise<Metadata> {
-  const { title, subtitle } = await params;
+  const post = await fetchQuery(api.posts.getBySlug, { slug: params.slug });
+
+  if (!post) return { title: "Post not found" };
+
   return {
-    title,
-    description: subtitle,
+    title: post.title,
+    description: post.subtitle,
   };
 }
 
-export async function generateStaticParams(): Promise<Doc<"posts">[]> {
-  return await fetchQuery(api.posts.getAll, {});
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const posts = await fetchQuery(api.posts.getAll, {});
+  return posts.map((p) => ({ slug: p.slug }));
 }
 
 export const dynamicParams = false;

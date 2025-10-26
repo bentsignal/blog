@@ -17,9 +17,11 @@ export default defineSchema({
     title: v.string(),
     subtitle: v.string(),
     slug: v.string(),
-  }).searchIndex("search_post_title", {
-    searchField: "title",
-  }),
+  })
+    .searchIndex("search_post_title", {
+      searchField: "title",
+    })
+    .index("by_slug", ["slug"]),
   messages: defineTable({
     snapshots: v.array(snapshot),
     profile: v.id("profiles"),
