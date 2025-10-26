@@ -1,38 +1,54 @@
 "use client";
 
-import { useAuth } from "@/context/auth-context";
-import { useChannel } from "@/context/channel-context";
+import {
+  Provider as ChannelProvider,
+  useChannel,
+} from "@/context/channel-context";
+import { useChat } from "@/context/chat-context";
 import { Provider as ListProvider } from "@/context/list-context";
+import { Doc } from "@/convex/_generated/dataModel";
+import { ChevronLeft } from "lucide-react";
 import * as Auth from "@/ui/atoms/auth";
 import * as List from "@/ui/atoms/list";
 import * as Message from "@/ui/atoms/message";
+import * as Tooltip from "@/ui/atoms/tooltip";
 import { ChannelComposer } from "@/ui/molecules/composers";
 import { MessageList } from "@/ui/molecules/message-list";
 import { TopControls } from "@/ui/molecules/top-controls";
 
-export default function ChannelPage() {
+export const ChannelPage = ({ channel }: { channel: Doc<"channels"> }) => {
   return (
-    <div className="flex h-full w-full flex-col">
-      <TopControls className="md:hidden" />
-      <Header />
-      <Body />
-    </div>
+    <ChannelProvider channel={channel}>
+      <div className="flex h-full w-full flex-col">
+        <TopControls className="md:hidden" />
+        <Header />
+        <Body />
+      </div>
+    </ChannelProvider>
   );
-}
+};
 
 const Header = () => {
-  const signedIn = useAuth((c) => c.signedIn);
   const channelName = useChannel((c) => c.channel.name);
+  const setCurrentChannel = useChat((c) => c.setCurrentChannel);
   return (
     <div className="bg-muted m-4 mb-0 flex items-center justify-between rounded-2xl p-3">
       <div className="flex flex-1 items-center gap-3 pl-1">
-        <span className="text-3xl font-semibold">#</span>
+        <Tooltip.Frame>
+          <Tooltip.Trigger asChild>
+            <ChevronLeft
+              className="size-5 cursor-pointer"
+              onClick={() => setCurrentChannel(null)}
+            />
+          </Tooltip.Trigger>
+          <Tooltip.Content>Back to channel list</Tooltip.Content>
+        </Tooltip.Frame>
         <div className="flex flex-1 flex-col justify-center">
           <span className="text-sm font-bold">{channelName}</span>
           <span className="text-muted-foreground text-xs">Text Channel</span>
         </div>
       </div>
-      {signedIn ? <Auth.ProfileButton /> : <Auth.SignInButton />}
+      <Auth.PrimaryButton />
     </div>
   );
 };
@@ -41,10 +57,21 @@ const Body = () => {
   const loadingStatus = useChannel((c) => c.loadingStatus);
   const channelComposerInputRef = useChannel((c) => c.channelComposerInputRef);
   const loadMoreMessages = useChannel((c) => c.loadMoreMessages);
-  const messageCount = useChannel((c) => c.messages.length);
+  const messages = useChannel((c) => c.messages);
 
   if (loadingStatus === "LoadingFirstPage") {
-    return <Skeleton />;
+    return (
+      <ListProvider>
+        <List.Frame>
+          <List.Content className="py-4">
+            {Array.from({ length: 20 }).map((_, index) => (
+              <Message.Skeleton key={index} index={index} />
+            ))}
+          </List.Content>
+        </List.Frame>
+        <ChannelComposer />
+      </ListProvider>
+    );
   }
 
   return (
@@ -56,34 +83,10 @@ const Body = () => {
       skeletonComponent={<Message.Skeleton />}
       loadMore={loadMoreMessages}
       composerInputRef={channelComposerInputRef}
-      contentVersion={messageCount}
+      contentVersion={messages.length}
     >
-      <MessagesAndComposer />
-    </ListProvider>
-  );
-};
-
-const Skeleton = () => {
-  return (
-    <ListProvider>
-      <List.Frame>
-        <List.Content className="py-4">
-          {Array.from({ length: 20 }).map((_, index) => (
-            <Message.Skeleton key={index} index={index} />
-          ))}
-        </List.Content>
-      </List.Frame>
-      <ChannelComposer />
-    </ListProvider>
-  );
-};
-
-const MessagesAndComposer = () => {
-  const messages = useChannel((c) => c.messages);
-  return (
-    <>
       <MessageList messages={messages} />
       <ChannelComposer />
-    </>
+    </ListProvider>
   );
 };

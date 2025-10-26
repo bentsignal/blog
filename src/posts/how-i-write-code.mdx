@@ -1,0 +1,207 @@
+## How I Write Code
+
+As divisive as the topic of best practices can be, no one enjoys working with
+bad code. "Bad code" means something different to each of us, but that
+overwhelming feeling of disorganization that comes with working in a chaotic
+codebase is something I think we'd all like to avoid.
+
+I don't think there is a solution here because the problem is heavily
+contextual. It depends on what you're working on, how many people you're working
+on it with, and how long you're going to be working on it for. If you're vibe
+coding a tool strictly for personal use, it may not matter if the code is
+imperfect. By contrast, something that you plan to maintain and scale with a
+team should probably have more thought put into it.
+
+But even then the matter is still quite subjective. Even if the projects we're
+working on are similar, what works for me and my team may not work for you and
+yours. The fine grained details will always be up for debate, I think there is
+one metric that we should all strive to optimize for: **Readability**.
+
+We all want to work with code that is readable, and writing code that is easy
+for humans and machines to read is more important now than ever. The rate at
+which new code is being written is exponentially increasing as generative AI
+continues to improve. Coding agents powered by LLMs are quite good at adhering
+to the patterns and conventions of the codebases they're working in. If they're
+working around slop, then they will likely add more slop to the pile. But if you
+give them good examples as guidelines, they do a surprisingly good job of
+following them.
+
+If we want to avoid a flood of AI generated slop entering our codebases, then we
+need to make sure we're building good foundations and setting good examples for
+our peers (both human and AI). I think a good starting point is to discuss the
+following 5 topics:
+
+1. Naming
+2. Control flow
+3. Styling
+4. Composition
+5. Tight coupling
+
+My principles in these domains aren't set in stone by any means. They've changed
+dramatically over the years, and I imagine they will continue to change as time
+passes. It does however feel like the more I learn, the more they converge
+towards some unreachable point. Taking that into account, I thought it would be
+fun to document my thoughts, and to build something showcasing how they can be
+applied in a real-world application.
+
+#### Naming
+
+When naming variables, I aim to convey exactly what information the variable
+contains. I find that verbosity at the expense of brevity is a worthwhile
+tradeoff as it improves readability for both humans and machines. I do begin to
+hesitate when my names get longer than a few words. But a year down the road
+when I come back and need to understand what I wrote, I'll be thankful for the
+clarity.
+
+#### Styling
+
+I'm not sure if I would describe the problem of styling as completely solved,
+but **Tailwind** feels like it gets us pretty close to the finish line. It
+provides a concise manner to describe styles _in the same location_ as your
+markup / component, while also reducing bundle size and improving performance.
+
+Styling is one of those things that does kind of feel like it's solved a little
+bit. I don't know if solved is the right way to put it, but it seems like we've
+kind of converged to a solution which obviously is Tailwind. Tailwind is great.
+I think it solves a ton of problems, performance, bundle size, whatever. There
+are times where it feels a little bulky to use it; if you have a component that
+has a lot of styles it starts to feel a little overwhelming, and my usual way
+around that is just to use the CN utility and create new lines for each group of
+styles, and then I always have the Tailwind Prettier plugin running so that'll
+sort them so they're in the recognizable and easily compressible order. But
+Tailwind works for me. I don't love how long some class names get because of so
+many utility classes packed into one string, but it works fine, and in cases
+like that typically it just means you should probably be making an actual class
+in CSS, but I tend not to. It doesn't bother me too much.
+
+#### State Management
+
+This is a particularly fun one because as trivial as this may seem, this is
+still largely an unsolved problem, especially in React, which is what I like to
+build in for the web and mobile, and pretty much every platform building
+applications for users. Over the years, a lot of different solutions have come
+and gone. Redux was great when it was first introduced and then better things
+have replaced it that require less bulk. And it feels like right now there isn't
+a decided winner. And I guess that's kind of how it should be because there
+isn't a best. There isn't one solution that fits all cases. But I do think that
+generally there are some good ways. I think there are some winners for specific
+use cases; now they don't work for everything but I think depending on your
+scope. There are maybe not objectively the best options but there are better
+ways than others to handle things.
+
+Now I know you might read the next few words and immediately dismiss what I have
+to say, but please hear me out because this is more promising than it might
+sound. The way that I've actually found most enjoyable to manage state with
+React is with context. And I know context has gotten a lot of flak over the
+years because there are some pretty significant performance issues inherent to
+the way it works, just because whatever subscribes to that context will
+re-render if any piece of it changes, even if it's not a piece that the
+component itself depends on. But there are actually some ways that you can get
+around this, which make it really nice because context is incredibly composable,
+which makes it a great way to manage state because the state is tied heavily to
+whatever level your component lives at.
+
+And the way to do this is with selectors, which you might be familiar with if
+you've worked with, probably one of the most popular state management solutions
+right now, Zustand. And the way Zustand tracks state updates with your Zustand
+stores is by using selectors in your components. And that way the component only
+re-renders if the piece of the store it depends on changes. So you get that same
+level of granularity, but the composability of context, which is kind of a
+win-win.
+
+And to be clear, it's not a complete replacement for Zustand. Zustand still has
+its place, but Zustand is best for use as a truly global store. Because it's not
+composable, you have to define the store for every case you want a new store,
+which isn't very composable, but for a global store where you have one, because
+it's global, or you might have multiple global stores, but you don't need
+multiple of each type. So it's great for that. But if I have, in the example
+messenger app, my composer, I want each composer to have its own state that can
+be accessed by all of the components below it. Now, if I were to use Zustand,
+I'd have to create however many different separate Zustand stores for each
+composer. But with context, I can just create the component in one line as the
+provider, where you define the provider, each provider is the same for each
+composer. And that way they all have the same shape of state, but different
+actual states.
+
+#### Styling
+
+Styling is one of those things that does kind of feel like it's solved a little
+bit. I don't know if solved is the right way to put it, but it seems like we've
+kind of converged to a solution which obviously is Tailwind. Tailwind is great.
+I think it solves a ton of problems, performance, bundle size, whatever. There
+are times where it feels a little bulky to use it; if you have a component that
+has a lot of styles it starts to feel a little overwhelming, and my usual way
+around that is just to use the CN utility and create new lines for each group of
+styles, and then I always have the Tailwind Prettier plugin running so that'll
+sort them so they're in the recognizable and easily compressible order. But
+Tailwind works for me. I don't love how long some class names get because of so
+many utility classes packed into one string, but it works fine, and in cases
+like that typically it just means you should probably be making an actual class
+in CSS, but I tend not to. It doesn't bother me too much.
+
+#### Fun vs. Boring
+
+Fun in tools is fine, as long as it doesn't get in my way.
+
+##### great
+
+- bear watching login
+- success animation on button click
+
+##### bad
+
+- controlling my scroll position
+- long loading animations that block using
+
+This is an interesting one because I don't think there is ever going to be a
+right answer that we all decide on. But I think I've come to. I'm not super set
+on my opinion on this, but I think I've come to a conclusion I'm fairly happy
+with.
+
+Simply put, I think tools should be pretty damn boring and just get out of my
+way so I can get what I need to do done. And experiences should be fun.
+
+Now, the line is hard to draw. Well, okay, then what's a tool and what's an
+experience? How fun should experiences be? How boring should tools be? And
+that's a harder line to draw. But when you're dealing with things like excessive
+use of colors, animations, fonts, whatever, I think going over the line with
+tools, there's a very clear line where you're just getting in my way and it's
+great, but I'm not here to use your art project. I'm here to use your tool. So I
+think using things only when they make sense, doing as little as possible while
+delivering a great experience should be the goal for tools.
+
+Now experiences, on the other hand, I think that's where you should really just
+go to town, have a great time. I'm not here on a constrained timeline. I'm not
+trying to just get in and get out and do something; I'm just here to experience
+something. So things like games, things like I don't know. I mean there are
+things that kind of teeter on the line of tools and experience that are more
+leisurely. Cool animations, awesome fonts that aren't super readable, great. I
+don't care if it looks pretty; I want to have a good experience. Music, awesome,
+but yes, I guess that's a good point. So sounds and music. Every time a tool.
+Today I was on LinkedIn and I sent a message and it made a little ding. No,
+absolutely not, get out of here. But a more leisurely thing that's loading up,
+if it has a cool sound or has some nice music, awesome.
+
+#### Strong coupling
+
+Typescript da goat
+
+#### Composition
+
+S/o fernando
+
+Atomic design
+
+##### To be clear
+
+I am just as much a proprietor of this issue as a solver. If you investigate my
+github repos, you will find some truly awful code that no one could ever reason
+about. But the formation of this project resonates deeply with
+[The Shape of the Essay Field](https://www.paulgraham.com/field.html) by Paul
+Graham. I started on this because Fernando Rojo's talk had me curious about
+handling state management in his Composition model. From there
+
+Ask myself:
+
+How close can someone who hasn't even written code come to understanding what I
+wrote?

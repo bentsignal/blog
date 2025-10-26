@@ -87,3 +87,8 @@ export const SignInButton = () => {
     </Button>
   );
 };
+
+export const PrimaryButton = () => {
+  const isSignedIn = useAuth((c) => c.signedIn);
+  return isSignedIn ? <ProfileButton /> : <SignInButton />;
+};

@@ -9,6 +9,16 @@ const snapshot = v.object({
 export default defineSchema({
   channels: defineTable({
     name: v.string(),
+    post: v.optional(v.id("posts")),
+  }).searchIndex("search_channel_name", {
+    searchField: "name",
+  }),
+  posts: defineTable({
+    title: v.string(),
+    subtitle: v.string(),
+    slug: v.string(),
+  }).searchIndex("search_post_title", {
+    searchField: "title",
   }),
   messages: defineTable({
     snapshots: v.array(snapshot),

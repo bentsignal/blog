@@ -9,11 +9,12 @@
  */
 
 import type * as auth from "../auth.js";
-import type * as channel from "../channel.js";
+import type * as channels from "../channels.js";
 import type * as convex_helpers from "../convex_helpers.js";
 import type * as http from "../http.js";
 import type * as limiter from "../limiter.js";
 import type * as messages from "../messages.js";
+import type * as posts from "../posts.js";
 import type * as uploadthing from "../uploadthing.js";
 import type * as user from "../user.js";
 
@@ -33,11 +34,12 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
-  channel: typeof channel;
+  channels: typeof channels;
   convex_helpers: typeof convex_helpers;
   http: typeof http;
   limiter: typeof limiter;
   messages: typeof messages;
+  posts: typeof posts;
   uploadthing: typeof uploadthing;
   user: typeof user;
 }>;
