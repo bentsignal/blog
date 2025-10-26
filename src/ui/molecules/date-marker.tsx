@@ -1,7 +1,8 @@
+import { memo } from "react";
 import { getTextDateString, isToday, isYesterday } from "@/utils/time-utils";
 import { Separator } from "@/ui/atoms/separator";
 
-export const DateMarker = ({ time }: { time: number }) => {
+export const DateMarker = memo(({ time }: { time: number }) => {
   const label = isToday(time)
     ? "Today"
     : isYesterday(time)
@@ -14,4 +15,4 @@ export const DateMarker = ({ time }: { time: number }) => {
       <Separator className="flex-1" />
     </div>
   );
-};
+});
