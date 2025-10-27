@@ -18,13 +18,36 @@ export const ChannelList = () => {
   const setCurrentChannel = useChat((c) => c.setCurrentChannel);
   const debouncedSearchTerm = useSearch((c) => c.debouncedSearchTerm);
 
-  const { results: channels } = usePaginatedQuery(
+  const { results: channels, status } = usePaginatedQuery(
     api.channels.get,
     { searchTerm: debouncedSearchTerm },
     {
       initialNumItems: 30,
     },
   );
+
+  if (status === "LoadingFirstPage") {
+    return (
+      <ListContext.Provider>
+        <List.Frame>
+          <List.Content className="flex animate-pulse flex-col gap-2 py-4">
+            {Array.from({ length: 20 }).map((_, index) => (
+              <div
+                key={index}
+                className={cn(
+                  "dark:bg-card bg-accent mx-4 flex items-center gap-3 rounded-2xl p-3 px-4",
+                )}
+              >
+                <span className="text-muted-foreground text-3xl opacity-0 select-none">
+                  #
+                </span>
+              </div>
+            ))}
+          </List.Content>
+        </List.Frame>
+      </ListContext.Provider>
+    );
+  }
 
   return (
     <ListContext.Provider>
@@ -36,12 +59,12 @@ export const ChannelList = () => {
               onClick={() => setCurrentChannel(channel)}
               className={cn(
                 "dark:bg-card dark:hover:bg-muted bg-accent hover:bg-muted transition-colors duration-100",
-                "mx-4 flex cursor-pointer items-center gap-3 rounded-md p-3 px-4 select-none",
+                "mx-4 flex cursor-pointer items-center gap-3 rounded-2xl p-3 px-4 select-none",
               )}
             >
-              <span className="text-3xl font-bold">#</span>
+              <span className="text-muted-foreground text-3xl">#</span>
               <div className="flex max-w-full flex-col pr-8">
-                <span className="text-sm font-semibold">{channel.name}</span>
+                <span className="text-sm font-bold">{channel.name}</span>
                 <span className="text-muted-foreground truncate text-xs">
                   {channel.messagePreview}
                 </span>
