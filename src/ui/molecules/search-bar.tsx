@@ -20,8 +20,13 @@ export const SearchBar = ({
   const setSearchTerm = useSearch((c) => c.setSearchTerm);
 
   return (
-    <InputGroup.Frame className={className}>
-      <InputGroup.Addon align="inline-start">
+    <InputGroup.Frame
+      className={cn(
+        className,
+        "rounded-none border-none bg-transparent! ring-0!",
+      )}
+    >
+      <InputGroup.Addon align="inline-start" className="pl-1.5">
         <Search className="size-4" />
       </InputGroup.Addon>
       <InputGroup.Input

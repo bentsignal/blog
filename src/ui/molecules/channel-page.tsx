@@ -32,8 +32,8 @@ const Header = () => {
   const channelName = useChannel((c) => c.channel.name);
   const setCurrentChannel = useChat((c) => c.setCurrentChannel);
   return (
-    <div className="bg-muted m-4 mb-0 flex items-center justify-between rounded-2xl p-3">
-      <div className="flex flex-1 items-center gap-3 pl-1">
+    <div className="bg-muted m-4 mb-0 flex items-center justify-between rounded-2xl p-3 pl-2">
+      <div className="flex flex-1 items-center gap-2 pl-1">
         <Tooltip.Frame>
           <Tooltip.Trigger asChild>
             <ChevronLeft

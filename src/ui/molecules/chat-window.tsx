@@ -1,7 +1,6 @@
 "use client";
 
 import { useChat } from "@/context/chat-context";
-import * as SearchContext from "@/context/search-context";
 import { SearchBar } from "./search-bar";
 import * as Auth from "@/ui/atoms/auth";
 import { ChannelList } from "@/ui/molecules/channel-list";
@@ -15,14 +14,12 @@ export const ChatWindow = () => {
   }
 
   return (
-    <SearchContext.Provider>
-      <div className="flex w-full flex-col gap-2 p-4">
-        <div className="flex gap-2">
-          <SearchBar placeholder="Search channels" />
-          <Auth.PrimaryButton />
-        </div>
-        <ChannelList />
+    <div className="flex w-full flex-col gap-2 p-4">
+      <div className="bg-muted flex rounded-2xl p-3">
+        <SearchBar placeholder="Search" />
+        <Auth.PrimaryButton />
       </div>
-    </SearchContext.Provider>
+      <ChannelList />
+    </div>
   );
 };

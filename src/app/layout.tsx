@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { GlobalProviders } from "@/context/global-context";
 import * as ListContext from "@/context/list-context";
+import * as SearchContext from "@/context/search-context";
 import * as Abyss from "@/ui/atoms/abyss";
 import * as List from "@/ui/atoms/list";
 import * as Sidebar from "@/ui/atoms/sidebar";
@@ -22,8 +23,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "blog | bentsignal",
-    template: "%s | bentsignal",
+    default: "blog ❖ bentsignal",
+    template: "%s ❖ bentsignal",
   },
   description: "A space for me to share my thoughts",
 };
@@ -42,7 +43,9 @@ export default function RootLayout({
           <Toaster />
           <Sidebar.Frame className="max-w-screen sm:max-w-lg">
             <Sidebar.Content className="flex items-center">
-              <ChatWindow />
+              <SearchContext.Provider>
+                <ChatWindow />
+              </SearchContext.Provider>
             </Sidebar.Content>
           </Sidebar.Frame>
           <ListContext.Provider>
