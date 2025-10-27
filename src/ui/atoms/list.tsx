@@ -45,7 +45,7 @@ export const Content = ({
       className={cn(
         "overflow-y-auto overscroll-contain",
         "scrollbar-thin scrollbar-thumb-muted-foreground/10 scrollbar-track-transparent",
-        "mask-t-from-97% mask-b-from-97%",
+        "mask-t-from-99% mask-b-from-99%",
         className,
       )}
       ref={scrollRef}

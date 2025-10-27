@@ -23,7 +23,7 @@ export const SearchBar = ({
     <InputGroup.Frame
       className={cn(
         className,
-        "rounded-none border-none bg-transparent! ring-0!",
+        "rounded-none border-none bg-transparent! shadow-none! ring-0!",
       )}
     >
       <InputGroup.Addon align="inline-start" className="pl-1.5">

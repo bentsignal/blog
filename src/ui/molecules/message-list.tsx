@@ -16,7 +16,7 @@ export const MessageList = ({
 }) => {
   return (
     <List.Frame>
-      <List.Content className="mask-t-from-99% mask-b-from-99% pb-4">
+      <List.Content className="pb-4">
         {messages.map((message, index) => {
           const previousMessage = index > 0 ? messages[index - 1] : null;
           // messages sent by the same user within 5 minutes of each other are chained together

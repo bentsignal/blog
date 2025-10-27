@@ -20,7 +20,35 @@ export const get = query({
     } else {
       channels = await ctx.db.query("channels").paginate(args.paginationOpts);
     }
-    return channels;
+    const channelsWithMessagePreviews = await Promise.all(
+      channels.page.map(async (channel) => {
+        const message = await ctx.db
+          .query("messages")
+          .withIndex("by_channel", (q) => q.eq("channel", channel._id))
+          .order("desc")
+          .first();
+        if (!message)
+          return {
+            ...channel,
+            messagePreview: null,
+          };
+        const profile = await ctx.db.get(message.profile);
+        if (!profile)
+          return {
+            ...channel,
+            messagePreview: null,
+          };
+        const previewString = `${profile.name}: ${message.snapshots[0]?.content}`;
+        return {
+          ...channel,
+          messagePreview: previewString,
+        };
+      }),
+    );
+    return {
+      ...channels,
+      page: channelsWithMessagePreviews,
+    };
   },
 });
 

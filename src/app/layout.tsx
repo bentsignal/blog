@@ -52,7 +52,9 @@ export default function RootLayout({
             <List.Frame>
               <TopControls className="absolute top-0 left-0 z-6" />
               <Abyss.Top />
-              <List.Content className="max-h-screen">{children}</List.Content>
+              <List.Content className="max-h-screen mask-t-from-97% mask-b-from-97%">
+                {children}
+              </List.Content>
               <div className="absolute right-0 bottom-0 z-6 flex flex-col gap-2 p-4">
                 <List.ScrollToTopButton />
                 <List.ScrollToBottomButton />

@@ -11,7 +11,6 @@ import { ChevronLeft } from "lucide-react";
 import * as Auth from "@/ui/atoms/auth";
 import * as List from "@/ui/atoms/list";
 import * as Message from "@/ui/atoms/message";
-import * as Tooltip from "@/ui/atoms/tooltip";
 import { ChannelComposer } from "@/ui/molecules/composers";
 import { MessageList } from "@/ui/molecules/message-list";
 import { TopControls } from "@/ui/molecules/top-controls";
@@ -32,17 +31,12 @@ const Header = () => {
   const channelName = useChannel((c) => c.channel.name);
   const setCurrentChannel = useChat((c) => c.setCurrentChannel);
   return (
-    <div className="bg-muted m-4 mb-0 flex items-center justify-between rounded-2xl p-3 pl-2">
+    <div className="bg-muted mx-4 flex items-center justify-between rounded-2xl p-3 pl-2 md:mt-4">
       <div className="flex flex-1 items-center gap-2 pl-1">
-        <Tooltip.Frame>
-          <Tooltip.Trigger asChild>
-            <ChevronLeft
-              className="size-5 cursor-pointer"
-              onClick={() => setCurrentChannel(null)}
-            />
-          </Tooltip.Trigger>
-          <Tooltip.Content>Back to channel list</Tooltip.Content>
-        </Tooltip.Frame>
+        <ChevronLeft
+          className="size-5 cursor-pointer"
+          onClick={() => setCurrentChannel(null)}
+        />
         <div className="flex flex-1 flex-col justify-center">
           <span className="text-sm font-bold">{channelName}</span>
           <span className="text-muted-foreground text-xs">Text Channel</span>
