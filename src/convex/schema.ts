@@ -17,7 +17,7 @@ export default defineSchema({
     title: v.string(),
     subtitle: v.string(),
     slug: v.string(),
-    channel: v.optional(v.id("channels")),
+    channel: v.id("channels"),
   })
     .searchIndex("search_post_title", {
       searchField: "title",
