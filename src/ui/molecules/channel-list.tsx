@@ -2,9 +2,10 @@
 
 import { useChat } from "@/context/chat-context";
 import * as ListContext from "@/context/list-context";
-import { ChannelDataWithMessagePreview } from "@/types/channel-types";
+import { Doc } from "@/convex/_generated/dataModel";
 import { cn } from "@/utils/style-utils";
 import { PaginationStatus } from "convex/react";
+import { usePathname, useRouter } from "next/navigation";
 import * as List from "@/ui/atoms/list";
 import * as Shapes from "@/ui/atoms/shapes";
 
@@ -12,10 +13,17 @@ export const ChannelList = ({
   channels,
   status,
 }: {
-  channels: ChannelDataWithMessagePreview[];
+  channels: {
+    data: Doc<"channels">;
+    slug?: string;
+    previewMessage?: string;
+  }[];
   status: PaginationStatus;
 }) => {
   const setCurrentChannel = useChat((c) => c.setCurrentChannel);
+
+  const router = useRouter();
+  const pathname = usePathname();
 
   if (status === "LoadingFirstPage") {
     return (
@@ -56,8 +64,17 @@ export const ChannelList = ({
         <List.Content className="flex flex-col gap-2 py-4">
           {channels.map((channel) => (
             <div
-              key={channel._id}
-              onClick={() => setCurrentChannel(channel)}
+              key={channel.data._id}
+              onClick={() => {
+                if (channel.slug && pathname.includes(channel.slug)) {
+                  setCurrentChannel(channel.data);
+                }
+                if (channel.slug) {
+                  router.push(`/${channel.slug}`);
+                } else {
+                  setCurrentChannel(channel.data);
+                }
+              }}
               className={cn(
                 "dark:bg-card dark:hover:bg-muted bg-accent hover:bg-muted transition-colors duration-100",
                 "mx-4 flex cursor-pointer items-center gap-3 rounded-2xl p-3 px-4 select-none",
@@ -65,9 +82,9 @@ export const ChannelList = ({
             >
               <span className="text-muted-foreground text-3xl">#</span>
               <div className="flex max-w-full flex-col pr-8">
-                <span className="text-sm font-bold">{channel.name}</span>
+                <span className="text-sm font-bold">{channel.data.name}</span>
                 <span className="text-muted-foreground truncate text-xs">
-                  {channel.messagePreview}
+                  {channel.previewMessage}
                 </span>
               </div>
             </div>

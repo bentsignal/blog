@@ -1,5 +1,4 @@
 import { Provider as AuthProvider } from "./auth-context";
-import { Provider as ChatProvider } from "./chat-context";
 import { ConvexClientProvider } from "./convex-context";
 import { ThemeProvider } from "./theme-context";
 import { Provider as SidebarProvider } from "@/ui/atoms/sidebar";
@@ -21,9 +20,7 @@ export const GlobalProviders = async ({
           enableSystem
           disableTransitionOnChange
         >
-          <ChatProvider>
-            <SidebarProvider>{children}</SidebarProvider>
-          </ChatProvider>
+          <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
       </AuthProvider>
     </ConvexClientProvider>

@@ -1,5 +1,6 @@
 import { v } from "convex/values";
-import { query } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
+import { MutationCtx, query, QueryCtx } from "./_generated/server";
 
 export const getAll = query({
   handler: async (ctx) => {
@@ -18,3 +19,13 @@ export const getBySlug = query({
       .first();
   },
 });
+
+export const getPostSlugById = async (
+  ctx: MutationCtx | QueryCtx,
+  postId?: Id<"posts">,
+) => {
+  if (!postId) return undefined;
+  const post = await ctx.db.get(postId);
+  if (!post) return undefined;
+  return post.slug;
+};

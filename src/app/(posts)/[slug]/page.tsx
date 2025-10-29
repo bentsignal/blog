@@ -6,45 +6,58 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/ui/atoms/button";
+import ChatWrapper from "@/ui/molecules/chat-wrapper";
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
 
   const post = await fetchQuery(api.posts.getBySlug, { slug });
   if (!post) {
     notFound();
   }
 
+  const channel = await fetchQuery(api.channels.getById, { id: post.channel });
+  if (!channel) {
+    notFound();
+  }
+
   const { default: Post } = await import(`@/posts/${slug}.mdx`);
 
   return (
-    <div className="mx-auto my-16 flex max-w-xl flex-col gap-2 px-4">
-      <Link href="/">
-        <Button variant="ghost">
-          <MoveLeft /> Back to Home
-        </Button>
-      </Link>
-      <h2 className="text-3xl font-semibold">{post.title}</h2>
-      <p className="text-muted-foreground">{post.subtitle}</p>
-      <div
-        className={cn(
-          "prose dark:prose-invert",
-          "prose-headings:mt-8 prose-headings:font-semibold",
-          "prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl prose-h4:text-2xl prose-h5:text-xl prose-h6:text-lg",
-        )}
-      >
-        <Post />
+    <ChatWrapper channel={channel}>
+      <div className="mx-auto my-16 flex max-w-xl flex-col gap-2 px-4">
+        <Link href="/">
+          <Button variant="ghost">
+            <MoveLeft /> Back to Home
+          </Button>
+        </Link>
+        <h2 className="text-3xl font-semibold">{post.title}</h2>
+        <p className="text-muted-foreground">{post.subtitle}</p>
+        <div
+          className={cn(
+            "prose dark:prose-invert",
+            "prose-headings:mt-8 prose-headings:font-semibold",
+            "prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl prose-h4:text-2xl prose-h5:text-xl prose-h6:text-lg",
+          )}
+        >
+          <Post />
+        </div>
       </div>
-    </div>
+    </ChatWrapper>
   );
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const post = await fetchQuery(api.posts.getBySlug, { slug: params.slug });
+  const { slug } = await params;
+  const post = await fetchQuery(api.posts.getBySlug, { slug });
 
   if (!post) return { title: "Post not found" };
 

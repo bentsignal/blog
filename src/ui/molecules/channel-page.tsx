@@ -35,7 +35,7 @@ const Header = () => {
       <div className="flex flex-1 items-center gap-2 pl-1">
         <ChevronLeft
           className="size-5 cursor-pointer"
-          onClick={() => setCurrentChannel(null)}
+          onClick={() => setCurrentChannel(undefined)}
         />
         <div className="flex flex-1 flex-col justify-center">
           <span className="text-sm font-bold">{channelName}</span>

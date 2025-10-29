@@ -1,6 +1,8 @@
 import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
-import { query } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
+import { MutationCtx, query, QueryCtx } from "./_generated/server";
+import { getPostSlugById } from "./posts";
 
 export const get = query({
   args: {
@@ -20,35 +22,32 @@ export const get = query({
     } else {
       channels = await ctx.db.query("channels").paginate(args.paginationOpts);
     }
-    const channelsWithMessagePreviews = await Promise.all(
+    const channelsWithMetadata = await Promise.all(
       channels.page.map(async (channel) => {
-        const message = await ctx.db
-          .query("messages")
-          .withIndex("by_channel", (q) => q.eq("channel", channel._id))
-          .order("desc")
-          .first();
-        if (!message)
-          return {
-            ...channel,
-            messagePreview: null,
-          };
-        const profile = await ctx.db.get(message.profile);
-        if (!profile)
-          return {
-            ...channel,
-            messagePreview: null,
-          };
-        const previewString = `${profile.name}: ${message.snapshots[0]?.content}`;
+        const [slug, previewMessage] = await Promise.all([
+          getPostSlugById(ctx, channel.post),
+          getPreviewMessageForChannel(ctx, channel._id),
+        ]);
         return {
-          ...channel,
-          messagePreview: previewString,
+          data: channel,
+          slug,
+          previewMessage,
         };
       }),
     );
     return {
       ...channels,
-      page: channelsWithMessagePreviews,
+      page: channelsWithMetadata,
     };
+  },
+});
+
+export const getById = query({
+  args: {
+    id: v.id("channels"),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.id);
   },
 });
 
@@ -57,3 +56,18 @@ export const getAll = query({
     return await ctx.db.query("channels").collect();
   },
 });
+
+const getPreviewMessageForChannel = async (
+  ctx: MutationCtx | QueryCtx,
+  channelId: Id<"channels">,
+) => {
+  const message = await ctx.db
+    .query("messages")
+    .withIndex("by_channel", (q) => q.eq("channel", channelId))
+    .order("desc")
+    .first();
+  if (!message) return undefined;
+  const profile = await ctx.db.get(message.profile);
+  if (!profile) return undefined;
+  return `${profile.name}: ${message.snapshots[0]?.content}`;
+};

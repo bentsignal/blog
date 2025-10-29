@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Doc } from "@/convex/_generated/dataModel";
 import {
   ContextSelector,
@@ -9,26 +9,27 @@ import {
 } from "@fluentui/react-context-selector";
 
 interface ChatContextType {
-  currentChannel: Doc<"channels"> | null;
-  setCurrentChannel: (channel: Doc<"channels"> | null) => void;
+  currentChannel?: Doc<"channels">;
+  setCurrentChannel: (channel?: Doc<"channels">) => void;
 }
 
 export const ChatContext = createContext<ChatContextType>({
-  currentChannel: null,
+  currentChannel: undefined,
   setCurrentChannel: () => {},
 });
 
 export const useChat = <T,>(selector: ContextSelector<ChatContextType, T>) =>
   useContextSelector(ChatContext, selector);
 
-export const Provider = ({ children }: { children: React.ReactNode }) => {
-  const [currentChannel, setCurrentChannel] = useState<Doc<"channels"> | null>(
-    null,
-  );
-  const contextValue = useMemo(
-    () => ({ currentChannel, setCurrentChannel }),
-    [currentChannel, setCurrentChannel],
-  );
+export const Provider = ({
+  channel,
+  children,
+}: {
+  channel?: Doc<"channels">;
+  children: React.ReactNode;
+}) => {
+  const [currentChannel, setCurrentChannel] = useState(channel);
+  const contextValue = { currentChannel, setCurrentChannel };
   return (
     <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>
   );
