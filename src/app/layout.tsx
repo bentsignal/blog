@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { GlobalProviders } from "@/context/global-context";
 import * as SearchContext from "@/context/search-context";
+import { headers } from "next/headers";
 import { Toaster } from "@/ui/atoms/toast";
 
 const geistSans = Geist({
@@ -23,11 +24,13 @@ export const metadata: Metadata = {
   description: "A space for me to share my thoughts",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const slug = headersList.get("x-slug");
   return (
     <html lang="en" suppressHydrationWarning>
       <body
