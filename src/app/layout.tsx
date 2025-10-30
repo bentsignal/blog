@@ -36,6 +36,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <p className="hidden">slug: {slug}</p>
         <GlobalProviders>
           <Toaster />
           <SearchContext.Provider>{children}</SearchContext.Provider>
