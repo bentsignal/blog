@@ -26,7 +26,6 @@ export const ReplyComposer = () => {
   const setInteractionState = useMessage((c) => c.setInteractionState);
   const name = useMessage((c) => c.name);
 
-  // TODO: originally I was using message.slug and casting (since its optional)
   const slug = useChannel((c) => c.slug);
 
   const scrollToBottom = useList((c) => c.scrollToBottom);
