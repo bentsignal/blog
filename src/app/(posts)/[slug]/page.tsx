@@ -1,16 +1,24 @@
 import { posts, postSlugs, type PostSlug } from "@/data/posts";
+import { validatePostSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
 import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Button } from "@/ui/atoms/button";
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: PostSlug }>;
+  params: Promise<{ slugParam: string }>;
 }) {
-  const { slug } = await params;
+  const { slugParam } = await params;
+  const slug = validatePostSlug(slugParam);
+
+  if (!slug) {
+    notFound();
+  }
+
   const post = posts[slug];
 
   const { default: Post } = await import(`@/posts/${slug}.mdx`);
