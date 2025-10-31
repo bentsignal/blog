@@ -9,7 +9,7 @@ import {
   useContextSelector,
 } from "@fluentui/react-context-selector";
 import { useConvexAuth, useQuery } from "convex/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 
@@ -39,6 +39,7 @@ export const Provider = ({
   children: React.ReactNode;
 }) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   // either a sign in or sign out is in progress
   const [inProgress, setInProgress] = useState(false);
@@ -80,7 +81,10 @@ export const Provider = ({
     if (inProgress) return;
     setInProgress(true);
     await authClient.signIn.social(
-      { provider: "github" },
+      {
+        provider: "github",
+        callbackURL: pathname || "/",
+      },
       {
         onError: (error) => {
           setInProgress(false);
@@ -91,7 +95,7 @@ export const Provider = ({
         },
       },
     );
-  }, [inProgress]);
+  }, [inProgress, pathname]);
 
   const contextValue = useMemo(
     () => ({
