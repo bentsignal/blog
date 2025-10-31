@@ -1,3 +1,5 @@
+import { channels, type ChannelSlug } from "@/data/channels";
+import { posts, type PostSlug } from "@/data/posts";
 import { NextRequest } from "next/server";
 
 export const getSlugFromRequest = (request: NextRequest) => {
@@ -16,4 +18,16 @@ export const getSlugFromRequest = (request: NextRequest) => {
   if (!isOnlySlug) return null;
 
   return pathname.split("/")[1];
+};
+
+export const validateChannelSlug = (slug?: string | null) => {
+  if (!slug) return undefined;
+  if (slug in Object.keys(channels)) return slug as ChannelSlug;
+  return undefined;
+};
+
+export const validatePostSlug = (slug?: string | null) => {
+  if (!slug) return undefined;
+  if (slug in Object.keys(posts)) return slug as PostSlug;
+  return undefined;
 };

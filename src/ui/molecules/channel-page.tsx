@@ -4,9 +4,9 @@ import {
   Provider as ChannelProvider,
   useChannel,
 } from "@/context/channel-context";
-import { useChat } from "@/context/chat-context";
+import { useChatWindow } from "@/context/chat-window-context";
 import { Provider as ListProvider } from "@/context/list-context";
-import { Doc } from "@/convex/_generated/dataModel";
+import { type ChannelSlug } from "@/data/channels";
 import { ChevronLeft } from "lucide-react";
 import * as Auth from "@/ui/atoms/auth";
 import * as List from "@/ui/atoms/list";
@@ -15,9 +15,9 @@ import { ChannelComposer } from "@/ui/molecules/composers";
 import { MessageList } from "@/ui/molecules/message-list";
 import { TopControls } from "@/ui/molecules/top-controls";
 
-export const ChannelPage = ({ channel }: { channel: Doc<"channels"> }) => {
+export const ChannelPage = ({ slug }: { slug: ChannelSlug }) => {
   return (
-    <ChannelProvider channel={channel}>
+    <ChannelProvider slug={slug}>
       <div className="flex h-full w-full flex-col">
         <TopControls className="md:hidden" />
         <Header />
@@ -29,13 +29,13 @@ export const ChannelPage = ({ channel }: { channel: Doc<"channels"> }) => {
 
 const Header = () => {
   const channelName = useChannel((c) => c.channel.name);
-  const setCurrentChannel = useChat((c) => c.setCurrentChannel);
+  const setCurrentChannelSlug = useChatWindow((c) => c.setCurrentChannelSlug);
   return (
     <div className="bg-muted mx-4 flex items-center justify-between rounded-2xl p-3 pl-2 md:mt-4">
       <div className="flex flex-1 items-center gap-2 pl-1">
         <ChevronLeft
           className="size-5 cursor-pointer"
-          onClick={() => setCurrentChannel(undefined)}
+          onClick={() => setCurrentChannelSlug(undefined)}
         />
         <div className="flex flex-1 flex-col justify-center">
           <span className="text-sm font-bold">{channelName}</span>

@@ -1,28 +1,17 @@
-import { api } from "@/convex/_generated/api";
+import { posts, type PostSlug } from "@/data/posts";
 import { cn } from "@/utils/style-utils";
-import { fetchQuery } from "convex/nextjs";
 import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { Button } from "@/ui/atoms/button";
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: PostSlug }>;
 }) {
   const { slug } = await params;
-
-  const post = await fetchQuery(api.posts.getBySlug, { slug });
-  if (!post) {
-    notFound();
-  }
-
-  const channel = await fetchQuery(api.channels.getById, { id: post.channel });
-  if (!channel) {
-    notFound();
-  }
+  const post = posts[slug];
 
   const { default: Post } = await import(`@/posts/${slug}.mdx`);
 
@@ -51,12 +40,10 @@ export default async function Page({
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: PostSlug }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await fetchQuery(api.posts.getBySlug, { slug });
-
-  if (!post) return { title: "Post not found" };
+  const post = posts[slug];
 
   return {
     title: post.title,
@@ -64,9 +51,9 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  const posts = await fetchQuery(api.posts.getAll, {});
-  return posts.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  const slugs = Object.keys(posts);
+  return slugs.map((slug) => ({ slug: slug as PostSlug }));
 }
 
 export const dynamicParams = false;

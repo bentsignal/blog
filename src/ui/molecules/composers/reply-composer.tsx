@@ -1,8 +1,8 @@
 import { useState } from "react";
+import { useChannel } from "@/context/channel-context";
 import { Provider as ComposerProvider } from "@/context/composer-context";
 import { ListContext, useList } from "@/context/list-context";
 import { MessageContext, useMessage } from "@/context/message-context";
-import { ChannelSlug } from "@/data/channels";
 import { validateMessage } from "@/utils/message-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
@@ -22,10 +22,12 @@ export const ReplyComposer = () => {
   }
 
   const messageId = useMessage((c) => c._id);
-  const slug = useMessage((c) => c.slug);
   const inputRef = useMessage((c) => c.replyComposerInputRef);
   const setInteractionState = useMessage((c) => c.setInteractionState);
   const name = useMessage((c) => c.name);
+
+  // TODO: originally I was using message.slug and casting (since its optional)
+  const slug = useChannel((c) => c.slug);
 
   const scrollToBottom = useList((c) => c.scrollToBottom);
   const listComposer = useList((c) => c.composerInputRef);
@@ -47,8 +49,7 @@ export const ReplyComposer = () => {
         }
         sendMessage({
           content: newValue,
-          // TODO: remove cast once slug is required
-          slug: slug as ChannelSlug,
+          slug,
           replyTo: messageId,
         });
         setInteractionState("idle");

@@ -1,9 +1,9 @@
 "use client";
 
-import { RefObject, useMemo, useRef } from "react";
+import { RefObject, useEffect, useMemo, useRef } from "react";
 import { INITIAL_PAGE_SIZE, PAGE_SIZE } from "@/config/channel-config";
 import { api } from "@/convex/_generated/api";
-import { Doc } from "@/convex/_generated/dataModel";
+import { channels, ChannelSlug, type Channel } from "@/data/channels";
 import { MessageDataWithUserInfo } from "@/types/message-types";
 import {
   ContextSelector,
@@ -13,10 +13,11 @@ import {
 import { PaginationStatus, usePaginatedQuery } from "convex/react";
 
 type ChannelProps = {
-  channel: Doc<"channels">;
+  slug: ChannelSlug;
 };
 
 interface ChannelContextType extends ChannelProps {
+  channel: Channel;
   channelComposerInputRef: RefObject<HTMLTextAreaElement | null>;
   messages: MessageDataWithUserInfo[];
   loadingStatus: PaginationStatus;
@@ -32,16 +33,24 @@ export const useChannel = <T,>(
 ) => useContextSelector(ChannelContext, selector);
 
 export const Provider = ({
-  channel,
+  slug,
   children,
 }: ChannelProps & {
   children: React.ReactNode;
 }) => {
   const channelComposerInputRef = useRef<HTMLTextAreaElement>(null);
 
+  useEffect(() => {
+    setTimeout(() => {
+      channelComposerInputRef.current?.focus();
+    }, 50);
+  }, [slug]);
+
+  const channel = channels[slug];
+
   const { results, status, loadMore } = usePaginatedQuery(
     api.messages.get,
-    { channel: channel._id },
+    { slug },
     {
       initialNumItems: INITIAL_PAGE_SIZE,
     },
@@ -51,13 +60,14 @@ export const Provider = ({
 
   const contextValue = useMemo(
     () => ({
+      slug,
       channel,
       channelComposerInputRef,
       loadingStatus: status,
       loadMoreMessages: () => loadMore(PAGE_SIZE),
       messages: orderedResults,
     }),
-    [channel, channelComposerInputRef, orderedResults, status, loadMore],
+    [slug, channel, channelComposerInputRef, orderedResults, status, loadMore],
   );
 
   return (

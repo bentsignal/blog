@@ -46,7 +46,7 @@ export const useMessageActions = () => {
             Math.random().toString(36).slice(2)) as Id<"messages">,
           _creationTime: Date.now(),
           profile: myProfileId as Id<"profiles">,
-          channel: args.channel,
+          slug: args.slug,
           snapshots: [
             {
               content: args.content,
@@ -58,7 +58,7 @@ export const useMessageActions = () => {
         localStore.setQuery(
           api.messages.get,
           {
-            channel: current.args.channel,
+            slug: current.args.slug,
             paginationOpts: current.args.paginationOpts,
           },
           {
@@ -87,7 +87,7 @@ export const useMessageActions = () => {
           localStore.setQuery(
             api.messages.get,
             {
-              channel: result.args.channel,
+              slug: result.args.slug,
               paginationOpts: result.args.paginationOpts,
             },
             {
@@ -131,7 +131,7 @@ export const useMessageActions = () => {
             localStore.setQuery(
               api.messages.get,
               {
-                channel: result.args.channel,
+                slug: result.args.slug,
                 paginationOpts: result.args.paginationOpts,
               },
               {

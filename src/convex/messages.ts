@@ -79,7 +79,7 @@ export const get = query({
 export const send = authedMutation({
   args: {
     content: v.string(),
-    channel: v.id("channels"),
+    slug: vSlug,
     replyTo: v.optional(v.id("messages")),
   },
   handler: async (ctx, args) => {
@@ -100,7 +100,7 @@ export const send = authedMutation({
         },
       ],
       profile: profile._id,
-      channel: args.channel,
+      slug: args.slug,
       replyTo: args.replyTo,
     });
   },
