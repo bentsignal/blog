@@ -1,5 +1,5 @@
 import { memo } from "react";
-import * as MessageContext from "@/context/message-context";
+import { Provider as MessageProvider } from "@/context/message-context";
 import { MessageDataWithUserInfo } from "@/types/message-types";
 import * as Message from "@/ui/atoms/message";
 import { InlineComposer } from "@/ui/molecules/composers";
@@ -7,7 +7,7 @@ import { InlineComposer } from "@/ui/molecules/composers";
 export const StandardMessage = memo(
   ({ message }: { message: MessageDataWithUserInfo }) => {
     return (
-      <MessageContext.Provider message={message}>
+      <MessageProvider message={message}>
         <Message.Frame className="mt-3">
           <div className="flex gap-3">
             <Message.PFP />
@@ -19,7 +19,7 @@ export const StandardMessage = memo(
           <Message.Actions />
         </Message.Frame>
         <InlineComposer />
-      </MessageContext.Provider>
+      </MessageProvider>
     );
   },
   (prev, next) => {

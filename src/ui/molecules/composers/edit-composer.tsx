@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as ComposerContext from "@/context/composer-context";
+import { Provider as ComposerProvider } from "@/context/composer-context";
 import { MessageContext, useMessage } from "@/context/message-context";
 import { validateMessage } from "@/utils/message-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
@@ -26,7 +26,7 @@ export const EditComposer = () => {
   const { editMessage } = useMessageActions();
 
   return (
-    <ComposerContext.Provider
+    <ComposerProvider
       inputValue={inputValue}
       setInputValue={setInputValue}
       inputRef={inputRef}
@@ -56,6 +56,6 @@ export const EditComposer = () => {
           <Composer.Save />
         </ButtonGroup.Frame>
       </Composer.Frame>
-    </ComposerContext.Provider>
+    </ComposerProvider>
   );
 };

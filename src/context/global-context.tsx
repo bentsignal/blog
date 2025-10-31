@@ -1,7 +1,7 @@
-import * as AuthContext from "@/context/auth-context";
-import * as ChatContext from "@/context/chat-context";
-import * as ConvexContext from "@/context/convex-context";
-import * as ThemeContext from "@/context/theme-context";
+import { Provider as AuthProvider } from "@/context/auth-context";
+import { Provider as ChatWindowProvider } from "@/context/chat-window-context";
+import { Provider as ConvexProvider } from "@/context/convex-context";
+import { Provider as ThemeProvider } from "@/context/theme-context";
 import { headers } from "next/headers";
 import * as Sidebar from "@/ui/atoms/sidebar";
 import { getToken } from "@/lib/auth-server";
@@ -18,19 +18,19 @@ export const Provider = async ({
   const authed = token !== undefined;
 
   return (
-    <ConvexContext.Provider>
-      <AuthContext.Provider isAuthenticatedServerSide={authed}>
-        <ThemeContext.Provider
+    <ConvexProvider>
+      <AuthProvider isAuthenticatedServerSide={authed}>
+        <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <ChatContext.Provider>
+          <ChatWindowProvider slugFromHeaders={slug}>
             <Sidebar.Provider>{children}</Sidebar.Provider>
-          </ChatContext.Provider>
-        </ThemeContext.Provider>
-      </AuthContext.Provider>
-    </ConvexContext.Provider>
+          </ChatWindowProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </ConvexProvider>
   );
 };

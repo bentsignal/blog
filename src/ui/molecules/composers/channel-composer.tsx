@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { ChannelContext, useChannel } from "@/context/channel-context";
-import * as ComposerContext from "@/context/composer-context";
+import { Provider as ComposerProvider } from "@/context/composer-context";
 import { ListContext, useList } from "@/context/list-context";
 import { validateMessage } from "@/utils/message-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
@@ -22,7 +22,7 @@ export const ChannelComposer = () => {
 
   const [inputValue, setInputValue] = useState("");
 
-  const channel = useChannel((c) => c.channel);
+  const slug = useChannel((c) => c.slug);
   const composerInputRef = useChannel((c) => c.channelComposerInputRef);
   const signedIn = useAuth((c) => c.signedIn);
   const signIn = useAuth((c) => c.signIn);
@@ -44,7 +44,7 @@ export const ChannelComposer = () => {
     setInputValue("");
     sendMessage({
       content: value,
-      channel: channel._id,
+      slug,
     });
     if (composerInputRef.current) {
       composerInputRef.current.style.height = "auto";
@@ -55,7 +55,7 @@ export const ChannelComposer = () => {
   };
 
   return (
-    <ComposerContext.Provider
+    <ComposerProvider
       onSubmit={onSubmit}
       inputValue={inputValue}
       setInputValue={setInputValue}
@@ -65,6 +65,6 @@ export const ChannelComposer = () => {
         <Composer.Input className="ml-1" />
         <Composer.Send />
       </Composer.Frame>
-    </ComposerContext.Provider>
+    </ComposerProvider>
   );
 };

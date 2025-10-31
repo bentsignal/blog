@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import * as GlobalContext from "@/context/global-context";
-import * as ListContext from "@/context/list-context";
-import * as SearchContext from "@/context/search-context";
+import { Provider as GlobalProvider } from "@/context/global-context";
+import { Provider as ListProvider } from "@/context/list-context";
+import { Provider as SearchProvider } from "@/context/search-context";
 import * as Abyss from "@/ui/atoms/abyss";
 import * as List from "@/ui/atoms/list";
 import * as Sidebar from "@/ui/atoms/sidebar";
@@ -39,16 +39,16 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <GlobalContext.Provider>
+        <GlobalProvider>
           <Toaster />
           <Sidebar.Frame className="max-w-screen sm:max-w-lg">
             <Sidebar.Content className="flex items-center">
-              <SearchContext.Provider>
+              <SearchProvider>
                 <ChatWindow />
-              </SearchContext.Provider>
+              </SearchProvider>
             </Sidebar.Content>
           </Sidebar.Frame>
-          <ListContext.Provider>
+          <ListProvider>
             <List.Frame>
               <TopControls className="absolute top-0 left-0 z-6" />
               <Abyss.Top />
@@ -61,8 +61,8 @@ export default async function RootLayout({
               </div>
               <Abyss.Bottom />
             </List.Frame>
-          </ListContext.Provider>
-        </GlobalContext.Provider>
+          </ListProvider>
+        </GlobalProvider>
       </body>
     </html>
   );

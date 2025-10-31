@@ -1,7 +1,8 @@
 import { useState } from "react";
-import * as ComposerContext from "@/context/composer-context";
+import { Provider as ComposerProvider } from "@/context/composer-context";
 import { ListContext, useList } from "@/context/list-context";
 import { MessageContext, useMessage } from "@/context/message-context";
+import { ChannelSlug } from "@/data/channels";
 import { validateMessage } from "@/utils/message-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
@@ -21,7 +22,7 @@ export const ReplyComposer = () => {
   }
 
   const messageId = useMessage((c) => c._id);
-  const channel = useMessage((c) => c.channel);
+  const slug = useMessage((c) => c.slug);
   const inputRef = useMessage((c) => c.replyComposerInputRef);
   const setInteractionState = useMessage((c) => c.setInteractionState);
   const name = useMessage((c) => c.name);
@@ -33,7 +34,7 @@ export const ReplyComposer = () => {
   const { sendMessage } = useMessageActions();
 
   return (
-    <ComposerContext.Provider
+    <ComposerProvider
       inputValue={inputValue}
       setInputValue={setInputValue}
       inputRef={inputRef}
@@ -46,7 +47,8 @@ export const ReplyComposer = () => {
         }
         sendMessage({
           content: newValue,
-          channel: channel,
+          // TODO: remove cast once slug is required
+          slug: slug as ChannelSlug,
           replyTo: messageId,
         });
         setInteractionState("idle");
@@ -69,6 +71,6 @@ export const ReplyComposer = () => {
           <Composer.Send />
         </ButtonGroup.Frame>
       </Composer.Frame>
-    </ComposerContext.Provider>
+    </ComposerProvider>
   );
 };
