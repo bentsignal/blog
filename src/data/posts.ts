@@ -16,4 +16,6 @@ export const posts = {
   },
 } as const satisfies Partial<Record<Slug, Post>>;
 
+export const postSlugs = Object.keys(posts) as PostSlug[];
+
 export type PostSlug = keyof typeof posts;

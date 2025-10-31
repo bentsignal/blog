@@ -4,7 +4,7 @@ import { useChatWindow } from "@/context/chat-window-context";
 import { Provider as ListProvider } from "@/context/list-context";
 import { useSearch } from "@/context/search-context";
 import { channels, type ChannelSlug } from "@/data/channels";
-import { posts } from "@/data/posts";
+import { validatePostSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
 import { useRouter } from "next/navigation";
 import * as List from "@/ui/atoms/list";
@@ -41,8 +41,10 @@ export const ChannelList = () => {
               key={channel.slug}
               onClick={() => {
                 setCurrentChannelSlug(channel.slug);
-                if (channel.slug in Object.keys(posts)) {
-                  router.push(`/${channel.slug}`);
+                // if the channel has an associated post, redirect to the post's page
+                const postSlug = validatePostSlug(channel.slug);
+                if (postSlug) {
+                  router.push(`/${postSlug}`);
                 }
               }}
               className={cn(

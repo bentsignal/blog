@@ -1,4 +1,4 @@
-import { posts, type PostSlug } from "@/data/posts";
+import { posts, postSlugs, type PostSlug } from "@/data/posts";
 import { cn } from "@/utils/style-utils";
 import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
@@ -52,8 +52,7 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const slugs = Object.keys(posts);
-  return slugs.map((slug) => ({ slug: slug as PostSlug }));
+  return postSlugs.map((slug) => ({ slug }));
 }
 
 export const dynamicParams = false;
