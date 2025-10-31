@@ -1,4 +1,5 @@
 import { MessageDataWithUserInfo } from "@/types/message-types";
+import { vSlug } from "@/types/slugs";
 import { validateMessage } from "@/utils/message-utils";
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
@@ -10,13 +11,13 @@ import { getProfile, type Profile } from "./user";
 
 export const get = query({
   args: {
-    channel: v.id("channels"),
+    slug: vSlug,
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
     const messages = await ctx.db
       .query("messages")
-      .withIndex("by_channel", (q) => q.eq("channel", args.channel))
+      .withIndex("by_slug", (q) => q.eq("slug", args.slug))
       .order("desc")
       .paginate(args.paginationOpts);
     const repliedToMessages = await Promise.all(
