@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useChannel } from "@/context/channel-context";
 import { Provider as ComposerProvider } from "@/context/composer-context";
 import { ListContext, useList } from "@/context/list-context";
 import { MessageContext, useMessage } from "@/context/message-context";
@@ -25,8 +24,7 @@ export const ReplyComposer = () => {
   const inputRef = useMessage((c) => c.replyComposerInputRef);
   const setInteractionState = useMessage((c) => c.setInteractionState);
   const name = useMessage((c) => c.name);
-
-  const slug = useChannel((c) => c.slug);
+  const slug = useMessage((c) => c.slug);
 
   const scrollToBottom = useList((c) => c.scrollToBottom);
   const listComposer = useList((c) => c.composerInputRef);
