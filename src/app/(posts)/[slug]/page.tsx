@@ -5,7 +5,6 @@ import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Button } from "@/ui/atoms/button";
 
 export default async function Page({
   params,
