@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import * as Sidebar from "@/ui/atoms/sidebar";
 import { getToken } from "@/lib/auth-server";
 
-export const Provider = async ({
+export const Providers = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
