@@ -10,18 +10,18 @@ import { Button } from "@/ui/atoms/button";
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slugParam: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { slugParam } = await params;
-  const slug = validatePostSlug(slugParam);
+  const { slug } = await params;
+  const validatedSlug = validatePostSlug(slug);
 
-  if (!slug) {
+  if (!validatedSlug) {
     notFound();
   }
 
-  const post = posts[slug];
+  const post = posts[validatedSlug];
 
-  const { default: Post } = await import(`@/posts/${slug}.mdx`);
+  const { default: Post } = await import(`@/posts/${validatedSlug}.mdx`);
 
   return (
     <div className="mx-auto my-16 flex max-w-xl flex-col gap-2 px-4">
