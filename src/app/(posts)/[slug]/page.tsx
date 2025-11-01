@@ -25,10 +25,11 @@ export default async function Page({
 
   return (
     <div className="mx-auto my-16 flex max-w-xl flex-col gap-2 px-4">
-      <Link href="/">
-        <Button variant="ghost">
-          <MoveLeft /> Back to Home
-        </Button>
+      <Link
+        href="/"
+        className="text-muted-foreground hover:text-primary flex cursor-pointer items-center gap-2 text-sm transition-colors duration-100"
+      >
+        <MoveLeft className="size-3" /> Back to Home
       </Link>
       <h2 className="text-3xl font-semibold">{post.title}</h2>
       <p className="text-muted-foreground">{post.subtitle}</p>
