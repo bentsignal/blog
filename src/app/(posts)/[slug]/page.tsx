@@ -12,15 +12,21 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const validatedSlug = validatePostSlug(slug);
 
+  const validatedSlug = validatePostSlug(slug);
   if (!validatedSlug) {
     notFound();
   }
 
   const post = posts[validatedSlug];
-
   const { default: Post } = await import(`@/posts/${validatedSlug}.mdx`);
+
+  const dateString = post.datePosted.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  const readingTimeString = `${post.readingTimeInMinutes} min read`;
 
   return (
     <div className="mx-auto my-16 flex max-w-xl flex-col gap-2 px-4">
@@ -30,8 +36,14 @@ export default async function Page({
       >
         <MoveLeft className="size-3" /> Back to Home
       </Link>
-      <h2 className="text-3xl font-semibold">{post.title}</h2>
-      <p className="text-muted-foreground">{post.subtitle}</p>
+      <div className="my-4 flex flex-col gap-2">
+        <h2 className="text-3xl font-semibold">{post.title}</h2>
+        <div className="flex items-center justify-between">
+          <p className="text-muted-foreground">
+            {dateString} • {readingTimeString}
+          </p>
+        </div>
+      </div>
       <div
         className={cn(
           "prose dark:prose-invert",
