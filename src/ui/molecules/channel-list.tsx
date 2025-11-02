@@ -1,30 +1,30 @@
 "use client";
 
+import {
+  ChannelListContext,
+  useChannelList,
+} from "@/context/channel-list-context";
 import { useChatWindow } from "@/context/chat-window-context";
 import { Provider as ListProvider } from "@/context/list-context";
-import { useSearch } from "@/context/search-context";
-import { channels, type ChannelSlug } from "@/data/channels";
 import { validatePostSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
+import { useHasParentContext } from "@fluentui/react-context-selector";
 import { useRouter } from "next/navigation";
 import * as List from "@/ui/atoms/list";
+import * as Shapes from "@/ui/atoms/shapes";
 
 export const ChannelList = () => {
+  const hasChannelListContext = useHasParentContext(ChannelListContext);
+  if (!hasChannelListContext) {
+    throw new Error("ChannelListContext not found");
+  }
+
   const setCurrentChannelSlug = useChatWindow((c) => c.setCurrentChannelSlug);
-  const searchTerm = useSearch((c) => c.searchTerm);
+  const channels = useChannelList((c) => c.channels);
 
   const router = useRouter();
 
-  const filteredChannels = Object.entries(channels)
-    .map(([key, channel]) => ({
-      slug: key as ChannelSlug,
-      ...channel,
-    }))
-    .filter((channel) =>
-      channel.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-
-  if (filteredChannels.length === 0) {
+  if (channels.length === 0) {
     return (
       <div className="text-muted-foreground py-4 text-center">
         No channels found
@@ -36,7 +36,7 @@ export const ChannelList = () => {
     <ListProvider>
       <List.Frame>
         <List.Content className="flex flex-col gap-2 py-4">
-          {filteredChannels.map((channel) => (
+          {channels.map((channel) => (
             <div
               key={channel.slug}
               onClick={() => {
@@ -55,10 +55,20 @@ export const ChannelList = () => {
               <span className="text-muted-foreground text-3xl">#</span>
               <div className="flex max-w-full flex-col pr-8">
                 <span className="text-sm font-bold">{channel.name}</span>
-                <span className="text-muted-foreground truncate text-xs">
-                  {/* {channel.previewMessage} */}
-                  Preview Message
-                </span>
+                {channel.previewString === undefined ? (
+                  <Shapes.HorizontalBar
+                    className="mt-1"
+                    width={Math.random() * 200 + 50}
+                  />
+                ) : channel.previewString === null ? (
+                  <span className="text-muted-foreground truncate text-xs">
+                    Preview unavailable
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground truncate text-xs">
+                    {channel.previewString}
+                  </span>
+                )}
               </div>
             </div>
           ))}

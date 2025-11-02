@@ -1,3 +1,4 @@
+import { channelSlugs } from "@/data/channels";
 import { MessageDataWithUserInfo } from "@/types/message-types";
 import { vSlug } from "@/types/slugs";
 import { validateMessage } from "@/utils/message-utils";
@@ -168,3 +169,29 @@ export const deleteAllFromUser = async (ctx: MutationCtx, userId: string) => {
     await ctx.db.delete(message._id);
   }
 };
+
+export const getPreviewsForChannels = query({
+  handler: async (ctx) => {
+    const messages = await Promise.all(
+      channelSlugs.map(async (slug) => {
+        const message = await ctx.db
+          .query("messages")
+          .withIndex("by_slug", (q) => q.eq("slug", slug))
+          .order("desc")
+          .first();
+        if (!message) return { slug, previewString: null };
+        const profile = await ctx.db.get(message.profile);
+        if (!profile) return { slug, previewString: null };
+        const messageContent =
+          message.snapshots[message.snapshots.length - 1].content;
+        const displayName = profile.name;
+        const previewString = `${displayName}: ${messageContent}`;
+        return {
+          slug,
+          previewString,
+        };
+      }),
+    );
+    return messages;
+  },
+});

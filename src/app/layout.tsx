@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Provider as ChannelListProvider } from "@/context/channel-list-context";
 import { Providers as GlobalProviders } from "@/context/global-context";
 import { Provider as ListProvider } from "@/context/list-context";
 import { Provider as SearchProvider } from "@/context/search-context";
@@ -44,7 +45,9 @@ export default async function RootLayout({
           <Sidebar.Frame className="max-w-screen sm:max-w-lg">
             <Sidebar.Content className="flex items-center">
               <SearchProvider>
-                <ChatWindow />
+                <ChannelListProvider>
+                  <ChatWindow />
+                </ChannelListProvider>
               </SearchProvider>
             </Sidebar.Content>
           </Sidebar.Frame>
