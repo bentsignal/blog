@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"pnpm run dev:next\" \"pnpm run dev:convex\"",
-    "dev:next": "next dev --turbopack -H 0.0.0.0",
+    "dev:next": "next dev -H 0.0.0.0",
     "dev:convex": "convex dev",
     "build": "pnpm run lint && pnpm run build:convex && pnpm run build:next",
-    "build:next": "next build --turbopack",
+    "build:next": "next build",
     "build:convex": "convex deploy",
     "lint": "oxlint --type-aware",
     "format": "prettier --write ./src",
