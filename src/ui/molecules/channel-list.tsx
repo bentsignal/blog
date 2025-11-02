@@ -56,10 +56,7 @@ export const ChannelList = () => {
               <div className="flex max-w-full flex-col pr-8">
                 <span className="text-sm font-bold">{channel.name}</span>
                 {channel.previewString === undefined ? (
-                  <Shapes.HorizontalBar
-                    className="mt-1"
-                    width={Math.random() * 200 + 50}
-                  />
+                  <Shapes.HorizontalBar className="mt-1" width={200} />
                 ) : channel.previewString === null ? (
                   <span className="text-muted-foreground truncate text-xs">
                     Preview unavailable

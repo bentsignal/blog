@@ -11,11 +11,11 @@ export const Providers = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const headersList = await headers();
-  const slug = headersList.get("x-slug");
+  // const headersList = await headers();
+  const slug = null; // headersList.get("x-slug");
 
-  const token = await getToken();
-  const authed = token !== undefined;
+  // const token = await getToken();
+  const authed = false; // token !== undefined;
 
   return (
     <ConvexProvider>

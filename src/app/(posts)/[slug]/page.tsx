@@ -1,3 +1,5 @@
+"use cache";
+
 import { posts, postSlugs, type PostSlug } from "@/data/posts";
 import { validatePostSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
@@ -5,9 +7,6 @@ import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-export const dynamic = "force-static";
-export const dynamicParams = false;
 
 export default async function Page({
   params,

@@ -118,12 +118,9 @@ export const Skeleton = ({ index }: { index?: number }) => {
       <div className="flex gap-3">
         <Shapes.Circle className="size-10" />
         <div className="mt-1 flex w-full flex-col gap-1.5">
-          <Shapes.HorizontalBar width={Math.random() * 150 + 50} />
+          <Shapes.HorizontalBar width={200} />
           {Array.from({ length: numberOfContentLines }, (_, index) => (
-            <Shapes.HorizontalBar
-              width={Math.random() * 150 + 50}
-              key={index}
-            />
+            <Shapes.HorizontalBar width={200} key={index} />
           ))}
         </div>
       </div>

@@ -10,6 +10,18 @@ export const posts = {
     title: "Under Construction 🚧",
     subtitle: "Check back soon ! ! !",
   },
+  test: {
+    title: "Test",
+    subtitle: "Test",
+  },
+  test2: {
+    title: "Test 2",
+    subtitle: "Test 2",
+  },
+  test3: {
+    title: "Test 3",
+    subtitle: "Test 3",
+  },
 } as const satisfies Partial<Record<Slug, Post>>;
 
 export const postSlugs = Object.keys(posts) as PostSlug[];
