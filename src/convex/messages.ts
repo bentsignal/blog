@@ -1,6 +1,6 @@
 import { channelSlugs } from "@/data/channels";
+import { vSlug } from "@/data/slugs";
 import { MessageDataWithUserInfo } from "@/types/message-types";
-import { vSlug } from "@/types/slugs";
 import { validateMessage } from "@/utils/message-utils";
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";

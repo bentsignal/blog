@@ -1,4 +1,4 @@
-import { vSlug } from "@/types/slugs";
+import { vSlug } from "@/data/slugs";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 

@@ -1,4 +1,4 @@
-import type { Slug } from "@/types/slugs";
+import type { Slug } from "@/data/slugs";
 
 export interface Post {
   title: string;
