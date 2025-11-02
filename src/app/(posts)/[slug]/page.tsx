@@ -62,5 +62,3 @@ export async function generateMetadata({
 export async function generateStaticParams() {
   return postSlugs.map((slug) => ({ slug }));
 }
-
-export const dynamicParams = false;
