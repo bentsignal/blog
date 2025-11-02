@@ -6,6 +6,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-static";
+export const dynamicParams = false;
+
 export default async function Page({
   params,
 }: {
@@ -62,5 +65,3 @@ export async function generateMetadata({
 export async function generateStaticParams() {
   return postSlugs.map((slug) => ({ slug }));
 }
-
-export const dynamicParams = false;
