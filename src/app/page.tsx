@@ -1,7 +1,7 @@
-"use cache";
-
 import { posts, postSlugs } from "@/data/posts";
 import PostCard from "@/ui/molecules/post-card";
+
+export const dynamic = "force-static";
 
 export default async function HomePage() {
   return (
