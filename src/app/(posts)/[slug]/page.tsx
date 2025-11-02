@@ -1,5 +1,3 @@
-"use cache";
-
 import { posts, postSlugs, type PostSlug } from "@/data/posts";
 import { validatePostSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
@@ -64,3 +62,5 @@ export async function generateMetadata({
 export async function generateStaticParams() {
   return postSlugs.map((slug) => ({ slug }));
 }
+
+export const dynamicParams = false;
