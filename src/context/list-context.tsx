@@ -23,7 +23,7 @@ export interface ListContextType {
   vagueScrollPosition: VagueScrollPosition;
   loadingStatus?: PaginationStatus;
   skeletonComponent?: React.ReactNode;
-  composerInputRef?: RefObject<HTMLTextAreaElement | null>;
+  contentFitsInWindow: boolean;
 }
 
 export const ListContext = createContext<ListContextType>(
@@ -43,7 +43,6 @@ interface ListProps {
   skeletonComponent?: React.ReactNode;
   loadMoreOnScrollThreshold?: number;
   loadMore?: () => void;
-  composerInputRef?: RefObject<HTMLTextAreaElement | null>;
   contentVersion?: number;
 }
 
@@ -57,7 +56,6 @@ export const Provider = ({
   loadMoreOnScrollThreshold = 1500,
   skeletonComponent,
   loadMore,
-  composerInputRef,
   contentVersion,
 }: ListProps) => {
   const distanceFromBottom = useRef(0);
@@ -157,10 +155,14 @@ export const Provider = ({
       scrollToTop,
       loadingStatus,
       skeletonComponent,
-      composerInputRef,
       vagueScrollPosition,
     }),
-    [loadingStatus, skeletonComponent, composerInputRef, vagueScrollPosition],
+    [
+      loadingStatus,
+      skeletonComponent,
+      vagueScrollPosition,
+      contentFitsInWindow,
+    ],
   );
 
   return (

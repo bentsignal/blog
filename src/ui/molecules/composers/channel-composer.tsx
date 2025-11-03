@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { ChannelContext, useChannel } from "@/context/channel-context";
+import { useChatWindow } from "@/context/chat-window-context";
 import { Provider as ComposerProvider } from "@/context/composer-context";
 import { ListContext, useList } from "@/context/list-context";
 import { validateMessage } from "@/utils/message-utils";
@@ -23,7 +24,7 @@ export const ChannelComposer = () => {
   const [inputValue, setInputValue] = useState("");
 
   const slug = useChannel((c) => c.slug);
-  const composerInputRef = useChannel((c) => c.channelComposerInputRef);
+  const composerInputRef = useChatWindow((c) => c.composerInputRef);
   const signedIn = useAuth((c) => c.signedIn);
   const signIn = useAuth((c) => c.signIn);
   const scrollToBottom = useList((c) => c.scrollToBottom);
@@ -35,7 +36,7 @@ export const ChannelComposer = () => {
       await signIn();
       return;
     }
-    const value = composerInputRef.current?.value ?? "";
+    const value = composerInputRef?.current?.value ?? "";
     const validation = validateMessage(value);
     if (validation !== "Valid") {
       toast.error(validation);
@@ -46,7 +47,7 @@ export const ChannelComposer = () => {
       content: value,
       slug,
     });
-    if (composerInputRef.current) {
+    if (composerInputRef?.current) {
       composerInputRef.current.style.height = "auto";
     }
     setTimeout(() => {

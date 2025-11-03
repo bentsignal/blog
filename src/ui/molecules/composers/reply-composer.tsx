@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useChatWindow } from "@/context/chat-window-context";
 import { Provider as ComposerProvider } from "@/context/composer-context";
 import { ListContext, useList } from "@/context/list-context";
 import { MessageContext, useMessage } from "@/context/message-context";
@@ -11,11 +12,11 @@ import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const ReplyComposer = () => {
   const hasMessageContext = useHasParentContext(MessageContext);
+  const hasListContext = useHasParentContext(ListContext);
+
   if (!hasMessageContext) {
     throw new Error("MessageContext not found");
   }
-
-  const hasListContext = useHasParentContext(ListContext);
   if (!hasListContext) {
     throw new Error("ListContext not found");
   }
@@ -27,7 +28,7 @@ export const ReplyComposer = () => {
   const slug = useMessage((c) => c.slug);
 
   const scrollToBottom = useList((c) => c.scrollToBottom);
-  const listComposer = useList((c) => c.composerInputRef);
+  const chatWindowComposer = useChatWindow((c) => c.composerInputRef);
 
   const [inputValue, setInputValue] = useState("");
   const { sendMessage } = useMessageActions();
@@ -50,7 +51,7 @@ export const ReplyComposer = () => {
           replyTo: messageId,
         });
         setInteractionState("idle");
-        listComposer?.current?.focus();
+        chatWindowComposer?.current?.focus();
         setTimeout(() => {
           scrollToBottom();
         }, 0);

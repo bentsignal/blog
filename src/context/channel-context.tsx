@@ -1,6 +1,6 @@
 "use client";
 
-import { RefObject, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { INITIAL_PAGE_SIZE, PAGE_SIZE } from "@/config/channel-config";
 import { api } from "@/convex/_generated/api";
 import { channels, ChannelSlug, type Channel } from "@/data/channels";
@@ -11,6 +11,7 @@ import {
   useContextSelector,
 } from "@fluentui/react-context-selector";
 import { PaginationStatus, usePaginatedQuery } from "convex/react";
+import { useChatWindow } from "./chat-window-context";
 
 type ChannelProps = {
   slug: ChannelSlug;
@@ -18,7 +19,6 @@ type ChannelProps = {
 
 interface ChannelContextType extends ChannelProps {
   channel: Channel;
-  channelComposerInputRef: RefObject<HTMLTextAreaElement | null>;
   messages: MessageDataWithUserInfo[];
   loadingStatus: PaginationStatus;
   loadMoreMessages: () => void;
@@ -38,13 +38,13 @@ export const Provider = ({
 }: ChannelProps & {
   children: React.ReactNode;
 }) => {
-  const channelComposerInputRef = useRef<HTMLTextAreaElement>(null);
+  const chatWindowComposer = useChatWindow((c) => c.composerInputRef);
 
   useEffect(() => {
     setTimeout(() => {
-      channelComposerInputRef.current?.focus();
+      chatWindowComposer?.current?.focus();
     }, 50);
-  }, [slug]);
+  }, [chatWindowComposer, slug]);
 
   const channel = channels[slug];
 
@@ -62,12 +62,11 @@ export const Provider = ({
     () => ({
       slug,
       channel,
-      channelComposerInputRef,
       loadingStatus: status,
       loadMoreMessages: () => loadMore(PAGE_SIZE),
       messages: orderedResults,
     }),
-    [slug, channel, channelComposerInputRef, orderedResults, status, loadMore],
+    [slug, channel, orderedResults, status, loadMore],
   );
 
   return (

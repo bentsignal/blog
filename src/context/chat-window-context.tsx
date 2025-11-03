@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { RefObject, useRef, useState } from "react";
 import { type ChannelSlug } from "@/data/channels";
 import { validateChannelSlug } from "@/utils/slug-utils";
 import {
@@ -12,6 +12,7 @@ import {
 interface ChatWindowContextType {
   currentChannelSlug?: ChannelSlug;
   setCurrentChannelSlug: (slug?: ChannelSlug) => void;
+  composerInputRef: RefObject<HTMLTextAreaElement | null>;
 }
 
 export const ChatWindowContext = createContext<ChatWindowContextType>(
@@ -31,10 +32,12 @@ export const Provider = ({
 }) => {
   const validatedSlug = validateChannelSlug(slugFromHeaders);
   const [currentChannelSlug, setCurrentChannelSlug] = useState(validatedSlug);
+  const composerInputRef = useRef<HTMLTextAreaElement>(null);
 
   const contextValue = {
     currentChannelSlug,
     setCurrentChannelSlug,
+    composerInputRef,
   };
 
   return (

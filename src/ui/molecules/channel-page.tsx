@@ -49,7 +49,6 @@ const Header = () => {
 
 const Body = () => {
   const loadingStatus = useChannel((c) => c.loadingStatus);
-  const channelComposerInputRef = useChannel((c) => c.channelComposerInputRef);
   const loadMoreMessages = useChannel((c) => c.loadMoreMessages);
   const messages = useChannel((c) => c.messages);
 
@@ -76,7 +75,6 @@ const Body = () => {
       loadingStatus={loadingStatus}
       skeletonComponent={<Message.Skeleton />}
       loadMore={loadMoreMessages}
-      composerInputRef={channelComposerInputRef}
       contentVersion={messages.length}
     >
       <MessageList messages={messages} />
