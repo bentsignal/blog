@@ -50,13 +50,12 @@ export const Content = ({
       )}
       ref={scrollRef}
     >
-      <Skeleton />
       {children}
     </div>
   );
 };
 
-export const Skeleton = () => {
+export const Skeletons = () => {
   const hasScrollContext = useHasParentContext(ListContext);
   if (!hasScrollContext) {
     throw new Error("ListContext not found");
@@ -131,6 +130,24 @@ export const ScrollToTopButton = ({ className }: { className?: string }) => {
         </ToolTip.Trigger>
         <ToolTip.Content>Scroll to top</ToolTip.Content>
       </ToolTip.Frame>
+    </div>
+  );
+};
+
+export const ProgressBar = () => {
+  const hasScrollContext = useHasParentContext(ListContext);
+  if (!hasScrollContext) {
+    throw new Error("ListContext not found");
+  }
+
+  const percentToBottom = useList((c) => c.percentToBottom);
+
+  return (
+    <div className="absolute top-0 right-0 z-6 w-full">
+      <div
+        className="bg-primary h-1"
+        style={{ width: `${percentToBottom}%` }}
+      />
     </div>
   );
 };

@@ -24,6 +24,7 @@ export interface ListContextType {
   loadingStatus?: PaginationStatus;
   skeletonComponent?: React.ReactNode;
   contentFitsInWindow: boolean;
+  percentToBottom: number;
 }
 
 export const ListContext = createContext<ListContextType>(
@@ -69,6 +70,10 @@ export const Provider = ({
   const loadingStatusRef = useRef(loadingStatus);
   loadingStatusRef.current = loadingStatus;
 
+  const [percentToBottom, setPercentToBottom] = useState(
+    startAt === "bottom" ? 100 : 0,
+  );
+
   const [vagueScrollPosition, setVagueScrollPosition] =
     useState<VagueScrollPosition>(startAt === "bottom" ? "bottom" : "top");
 
@@ -94,8 +99,8 @@ export const Provider = ({
         const totalHeight = scrollElement.scrollHeight;
         const windowHeight = scrollElement.clientHeight;
         const newDistanceFromTop = scrollElement.scrollTop;
-        const newDistanceFromBottom =
-          totalHeight - windowHeight - newDistanceFromTop;
+        const scrollableDistance = totalHeight - windowHeight;
+        const newDistanceFromBottom = scrollableDistance - newDistanceFromTop;
         distanceFromBottom.current = newDistanceFromBottom;
         if (
           newDistanceFromTop < loadMoreOnScrollThreshold &&
@@ -112,13 +117,23 @@ export const Provider = ({
               : "middle";
         vagueScrollPositionRef.current = newVagueScrollPosition;
         setVagueScrollPosition(newVagueScrollPosition);
+        setPercentToBottom(
+          scrollableDistance > 0
+            ? (newDistanceFromTop / scrollableDistance) * 100
+            : 100,
+        );
       };
       scrollElement.addEventListener("scroll", handleScroll);
       return () => {
         scrollElement.removeEventListener("scroll", handleScroll);
       };
     }
-  }, [nearBoundaryThreshold, loadMore, loadMoreOnScrollThreshold]);
+  }, [
+    nearBoundaryThreshold,
+    loadMore,
+    loadMoreOnScrollThreshold,
+    setPercentToBottom,
+  ]);
 
   // when new content is loaded and appended to the top of the list, retain previous distance from bottom
   useEffect(() => {
