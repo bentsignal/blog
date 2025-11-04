@@ -46,7 +46,10 @@ export const MessageList = ({
           );
         })}
       </List.Content>
-      <List.ScrollToBottomButton className="absolute right-0 bottom-0 z-6 p-4" />
+      <List.ScrollToBottomButton
+        className="absolute right-0 bottom-0 z-6 p-4"
+        hideWhenAtBottom={true}
+      />
     </List.Frame>
   );
 };

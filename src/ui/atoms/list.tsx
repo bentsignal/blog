@@ -83,7 +83,13 @@ export const Skeletons = () => {
   );
 };
 
-export const ScrollToBottomButton = ({ className }: { className?: string }) => {
+export const ScrollToBottomButton = ({
+  className,
+  hideWhenAtBottom = false,
+}: {
+  className?: string;
+  hideWhenAtBottom?: boolean;
+}) => {
   const hasScrollContext = useHasParentContext(ListContext);
   if (!hasScrollContext) {
     throw new Error("ListContext not found");
@@ -93,7 +99,10 @@ export const ScrollToBottomButton = ({ className }: { className?: string }) => {
     (c) => c.vagueScrollPosition === "bottom",
   );
   const hideScrollToBottomButton = useList(
-    (c) => c.contentFitsInWindow || c.loadingStatus === "LoadingFirstPage",
+    (c) =>
+      c.contentFitsInWindow ||
+      c.loadingStatus === "LoadingFirstPage" ||
+      (hideWhenAtBottom && c.vagueScrollPosition === "bottom"),
   );
   const scrollToBottom = useList((c) => c.scrollToBottom);
 
@@ -118,7 +127,13 @@ export const ScrollToBottomButton = ({ className }: { className?: string }) => {
   );
 };
 
-export const ScrollToTopButton = ({ className }: { className?: string }) => {
+export const ScrollToTopButton = ({
+  className,
+  hideWhenAtTop = false,
+}: {
+  className?: string;
+  hideWhenAtTop?: boolean;
+}) => {
   const hasScrollContext = useHasParentContext(ListContext);
   if (!hasScrollContext) {
     throw new Error("ListContext not found");
@@ -128,7 +143,10 @@ export const ScrollToTopButton = ({ className }: { className?: string }) => {
     (c) => c.vagueScrollPosition === "top",
   );
   const hideScrollToTopButton = useList(
-    (c) => c.contentFitsInWindow || c.loadingStatus === "LoadingFirstPage",
+    (c) =>
+      c.contentFitsInWindow ||
+      c.loadingStatus === "LoadingFirstPage" ||
+      (hideWhenAtTop && c.vagueScrollPosition === "top"),
   );
   const scrollToTop = useList((c) => c.scrollToTop);
 
