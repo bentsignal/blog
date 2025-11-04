@@ -2,9 +2,9 @@
 
 import {
   RefObject,
+  useCallback,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -36,9 +36,9 @@ export const useList = <T,>(selector: ContextSelector<ListContextType, T>) =>
 
 interface ListProps {
   children: React.ReactNode;
-  stickToBottom?: boolean;
+  isBottomSticky?: boolean;
   startAt?: "bottom" | "top";
-  maintainScrollOnContentChange?: boolean;
+  keepScrollPositionWhenContentChanges?: boolean;
   loadingStatus?: PaginationStatus;
   nearBoundaryThreshold?: number;
   skeletonComponent?: React.ReactNode;
@@ -49,9 +49,9 @@ interface ListProps {
 
 export const Provider = ({
   children,
-  stickToBottom,
+  isBottomSticky,
   startAt = "top",
-  maintainScrollOnContentChange,
+  keepScrollPositionWhenContentChanges,
   loadingStatus,
   nearBoundaryThreshold = 10,
   loadMoreOnScrollThreshold = 1500,
@@ -61,9 +61,6 @@ export const Provider = ({
 }: ListProps) => {
   const distanceFromBottom = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const vagueScrollPositionRef = useRef<VagueScrollPosition>(
-    startAt === "bottom" ? "bottom" : "top",
-  );
 
   // avoid re mounting scroll listener ever time loading status changes
   // TODO: use useEffectEvent to avoid this ( after upgrading to React 19.2+)
@@ -76,20 +73,31 @@ export const Provider = ({
 
   const [vagueScrollPosition, setVagueScrollPosition] =
     useState<VagueScrollPosition>(startAt === "bottom" ? "bottom" : "top");
+  const vagueScrollPositionRef = useRef<VagueScrollPosition>(
+    startAt === "bottom" ? "bottom" : "top",
+  );
 
-  const scrollToBottom = (behavior: "instant" | "smooth" = "instant") => {
-    scrollRef.current?.scrollTo({
-      top: scrollRef.current?.scrollHeight,
-      behavior,
-    });
-  };
+  const [contentFitsInWindow, setContentFitsInWindow] = useState(true);
 
-  const scrollToTop = (behavior: "instant" | "smooth" = "instant") => {
-    scrollRef.current?.scrollTo({
-      top: 0,
-      behavior,
-    });
-  };
+  const scrollToBottom = useCallback(
+    (behavior: "instant" | "smooth" = "instant") => {
+      scrollRef.current?.scrollTo({
+        top: scrollRef.current?.scrollHeight,
+        behavior,
+      });
+    },
+    [],
+  );
+
+  const scrollToTop = useCallback(
+    (behavior: "instant" | "smooth" = "instant") => {
+      scrollRef.current?.scrollTo({
+        top: 0,
+        behavior,
+      });
+    },
+    [],
+  );
 
   // handle scroll events (determine if user is at bottom, load more items when close to top of list)
   useEffect(() => {
@@ -117,6 +125,7 @@ export const Provider = ({
               : "middle";
         vagueScrollPositionRef.current = newVagueScrollPosition;
         setVagueScrollPosition(newVagueScrollPosition);
+        setContentFitsInWindow(totalHeight <= windowHeight);
         setPercentToBottom(
           scrollableDistance > 0
             ? (newDistanceFromTop / scrollableDistance) * 100
@@ -140,45 +149,48 @@ export const Provider = ({
     if (
       vagueScrollPositionRef.current !== "bottom" &&
       scrollRef.current &&
-      maintainScrollOnContentChange
+      keepScrollPositionWhenContentChanges
     ) {
       scrollRef.current.scrollTop =
         scrollRef.current.scrollHeight -
         scrollRef.current.clientHeight -
         distanceFromBottom.current;
     }
-  }, [contentVersion, maintainScrollOnContentChange]);
+  }, [contentVersion, keepScrollPositionWhenContentChanges]);
 
   // when user is at the bottom of the list and the content changes, scroll to the new bottom
   useEffect(() => {
-    if (vagueScrollPositionRef.current === "bottom" && stickToBottom) {
+    if (vagueScrollPositionRef.current === "bottom" && isBottomSticky) {
       scrollToBottom();
     }
-  }, [contentVersion, stickToBottom]);
+  }, [contentVersion, isBottomSticky, scrollToBottom]);
 
   // optionally scroll to the bottom of the list before items are rendered
   useLayoutEffect(() => {
     if (startAt === "bottom") {
       scrollToBottom();
     }
-  }, [startAt]);
+  }, [startAt, scrollToBottom]);
 
-  const contextValue = useMemo(
-    () => ({
-      scrollRef,
-      scrollToBottom,
-      scrollToTop,
-      loadingStatus,
-      skeletonComponent,
-      vagueScrollPosition,
-    }),
-    [
-      loadingStatus,
-      skeletonComponent,
-      vagueScrollPosition,
-      contentFitsInWindow,
-    ],
-  );
+  // whenever content updates, determine if the content fits in the window
+  useEffect(() => {
+    const windowHeight = scrollRef.current?.clientHeight;
+    const totalHeight = scrollRef.current?.scrollHeight;
+    if (totalHeight && windowHeight) {
+      setContentFitsInWindow(totalHeight <= windowHeight);
+    }
+  }, [contentVersion]);
+
+  const contextValue = {
+    scrollRef,
+    scrollToBottom,
+    scrollToTop,
+    loadingStatus,
+    skeletonComponent,
+    vagueScrollPosition,
+    contentFitsInWindow,
+    percentToBottom,
+  };
 
   return (
     <ListContext.Provider value={contextValue}>{children}</ListContext.Provider>

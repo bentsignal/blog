@@ -9,7 +9,6 @@ import { Provider as ListProvider } from "@/context/list-context";
 import { type ChannelSlug } from "@/data/channels";
 import { ChevronLeft } from "lucide-react";
 import * as Auth from "@/ui/atoms/auth";
-import * as List from "@/ui/atoms/list";
 import * as Message from "@/ui/atoms/message";
 import { ChannelComposer } from "@/ui/molecules/composers";
 import { MessageList } from "@/ui/molecules/message-list";
@@ -52,26 +51,11 @@ const Body = () => {
   const loadMoreMessages = useChannel((c) => c.loadMoreMessages);
   const messages = useChannel((c) => c.messages);
 
-  if (loadingStatus === "LoadingFirstPage") {
-    return (
-      <ListProvider>
-        <List.Frame>
-          <List.Content className="py-4">
-            {Array.from({ length: 20 }).map((_, index) => (
-              <Message.Skeleton key={index} index={index} />
-            ))}
-          </List.Content>
-        </List.Frame>
-        <ChannelComposer />
-      </ListProvider>
-    );
-  }
-
   return (
     <ListProvider
-      stickToBottom={true}
       startAt="bottom"
-      maintainScrollOnContentChange={true}
+      isBottomSticky={true}
+      keepScrollPositionWhenContentChanges={true}
       loadingStatus={loadingStatus}
       skeletonComponent={<Message.Skeleton />}
       loadMore={loadMoreMessages}

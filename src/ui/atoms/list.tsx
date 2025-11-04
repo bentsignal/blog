@@ -1,5 +1,6 @@
 "use client";
 
+import { cloneElement, isValidElement } from "react";
 import { ListContext, useList } from "@/context/list-context";
 import { cn } from "@/utils/style-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
@@ -72,7 +73,11 @@ export const Skeletons = () => {
   return (
     <div className="mt-3">
       {Array.from({ length: 10 }).map((_, index) => (
-        <div key={index}>{skeletonComponent}</div>
+        <div key={index}>
+          {isValidElement(skeletonComponent)
+            ? cloneElement(skeletonComponent as any, { index } as any)
+            : skeletonComponent}
+        </div>
       ))}
     </div>
   );
@@ -84,12 +89,15 @@ export const ScrollToBottomButton = ({ className }: { className?: string }) => {
     throw new Error("ListContext not found");
   }
 
-  const showScrollToBottomButton = useList(
-    (c) => c.vagueScrollPosition !== "bottom",
+  const disableScrollToBottomButton = useList(
+    (c) => c.vagueScrollPosition === "bottom",
+  );
+  const hideScrollToBottomButton = useList(
+    (c) => c.contentFitsInWindow || c.loadingStatus === "LoadingFirstPage",
   );
   const scrollToBottom = useList((c) => c.scrollToBottom);
 
-  if (!showScrollToBottomButton) return null;
+  if (hideScrollToBottomButton) return null;
 
   return (
     <div className={cn(className)}>
@@ -99,6 +107,7 @@ export const ScrollToBottomButton = ({ className }: { className?: string }) => {
             variant="outline"
             size="icon"
             onClick={() => scrollToBottom()}
+            disabled={disableScrollToBottomButton}
           >
             <ArrowDown className="size-4" />
           </Button>
@@ -115,16 +124,26 @@ export const ScrollToTopButton = ({ className }: { className?: string }) => {
     throw new Error("ListContext not found");
   }
 
-  const showScrollToTopButton = useList((c) => c.vagueScrollPosition !== "top");
+  const disableScrollToTopButton = useList(
+    (c) => c.vagueScrollPosition === "top",
+  );
+  const hideScrollToTopButton = useList(
+    (c) => c.contentFitsInWindow || c.loadingStatus === "LoadingFirstPage",
+  );
   const scrollToTop = useList((c) => c.scrollToTop);
 
-  if (!showScrollToTopButton) return null;
+  if (hideScrollToTopButton) return null;
 
   return (
     <div className={cn(className)}>
       <ToolTip.Frame>
         <ToolTip.Trigger asChild>
-          <Button variant="outline" size="icon" onClick={() => scrollToTop()}>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => scrollToTop()}
+            disabled={disableScrollToTopButton}
+          >
             <ArrowUp className="size-4" />
           </Button>
         </ToolTip.Trigger>

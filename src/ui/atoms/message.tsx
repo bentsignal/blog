@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { useMessage } from "@/context/message-context";
+import { getRandomWidth } from "@/utils/skeleton-utils";
 import { cn } from "@/utils/style-utils";
 import {
   getFullTimestamp,
@@ -113,16 +114,17 @@ export const Content = () => {
 
 export const Skeleton = ({ index }: { index?: number }) => {
   const numberOfContentLines = index ? (index % 4) + 1 : 3;
+
   return (
     <div className="mb-4 animate-pulse px-6 py-0.5">
       <div className="flex gap-3">
         <Shapes.Circle className="size-10" />
         <div className="mt-1 flex w-full flex-col gap-1.5">
-          <Shapes.HorizontalBar width={Math.random() * 150 + 50} />
-          {Array.from({ length: numberOfContentLines }, (_, index) => (
+          <Shapes.HorizontalBar width={getRandomWidth({ seed: 0 })} />
+          {Array.from({ length: numberOfContentLines }, (_, lineIndex) => (
             <Shapes.HorizontalBar
-              width={Math.random() * 150 + 50}
-              key={index}
+              width={getRandomWidth({ seed: (index ?? 0) + (lineIndex + 1) })}
+              key={lineIndex}
             />
           ))}
         </div>

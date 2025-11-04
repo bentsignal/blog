@@ -6,6 +6,7 @@ import {
 } from "@/context/channel-list-context";
 import { useChatWindow } from "@/context/chat-window-context";
 import { Provider as ListProvider } from "@/context/list-context";
+import { getRandomWidth } from "@/utils/skeleton-utils";
 import { validatePostSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
@@ -36,7 +37,7 @@ export const ChannelList = () => {
     <ListProvider>
       <List.Frame>
         <List.Content className="flex flex-col gap-2 py-4">
-          {channels.map((channel) => (
+          {channels.map((channel, index) => (
             <div
               key={channel.slug}
               onClick={() => {
@@ -55,26 +56,35 @@ export const ChannelList = () => {
               <span className="text-muted-foreground text-3xl">#</span>
               <div className="flex max-w-full flex-col pr-8">
                 <span className="text-sm font-bold">{channel.name}</span>
-                {channel.previewString === undefined ? (
-                  <Shapes.HorizontalBar
-                    className="mt-1"
-                    width={Math.random() * 200 + 50}
-                  />
-                ) : channel.previewString === null ? (
-                  <span className="text-muted-foreground truncate text-xs">
-                    Preview unavailable
-                  </span>
-                ) : (
-                  <span className="text-muted-foreground truncate text-xs">
-                    {channel.previewString}
-                  </span>
-                )}
+                <PreviewString value={channel.previewString} index={index} />
               </div>
             </div>
           ))}
         </List.Content>
-        <List.ScrollToTopButton className="absolute right-0 bottom-0 z-6 p-4" />
       </List.Frame>
     </ListProvider>
+  );
+};
+
+const PreviewString = ({
+  value,
+  index,
+}: {
+  value: string | undefined | null;
+  index: number;
+}) => {
+  if (value === undefined) {
+    return (
+      <Shapes.HorizontalBar
+        className="mt-1"
+        width={getRandomWidth({ seed: index, baseWidth: 100, maxWidth: 300 })}
+      />
+    );
+  }
+  const previewString = value ?? "Preview unavailable";
+  return (
+    <span className="text-muted-foreground truncate text-xs">
+      {previewString}
+    </span>
   );
 };
