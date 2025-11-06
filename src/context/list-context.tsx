@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ReactNode,
   RefObject,
   useCallback,
   useEffect,
@@ -17,14 +18,16 @@ import {
 import { type PaginationStatus } from "convex/react";
 
 export interface ListContextType {
-  scrollRef: RefObject<HTMLDivElement | null>;
+  bodyRef: RefObject<HTMLDivElement | null>;
   scrollToBottom: (behavior?: "instant" | "smooth") => void;
   scrollToTop: (behavior?: "instant" | "smooth") => void;
   vagueScrollPosition: VagueScrollPosition;
   loadingStatus?: PaginationStatus;
-  skeletonComponent?: React.ReactNode;
-  contentFitsInWindow: boolean;
+  skeletonComponent?: ReactNode;
+  contentFitsInContainer: boolean;
   percentToBottom: number;
+  topSkeletonContainerRef: RefObject<HTMLDivElement | null>;
+  bottomSkeletonContainerRef: RefObject<HTMLDivElement | null>;
 }
 
 export const ListContext = createContext<ListContextType>(
@@ -35,14 +38,14 @@ export const useList = <T,>(selector: ContextSelector<ListContextType, T>) =>
   useContextSelector(ListContext, selector);
 
 interface ListProps {
-  children: React.ReactNode;
+  children: ReactNode;
   isBottomSticky?: boolean;
   startAt?: "bottom" | "top";
   keepScrollPositionWhenContentChanges?: boolean;
   loadingStatus?: PaginationStatus;
-  nearBoundaryThreshold?: number;
-  skeletonComponent?: React.ReactNode;
-  loadMoreOnScrollThreshold?: number;
+  nearTopOrBottomThreshold?: number;
+  skeletonComponent?: ReactNode;
+  loadMoreWhenThisCloseToTop?: number;
   loadMore?: () => void;
   contentVersion?: number;
 }
@@ -53,17 +56,21 @@ export const Provider = ({
   startAt = "top",
   keepScrollPositionWhenContentChanges,
   loadingStatus,
-  nearBoundaryThreshold = 10,
-  loadMoreOnScrollThreshold = 1500,
+  nearTopOrBottomThreshold = 10, // px
+  loadMoreWhenThisCloseToTop = 700, // px
   skeletonComponent,
   loadMore,
   contentVersion,
 }: ListProps) => {
-  const distanceFromBottom = useRef(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const distanceFromBottomRef = useRef(0); // px
 
-  // avoid re mounting scroll listener ever time loading status changes
-  // TODO: use useEffectEvent to avoid this ( after upgrading to React 19.2+)
+  // body is what is scrolled, contains the content and optional skeletons
+  const bodyRef = useRef<HTMLDivElement>(null);
+  // optional, to put skeletons on top or below content (or both)
+  const topSkeletonContainerRef = useRef<HTMLDivElement>(null);
+  const bottomSkeletonContainerRef = useRef<HTMLDivElement>(null);
+
+  // TODO: use useEffectEvent to avoid this (after upgrading to React 19.2+)
   const loadingStatusRef = useRef(loadingStatus);
   loadingStatusRef.current = loadingStatus;
 
@@ -77,12 +84,17 @@ export const Provider = ({
     startAt === "bottom" ? "bottom" : "top",
   );
 
-  const [contentFitsInWindow, setContentFitsInWindow] = useState(true);
+  const [contentFitsInContainer, setContentFitsInContainer] = useState(true);
 
   const scrollToBottom = useCallback(
     (behavior: "instant" | "smooth" = "instant") => {
-      scrollRef.current?.scrollTo({
-        top: scrollRef.current?.scrollHeight,
+      // scroll to the bottom of the content, but just above the bottom skeletons (if they exist)
+      const heightOfBody = bodyRef.current?.scrollHeight ?? 0;
+      const heightOfContainer = bodyRef.current?.clientHeight ?? 0;
+      const heightOfBottomSkeletons =
+        bottomSkeletonContainerRef.current?.clientHeight ?? 0;
+      bodyRef.current?.scrollTo({
+        top: heightOfBody - heightOfContainer - heightOfBottomSkeletons,
         behavior,
       });
     },
@@ -91,8 +103,11 @@ export const Provider = ({
 
   const scrollToTop = useCallback(
     (behavior: "instant" | "smooth" = "instant") => {
-      scrollRef.current?.scrollTo({
-        top: 0,
+      // scroll to the top of the content, but just below the top skeletons (if they exist)
+      const heightOfTopSkeletons =
+        topSkeletonContainerRef.current?.clientHeight ?? 0;
+      bodyRef.current?.scrollTo({
+        top: heightOfTopSkeletons,
         behavior,
       });
     },
@@ -101,46 +116,72 @@ export const Provider = ({
 
   // handle scroll events (determine if user is at bottom, load more items when close to top of list)
   useEffect(() => {
-    const scrollElement = scrollRef.current;
-    if (scrollElement) {
-      const handleScroll = () => {
-        const totalHeight = scrollElement.scrollHeight;
-        const windowHeight = scrollElement.clientHeight;
-        const newDistanceFromTop = scrollElement.scrollTop;
-        const scrollableDistance = totalHeight - windowHeight;
-        const newDistanceFromBottom = scrollableDistance - newDistanceFromTop;
-        distanceFromBottom.current = newDistanceFromBottom;
-        if (
-          newDistanceFromTop < loadMoreOnScrollThreshold &&
-          loadMore &&
-          loadingStatusRef.current === "CanLoadMore"
-        ) {
-          loadMore();
-        }
-        const newVagueScrollPosition =
-          newDistanceFromTop <= nearBoundaryThreshold
-            ? "top"
-            : newDistanceFromBottom <= nearBoundaryThreshold
-              ? "bottom"
-              : "middle";
-        vagueScrollPositionRef.current = newVagueScrollPosition;
-        setVagueScrollPosition(newVagueScrollPosition);
-        setContentFitsInWindow(totalHeight <= windowHeight);
-        setPercentToBottom(
-          scrollableDistance > 0
-            ? (newDistanceFromTop / scrollableDistance) * 100
-            : 100,
-        );
-      };
-      scrollElement.addEventListener("scroll", handleScroll);
-      return () => {
-        scrollElement.removeEventListener("scroll", handleScroll);
-      };
-    }
+    const bodyContainer = bodyRef.current;
+    const topSkeletonContainer = topSkeletonContainerRef.current;
+    const bottomSkeletonContainer = bottomSkeletonContainerRef.current;
+
+    if (!bodyContainer) return;
+
+    const handleScroll = () => {
+      const heightOfBody = bodyContainer.scrollHeight;
+      const heightOfContainer = bodyContainer.clientHeight;
+      const heightOfTopSkeletons = topSkeletonContainer?.clientHeight ?? 0;
+      const heightOfBottomSkeletons =
+        bottomSkeletonContainer?.clientHeight ?? 0;
+      const heightOfContent =
+        heightOfBody - heightOfTopSkeletons - heightOfBottomSkeletons;
+
+      const distanceFromTop = bodyContainer.scrollTop;
+      const distanceFromTopOfContent = distanceFromTop - heightOfTopSkeletons;
+      const distanceFromBottomOfContent =
+        heightOfBody -
+        heightOfContainer -
+        heightOfBottomSkeletons -
+        distanceFromTop;
+      distanceFromBottomRef.current = distanceFromBottomOfContent;
+
+      const closeEnoughToLoadMore =
+        distanceFromTopOfContent < loadMoreWhenThisCloseToTop;
+      if (
+        loadMore &&
+        closeEnoughToLoadMore &&
+        loadingStatusRef.current === "CanLoadMore"
+      ) {
+        loadMore();
+      }
+
+      const newVagueScrollPosition =
+        distanceFromTopOfContent <= nearTopOrBottomThreshold
+          ? "top"
+          : distanceFromBottomOfContent <= nearTopOrBottomThreshold
+            ? "bottom"
+            : "middle";
+      vagueScrollPositionRef.current = newVagueScrollPosition;
+      setVagueScrollPosition(newVagueScrollPosition);
+
+      setContentFitsInContainer(heightOfContent <= heightOfContainer);
+
+      const newUnclampedPercentToBottom =
+        (distanceFromTopOfContent / (heightOfContent - heightOfContainer)) *
+        100;
+      const newPercentToBottom =
+        newUnclampedPercentToBottom > 100
+          ? 100
+          : newUnclampedPercentToBottom < 0
+            ? 0
+            : newUnclampedPercentToBottom;
+      setPercentToBottom(newPercentToBottom);
+    };
+
+    bodyContainer.addEventListener("scroll", handleScroll);
+
+    return () => {
+      bodyContainer.removeEventListener("scroll", handleScroll);
+    };
   }, [
-    nearBoundaryThreshold,
+    nearTopOrBottomThreshold,
     loadMore,
-    loadMoreOnScrollThreshold,
+    loadMoreWhenThisCloseToTop,
     setPercentToBottom,
   ]);
 
@@ -148,13 +189,13 @@ export const Provider = ({
   useEffect(() => {
     if (
       vagueScrollPositionRef.current !== "bottom" &&
-      scrollRef.current &&
+      bodyRef.current &&
       keepScrollPositionWhenContentChanges
     ) {
-      scrollRef.current.scrollTop =
-        scrollRef.current.scrollHeight -
-        scrollRef.current.clientHeight -
-        distanceFromBottom.current;
+      const heightOfBody = bodyRef.current.scrollHeight;
+      const heightOfContainer = bodyRef.current.clientHeight;
+      bodyRef.current.scrollTop =
+        heightOfBody - heightOfContainer - distanceFromBottomRef.current;
     }
   }, [contentVersion, keepScrollPositionWhenContentChanges]);
 
@@ -172,23 +213,31 @@ export const Provider = ({
     }
   }, [startAt, scrollToBottom]);
 
-  // whenever content updates, determine if the content fits in the window
+  // whenever content updates, determine if the content fits in the container
   useEffect(() => {
-    const windowHeight = scrollRef.current?.clientHeight;
-    const totalHeight = scrollRef.current?.scrollHeight;
-    if (totalHeight && windowHeight) {
-      setContentFitsInWindow(totalHeight <= windowHeight);
+    const heightOfBody = bodyRef.current?.scrollHeight ?? 0;
+    const heightOfContainer = bodyRef.current?.clientHeight;
+    const heightOfTopSkeletons =
+      topSkeletonContainerRef.current?.clientHeight ?? 0;
+    const heightOfBottomSkeletons =
+      bottomSkeletonContainerRef.current?.clientHeight ?? 0;
+    const heightOfContent =
+      heightOfBody - heightOfTopSkeletons - heightOfBottomSkeletons;
+    if (heightOfContent && heightOfContainer) {
+      setContentFitsInContainer(heightOfContent <= heightOfContainer);
     }
   }, [contentVersion]);
 
   const contextValue = {
-    scrollRef,
+    bodyRef,
+    topSkeletonContainerRef,
+    bottomSkeletonContainerRef,
     scrollToBottom,
     scrollToTop,
     loadingStatus,
     skeletonComponent,
     vagueScrollPosition,
-    contentFitsInWindow,
+    contentFitsInContainer,
     percentToBottom,
   };
 

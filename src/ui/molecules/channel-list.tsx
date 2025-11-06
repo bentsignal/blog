@@ -36,31 +36,33 @@ export const ChannelList = () => {
   return (
     <ListProvider>
       <List.Frame>
-        <List.Content className="flex flex-col gap-2 py-4">
-          {channels.map((channel, index) => (
-            <div
-              key={channel.slug}
-              onClick={() => {
-                setCurrentChannelSlug(channel.slug);
-                // if the channel has an associated post, redirect to the post's page
-                const postSlug = validatePostSlug(channel.slug);
-                if (postSlug) {
-                  router.push(`/${postSlug}`);
-                }
-              }}
-              className={cn(
-                "dark:bg-card dark:hover:bg-muted bg-accent hover:bg-muted transition-colors duration-100",
-                "mx-4 flex cursor-pointer items-center gap-3 rounded-2xl p-3 px-4 select-none",
-              )}
-            >
-              <span className="text-muted-foreground text-3xl">#</span>
-              <div className="flex max-w-full flex-col pr-8">
-                <span className="text-sm font-bold">{channel.name}</span>
-                <PreviewString value={channel.previewString} index={index} />
+        <List.Body>
+          <div className="flex flex-col gap-2 py-4">
+            {channels.map((channel, index) => (
+              <div
+                key={channel.slug}
+                onClick={() => {
+                  setCurrentChannelSlug(channel.slug);
+                  // if the channel has an associated post, redirect to the post's page
+                  const postSlug = validatePostSlug(channel.slug);
+                  if (postSlug) {
+                    router.push(`/${postSlug}`);
+                  }
+                }}
+                className={cn(
+                  "dark:bg-card dark:hover:bg-muted bg-accent hover:bg-muted transition-colors duration-100",
+                  "mx-4 flex cursor-pointer items-center gap-3 rounded-2xl p-3 px-4 select-none",
+                )}
+              >
+                <span className="text-muted-foreground text-3xl">#</span>
+                <div className="flex max-w-full flex-col pr-8">
+                  <span className="text-sm font-bold">{channel.name}</span>
+                  <PreviewString value={channel.previewString} index={index} />
+                </div>
               </div>
-            </div>
-          ))}
-        </List.Content>
+            ))}
+          </div>
+        </List.Body>
       </List.Frame>
     </ListProvider>
   );

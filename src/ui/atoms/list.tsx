@@ -6,7 +6,6 @@ import { cn } from "@/utils/style-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "./button";
-import * as ToolTip from "./tooltip";
 
 export const Frame = ({
   children,
@@ -18,7 +17,7 @@ export const Frame = ({
   return (
     <div
       className={cn(
-        "relative flex flex-1 flex-col overflow-y-hidden",
+        "relative flex max-h-screen flex-1 flex-col overflow-y-hidden",
         className,
       )}
     >
@@ -27,52 +26,86 @@ export const Frame = ({
   );
 };
 
-export const Content = ({
+export const Body = ({
   children,
-  className,
+  fade,
 }: {
   children: React.ReactNode;
-  className?: string;
+  fade?: "sm" | "md" | "lg";
 }) => {
-  const hasScrollContext = useHasParentContext(ListContext);
-  if (!hasScrollContext) {
+  const hasListContext = useHasParentContext(ListContext);
+  if (!hasListContext) {
     throw new Error("ListContext not found");
   }
 
-  const scrollRef = useList((c) => c.scrollRef);
+  const bodyRef = useList((c) => c.bodyRef);
+  const vagueScrollPosition = useList((c) => c.vagueScrollPosition);
+
+  const scrollbarClass =
+    vagueScrollPosition === "bottom"
+      ? "scrollbar-thumb-transparent"
+      : "scrollbar-thumb-muted-foreground/10";
+
+  const fadeClass =
+    fade === "sm"
+      ? "mask-t-from-99% mask-b-from-99%"
+      : fade === "md"
+        ? "mask-t-from-97% mask-b-from-97%"
+        : fade === "lg"
+          ? "mask-t-from-95% mask-b-from-95%"
+          : undefined;
 
   return (
     <div
       className={cn(
         "overflow-y-auto overscroll-contain",
         "scrollbar-thin scrollbar-thumb-muted-foreground/10 scrollbar-track-transparent",
-        "mask-t-from-99% mask-b-from-99%",
-        className,
+        fadeClass,
+        scrollbarClass,
       )}
-      ref={scrollRef}
+      ref={bodyRef}
     >
       {children}
     </div>
   );
 };
 
-export const Skeletons = () => {
-  const hasScrollContext = useHasParentContext(ListContext);
-  if (!hasScrollContext) {
+export const Skeletons = ({
+  count = 30,
+  position = null,
+  className,
+}: {
+  count?: number;
+  position?: "aboveContent" | "belowContent" | null;
+  className?: string;
+}) => {
+  const hasListContext = useHasParentContext(ListContext);
+  if (!hasListContext) {
     throw new Error("ListContext not found");
   }
 
   const skeletonComponent = useList((c) => c.skeletonComponent);
   const loadingStatus = useList((c) => c.loadingStatus);
+  const topSkeletonContainerRef = useList((c) => c.topSkeletonContainerRef);
+  const bottomSkeletonContainerRef = useList(
+    (c) => c.bottomSkeletonContainerRef,
+  );
 
   const showSkeleton =
     loadingStatus && skeletonComponent && loadingStatus !== "Exhausted";
 
   if (!showSkeleton) return null;
 
+  const ref =
+    position === "aboveContent"
+      ? topSkeletonContainerRef
+      : position === "belowContent"
+        ? bottomSkeletonContainerRef
+        : null;
+
   return (
-    <div className="mt-3">
-      {Array.from({ length: 10 }).map((_, index) => (
+    <div className={cn(className)} ref={ref}>
+      {Array.from({ length: count }).map((_, index) => (
         <div key={index}>
           {isValidElement(skeletonComponent)
             ? cloneElement(skeletonComponent as any, { index } as any)
@@ -90,8 +123,8 @@ export const ScrollToBottomButton = ({
   className?: string;
   hideWhenAtBottom?: boolean;
 }) => {
-  const hasScrollContext = useHasParentContext(ListContext);
-  if (!hasScrollContext) {
+  const hasListContext = useHasParentContext(ListContext);
+  if (!hasListContext) {
     throw new Error("ListContext not found");
   }
 
@@ -100,7 +133,7 @@ export const ScrollToBottomButton = ({
   );
   const hideScrollToBottomButton = useList(
     (c) =>
-      c.contentFitsInWindow ||
+      c.contentFitsInContainer ||
       c.loadingStatus === "LoadingFirstPage" ||
       (hideWhenAtBottom && c.vagueScrollPosition === "bottom"),
   );
@@ -110,19 +143,14 @@ export const ScrollToBottomButton = ({
 
   return (
     <div className={cn(className)}>
-      <ToolTip.Frame>
-        <ToolTip.Trigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => scrollToBottom()}
-            disabled={disableScrollToBottomButton}
-          >
-            <ArrowDown className="size-4" />
-          </Button>
-        </ToolTip.Trigger>
-        <ToolTip.Content>Scroll to bottom</ToolTip.Content>
-      </ToolTip.Frame>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => scrollToBottom()}
+        disabled={disableScrollToBottomButton}
+      >
+        <ArrowDown className="size-4" />
+      </Button>
     </div>
   );
 };
@@ -134,8 +162,8 @@ export const ScrollToTopButton = ({
   className?: string;
   hideWhenAtTop?: boolean;
 }) => {
-  const hasScrollContext = useHasParentContext(ListContext);
-  if (!hasScrollContext) {
+  const hasListContext = useHasParentContext(ListContext);
+  if (!hasListContext) {
     throw new Error("ListContext not found");
   }
 
@@ -144,7 +172,7 @@ export const ScrollToTopButton = ({
   );
   const hideScrollToTopButton = useList(
     (c) =>
-      c.contentFitsInWindow ||
+      c.contentFitsInContainer ||
       c.loadingStatus === "LoadingFirstPage" ||
       (hideWhenAtTop && c.vagueScrollPosition === "top"),
   );
@@ -154,26 +182,21 @@ export const ScrollToTopButton = ({
 
   return (
     <div className={cn(className)}>
-      <ToolTip.Frame>
-        <ToolTip.Trigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => scrollToTop()}
-            disabled={disableScrollToTopButton}
-          >
-            <ArrowUp className="size-4" />
-          </Button>
-        </ToolTip.Trigger>
-        <ToolTip.Content>Scroll to top</ToolTip.Content>
-      </ToolTip.Frame>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => scrollToTop()}
+        disabled={disableScrollToTopButton}
+      >
+        <ArrowUp className="size-4" />
+      </Button>
     </div>
   );
 };
 
 export const ProgressBar = () => {
-  const hasScrollContext = useHasParentContext(ListContext);
-  if (!hasScrollContext) {
+  const hasListContext = useHasParentContext(ListContext);
+  if (!hasListContext) {
     throw new Error("ListContext not found");
   }
 
