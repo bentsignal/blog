@@ -9,6 +9,7 @@ import { Provider as ListProvider } from "@/context/list-context";
 import { type ChannelSlug } from "@/data/channels";
 import { ChevronLeft } from "lucide-react";
 import * as Auth from "@/ui/atoms/auth";
+import * as List from "@/ui/atoms/list";
 import * as Message from "@/ui/atoms/message";
 import { ChannelComposer } from "@/ui/molecules/composers";
 import { MessageList } from "@/ui/molecules/message-list";
@@ -50,6 +51,22 @@ const Body = () => {
   const loadingStatus = useChannel((c) => c.loadingStatus);
   const loadMoreMessages = useChannel((c) => c.loadMoreMessages);
   const messages = useChannel((c) => c.messages);
+
+  if (loadingStatus === "LoadingFirstPage") {
+    return (
+      <ListProvider
+        loadingStatus={loadingStatus}
+        skeletonComponent={<Message.Skeleton />}
+      >
+        <List.Frame>
+          <div className="flex flex-1 flex-col justify-end overflow-hidden mask-t-from-95%">
+            <List.Skeletons />
+          </div>
+        </List.Frame>
+        <ChannelComposer />
+      </ListProvider>
+    );
+  }
 
   return (
     <ListProvider
