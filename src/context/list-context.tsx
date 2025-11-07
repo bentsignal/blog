@@ -28,6 +28,7 @@ export interface ListContextType {
   percentToBottom: number;
   topSkeletonContainerRef: RefObject<HTMLDivElement | null>;
   bottomSkeletonContainerRef: RefObject<HTMLDivElement | null>;
+  hasScrollBeenMeasured: boolean;
 }
 
 export const ListContext = createContext<ListContextType>(
@@ -85,6 +86,7 @@ export const Provider = ({
   );
 
   const [contentFitsInContainer, setContentFitsInContainer] = useState(true);
+  const [hasScrollBeenMeasured, setHasScrollBeenMeasured] = useState(false);
 
   const scrollToBottom = useCallback(
     (behavior: "instant" | "smooth" = "instant") => {
@@ -171,6 +173,8 @@ export const Provider = ({
             ? 0
             : newUnclampedPercentToBottom;
       setPercentToBottom(newPercentToBottom);
+
+      setHasScrollBeenMeasured(true);
     };
 
     bodyContainer.addEventListener("scroll", handleScroll);
@@ -239,6 +243,7 @@ export const Provider = ({
     vagueScrollPosition,
     contentFitsInContainer,
     percentToBottom,
+    hasScrollBeenMeasured,
   };
 
   return (

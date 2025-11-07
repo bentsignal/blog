@@ -39,12 +39,13 @@ export const Body = ({
   }
 
   const bodyRef = useList((c) => c.bodyRef);
-  const vagueScrollPosition = useList((c) => c.vagueScrollPosition);
+  const showScrollbar = useList(
+    (c) => c.vagueScrollPosition === "middle" && c.hasScrollBeenMeasured,
+  );
 
-  const scrollbarClass =
-    vagueScrollPosition === "bottom"
-      ? "scrollbar-thumb-transparent"
-      : "scrollbar-thumb-muted-foreground/10";
+  const scrollbarClass = showScrollbar
+    ? "scrollbar-thumb-muted-foreground/10"
+    : "scrollbar-thumb-transparent";
 
   const fadeClass =
     fade === "sm"
@@ -133,9 +134,10 @@ export const ScrollToBottomButton = ({
   );
   const hideScrollToBottomButton = useList(
     (c) =>
+      (hideWhenAtBottom && c.vagueScrollPosition === "bottom") ||
+      !c.hasScrollBeenMeasured ||
       c.contentFitsInContainer ||
-      c.loadingStatus === "LoadingFirstPage" ||
-      (hideWhenAtBottom && c.vagueScrollPosition === "bottom"),
+      c.loadingStatus === "LoadingFirstPage",
   );
   const scrollToBottom = useList((c) => c.scrollToBottom);
 
@@ -172,9 +174,10 @@ export const ScrollToTopButton = ({
   );
   const hideScrollToTopButton = useList(
     (c) =>
+      (hideWhenAtTop && c.vagueScrollPosition === "top") ||
+      !c.hasScrollBeenMeasured ||
       c.contentFitsInContainer ||
-      c.loadingStatus === "LoadingFirstPage" ||
-      (hideWhenAtTop && c.vagueScrollPosition === "top"),
+      c.loadingStatus === "LoadingFirstPage",
   );
   const scrollToTop = useList((c) => c.scrollToTop);
 
