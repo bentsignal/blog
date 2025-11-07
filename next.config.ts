@@ -18,6 +18,12 @@ const nextConfig: NextConfig = {
         search: "",
       },
     ],
+    localPatterns: [
+      {
+        pathname: "/src/assets/**",
+        search: "",
+      },
+    ],
     imageSizes: [40],
   },
   pageExtensions: ["ts", "tsx", "md", "mdx"],
