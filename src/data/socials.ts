@@ -23,13 +23,13 @@ export const socials = {
     url: "https://www.instagram.com/bentsignal/",
     icon: Icons.Instagram,
   },
-  linkedin: {
-    url: "https://www.linkedin.com/in/bentsignal/",
-    icon: Icons.LinkedIn,
-  },
   bluesky: {
     url: "https://bsky.app/profile/bentsignal.com",
     icon: Icons.Bluesky,
+  },
+  linkedin: {
+    url: "https://www.linkedin.com/in/bentsignal/",
+    icon: Icons.LinkedIn,
   },
   email: {
     url: "mailto:me@bentsignal.com",
