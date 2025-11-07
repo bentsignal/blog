@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { UserRound } from "lucide-react";
+import { useTheme } from "next-themes";
 import { Button } from "./button";
 import * as Icons from "./icon";
 import * as Popover from "./popover";
@@ -74,6 +75,10 @@ export const SignInButton = () => {
   const inProgress = useAuth((c) => c.inProgress);
   const signIn = useAuth((c) => c.signIn);
 
+  const { resolvedTheme } = useTheme();
+  const color = resolvedTheme === "light" ? "white" : "black";
+  console.log(color);
+
   return (
     <Button className="min-w-52 font-bold" onClick={signIn}>
       {inProgress ? (
@@ -81,7 +86,7 @@ export const SignInButton = () => {
       ) : (
         <div className="flex items-center gap-2">
           Join the conversation
-          <Icons.Github />
+          <Icons.Github color={color} />
         </div>
       )}
     </Button>
