@@ -1,9 +1,9 @@
 import { Doc } from "@/convex/_generated/dataModel";
 
-export interface MessageDataWithUserInfo extends Partial<Doc<"messages">> {
+export interface MessageDataWithUserInfo extends Doc<"messages"> {
   name: string;
   pfp: string | null | undefined;
-  reply?: Partial<MessageDataWithUserInfo>;
+  reply?: MessageDataWithUserInfo;
 }
 
 export type MessageInteractionState = "idle" | "editing" | "replying";

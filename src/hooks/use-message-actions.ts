@@ -104,7 +104,7 @@ export const useMessageActions = () => {
                         ...message,
                         reply: {
                           ...message.reply,
-                          snapshots: [...message.reply.snapshots!, newSnapshot],
+                          snapshots: [...message.reply.snapshots, newSnapshot],
                         },
                       }
                     : message,
