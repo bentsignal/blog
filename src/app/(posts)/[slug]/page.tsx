@@ -8,6 +8,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import * as Abyss from "@/ui/atoms/abyss";
 import * as List from "@/ui/atoms/list";
+import { Separator } from "@/ui/atoms/separator";
+import { Socials } from "@/ui/molecules/socials";
 import { TopControls } from "@/ui/molecules/top-controls";
 
 export default async function Page({
@@ -62,6 +64,14 @@ export default async function Page({
               )}
             >
               <Post />
+            </div>
+
+            <Separator className="my-4" />
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-muted-foreground text-sm">
+                @bentsignal on everything
+              </span>
+              <Socials />
             </div>
           </div>
         </List.Body>
