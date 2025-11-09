@@ -7,12 +7,18 @@ const snapshot = v.object({
   timestamp: v.number(),
 });
 
+const viewer = v.object({
+  profile: v.id("profiles"),
+  timestamp: v.number(),
+});
+
 export default defineSchema({
   messages: defineTable({
     snapshots: v.array(snapshot),
     profile: v.id("profiles"),
     slug: vSlug,
     replyTo: v.optional(v.id("messages")),
+    seenBy: v.optional(v.array(viewer)),
   }).index("by_slug", ["slug"]),
   profiles: defineTable({
     user: v.string(),

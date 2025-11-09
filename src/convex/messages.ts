@@ -103,6 +103,7 @@ export const send = authedMutation({
       profile: profile._id,
       slug: args.slug,
       replyTo: args.replyTo,
+      seenBy: [],
     });
   },
 });
