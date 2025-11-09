@@ -18,7 +18,7 @@ export default defineSchema({
     profile: v.id("profiles"),
     slug: vSlug,
     replyTo: v.optional(v.id("messages")),
-    seenBy: v.optional(v.array(viewer)),
+    seenBy: v.array(viewer),
   }).index("by_slug", ["slug"]),
   profiles: defineTable({
     user: v.string(),

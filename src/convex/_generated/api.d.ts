@@ -13,7 +13,6 @@ import type * as convex_helpers from "../convex_helpers.js";
 import type * as http from "../http.js";
 import type * as limiter from "../limiter.js";
 import type * as messages from "../messages.js";
-import type * as migration from "../migration.js";
 import type * as uploadthing from "../uploadthing.js";
 import type * as user from "../user.js";
 
@@ -37,7 +36,6 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   limiter: typeof limiter;
   messages: typeof messages;
-  migration: typeof migration;
   uploadthing: typeof uploadthing;
   user: typeof user;
 }>;
