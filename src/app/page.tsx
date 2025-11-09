@@ -5,7 +5,7 @@ import Image from "next/image";
 import * as Abyss from "@/ui/atoms/abyss";
 import * as List from "@/ui/atoms/list";
 import { Separator } from "@/ui/atoms/separator";
-import PostCard from "@/ui/molecules/post-card";
+import PostLink from "@/ui/molecules/post-link";
 import { Socials } from "@/ui/molecules/socials";
 import { TopControls } from "@/ui/molecules/top-controls";
 
@@ -34,10 +34,25 @@ export default function HomePage() {
               </div>
             </div>
             <Separator className="my-1" />
-            {postSlugs.map((slug) => {
-              const post = posts[slug];
-              return <PostCard post={post} slug={slug} key={slug} />;
-            })}
+            <div className="flex flex-col gap-3">
+              {postSlugs.map((slug) => {
+                const post = posts[slug];
+                return (
+                  <PostLink slug={slug} key={slug}>
+                    <div className="text-muted-foreground hover:text-primary flex items-center justify-between gap-1 rounded-md transition-colors duration-100">
+                      <h2 className="font-semibold">{post.title}</h2>
+                      <p className="text-sm">
+                        {post.datePosted.toLocaleDateString(undefined, {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </p>
+                    </div>
+                  </PostLink>
+                );
+              })}
+            </div>
           </div>
         </List.Body>
         <Abyss.Bottom />
