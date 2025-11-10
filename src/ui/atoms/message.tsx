@@ -26,6 +26,7 @@ export const Frame = ({
   children: React.ReactNode;
 }) => {
   const interactionState = useMessage((c) => c.interactionState);
+  const frameRef = useMessage((c) => c.frameRef);
 
   const bgColor =
     interactionState === "editing"
@@ -37,6 +38,7 @@ export const Frame = ({
   return (
     <div
       className={cn("group/message relative px-6 py-0.5", className, bgColor)}
+      ref={frameRef}
     >
       {children}
     </div>
@@ -143,11 +145,11 @@ export const SideTime = () => {
 };
 
 export const Actions = () => {
-  const isSignedIn = useAuth((c) => c.signedIn);
+  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
   const myProfileId = useAuth((c) => c.myProfileId);
   const messageProfileId = useMessage((c) => c.profile);
 
-  if (!isSignedIn) return null;
+  if (imNotSignedIn) return null;
 
   const isMyMessage = myProfileId === messageProfileId;
 

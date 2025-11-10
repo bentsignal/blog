@@ -77,7 +77,6 @@ export const SignInButton = () => {
 
   const { resolvedTheme } = useTheme();
   const color = resolvedTheme === "light" ? "white" : "black";
-  console.log(color);
 
   return (
     <Button className="min-w-52 font-bold" onClick={signIn}>
@@ -94,6 +93,6 @@ export const SignInButton = () => {
 };
 
 export const PrimaryButton = () => {
-  const isSignedIn = useAuth((c) => c.signedIn);
-  return isSignedIn ? <ProfileButton /> : <SignInButton />;
+  const imSignedIn = useAuth((c) => c.imSignedIn);
+  return imSignedIn ? <ProfileButton /> : <SignInButton />;
 };

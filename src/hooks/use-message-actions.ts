@@ -153,9 +153,15 @@ export const useMessageActions = () => {
     onError: toastError,
   });
 
+  const { mutate: markAsRead } = useMutation({
+    mutationFn: useConvexMutation(api.messages.markAsRead),
+    onError: toastError,
+  });
+
   return {
     sendMessage,
     editMessage,
     deleteMessage,
+    markAsRead,
   };
 };

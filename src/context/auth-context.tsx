@@ -17,7 +17,7 @@ interface AuthContextType {
   image: string | null | undefined;
   name: string | undefined;
   myProfileId: Id<"profiles"> | undefined;
-  signedIn: boolean;
+  imSignedIn: boolean;
   inProgress: boolean;
   signOut: () => Promise<void>;
   signIn: () => Promise<void>;
@@ -100,7 +100,7 @@ export const Provider = ({
   const contextValue = useMemo(
     () => ({
       image,
-      signedIn: isAuthenticatedServerSide,
+      imSignedIn: isAuthenticatedServerSide,
       myProfileId,
       name,
       inProgress,

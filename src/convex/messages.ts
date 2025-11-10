@@ -196,3 +196,25 @@ export const getPreviewsForChannels = query({
     return messages;
   },
 });
+
+export const markAsRead = authedMutation({
+  args: {
+    messageIds: v.array(v.id("messages")),
+  },
+  handler: async (ctx, args) => {
+    const myProfile = await getProfile(ctx, ctx.user.subject);
+    for (const messageId of args.messageIds) {
+      const message = await ctx.db.get(messageId);
+      if (!message) continue;
+      if (message.seenBy.some((viewer) => viewer.profile === myProfile._id))
+        continue;
+      if (message.profile === myProfile._id) continue;
+      await ctx.db.patch(messageId, {
+        seenBy: [
+          ...message.seenBy,
+          { profile: myProfile._id, timestamp: Date.now() },
+        ],
+      });
+    }
+  },
+});

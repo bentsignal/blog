@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   MessageDataWithUserInfo,
   MessageInteractionState,
@@ -10,12 +10,15 @@ import {
   createContext,
   useContextSelector,
 } from "@fluentui/react-context-selector";
+import { useAuth } from "./auth-context";
+import { useChatWindow } from "./chat-window-context";
 
 interface MessageContextType extends MessageDataWithUserInfo {
   interactionState: MessageInteractionState;
   setInteractionState: (interactionState: MessageInteractionState) => void;
   editComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
   replyComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
+  frameRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export const MessageContext = createContext<MessageContextType>(
@@ -33,10 +36,47 @@ export const Provider = ({
   message: MessageDataWithUserInfo;
   children: React.ReactNode;
 }) => {
-  const editComposerInputRef = useRef<HTMLTextAreaElement>(null);
   const [interactionState, setInteractionState] =
     useState<MessageInteractionState>("idle");
+
+  const editComposerInputRef = useRef<HTMLTextAreaElement>(null);
   const replyComposerInputRef = useRef<HTMLTextAreaElement>(null);
+
+  const myProfileId = useAuth((c) => c.myProfileId);
+  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+
+  const frameRef = useRef<HTMLDivElement>(null);
+
+  // determine if user has seen message
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const iJustRead = useChatWindow((c) => c.iJustRead);
+  useEffect(() => {
+    if (imNotSignedIn) return;
+
+    const observer = observerRef.current;
+
+    const frame = frameRef.current;
+    if (!frame) return;
+
+    const iSentThisMessage = myProfileId === message.profile;
+    if (iSentThisMessage) return;
+
+    const iHaveAlreadySeenThisMessage = message.seenBy.some(
+      (viewer) => viewer.profile === myProfileId,
+    );
+    if (iHaveAlreadySeenThisMessage) return;
+
+    observerRef.current = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          iJustRead(message._id);
+        }
+      },
+      { threshold: 0.1 },
+    );
+    observer?.observe(frame);
+    return () => observer?.unobserve(frame);
+  }, [myProfileId, message, iJustRead, imNotSignedIn]);
 
   const contextValue = useMemo(
     () => ({
@@ -53,6 +93,7 @@ export const Provider = ({
       replyComposerInputRef,
       interactionState,
       setInteractionState,
+      frameRef,
     }),
     [
       message._id,

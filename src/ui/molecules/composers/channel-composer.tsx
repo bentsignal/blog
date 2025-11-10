@@ -25,14 +25,14 @@ export const ChannelComposer = () => {
 
   const slug = useChannel((c) => c.slug);
   const composerInputRef = useChatWindow((c) => c.composerInputRef);
-  const signedIn = useAuth((c) => c.signedIn);
+  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
   const signIn = useAuth((c) => c.signIn);
   const scrollToBottom = useList((c) => c.scrollToBottom);
 
   const { sendMessage } = useMessageActions();
 
   const onSubmit = async () => {
-    if (!signedIn) {
+    if (imNotSignedIn) {
       await signIn();
       return;
     }
