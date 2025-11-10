@@ -42,7 +42,7 @@ export const Provider = ({
   const imNotSignedIn = useAuth((c) => !c.imSignedIn);
 
   // periodically check if the user has read new messages, if so mark them as read
-  const intervalTime = 1000 * 10; // 10 seconds
+  const intervalTime = 1000 * 5; // check every 5 seconds
   const messageIdsAlreadyMarkedAsRead = useRef<Set<Id<"messages">>>(new Set());
   const messageIdsToMarkAsRead = useRef<Set<Id<"messages">>>(new Set());
   useEffect(() => {
