@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import {
@@ -44,12 +44,23 @@ export const Provider = ({
   // either a sign in or sign out is in progress
   const [inProgress, setInProgress] = useState(false);
 
+  // use serverside auth value until client is mounted
   const { isAuthenticated: isAuthenticatedClientSide } = useConvexAuth();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setMounted(true);
+    }, 5000);
+  }, []);
+  const imSignedIn = mounted
+    ? isAuthenticatedClientSide
+    : isAuthenticatedServerSide;
 
   const info = useQuery(
     api.user.getInfo,
     isAuthenticatedClientSide ? {} : "skip",
   );
+
   const image = useMemo(() => info?.image, [info]);
   const name = useMemo(() => info?.name, [info]);
   const myProfileId = useMemo(() => info?.profileId, [info]);
@@ -100,7 +111,7 @@ export const Provider = ({
   const contextValue = useMemo(
     () => ({
       image,
-      imSignedIn: isAuthenticatedServerSide,
+      imSignedIn,
       myProfileId,
       name,
       inProgress,
@@ -109,7 +120,7 @@ export const Provider = ({
       deleteAccount,
     }),
     [
-      isAuthenticatedServerSide,
+      imSignedIn,
       inProgress,
       signOut,
       signIn,
