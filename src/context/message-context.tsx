@@ -53,8 +53,6 @@ export const Provider = ({
   useEffect(() => {
     if (imNotSignedIn) return;
 
-    const observer = observerRef.current;
-
     const frame = frameRef.current;
     if (!frame) return;
 
@@ -66,7 +64,7 @@ export const Provider = ({
     );
     if (iHaveAlreadySeenThisMessage) return;
 
-    observerRef.current = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           iJustRead(message._id);
@@ -74,8 +72,9 @@ export const Provider = ({
       },
       { threshold: 0.1 },
     );
-    observer?.observe(frame);
-    return () => observer?.unobserve(frame);
+    observerRef.current = observer;
+    observer.observe(frame);
+    return () => observer.unobserve(frame);
   }, [myProfileId, message, iJustRead, imNotSignedIn]);
 
   const contextValue = useMemo(
