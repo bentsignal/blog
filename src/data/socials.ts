@@ -1,7 +1,14 @@
 import { Mail } from "lucide-react";
 import * as Icons from "@/ui/atoms/icon";
 
-type Company = "github" | "instagram" | "x" | "linkedin" | "bluesky" | "email";
+type Company =
+  | "github"
+  | "instagram"
+  | "x"
+  | "linkedin"
+  | "bluesky"
+  | "email"
+  | "discord";
 
 type Metadata = {
   url: string;
@@ -26,6 +33,11 @@ export const socials = {
   bluesky: {
     url: "https://bsky.app/profile/bentsignal.com",
     icon: Icons.Bluesky,
+  },
+  discord: {
+    url: "https://discord.gg/Ep9YsvhZ",
+    icon: Icons.Discord,
+    className: "size-6",
   },
   linkedin: {
     url: "https://www.linkedin.com/in/bentsignal/",
