@@ -2,7 +2,7 @@
 
 import { useChatWindow } from "@/context/chat-window-context";
 import { PostSlug } from "@/data/posts";
-import { validateChannelSlug } from "@/utils/slug-utils";
+import { findChannelWithSlug } from "@/utils/slug-utils";
 import Link from "next/link";
 
 export default function PostLink({
@@ -17,7 +17,7 @@ export default function PostLink({
   return (
     <Link
       onClick={() => {
-        const channelSlug = validateChannelSlug(slug);
+        const channelSlug = findChannelWithSlug(slug);
         if (channelSlug) {
           setCurrentChannelSlug(channelSlug);
         }

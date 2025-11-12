@@ -20,13 +20,13 @@ export const getSlugFromRequest = (request: NextRequest) => {
   return pathname.split("/")[1];
 };
 
-export const validateChannelSlug = (slug?: string | null) => {
+export const findChannelWithSlug = (slug?: string | null) => {
   if (!slug) return undefined;
   if (channelSlugs.includes(slug as ChannelSlug)) return slug as ChannelSlug;
   return undefined;
 };
 
-export const validatePostSlug = (slug?: string | null) => {
+export const findPostWithSlug = (slug?: string | null) => {
   if (!slug) return undefined;
   if (postSlugs.includes(slug as PostSlug)) return slug as PostSlug;
   return undefined;

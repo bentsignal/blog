@@ -1,6 +1,6 @@
 import { Provider as ListProvider } from "@/context/list-context";
 import { posts, postSlugs, type PostSlug } from "@/data/posts";
-import { validatePostSlug } from "@/utils/slug-utils";
+import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
 import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
@@ -19,7 +19,7 @@ export default async function Page({
 }) {
   const { slug } = await params;
 
-  const validatedSlug = validatePostSlug(slug);
+  const validatedSlug = findPostWithSlug(slug);
   if (!validatedSlug) {
     notFound();
   }

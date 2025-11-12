@@ -7,7 +7,7 @@ import {
 import { useChatWindow } from "@/context/chat-window-context";
 import { Provider as ListProvider } from "@/context/list-context";
 import { getRandomWidth } from "@/utils/skeleton-utils";
-import { validatePostSlug } from "@/utils/slug-utils";
+import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { useRouter } from "next/navigation";
@@ -44,7 +44,7 @@ export const ChannelList = () => {
                 onClick={() => {
                   setCurrentChannelSlug(channel.slug);
                   // if the channel has an associated post, redirect to the post's page
-                  const postSlug = validatePostSlug(channel.slug);
+                  const postSlug = findPostWithSlug(channel.slug);
                   if (postSlug) {
                     router.push(`/${postSlug}`);
                   }

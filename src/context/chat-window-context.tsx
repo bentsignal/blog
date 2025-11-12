@@ -3,7 +3,7 @@
 import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { type ChannelSlug } from "@/data/channels";
-import { validateChannelSlug } from "@/utils/slug-utils";
+import { findChannelWithSlug } from "@/utils/slug-utils";
 import {
   ContextSelector,
   createContext,
@@ -34,7 +34,7 @@ export const Provider = ({
   slugFromHeaders: string | null;
   children: React.ReactNode;
 }) => {
-  const validatedSlug = validateChannelSlug(slugFromHeaders);
+  const validatedSlug = findChannelWithSlug(slugFromHeaders);
   const [currentChannelSlug, setCurrentChannelSlug] = useState(validatedSlug);
   const composerInputRef = useRef<HTMLTextAreaElement>(null);
 
