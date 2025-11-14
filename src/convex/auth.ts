@@ -1,3 +1,4 @@
+import { env } from "@/convex/convex.env";
 import { defaultNotificationSettings } from "@/types/notification-types";
 import {
   AuthFunctions,
@@ -71,7 +72,7 @@ export const createAuth = (
     logger: {
       disabled: optionsOnly,
     },
-    baseURL: process.env.SITE_URL,
+    baseURL: env.SITE_URL,
     database: authComponent.adapter(ctx),
     emailAndPassword: {
       enabled: false,
@@ -91,8 +92,8 @@ export const createAuth = (
     plugins: [convex()],
     socialProviders: {
       github: {
-        clientId: process.env.GITHUB_CLIENT_ID!,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+        clientId: env.GITHUB_CLIENT_ID,
+        clientSecret: env.GITHUB_CLIENT_SECRET,
       },
     },
   });

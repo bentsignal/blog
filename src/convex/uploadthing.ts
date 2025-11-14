@@ -1,12 +1,13 @@
 "use node";
 
+import { env } from "@/convex/convex.env";
 import { v } from "convex/values";
 import { UTApi, UTFile } from "uploadthing/server";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
 
 export const utapi = new UTApi({
-  token: process.env.UPLOADTHING_TOKEN,
+  token: env.UPLOADTHING_TOKEN,
 });
 
 export const uploadPFP = internalAction({
@@ -26,7 +27,7 @@ export const uploadPFP = internalAction({
 });
 
 export const getFileURL = (key: string) => {
-  const orgID = process.env.UPLOADTHING_ORG_ID!;
+  const orgID = env.UPLOADTHING_ORG_ID;
   return `https://${orgID}.ufs.sh/f/${key}`;
 };
 
