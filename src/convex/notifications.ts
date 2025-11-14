@@ -47,7 +47,7 @@ export const notifyUserOfReplyToTheirMessage = async ({
     return;
   }
   const scheduledTaskId = await ctx.scheduler.runAfter(
-    getTimeInMs({ seconds: 30 }),
+    getTimeInMs({ hours: 24 }),
     internal.email.actions.sendReplyNotification,
     {
       recipientProfileId: messageBeingRepliedTo.profile,

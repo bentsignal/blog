@@ -31,10 +31,11 @@ const sendReply = async (
     messages,
     userId: user._id,
   });
+  const replyOrReplies = messages.length === 1 ? "reply" : "replies";
   const { error } = await inbound.emails.send({
     from: "bentsignal <notifications@mail.bentsignal.com>",
     to: user.email,
-    subject: `🔔 You have ${messages.length} new replies to your messages`,
+    subject: `🔔 You have ${messages.length} new ${replyOrReplies} to your messages`,
     html: emailContent,
   });
   if (error) throw new Error(error);
