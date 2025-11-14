@@ -33,6 +33,12 @@ export default function HomePage() {
                 <Socials />
               </div>
             </div>
+            <span>
+              I build software, film & edit videos, shoot film & digital
+              photography, make digital art, and so much more. This is an
+              ever-evolving space for me to document my thoughts on{" "}
+              <i>anything and everything</i> I find interesting.
+            </span>
             <Separator className="my-1" />
             <div className="flex flex-col gap-3">
               {postSlugs.map((slug) => {
