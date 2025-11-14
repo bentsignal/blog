@@ -1,3 +1,4 @@
+import { defaultNotificationSettings } from "@/types/notification-types";
 import { internalMutation } from "./_generated/server";
 
 export const unreadAll = internalMutation({
@@ -6,6 +7,18 @@ export const unreadAll = internalMutation({
     for (const message of messages) {
       await ctx.db.patch(message._id, {
         seenBy: [],
+      });
+    }
+  },
+});
+
+export const createPreferences = internalMutation({
+  handler: async (ctx) => {
+    const profiles = await ctx.db.query("profiles").collect();
+    for (const profile of profiles) {
+      await ctx.db.insert("preferences", {
+        profile: profile._id,
+        notifications: defaultNotificationSettings,
       });
     }
   },

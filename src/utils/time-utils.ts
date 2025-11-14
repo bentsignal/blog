@@ -67,3 +67,19 @@ export const isYesterday = (time: number) => {
     date.getDate() === now.getDate() - 1
   );
 };
+
+export const getTimeInMs = ({
+  hours,
+  minutes,
+  seconds,
+}: {
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+}) => {
+  return (
+    (hours ?? 0) * 60 * 60 * 1000 +
+    (minutes ?? 0) * 60 * 1000 +
+    (seconds ?? 0) * 1000
+  );
+};

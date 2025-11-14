@@ -20,7 +20,7 @@ export const useMessageActions = () => {
   const { mutate: sendMessage } = useMutation({
     mutationFn: useConvexMutation(api.messages.send).withOptimisticUpdate(
       (localStore, args) => {
-        const results = localStore.getAllQueries(api.messages.get);
+        const results = localStore.getAllQueries(api.messages.getPage);
         const current = results[0];
         if (!current || !current.value) return;
 
@@ -57,7 +57,7 @@ export const useMessageActions = () => {
           reply,
         };
         localStore.setQuery(
-          api.messages.get,
+          api.messages.getPage,
           {
             slug: current.args.slug,
             paginationOpts: current.args.paginationOpts,
@@ -76,7 +76,7 @@ export const useMessageActions = () => {
     mutationFn: useConvexMutation(api.messages.edit).withOptimisticUpdate(
       (localStore, args) => {
         const newSnapshot = { content: args.content, timestamp: Date.now() };
-        const results = localStore.getAllQueries(api.messages.get);
+        const results = localStore.getAllQueries(api.messages.getPage);
         for (const result of results) {
           if (!result || !result.value) continue;
           const hasTargetMessage = result.value.page?.some(
@@ -86,7 +86,7 @@ export const useMessageActions = () => {
           );
           if (!hasTargetMessage) continue;
           localStore.setQuery(
-            api.messages.get,
+            api.messages.getPage,
             {
               slug: result.args.slug,
               paginationOpts: result.args.paginationOpts,
@@ -120,7 +120,7 @@ export const useMessageActions = () => {
   const { mutate: deleteMessage } = useMutation({
     mutationFn: useConvexMutation(api.messages.deleteOne).withOptimisticUpdate(
       (localStore, args) => {
-        const results = localStore.getAllQueries(api.messages.get);
+        const results = localStore.getAllQueries(api.messages.getPage);
         for (const result of results) {
           if (!result || !result.value) continue;
           const hasTargetMessage = result.value.page?.some(
@@ -130,7 +130,7 @@ export const useMessageActions = () => {
           );
           if (hasTargetMessage) {
             localStore.setQuery(
-              api.messages.get,
+              api.messages.getPage,
               {
                 slug: result.args.slug,
                 paginationOpts: result.args.paginationOpts,

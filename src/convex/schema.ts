@@ -1,6 +1,7 @@
 import { vSlug } from "@/data/slugs";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { vNotificationSettings } from "../types/notification-types";
 
 const snapshot = v.object({
   content: v.string(),
@@ -25,4 +26,13 @@ export default defineSchema({
     name: v.string(),
     imageKey: v.optional(v.string()),
   }).index("by_user", ["user"]),
+  notifications: defineTable({
+    messages: v.array(v.id("messages")),
+    recipient: v.id("profiles"),
+    taskId: v.id("_scheduled_functions"),
+  }).index("by_recipient", ["recipient"]),
+  preferences: defineTable({
+    profile: v.id("profiles"),
+    notifications: vNotificationSettings,
+  }).index("by_profile", ["profile"]),
 });

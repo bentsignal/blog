@@ -1,5 +1,11 @@
 import { ConvexError, v } from "convex/values";
-import { internalMutation, MutationCtx, QueryCtx } from "./_generated/server";
+import {
+  internalMutation,
+  internalQuery,
+  MutationCtx,
+  QueryCtx,
+} from "./_generated/server";
+import { authComponent } from "./auth";
 import { authedQuery } from "./convex_helpers";
 import { getFileURL } from "./uploadthing";
 
@@ -8,7 +14,7 @@ export type Profile = {
   image: string | null | undefined;
 };
 
-export const getProfile = async (
+export const getProfileByUserId = async (
   ctx: MutationCtx | QueryCtx,
   userId: string,
 ) => {
@@ -20,9 +26,22 @@ export const getProfile = async (
   return profile;
 };
 
+export const getUserByProfileId = internalQuery({
+  args: {
+    profileId: v.id("profiles"),
+  },
+  handler: async (ctx, args) => {
+    const profile = await ctx.db.get(args.profileId);
+    if (!profile) throw new ConvexError("Profile not found");
+    const user = await authComponent.getAnyUserById(ctx, profile.user);
+    if (!user) throw new ConvexError("User not found");
+    return user;
+  },
+});
+
 export const getInfo = authedQuery({
   handler: async (ctx) => {
-    const profile = await getProfile(ctx, ctx.user.subject);
+    const profile = await getProfileByUserId(ctx, ctx.user.subject);
     return {
       name: profile.name,
       image: profile.imageKey ? getFileURL(profile.imageKey) : null,

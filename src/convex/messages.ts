@@ -4,13 +4,15 @@ import { MessageDataWithUserInfo } from "@/types/message-types";
 import { validateMessage } from "@/utils/message-utils";
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
+import { Id } from "./_generated/dataModel";
 import { MutationCtx, query } from "./_generated/server";
 import { authedMutation } from "./convex_helpers";
 import { rateLimiter } from "./limiter";
+import { notifyUserOfReplyToTheirMessage } from "./notifications";
 import { getFileURL } from "./uploadthing";
-import { getProfile, type Profile } from "./user";
+import { getProfileByUserId, type Profile } from "./user";
 
-export const get = query({
+export const getPage = query({
   args: {
     slug: vSlug,
     paginationOpts: paginationOptsValidator,
@@ -84,27 +86,37 @@ export const send = authedMutation({
     replyTo: v.optional(v.id("messages")),
   },
   handler: async (ctx, args) => {
-    const { content } = args;
-    const validation = validateMessage(content);
+    const validation = validateMessage(args.content);
     if (validation !== "Valid") throw new ConvexError(validation);
-    // will throw a ConvexError if the rate limit is exceeded
-    await rateLimiter.limit(ctx, "messageAction", {
+    const rateLimiterResponse = await rateLimiter.limit(ctx, "messageAction", {
       key: ctx.user.subject,
-      throws: true,
     });
-    const profile = await getProfile(ctx, ctx.user.subject);
-    await ctx.db.insert("messages", {
+    if (rateLimiterResponse.ok === false) {
+      throw new ConvexError(
+        `Slow down! You're sending messages too fast. Try again in a few seconds.`,
+      );
+    }
+    const sendersProfile = await getProfileByUserId(ctx, ctx.user.subject);
+    const messageId = await ctx.db.insert("messages", {
       snapshots: [
         {
-          content,
+          content: args.content,
           timestamp: Date.now(),
         },
       ],
-      profile: profile._id,
+      profile: sendersProfile._id,
       slug: args.slug,
       replyTo: args.replyTo,
       seenBy: [],
     });
+    if (args.replyTo) {
+      await notifyUserOfReplyToTheirMessage({
+        ctx,
+        idOfReplyMessage: messageId,
+        idOfRecipientMessage: args.replyTo,
+        sendersProfile: sendersProfile._id,
+      });
+    }
   },
 });
 
@@ -117,15 +129,18 @@ export const edit = authedMutation({
     const { content } = args;
     const validation = validateMessage(content);
     if (validation !== "Valid") throw new ConvexError(validation);
-    // will throw a ConvexError if the rate limit is exceeded
-    await rateLimiter.limit(ctx, "messageAction", {
+    const rateLimiterResponse = await rateLimiter.limit(ctx, "messageAction", {
       key: ctx.user.subject,
-      throws: true,
     });
+    if (rateLimiterResponse.ok === false) {
+      throw new ConvexError(
+        `Slow down! You're editing messages too fast. Try again in a few seconds.`,
+      );
+    }
     const userId = ctx.user.subject;
     const message = await ctx.db.get(args.messageId);
     if (!message) throw new ConvexError("Message not found");
-    const profile = await getProfile(ctx, userId);
+    const profile = await getProfileByUserId(ctx, userId);
     if (message.profile !== profile._id) throw new ConvexError("Unauthorized");
     // only keep the most recent 10 snapshots
     const updatedSnapshots = [
@@ -146,25 +161,30 @@ export const deleteOne = authedMutation({
     messageId: v.id("messages"),
   },
   handler: async (ctx, args) => {
-    // will throw a ConvexError if the rate limit is exceeded
-    await rateLimiter.limit(ctx, "messageAction", {
+    const rateLimiterResponse = await rateLimiter.limit(ctx, "messageAction", {
       key: ctx.user.subject,
-      throws: true,
     });
+    if (rateLimiterResponse.ok === false) {
+      throw new ConvexError(
+        `Slow down! You're deleting messages too fast. Try again in a few seconds.`,
+      );
+    }
     const userId = ctx.user.subject;
     const message = await ctx.db.get(args.messageId);
     if (!message) throw new ConvexError("Message not found");
-    const profile = await getProfile(ctx, userId);
+    const profile = await getProfileByUserId(ctx, userId);
     if (message.profile !== profile._id) throw new ConvexError("Unauthorized");
     await ctx.db.delete(args.messageId);
   },
 });
 
-export const deleteAllFromUser = async (ctx: MutationCtx, userId: string) => {
-  const profile = await getProfile(ctx, userId);
+export const deleteAllFromUser = async (
+  ctx: MutationCtx,
+  profileId: Id<"profiles">,
+) => {
   const messages = await ctx.db
     .query("messages")
-    .filter((q) => q.eq(q.field("profile"), profile._id))
+    .filter((q) => q.eq(q.field("profile"), profileId))
     .collect();
   for (const message of messages) {
     await ctx.db.delete(message._id);
@@ -202,7 +222,7 @@ export const markAsRead = authedMutation({
     messageIds: v.array(v.id("messages")),
   },
   handler: async (ctx, args) => {
-    const myProfile = await getProfile(ctx, ctx.user.subject);
+    const myProfile = await getProfileByUserId(ctx, ctx.user.subject);
     for (const messageId of args.messageIds) {
       const message = await ctx.db.get(messageId);
       if (!message) continue;

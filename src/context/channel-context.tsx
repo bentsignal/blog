@@ -49,7 +49,7 @@ export const Provider = ({
   const channel = channels[slug];
 
   const { results, status, loadMore } = usePaginatedQuery(
-    api.messages.get,
+    api.messages.getPage,
     { slug },
     {
       initialNumItems: INITIAL_PAGE_SIZE,

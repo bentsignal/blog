@@ -1,3 +1,4 @@
+import { defaultNotificationSettings } from "@/types/notification-types";
 import {
   AuthFunctions,
   createClient,
@@ -7,8 +8,10 @@ import { convex } from "@convex-dev/better-auth/plugins";
 import { betterAuth } from "better-auth";
 import { components, internal } from "./_generated/api";
 import { DataModel } from "./_generated/dataModel";
-import { deleteAllFromUser } from "./messages";
-import { getProfile } from "./user";
+import { deleteAllFromUser as deleteAllMessagesFromUser } from "./messages";
+import { deleteAllForUser as deleteAllNotificationsForUser } from "./notifications";
+import { deleteForUser as deletePreferencesForUser } from "./preferences";
+import { getProfileByUserId } from "./user";
 
 const authFunctions: AuthFunctions = internal.auth;
 
@@ -19,21 +22,26 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
   triggers: {
     user: {
       onDelete: async (ctx, authUser) => {
-        await deleteAllFromUser(ctx, authUser._id);
-        const profile = await getProfile(ctx, authUser._id);
-        if (profile) {
-          await ctx.db.delete(profile._id);
-        }
+        const profile = await getProfileByUserId(ctx, authUser._id);
+        if (!profile) return;
+        await deleteAllMessagesFromUser(ctx, profile._id);
+        await deletePreferencesForUser(ctx, profile._id);
+        await deleteAllNotificationsForUser(ctx, profile._id);
         if (profile.imageKey) {
           await ctx.scheduler.runAfter(0, internal.uploadthing.deleteFile, {
-            key: profile.imageKey,
+            key: profile.imageKey!,
           });
         }
+        await ctx.db.delete(profile._id);
       },
       onCreate: async (ctx, authUser) => {
         const profile = await ctx.db.insert("profiles", {
           user: authUser._id,
           name: authUser.name,
+        });
+        await ctx.db.insert("preferences", {
+          profile,
+          notifications: defaultNotificationSettings,
         });
         if (authUser.image) {
           await ctx.scheduler.runAfter(0, internal.uploadthing.uploadPFP, {
@@ -43,7 +51,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
         }
       },
       onUpdate: async (ctx, authUser) => {
-        const profile = await getProfile(ctx, authUser._id);
+        const profile = await getProfileByUserId(ctx, authUser._id);
         if (!profile) return;
         await ctx.db.patch(profile._id, {
           name: authUser.name,
