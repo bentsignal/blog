@@ -1,10 +1,7 @@
 import { channelSlugs, type ChannelSlug } from "@/data/channels";
 import { postSlugs, type PostSlug } from "@/data/posts";
-import { NextRequest } from "next/server";
 
-export const getSlugFromRequest = (request: NextRequest) => {
-  const { pathname } = request.nextUrl;
-
+export const getSlugFromPathname = (pathname: string) => {
   const isStatic =
     pathname.startsWith("/_next/") ||
     pathname.startsWith("/favicon") ||

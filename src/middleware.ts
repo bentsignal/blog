@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSlugFromRequest } from "./utils/slug-utils";
+import { getSlugFromPathname } from "./utils/slug-utils";
 
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -10,7 +10,7 @@ export default function middleware(request: NextRequest) {
 
   const response = NextResponse.next();
 
-  const slug = getSlugFromRequest(request);
+  const slug = getSlugFromPathname(pathname);
   if (slug) {
     response.headers.set("x-slug", slug);
   }
