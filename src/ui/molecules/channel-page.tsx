@@ -8,7 +8,6 @@ import { useChatWindow } from "@/context/chat-window-context";
 import { Provider as ListProvider } from "@/context/list-context";
 import { type ChannelSlug } from "@/data/channels";
 import { ChevronLeft } from "lucide-react";
-import * as Auth from "@/ui/atoms/auth";
 import * as List from "@/ui/atoms/list";
 import * as Message from "@/ui/atoms/message";
 import { ChannelComposer } from "@/ui/molecules/composers";
@@ -42,7 +41,6 @@ const Header = () => {
           <span className="text-muted-foreground text-xs">Text Channel</span>
         </div>
       </div>
-      <Auth.PrimaryButton />
     </div>
   );
 };

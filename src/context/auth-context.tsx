@@ -9,7 +9,7 @@ import {
   useContextSelector,
 } from "@fluentui/react-context-selector";
 import { useConvexAuth, useQuery } from "convex/react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 
@@ -38,7 +38,6 @@ export const Provider = ({
   isAuthenticatedServerSide: boolean;
   children: React.ReactNode;
 }) => {
-  const router = useRouter();
   const pathname = usePathname();
 
   // either a sign in or sign out is in progress
@@ -52,6 +51,7 @@ export const Provider = ({
       setMounted(true);
     }, 5000);
   }, []);
+
   const imSignedIn = mounted
     ? isAuthenticatedClientSide
     : isAuthenticatedServerSide;
@@ -67,26 +67,27 @@ export const Provider = ({
 
   const signOut = useCallback(async () => {
     if (inProgress) return;
+    setInProgress(true);
     await authClient.signOut(
       {},
       {
         onResponse: () => {
-          router.refresh();
+          setInProgress(false);
         },
       },
     );
-  }, [router, inProgress]);
+  }, [inProgress]);
 
   const deleteAccount = useCallback(async () => {
     await authClient.deleteUser(
       {},
       {
         onResponse: () => {
-          router.refresh();
+          setInProgress(false);
         },
       },
     );
-  }, [router]);
+  }, []);
 
   const signIn = useCallback(async () => {
     if (inProgress) return;

@@ -5,11 +5,13 @@ import {
   MAX_MESSAGE_LENGTH,
   MIN_MESSAGE_LENGTH,
 } from "@/config/message-config";
+import { useAuth } from "@/context/auth-context";
 import { ComposerContext, useComposer } from "@/context/composer-context";
 import { cn } from "@/utils/style-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import * as Icons from "lucide-react";
 import * as ToolTip from "./tooltip";
+import * as Auth from "@/ui/atoms/auth";
 import { Button } from "@/ui/atoms/button";
 
 export const Frame = ({
@@ -49,6 +51,7 @@ export const Input = ({
   const onSubmit = useComposer((c) => c.onSubmit);
   const submitDisabled = useComposer((c) => c.submitDisabled);
   const onCancel = useComposer((c) => c.onCancel);
+  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
 
   useEffect(() => {
     const textarea = inputRef.current;
@@ -97,6 +100,7 @@ export const Input = ({
       placeholder={placeholder}
       minLength={MIN_MESSAGE_LENGTH}
       maxLength={MAX_MESSAGE_LENGTH}
+      disabled={imNotSignedIn}
     />
   );
 };
@@ -109,6 +113,9 @@ export const Send = () => {
 
   const onSubmit = useComposer((c) => c.onSubmit);
   const submitDisabled = useComposer((c) => c.inputValue.trim() === "");
+  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+
+  if (imNotSignedIn) return <Auth.JoinButton />;
 
   return (
     <ToolTip.Frame>
