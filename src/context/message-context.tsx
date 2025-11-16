@@ -84,6 +84,7 @@ export const Provider = ({
       profile: message.profile,
       name: message.name,
       pfp: message.pfp,
+      content: message.content,
       snapshots: message.snapshots,
       reply: message.reply,
       slug: message.slug,
@@ -108,6 +109,7 @@ export const Provider = ({
       replyComposerInputRef,
       interactionState,
       setInteractionState,
+      message.content,
     ],
   );
 

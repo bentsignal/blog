@@ -47,6 +47,7 @@ export const useMessageActions = () => {
           _creationTime: Date.now(),
           profile: myProfileId as Id<"profiles">,
           slug: args.slug,
+          content: args.content,
           snapshots: [
             {
               content: args.content,
@@ -97,6 +98,7 @@ export const useMessageActions = () => {
                 message._id === args.messageId
                   ? {
                       ...message,
+                      content: args.content,
                       snapshots: [...message.snapshots, newSnapshot],
                     }
                   : message.reply?._id === args.messageId
@@ -104,6 +106,7 @@ export const useMessageActions = () => {
                         ...message,
                         reply: {
                           ...message.reply,
+                          content: args.content,
                           snapshots: [...message.reply.snapshots, newSnapshot],
                         },
                       }
@@ -137,13 +140,18 @@ export const useMessageActions = () => {
               },
               {
                 ...result.value,
-                page: result.value.page
-                  ?.filter((message) => message._id !== args.messageId)
-                  .map((message) =>
-                    message.reply?._id === args.messageId
-                      ? { ...message, reply: undefined }
-                      : message,
-                  ),
+                page: result.value.page.map((message) => {
+                  if (message._id === args.messageId) {
+                    return { ...message, content: null, snapshots: [] };
+                  }
+                  if (message.reply?._id === args.messageId) {
+                    return {
+                      ...message,
+                      reply: { ...message.reply, content: null, snapshots: [] },
+                    };
+                  }
+                  return message;
+                }),
               },
             );
           }

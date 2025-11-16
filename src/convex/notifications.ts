@@ -2,11 +2,12 @@ import {
   NotificationType,
   vNotificationType,
 } from "@/types/notification-types";
+import { getMessageContent } from "@/utils/message-utils";
 import { getTimeInMs } from "@/utils/time-utils";
 import { validate } from "convex-helpers/validators";
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
-import { Doc, Id } from "./_generated/dataModel";
+import { Id } from "./_generated/dataModel";
 import {
   internalMutation,
   internalQuery,
@@ -92,6 +93,7 @@ export const getMessages = internalQuery({
           pfp: replierProfile?.imageKey
             ? getFileURL(replierProfile.imageKey)
             : null,
+          content: getMessageContent(replyMessage.snapshots),
         };
         if (!replyMessage.replyTo) return null;
         const originalMessage = await ctx.db.get(replyMessage.replyTo);
@@ -104,6 +106,7 @@ export const getMessages = internalQuery({
           pfp: originalProfile?.imageKey
             ? getFileURL(originalProfile.imageKey)
             : null,
+          content: getMessageContent(originalMessage.snapshots),
         };
         return {
           originalMessage: originalMessageWithUserInfo,

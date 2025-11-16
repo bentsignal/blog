@@ -102,13 +102,20 @@ const EditedIndicator = () => {
 };
 
 export const Content = () => {
-  const latestContent = useMessage(
-    (c) => c.snapshots[c.snapshots.length - 1].content,
-  );
+  const content = useMessage((c) => c.content);
   const isEdited = useMessage((c) => c.snapshots.length > 1);
+
+  if (!content) {
+    return (
+      <span className="text-muted-foreground/70 text-sm font-medium">
+        <i>Deleted message</i>
+      </span>
+    );
+  }
+
   return (
     <span className="text-muted-foreground text-sm font-medium">
-      {latestContent}
+      {content}
       {isEdited && <EditedIndicator />}
     </span>
   );
@@ -148,8 +155,10 @@ export const Actions = () => {
   const imNotSignedIn = useAuth((c) => !c.imSignedIn);
   const myProfileId = useAuth((c) => c.myProfileId);
   const messageProfileId = useMessage((c) => c.profile);
+  const messageIsDeleted = useMessage((c) => c.content === null);
 
   if (imNotSignedIn) return null;
+  if (messageIsDeleted) return null;
 
   const isMyMessage = myProfileId === messageProfileId;
 
@@ -268,12 +277,15 @@ const DeleteButton = () => {
 export const ReplyPreview = () => {
   const name = useMessage((c) => c.reply?.name);
   const pfp = useMessage((c) => c.reply?.pfp);
-  const latestContent = useMessage(
-    (c) => c.reply?.snapshots[c.reply?.snapshots.length - 1].content,
-  );
+  const content = useMessage((c) => c.reply?.content);
   const isEdited = useMessage(
-    (c) => c.reply?.snapshots.length && c.reply?.snapshots.length > 1,
+    (c) =>
+      c.reply?.content !== null &&
+      c.reply?.snapshots.length &&
+      c.reply?.snapshots.length > 1,
   );
+
+  const isDeleted = content === null;
 
   return (
     <div className="mb-0.5 flex h-5 items-center">
@@ -288,7 +300,7 @@ export const ReplyPreview = () => {
         />
       )}
       <span className="text-muted-foreground max-w-64 truncate text-xs">
-        {latestContent}
+        {isDeleted ? <i>Deleted message</i> : content}
       </span>
       {isEdited && <EditedIndicator />}
     </div>

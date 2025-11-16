@@ -82,10 +82,6 @@ export default async function renderReplyNotificationEmail({
 }
 
 const Message = ({ message }: { message: MessageDataWithUserInfo }) => {
-  const content = message.snapshots[message.snapshots.length - 1].content;
-  const maxChars = 1000;
-  const trimmedContent =
-    content.length > maxChars ? content.slice(0, maxChars) + "..." : content;
   return (
     <Section>
       <div className="flex items-center">
@@ -100,7 +96,17 @@ const Message = ({ message }: { message: MessageDataWithUserInfo }) => {
         )}
         <Text className="text-sm font-bold">{message.name}</Text>
       </div>
-      <Text>{trimmedContent}</Text>
+      <MessageContent content={message.content} />
     </Section>
   );
+};
+
+const MessageContent = ({ content }: { content: string | null }) => {
+  if (content === null) return <Text className="italic">Deleted message</Text>;
+
+  const maxChars = 1000;
+  const trimmedContent =
+    content.length > maxChars ? content.slice(0, maxChars) + "..." : content;
+
+  return <Text>{trimmedContent}</Text>;
 };

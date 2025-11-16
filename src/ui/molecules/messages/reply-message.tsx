@@ -28,17 +28,8 @@ export const ReplyMessage = memo(
   (prev, next) => {
     if (prev.message.name !== next.message.name) return false;
     if (prev.message.pfp !== next.message.pfp) return false;
-    if (
-      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
-      next.message.snapshots[next.message.snapshots.length - 1].content
-    )
-      return false;
-    if (
-      prev.message.reply?.snapshots[prev.message.reply?.snapshots.length - 1]
-        .content !==
-      next.message.reply?.snapshots[next.message.reply?.snapshots.length - 1]
-        .content
-    )
+    if (prev.message.content !== next.message.content) return false;
+    if (prev.message.reply?.content !== next.message.reply?.content)
       return false;
     if (prev.message.reply?.name !== next.message.reply?.name) return false;
     return true;

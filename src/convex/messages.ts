@@ -1,7 +1,7 @@
 import { channelSlugs } from "@/data/channels";
 import { vSlug } from "@/data/slugs";
 import { MessageDataWithUserInfo } from "@/types/message-types";
-import { validateMessage } from "@/utils/message-utils";
+import { getMessageContent, validateMessage } from "@/utils/message-utils";
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { Id } from "./_generated/dataModel";
@@ -61,17 +61,21 @@ export const getPage = query({
         if (repliedToMessage) {
           const profile = profilesMap[repliedToMessage.profile];
           if (!profile) throw new ConvexError("User not found");
+          const replyContent = getMessageContent(repliedToMessage.snapshots);
           reply = {
             ...repliedToMessage,
             name: profile.name,
             pfp: profile.image,
+            content: replyContent,
           };
         }
+        const messageContent = getMessageContent(message.snapshots);
         return {
           ...message,
           snapshots: message.snapshots.slice(-2),
           name: user.name,
           pfp: user.image,
+          content: messageContent,
           reply,
         };
       }),
@@ -140,6 +144,9 @@ export const edit = authedMutation({
     const userId = ctx.user.subject;
     const message = await ctx.db.get(args.messageId);
     if (!message) throw new ConvexError("Message not found");
+    const messageContent = getMessageContent(message.snapshots);
+    if (messageContent === null)
+      throw new ConvexError("Message has been deleted");
     const profile = await getProfileByUserId(ctx, userId);
     if (message.profile !== profile._id) throw new ConvexError("Unauthorized");
     // only keep the most recent 10 snapshots
@@ -174,7 +181,9 @@ export const deleteOne = authedMutation({
     if (!message) throw new ConvexError("Message not found");
     const profile = await getProfileByUserId(ctx, userId);
     if (message.profile !== profile._id) throw new ConvexError("Unauthorized");
-    await ctx.db.delete(args.messageId);
+    await ctx.db.patch(args.messageId, {
+      snapshots: [],
+    });
   },
 });
 
@@ -186,9 +195,13 @@ export const deleteAllFromUser = async (
     .query("messages")
     .filter((q) => q.eq(q.field("profile"), profileId))
     .collect();
-  for (const message of messages) {
-    await ctx.db.delete(message._id);
-  }
+  await Promise.all(
+    messages.map((message) =>
+      ctx.db.patch(message._id, {
+        snapshots: [],
+      }),
+    ),
+  );
 };
 
 export const getPreviewsForChannels = query({
@@ -203,10 +216,11 @@ export const getPreviewsForChannels = query({
         if (!message) return { slug, previewString: null };
         const profile = await ctx.db.get(message.profile);
         if (!profile) return { slug, previewString: null };
-        const messageContent =
-          message.snapshots[message.snapshots.length - 1].content;
+        const messageContent = getMessageContent(message.snapshots);
+        const messageContentString =
+          messageContent === null ? "Deleted message" : messageContent;
         const displayName = profile.name;
-        const previewString = `${displayName}: ${messageContent}`;
+        const previewString = `${displayName}: ${messageContentString}`;
         return {
           slug,
           previewString,

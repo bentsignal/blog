@@ -22,11 +22,7 @@ export const ChainedMessage = memo(
   (prev, next) => {
     if (prev.message.name !== next.message.name) return false;
     if (prev.message.pfp !== next.message.pfp) return false;
-    if (
-      prev.message.snapshots[prev.message.snapshots.length - 1].content !==
-      next.message.snapshots[next.message.snapshots.length - 1].content
-    )
-      return false;
+    if (prev.message.content !== next.message.content) return false;
     return true;
   },
 );
