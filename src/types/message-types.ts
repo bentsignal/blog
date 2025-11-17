@@ -16,3 +16,14 @@ export const vSnapshot = v.object({
 });
 
 export type Snapshot = Infer<typeof vSnapshot>;
+
+export const EMOJIS = ["❤️", "😂", "👍", "👎"] as const;
+export const vEmoji = v.union(...EMOJIS.map((emoji) => v.literal(emoji)));
+export type Emoji = Infer<typeof vEmoji>;
+
+export const vReaction = v.object({
+  profile: v.id("profiles"),
+  emoji: vEmoji,
+});
+
+export type Reaction = Infer<typeof vReaction>;

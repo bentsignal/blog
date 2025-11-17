@@ -23,3 +23,14 @@ export const createPreferences = internalMutation({
     }
   },
 });
+
+export const createEmptyReactionArray = internalMutation({
+  handler: async (ctx) => {
+    const messages = await ctx.db.query("messages").collect();
+    for (const message of messages) {
+      await ctx.db.patch(message._id, {
+        reactions: [],
+      });
+    }
+  },
+});

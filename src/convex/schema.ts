@@ -1,13 +1,8 @@
 import { vSlug } from "@/data/slugs";
-import { vSnapshot } from "@/types/message-types";
+import { vReaction, vSnapshot } from "@/types/message-types";
 import { vNotificationSettings } from "@/types/notification-types";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-
-const viewer = v.object({
-  profile: v.id("profiles"),
-  timestamp: v.number(),
-});
 
 export default defineSchema({
   messages: defineTable({
@@ -15,7 +10,13 @@ export default defineSchema({
     profile: v.id("profiles"),
     slug: vSlug,
     replyTo: v.optional(v.id("messages")),
-    seenBy: v.array(viewer),
+    seenBy: v.array(
+      v.object({
+        profile: v.id("profiles"),
+        timestamp: v.number(),
+      }),
+    ),
+    reactions: v.optional(v.array(vReaction)),
   }).index("by_slug", ["slug"]),
   profiles: defineTable({
     user: v.string(),
