@@ -112,6 +112,7 @@ export const send = authedMutation({
       slug: args.slug,
       replyTo: args.replyTo,
       seenBy: [],
+      reactions: [],
     });
     if (args.replyTo) {
       await notifyUserOfReplyToTheirMessage({
