@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  MessageDataWithUserInfo,
+  EnhancedMessage,
   MessageInteractionState,
 } from "@/types/message-types";
 import {
@@ -13,7 +13,7 @@ import {
 import { useAuth } from "./auth-context";
 import { useChatWindow } from "./chat-window-context";
 
-interface MessageContextType extends MessageDataWithUserInfo {
+interface MessageContextType extends EnhancedMessage {
   interactionState: MessageInteractionState;
   setInteractionState: (interactionState: MessageInteractionState) => void;
   editComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
@@ -33,7 +33,7 @@ export const Provider = ({
   message,
   children,
 }: {
-  message: MessageDataWithUserInfo;
+  message: EnhancedMessage;
   children: React.ReactNode;
 }) => {
   const [interactionState, setInteractionState] =
@@ -89,6 +89,8 @@ export const Provider = ({
       reply: message.reply,
       slug: message.slug,
       seenBy: message.seenBy,
+      reactions: message.reactions,
+      reactionSignature: message.reactionSignature,
       editComposerInputRef,
       replyComposerInputRef,
       interactionState,
@@ -105,6 +107,8 @@ export const Provider = ({
       message.reply,
       message.slug,
       message.seenBy,
+      message.reactions,
+      message.reactionSignature,
       editComposerInputRef,
       replyComposerInputRef,
       interactionState,

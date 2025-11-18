@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import { INITIAL_PAGE_SIZE, PAGE_SIZE } from "@/config/channel-config";
 import { api } from "@/convex/_generated/api";
 import { channels, ChannelSlug, type Channel } from "@/data/channels";
-import { MessageDataWithUserInfo } from "@/types/message-types";
+import { EnhancedMessage } from "@/types/message-types";
 import {
   ContextSelector,
   createContext,
@@ -19,7 +19,7 @@ type ChannelProps = {
 
 interface ChannelContextType extends ChannelProps {
   channel: Channel;
-  messages: MessageDataWithUserInfo[];
+  messages: EnhancedMessage[];
   loadingStatus: PaginationStatus;
   loadMoreMessages: () => void;
 }

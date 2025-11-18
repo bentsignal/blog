@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { useMessage } from "@/context/message-context";
+import { REACTION_EMOJIS, ReactionEmoji } from "@/types/message-types";
+import { getReactionCounts } from "@/utils/message-utils";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { cn } from "@/utils/style-utils";
 import {
@@ -186,6 +188,7 @@ const ActionsFrame = ({ children }: { children: React.ReactNode }) => {
 const MyMessageActions = () => {
   return (
     <ActionsFrame>
+      <ReactionButtons />
       <ReplyButton />
       <EditButton />
       <DeleteButton />
@@ -196,6 +199,7 @@ const MyMessageActions = () => {
 const OtherMessageActions = () => {
   return (
     <ActionsFrame>
+      <ReactionButtons />
       <ReplyButton />
     </ActionsFrame>
   );
@@ -303,6 +307,87 @@ export const ReplyPreview = () => {
         {isDeleted ? <i>Deleted message</i> : content}
       </span>
       {isEdited && <EditedIndicator />}
+    </div>
+  );
+};
+
+const ReactionButtons = () => {
+  const { reactToMessage } = useMessageActions();
+  const reactions = useMessage((c) => c.reactions);
+  const messageId = useMessage((c) => c._id);
+  const myProfileId = useAuth((c) => c.myProfileId);
+
+  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+
+  if (imNotSignedIn) return null;
+
+  return REACTION_EMOJIS.map((emoji) => {
+    const iveReactedWithThisEmoji = reactions.some(
+      (r) => r.profile === myProfileId && r.emoji === emoji,
+    );
+    return (
+      <ToolTip.Frame key={emoji}>
+        <ToolTip.Trigger asChild>
+          <Button
+            variant="outline"
+            size="actions"
+            onClick={() => reactToMessage({ messageId, emoji })}
+          >
+            {emoji}
+          </Button>
+        </ToolTip.Trigger>
+        <ToolTip.Content>
+          {iveReactedWithThisEmoji ? "Remove reaction" : "React with " + emoji}
+        </ToolTip.Content>
+      </ToolTip.Frame>
+    );
+  });
+};
+
+export const Reactions = () => {
+  const { reactToMessage } = useMessageActions();
+
+  const messageId = useMessage((c) => c._id);
+  const reactions = useMessage((c) => c.reactions);
+
+  const myProfileId = useAuth((c) => c.myProfileId);
+  const imSignedIn = useAuth((c) => c.imSignedIn);
+  const imNotSignedIn = !imSignedIn;
+
+  if (reactions.length === 0) return null;
+
+  const reactionCounts = getReactionCounts(reactions);
+
+  return (
+    <div className="mt-1.5 flex flex-wrap gap-2">
+      {Object.entries(reactionCounts)
+        .filter(([_, count]) => count !== undefined && count > 0)
+        .map(([emojiString, count]) => {
+          const emoji = emojiString as ReactionEmoji;
+          const iveReactedWithThisEmoji = reactions.some(
+            (r) => r.profile === myProfileId && r.emoji === emoji,
+          );
+          return (
+            <button
+              key={emoji}
+              onClick={() => {
+                if (imNotSignedIn) return;
+                reactToMessage({ messageId, emoji });
+              }}
+              disabled={imNotSignedIn}
+              className={cn(
+                "flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs transition-colors",
+                iveReactedWithThisEmoji
+                  ? "border-primary bg-primary/10 hover:bg-primary/20"
+                  : "border-border bg-background hover:bg-muted",
+                imSignedIn && "cursor-pointer",
+              )}
+            >
+              <span>{emoji}</span>
+              <span className="text-muted-foreground">{count}</span>
+            </button>
+          );
+        })}
     </div>
   );
 };

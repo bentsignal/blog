@@ -2,7 +2,12 @@ import {
   MAX_MESSAGE_LENGTH,
   MIN_MESSAGE_LENGTH,
 } from "@/config/message-config";
-import { Snapshot } from "@/types/message-types";
+import {
+  Reaction,
+  REACTION_EMOJIS,
+  ReactionEmoji,
+  Snapshot,
+} from "@/types/message-types";
 
 export const validateMessage = (content: string) => {
   if (!content) return "Message cannot be empty";
@@ -21,4 +26,21 @@ export const validateMessage = (content: string) => {
 export const getMessageContent = (snapshots: Snapshot[]) => {
   if (snapshots.length === 0) return null;
   return snapshots[snapshots.length - 1].content;
+};
+
+export const getReactionCounts = (reactions: Reaction[]) => {
+  return reactions.reduce(
+    (acc, reaction) => {
+      acc[reaction.emoji] = (acc[reaction.emoji] || 0) + 1;
+      return acc;
+    },
+    {} as Record<ReactionEmoji, number | undefined>,
+  );
+};
+
+export const getReactionsSignature = (reactions: Reaction[]) => {
+  const reactionCounts = getReactionCounts(reactions);
+  return REACTION_EMOJIS.map(
+    (emoji) => `${emoji}-${reactionCounts[emoji] ?? 0}`,
+  ).join("-");
 };

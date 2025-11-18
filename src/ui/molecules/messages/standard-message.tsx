@@ -1,11 +1,11 @@
 import { memo } from "react";
 import { Provider as MessageProvider } from "@/context/message-context";
-import { MessageDataWithUserInfo } from "@/types/message-types";
+import { EnhancedMessage } from "@/types/message-types";
 import * as Message from "@/ui/atoms/message";
 import { InlineComposer } from "@/ui/molecules/composers";
 
 export const StandardMessage = memo(
-  ({ message }: { message: MessageDataWithUserInfo }) => {
+  ({ message }: { message: EnhancedMessage }) => {
     return (
       <MessageProvider message={message}>
         <Message.Frame className="mt-3">
@@ -14,6 +14,7 @@ export const StandardMessage = memo(
             <div className="flex flex-col">
               <Message.Header />
               <Message.Content />
+              <Message.Reactions />
             </div>
           </div>
           <Message.Actions />
@@ -26,6 +27,9 @@ export const StandardMessage = memo(
     if (prev.message.name !== next.message.name) return false;
     if (prev.message.pfp !== next.message.pfp) return false;
     if (prev.message.content !== next.message.content) return false;
+    if (prev.message.reactionSignature !== next.message.reactionSignature) {
+      return false;
+    }
     return true;
   },
 );

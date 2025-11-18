@@ -1,6 +1,7 @@
 import { useAuth } from "@/context/auth-context";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { getReactionsSignature } from "@/utils/message-utils";
 import { useConvexMutation } from "@convex-dev/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -55,6 +56,8 @@ export const useMessageActions = () => {
             },
           ],
           seenBy: [],
+          reactions: [],
+          reactionSignature: "",
           reply,
         };
         localStore.setQuery(
@@ -166,10 +169,64 @@ export const useMessageActions = () => {
     onError: toastError,
   });
 
+  const { mutate: reactToMessage } = useMutation({
+    mutationFn: useConvexMutation(
+      api.messages.toggleReaction,
+    ).withOptimisticUpdate((localStore, args) => {
+      const results = localStore.getAllQueries(api.messages.getPage);
+      for (const result of results) {
+        if (result.value === undefined) continue;
+        const hasTargetMessage = result.value.page.some(
+          (message) => message._id === args.messageId,
+        );
+        if (!hasTargetMessage) continue;
+        localStore.setQuery(
+          api.messages.getPage,
+          {
+            slug: result.args.slug,
+            paginationOpts: result.args.paginationOpts,
+          },
+          {
+            ...result.value,
+            page: result.value.page.map((message) => {
+              if (message._id !== args.messageId) return message;
+              const iveReactedWithThisEmojiAlready = message.reactions.some(
+                (r) => r.profile === myProfileId && r.emoji === args.emoji,
+              );
+              let updatedReactions;
+              if (iveReactedWithThisEmojiAlready) {
+                updatedReactions = message.reactions.filter(
+                  (r) => !(r.profile === myProfileId && r.emoji === args.emoji),
+                );
+              } else {
+                updatedReactions = [
+                  ...message.reactions,
+                  {
+                    profile: myProfileId as Id<"profiles">,
+                    emoji: args.emoji,
+                  },
+                ];
+              }
+              const updatedReactionSignature =
+                getReactionsSignature(updatedReactions);
+              return {
+                ...message,
+                reactions: updatedReactions,
+                reactionSignature: updatedReactionSignature,
+              };
+            }),
+          },
+        );
+      }
+    }),
+    onError: toastError,
+  });
+
   return {
     sendMessage,
     editMessage,
     deleteMessage,
     markAsRead,
+    reactToMessage,
   };
 };

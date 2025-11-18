@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { type MessageDataWithUserInfo } from "@/types/message-types";
+import { type EnhancedMessage } from "@/types/message-types";
 import { areSameDay } from "@/utils/time-utils";
 import * as List from "@/ui/atoms/list";
 import { DateMarker } from "@/ui/molecules/date-marker";
@@ -9,11 +9,7 @@ import {
   StandardMessage,
 } from "@/ui/molecules/messages";
 
-export const MessageList = ({
-  messages,
-}: {
-  messages: MessageDataWithUserInfo[];
-}) => {
+export const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
   return (
     <List.Frame>
       <List.Body fade="sm">

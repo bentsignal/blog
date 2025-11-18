@@ -16,7 +16,7 @@ export default defineSchema({
         timestamp: v.number(),
       }),
     ),
-    reactions: v.optional(v.array(vReaction)),
+    reactions: v.array(vReaction),
   }).index("by_slug", ["slug"]),
   profiles: defineTable({
     user: v.string(),

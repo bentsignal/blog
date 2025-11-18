@@ -1,5 +1,5 @@
 import { env } from "@/convex/convex.env";
-import { MessageDataWithUserInfo } from "@/types/message-types";
+import { EnhancedMessage } from "@/types/message-types";
 import {
   Body,
   Button,
@@ -23,8 +23,8 @@ export default async function renderReplyNotificationEmail({
   userId,
 }: {
   messages: {
-    originalMessage: MessageDataWithUserInfo;
-    replyMessage: MessageDataWithUserInfo;
+    originalMessage: EnhancedMessage;
+    replyMessage: EnhancedMessage;
   }[];
   userId: string;
 }) {
@@ -81,7 +81,7 @@ export default async function renderReplyNotificationEmail({
   );
 }
 
-const Message = ({ message }: { message: MessageDataWithUserInfo }) => {
+const Message = ({ message }: { message: EnhancedMessage }) => {
   return (
     <Section>
       <div className="flex items-center">

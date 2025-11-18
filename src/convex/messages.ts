@@ -1,7 +1,11 @@
 import { channelSlugs } from "@/data/channels";
 import { vSlug } from "@/data/slugs";
-import { MessageDataWithUserInfo } from "@/types/message-types";
-import { getMessageContent, validateMessage } from "@/utils/message-utils";
+import { EnhancedMessage, vReactionEmoji } from "@/types/message-types";
+import {
+  getMessageContent,
+  getReactionsSignature,
+  validateMessage,
+} from "@/utils/message-utils";
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { Id } from "./_generated/dataModel";
@@ -57,7 +61,7 @@ export const getPage = query({
         if (!user) throw new ConvexError("User not found");
 
         const repliedToMessage = repliedToMessages[idx];
-        let reply: MessageDataWithUserInfo | undefined;
+        let reply: EnhancedMessage | undefined;
         if (repliedToMessage) {
           const profile = profilesMap[repliedToMessage.profile];
           if (!profile) throw new ConvexError("User not found");
@@ -67,6 +71,10 @@ export const getPage = query({
             name: profile.name,
             pfp: profile.image,
             content: replyContent,
+            reactions: repliedToMessage.reactions,
+            reactionSignature: getReactionsSignature(
+              repliedToMessage.reactions,
+            ),
           };
         }
         const messageContent = getMessageContent(message.snapshots);
@@ -77,7 +85,9 @@ export const getPage = query({
           pfp: user.image,
           content: messageContent,
           reply,
-        };
+          reactions: message.reactions,
+          reactionSignature: getReactionsSignature(message.reactions),
+        } satisfies EnhancedMessage;
       }),
     };
   },
@@ -248,6 +258,43 @@ export const markAsRead = authedMutation({
         seenBy: [
           ...message.seenBy,
           { profile: myProfile._id, timestamp: Date.now() },
+        ],
+      });
+    }
+  },
+});
+
+export const toggleReaction = authedMutation({
+  args: {
+    messageId: v.id("messages"),
+    emoji: vReactionEmoji,
+  },
+  handler: async (ctx, args) => {
+    const rateLimiterResponse = await rateLimiter.limit(ctx, "messageAction", {
+      key: ctx.user.subject,
+    });
+    if (rateLimiterResponse.ok === false) {
+      throw new ConvexError(
+        `Slow down! You're reacting to messages too fast. Try again in a few seconds.`,
+      );
+    }
+    const message = await ctx.db.get(args.messageId);
+    if (!message) throw new ConvexError("Message not found");
+    const profile = await getProfileByUserId(ctx, ctx.user.subject);
+    const iveReactedWithThisEmojiAlready = message.reactions.some(
+      (r) => r.profile === profile._id && r.emoji === args.emoji,
+    );
+    if (iveReactedWithThisEmojiAlready) {
+      await ctx.db.patch(args.messageId, {
+        reactions: message.reactions.filter(
+          (r) => !(r.profile === profile._id && r.emoji === args.emoji),
+        ),
+      });
+    } else {
+      await ctx.db.patch(args.messageId, {
+        reactions: [
+          ...message.reactions,
+          { profile: profile._id, emoji: args.emoji },
         ],
       });
     }
