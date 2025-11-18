@@ -16,7 +16,6 @@ export const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
         <List.Skeletons position="aboveContent" className="pt-4" />
         <div className="pb-4">
           {messages.map((message, index) => {
-            if (message.content === null) return null;
             const previousMessage = index > 0 ? messages[index - 1] : null;
             // messages sent by the same user within 5 minutes of each other are chained together
             const shouldChainMessages =

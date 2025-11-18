@@ -65,7 +65,7 @@ export const Provider = ({
         Math.ceil((results.length - INITIAL_PAGE_SIZE) / PAGE_SIZE) + 1,
         1,
       ),
-    [results],
+    [results.length],
   );
 
   const contextValue = useMemo(

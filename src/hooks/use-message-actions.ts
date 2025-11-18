@@ -143,18 +143,21 @@ export const useMessageActions = () => {
               },
               {
                 ...result.value,
-                page: result.value.page.map((message) => {
-                  if (message._id === args.messageId) {
-                    return { ...message, content: null, snapshots: [] };
-                  }
-                  if (message.reply?._id === args.messageId) {
-                    return {
-                      ...message,
-                      reply: { ...message.reply, content: null, snapshots: [] },
-                    };
-                  }
-                  return message;
-                }),
+                page: result.value.page
+                  .filter((message) => message._id !== args.messageId)
+                  .map((message) => {
+                    if (message.reply?._id === args.messageId) {
+                      return {
+                        ...message,
+                        reply: {
+                          ...message.reply,
+                          content: null,
+                          snapshots: [],
+                        },
+                      };
+                    }
+                    return message;
+                  }),
               },
             );
           }
