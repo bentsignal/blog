@@ -1,8 +1,12 @@
+import { EnhancedMessage } from "@/types/message-types";
 import {
   NotificationType,
   vNotificationType,
 } from "@/types/notification-types";
-import { getMessageContent } from "@/utils/message-utils";
+import {
+  getMessageContent,
+  getReactionsSignature,
+} from "@/utils/message-utils";
 import { getTimeInMs } from "@/utils/time-utils";
 import { validate } from "convex-helpers/validators";
 import { v } from "convex/values";
@@ -87,30 +91,32 @@ export const getMessages = internalQuery({
     const results = await Promise.all(
       filteredReplies.map(async (replyMessage) => {
         const replierProfile = await ctx.db.get(replyMessage.profile);
-        const replyMesssageWithUserInfo = {
+        const replyMessageEnhanced = {
           ...replyMessage,
           name: replierProfile?.name ?? "Unknown",
           pfp: replierProfile?.imageKey
             ? getFileURL(replierProfile.imageKey)
             : null,
           content: getMessageContent(replyMessage.snapshots),
-        };
+          reactionSignature: getReactionsSignature(replyMessage.reactions),
+        } satisfies EnhancedMessage;
         if (!replyMessage.replyTo) return null;
         const originalMessage = await ctx.db.get(replyMessage.replyTo);
         if (!originalMessage) return null;
         const originalProfile = await ctx.db.get(originalMessage.profile);
         if (!originalProfile) return null;
-        const originalMessageWithUserInfo = {
+        const originalMessageEnhanced = {
           ...originalMessage,
           name: originalProfile?.name ?? "Unknown",
           pfp: originalProfile?.imageKey
             ? getFileURL(originalProfile.imageKey)
             : null,
           content: getMessageContent(originalMessage.snapshots),
-        };
+          reactionSignature: getReactionsSignature(originalMessage.reactions),
+        } satisfies EnhancedMessage;
         return {
-          originalMessage: originalMessageWithUserInfo,
-          replyMessage: replyMesssageWithUserInfo,
+          originalMessage: originalMessageEnhanced,
+          replyMessage: replyMessageEnhanced,
         };
       }),
     );
