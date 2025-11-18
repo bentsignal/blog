@@ -40,7 +40,12 @@ export const SearchBar = ({
           searchTerm.length > 0 ? "cursor-pointer select-none" : "opacity-0",
         )}
       >
-        <X className="size-4" onClick={() => setSearchTerm("")} />
+        <button
+          onClick={() => setSearchTerm("")}
+          className="cursor-pointer p-1"
+        >
+          <X className="size-4" />
+        </button>
       </InputGroup.Addon>
     </InputGroup.Frame>
   );

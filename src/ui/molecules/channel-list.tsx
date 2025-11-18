@@ -39,7 +39,7 @@ export const ChannelList = () => {
         <List.Body>
           <div className="flex flex-col gap-2 py-4">
             {channels.map((channel, index) => (
-              <div
+              <button
                 key={channel.slug}
                 onClick={() => {
                   setCurrentChannelSlug(channel.slug);
@@ -56,10 +56,12 @@ export const ChannelList = () => {
               >
                 <span className="text-muted-foreground text-3xl">#</span>
                 <div className="flex max-w-full flex-col pr-8">
-                  <span className="text-sm font-bold">{channel.name}</span>
+                  <span className="text-start text-sm font-bold">
+                    {channel.name}
+                  </span>
                   <PreviewString value={channel.previewString} index={index} />
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </List.Body>

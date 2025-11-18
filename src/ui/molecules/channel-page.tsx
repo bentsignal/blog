@@ -32,10 +32,12 @@ const Header = () => {
   return (
     <div className="bg-muted mx-4 flex items-center justify-between rounded-2xl p-3 pl-2 md:mt-4">
       <div className="flex flex-1 items-center gap-2 pl-1">
-        <ChevronLeft
-          className="size-5 cursor-pointer"
+        <button
           onClick={() => setCurrentChannelSlug(undefined)}
-        />
+          className="cursor-pointer px-0.5 py-1"
+        >
+          <ChevronLeft className="size-5" />
+        </button>
         <div className="flex flex-1 flex-col justify-center">
           <span className="text-sm font-bold">{channelName}</span>
           <span className="text-muted-foreground text-xs">Text Channel</span>
