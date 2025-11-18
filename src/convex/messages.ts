@@ -226,11 +226,12 @@ export const getPreviewsForChannels = query({
   handler: async (ctx) => {
     const messages = await Promise.all(
       channelSlugs.map(async (slug) => {
-        const message = await ctx.db
+        const recentMessages = await ctx.db
           .query("messages")
           .withIndex("by_slug", (q) => q.eq("slug", slug))
           .order("desc")
-          .first();
+          .take(10);
+        const message = recentMessages.find((msg) => msg.snapshots.length > 0);
         if (!message) return { slug, previewString: null };
         const profile = await ctx.db.get(message.profile);
         if (!profile) return { slug, previewString: null };
