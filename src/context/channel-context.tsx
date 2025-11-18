@@ -22,6 +22,7 @@ interface ChannelContextType extends ChannelProps {
   messages: EnhancedMessage[];
   loadingStatus: PaginationStatus;
   loadMoreMessages: () => void;
+  numberOfPages: number;
 }
 
 export const ChannelContext = createContext<ChannelContextType>(
@@ -58,6 +59,15 @@ export const Provider = ({
 
   const orderedResults = useMemo(() => results.slice().reverse(), [results]);
 
+  const numberOfPages = useMemo(
+    () =>
+      Math.max(
+        Math.ceil((results.length - INITIAL_PAGE_SIZE) / PAGE_SIZE) + 1,
+        1,
+      ),
+    [results],
+  );
+
   const contextValue = useMemo(
     () => ({
       slug,
@@ -65,8 +75,9 @@ export const Provider = ({
       loadingStatus: status,
       loadMoreMessages: () => loadMore(PAGE_SIZE),
       messages: orderedResults,
+      numberOfPages,
     }),
-    [slug, channel, orderedResults, status, loadMore],
+    [slug, channel, orderedResults, status, loadMore, numberOfPages],
   );
 
   return (

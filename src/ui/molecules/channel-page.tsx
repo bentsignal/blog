@@ -49,6 +49,7 @@ const Body = () => {
   const loadingStatus = useChannel((c) => c.loadingStatus);
   const loadMoreMessages = useChannel((c) => c.loadMoreMessages);
   const messages = useChannel((c) => c.messages);
+  const numberOfPages = useChannel((c) => c.numberOfPages);
 
   if (loadingStatus === "LoadingFirstPage") {
     return (
@@ -75,6 +76,7 @@ const Body = () => {
       skeletonComponent={<Message.Skeleton />}
       loadMore={loadMoreMessages}
       contentVersion={messages.length}
+      numberOfPages={numberOfPages}
     >
       <MessageList messages={messages} />
       <ChannelComposer />

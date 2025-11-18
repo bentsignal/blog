@@ -49,6 +49,7 @@ interface ListProps {
   loadMoreWhenThisCloseToTop?: number;
   loadMore?: () => void;
   contentVersion?: number;
+  numberOfPages?: number;
 }
 
 export const Provider = ({
@@ -62,6 +63,7 @@ export const Provider = ({
   skeletonComponent,
   loadMore,
   contentVersion,
+  numberOfPages,
 }: ListProps) => {
   const distanceFromBottomRef = useRef(0); // px
 
@@ -189,7 +191,7 @@ export const Provider = ({
     setPercentToBottom,
   ]);
 
-  // when new content is loaded and appended to the top of the list, retain previous distance from bottom
+  // when a new page of content is loaded and appended to the top of the list, retain scroll position
   useEffect(() => {
     if (
       vagueScrollPositionRef.current !== "bottom" &&
@@ -201,7 +203,7 @@ export const Provider = ({
       bodyRef.current.scrollTop =
         heightOfBody - heightOfContainer - distanceFromBottomRef.current;
     }
-  }, [contentVersion, keepScrollPositionWhenContentChanges]);
+  }, [numberOfPages, keepScrollPositionWhenContentChanges]);
 
   // when user is at the bottom of the list and the content changes, scroll to the new bottom
   useEffect(() => {
