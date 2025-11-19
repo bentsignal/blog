@@ -26,7 +26,7 @@ export const Frame = ({
   );
 };
 
-export const Body = ({
+export const Container = ({
   children,
   fade,
 }: {
@@ -38,7 +38,7 @@ export const Body = ({
     throw new Error("ListContext not found");
   }
 
-  const bodyRef = useList((c) => c.bodyRef);
+  const containerRef = useList((c) => c.containerRef);
   const showScrollbar = useList(
     (c) => c.vagueScrollPosition === "middle" && c.hasScrollBeenMeasured,
   );
@@ -64,8 +64,29 @@ export const Body = ({
         fadeClass,
         scrollbarClass,
       )}
-      ref={bodyRef}
+      ref={containerRef}
     >
+      {children}
+    </div>
+  );
+};
+
+export const Content = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  const hasListContext = useHasParentContext(ListContext);
+  if (!hasListContext) {
+    throw new Error("ListContext not found");
+  }
+
+  const contentRef = useList((c) => c.contentRef);
+
+  return (
+    <div className={cn(className)} ref={contentRef}>
       {children}
     </div>
   );

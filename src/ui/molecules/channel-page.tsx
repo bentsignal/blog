@@ -73,11 +73,9 @@ const Body = () => {
     <ListProvider
       startAt="bottom"
       isBottomSticky={true}
-      keepScrollPositionWhenContentChanges={true}
       loadingStatus={loadingStatus}
       skeletonComponent={<Message.Skeleton />}
       loadMore={loadMoreMessages}
-      contentVersion={messages.length}
       numberOfPages={numberOfPages}
     >
       <MessageList messages={messages} />

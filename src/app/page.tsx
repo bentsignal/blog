@@ -15,8 +15,8 @@ export default function HomePage() {
       <List.Frame>
         <TopControls className="absolute top-0 left-0 z-6" />
         <Abyss.Top />
-        <List.Body fade="md">
-          <div className="mx-auto my-16 flex max-w-xl flex-col gap-4 px-4">
+        <List.Container fade="md">
+          <List.Content className="mx-auto my-16 flex max-w-xl flex-col gap-4 px-4">
             <div className="flex items-center gap-4">
               <Image
                 src={pfp}
@@ -59,8 +59,8 @@ export default function HomePage() {
                 );
               })}
             </div>
-          </div>
-        </List.Body>
+          </List.Content>
+        </List.Container>
         <Abyss.Bottom />
       </List.Frame>
     </ListProvider>

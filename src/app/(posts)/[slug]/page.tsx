@@ -40,8 +40,8 @@ export default async function Page({
         <List.ProgressBar />
         <TopControls className="absolute top-0 left-0 z-6" />
         <Abyss.Top />
-        <List.Body fade="md">
-          <div className="mx-auto flex max-w-xl flex-col gap-2 px-4 py-16">
+        <List.Container fade="md">
+          <List.Content className="mx-auto flex max-w-xl flex-col gap-2 px-4 py-16">
             <Link
               href="/"
               className="text-muted-foreground hover:text-primary flex cursor-pointer items-center gap-2 text-sm transition-colors duration-100"
@@ -73,8 +73,8 @@ export default async function Page({
               </span>
               <Socials />
             </div>
-          </div>
-        </List.Body>
+          </List.Content>
+        </List.Container>
         <div className="absolute right-0 bottom-0 z-6 flex flex-col gap-2 p-4">
           <List.ScrollToTopButton />
           <List.ScrollToBottomButton />

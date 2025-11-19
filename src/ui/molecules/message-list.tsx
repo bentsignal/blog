@@ -12,9 +12,9 @@ import {
 export const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
   return (
     <List.Frame>
-      <List.Body fade="sm">
+      <List.Container fade="sm">
         <List.Skeletons position="aboveContent" className="pt-4" />
-        <div className="pb-4">
+        <List.Content className="pb-4">
           {messages.map((message, index) => {
             const previousMessage = index > 0 ? messages[index - 1] : null;
             // messages sent by the same user within 5 minutes of each other are chained together
@@ -42,8 +42,8 @@ export const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
               </Fragment>
             );
           })}
-        </div>
-      </List.Body>
+        </List.Content>
+      </List.Container>
       <List.ScrollToBottomButton
         className="absolute right-0 bottom-0 z-6 p-4"
         hideWhenAtBottom={true}

@@ -36,8 +36,8 @@ export const ChannelList = () => {
   return (
     <ListProvider>
       <List.Frame>
-        <List.Body>
-          <div className="flex flex-col gap-2 py-4">
+        <List.Container>
+          <List.Content className="flex flex-col gap-2 py-4">
             {channels.map((channel, index) => (
               <button
                 key={channel.slug}
@@ -63,8 +63,8 @@ export const ChannelList = () => {
                 </div>
               </button>
             ))}
-          </div>
-        </List.Body>
+          </List.Content>
+        </List.Container>
       </List.Frame>
     </ListProvider>
   );
