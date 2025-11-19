@@ -123,11 +123,17 @@ export const Content = () => {
   );
 };
 
-export const Skeleton = ({ index }: { index?: number }) => {
+export const Skeleton = ({
+  index,
+  animate = true,
+}: {
+  index?: number;
+  animate?: boolean;
+}) => {
   const numberOfContentLines = index ? (index % 4) + 1 : 3;
 
   return (
-    <div className="mb-4 animate-pulse px-6 py-0.5">
+    <div className={cn("mb-4 px-6 py-0.5", animate && "animate-pulse")}>
       <div className="flex gap-3">
         <Shapes.Circle className="size-10" />
         <div className="mt-1 flex w-full flex-col gap-1.5">

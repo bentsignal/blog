@@ -85,9 +85,9 @@ const PreviewString = ({
       />
     );
   }
-  const previewString = value ?? "Preview unavailable";
+  const previewString = value ?? "No messages yet";
   return (
-    <span className="text-muted-foreground truncate text-xs">
+    <span className="text-muted-foreground truncate text-start text-xs">
       {previewString}
     </span>
   );

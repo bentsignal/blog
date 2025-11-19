@@ -1,7 +1,9 @@
 import { Fragment } from "react";
 import { type EnhancedMessage } from "@/types/message-types";
+import { cn } from "@/utils/style-utils";
 import { areSameDay } from "@/utils/time-utils";
 import * as List from "@/ui/atoms/list";
+import * as Message from "@/ui/atoms/message";
 import { DateMarker } from "@/ui/molecules/date-marker";
 import {
   ChainedMessage,
@@ -10,6 +12,33 @@ import {
 } from "@/ui/molecules/messages";
 
 export const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
+  if (messages.length === 0) {
+    return (
+      <List.Frame>
+        <div className="flex flex-1 flex-col justify-end overflow-hidden mask-t-from-95%">
+          {Array.from({ length: 30 }).map((_, index) => (
+            <Message.Skeleton key={index} index={index} animate={false} />
+          ))}
+        </div>
+        <div className="absolute top-0 left-0 flex h-full w-full items-center justify-center">
+          <div
+            className={cn(
+              "flex h-[50%] w-full flex-col items-center justify-center gap-1",
+              "bg-background/10 mask-t-from-75% mask-b-from-75% backdrop-blur-xs",
+              "animate-in fade-in blur-in duration-500",
+            )}
+          >
+            <span className="text-xl font-bold">
+              No one's said anything yet
+            </span>
+            <span className="text-muted-foreground text-lg">
+              Get the ball rolling! ⬇️
+            </span>
+          </div>
+        </div>
+      </List.Frame>
+    );
+  }
   return (
     <List.Frame>
       <List.Container fade="sm">
