@@ -220,18 +220,18 @@ export const getPreviewsForChannels = query({
   handler: async (ctx) => {
     const messages = await Promise.all(
       channelSlugs.map(async (slug) => {
-        const recentMessages = await ctx.db
+        const message = await ctx.db
           .query("messages")
           .withIndex("by_slug", (q) => q.eq("slug", slug))
           .order("desc")
-          .take(10);
-        const message = recentMessages.find((msg) => msg.snapshots.length > 0);
+          .filter((q) => q.neq(q.field("snapshots"), []))
+          .first();
         if (!message) return { slug, previewString: null };
         const profile = await ctx.db.get(message.profile);
         if (!profile) return { slug, previewString: null };
         const messageContent = getMessageContent(message.snapshots);
         const messageContentString =
-          messageContent === null ? "Deleted message" : messageContent;
+          messageContent === null ? "Preview unavailable" : messageContent;
         const displayName = profile.name;
         const previewString = `${displayName}: ${messageContentString}`;
         return {
