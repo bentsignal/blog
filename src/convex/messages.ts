@@ -22,18 +22,12 @@ export const getPage = query({
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    const unfilteredMessages = await ctx.db
+    const messages = await ctx.db
       .query("messages")
       .withIndex("by_slug", (q) => q.eq("slug", args.slug))
+      .filter((q) => q.neq(q.field("snapshots"), []))
       .order("desc")
       .paginate(args.paginationOpts);
-    // filter out messages that have been deleted
-    const messages = {
-      ...unfilteredMessages,
-      page: unfilteredMessages.page.filter(
-        (message) => message.snapshots.length > 0,
-      ),
-    };
     const repliedToMessages = await Promise.all(
       messages.page.map((message) =>
         message.replyTo ? ctx.db.get(message.replyTo) : null,
