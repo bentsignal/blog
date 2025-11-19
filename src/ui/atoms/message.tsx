@@ -298,8 +298,8 @@ export const ReplyPreview = () => {
         <Image
           src={pfp ?? ""}
           alt={name ?? ""}
-          width={40}
-          height={40}
+          width={16}
+          height={16}
           className="mr-1 size-4 flex-shrink-0 rounded-full"
         />
       )}

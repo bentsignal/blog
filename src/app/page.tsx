@@ -24,6 +24,7 @@ export default function HomePage() {
                 width={100}
                 height={100}
                 className="rounded-full"
+                priority
               />
               <div className="flex flex-col">
                 <span className="font-semibold">shawn</span>
