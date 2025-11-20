@@ -123,23 +123,19 @@ export const Provider = ({
 
   // handle scroll events (determine if user is at bottom, load more items when close to top of list)
   useEffect(() => {
-    const container = containerRef.current;
-    const content = contentRef.current;
-    const topSkeletonContainer = topSkeletonContainerRef.current;
-    const bottomSkeletonContainer = bottomSkeletonContainerRef.current;
-
-    if (!container) return;
-    if (!content) return;
-
     const handleScroll = () => {
-      const heightOfContainer = container.scrollHeight;
-      const heightOfScrollWindow = container.clientHeight;
-      const heightOfTopSkeletons = topSkeletonContainer?.clientHeight ?? 0;
-      const heightOfBottomSkeletons =
-        bottomSkeletonContainer?.clientHeight ?? 0;
-      const heightOfContent = content.clientHeight;
+      if (containerRef.current === null) return;
+      if (contentRef.current === null) return;
 
-      const distanceFromTop = container.scrollTop;
+      const heightOfContainer = containerRef.current.scrollHeight;
+      const heightOfScrollWindow = containerRef.current.clientHeight;
+      const heightOfTopSkeletons =
+        topSkeletonContainerRef.current?.clientHeight ?? 0;
+      const heightOfBottomSkeletons =
+        bottomSkeletonContainerRef.current?.clientHeight ?? 0;
+      const heightOfContent = contentRef.current.clientHeight;
+
+      const distanceFromTop = containerRef.current.scrollTop;
       const distanceFromTopOfContent = distanceFromTop - heightOfTopSkeletons;
       const distanceFromBottomOfContent =
         heightOfContainer -
@@ -183,8 +179,10 @@ export const Provider = ({
       setHasScrollBeenMeasured(true);
     };
 
-    container.addEventListener("scroll", handleScroll);
+    const container = containerRef.current;
+    if (container === null) return;
 
+    container.addEventListener("scroll", handleScroll);
     return () => {
       container.removeEventListener("scroll", handleScroll);
     };
