@@ -40,31 +40,21 @@ export const Provider = ({ children }: { children: React.ReactNode }) => {
 
   const slugsWithPreviews = useQuery(api.messages.getPreviewsForChannels);
 
-  let channels: ChannelWithPreview[] = [];
-  if (slugsWithPreviews) {
-    channels = slugsWithPreviews.map((preview) => {
-      const channel = baseChannels[preview.slug];
+  const channels = channelSlugs
+    .map((slug) => {
       return {
-        ...channel,
-        ...preview,
-      };
-    });
-  } else {
-    channels = channelSlugs.map((slug) => {
-      const channel = baseChannels[slug];
-      return {
-        ...channel,
+        ...baseChannels[slug],
         slug,
-        previewString: undefined,
+        previewString: slugsWithPreviews?.find(
+          (preview) => preview.slug === slug,
+        )?.previewString,
       };
-    });
-  }
-
-  if (hasSearchContext) {
-    channels = channels.filter((channel) =>
-      channel.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    })
+    .filter((channel) =>
+      hasSearchContext
+        ? channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+        : true,
     );
-  }
 
   const contextValue = { channels };
 
