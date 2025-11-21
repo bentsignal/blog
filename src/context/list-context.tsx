@@ -93,32 +93,58 @@ export const Provider = ({
   const [contentFitsInContainer, setContentFitsInContainer] = useState(true);
   const [hasScrollBeenMeasured, setHasScrollBeenMeasured] = useState(false);
 
+  const getScrollMeasurements = useCallback(() => {
+    const heightOfContainer = containerRef.current?.scrollHeight ?? 0;
+    const heightOfScrollWindow = containerRef.current?.clientHeight ?? 0;
+    const heightOfTopSkeletons =
+      topSkeletonContainerRef.current?.clientHeight ?? 0;
+    const heightOfBottomSkeletons =
+      bottomSkeletonContainerRef.current?.clientHeight ?? 0;
+    const heightOfContent = contentRef.current?.clientHeight ?? 0;
+
+    const distanceFromTop = containerRef.current?.scrollTop ?? 0;
+    const distanceFromTopOfContent = distanceFromTop - heightOfTopSkeletons;
+    const thisIsTheTopValueWhenAtBottomOfContent =
+      heightOfContainer - heightOfScrollWindow - heightOfBottomSkeletons;
+    const distanceFromBottomOfContent =
+      thisIsTheTopValueWhenAtBottomOfContent - distanceFromTop;
+
+    return {
+      heightOfContainer,
+      heightOfScrollWindow,
+      heightOfTopSkeletons,
+      heightOfBottomSkeletons,
+      heightOfContent,
+      distanceFromTop,
+      distanceFromTopOfContent,
+      thisIsTheTopValueWhenAtBottomOfContent,
+      distanceFromBottomOfContent,
+    };
+  }, []);
+
   const scrollToBottom = useCallback(
     (behavior: "instant" | "smooth" = "instant") => {
       // scroll to the bottom of the content, but just above the bottom skeletons (if they exist)
-      const heightOfContainer = containerRef.current?.scrollHeight ?? 0;
-      const heightOfScrollWindow = containerRef.current?.clientHeight ?? 0;
-      const heightOfBottomSkeletons =
-        bottomSkeletonContainerRef.current?.clientHeight ?? 0;
+      const { thisIsTheTopValueWhenAtBottomOfContent } =
+        getScrollMeasurements();
       containerRef.current?.scrollTo({
-        top: heightOfContainer - heightOfScrollWindow - heightOfBottomSkeletons,
+        top: thisIsTheTopValueWhenAtBottomOfContent,
         behavior,
       });
     },
-    [],
+    [getScrollMeasurements],
   );
 
   const scrollToTop = useCallback(
     (behavior: "instant" | "smooth" = "instant") => {
       // scroll to the top of the content, but just below the top skeletons (if they exist)
-      const heightOfTopSkeletons =
-        topSkeletonContainerRef.current?.clientHeight ?? 0;
+      const { heightOfTopSkeletons } = getScrollMeasurements();
       containerRef.current?.scrollTo({
         top: heightOfTopSkeletons,
         behavior,
       });
     },
-    [],
+    [getScrollMeasurements],
   );
 
   // handle scroll events (determine if user is at bottom, load more items when close to top of list)
@@ -127,21 +153,13 @@ export const Provider = ({
       if (containerRef.current === null) return;
       if (contentRef.current === null) return;
 
-      const heightOfContainer = containerRef.current.scrollHeight;
-      const heightOfScrollWindow = containerRef.current.clientHeight;
-      const heightOfTopSkeletons =
-        topSkeletonContainerRef.current?.clientHeight ?? 0;
-      const heightOfBottomSkeletons =
-        bottomSkeletonContainerRef.current?.clientHeight ?? 0;
-      const heightOfContent = contentRef.current.clientHeight;
+      const {
+        heightOfScrollWindow,
+        heightOfContent,
+        distanceFromTopOfContent,
+        distanceFromBottomOfContent,
+      } = getScrollMeasurements();
 
-      const distanceFromTop = containerRef.current.scrollTop;
-      const distanceFromTopOfContent = distanceFromTop - heightOfTopSkeletons;
-      const distanceFromBottomOfContent =
-        heightOfContainer -
-        heightOfScrollWindow -
-        heightOfBottomSkeletons -
-        distanceFromTop;
       distanceFromBottomRef.current = distanceFromBottomOfContent;
 
       const closeEnoughToLoadMore =
@@ -191,6 +209,7 @@ export const Provider = ({
     loadMore,
     loadMoreWhenThisCloseToTop,
     setPercentToBottom,
+    getScrollMeasurements,
   ]);
 
   // handle updates in size of content
@@ -245,7 +264,7 @@ export const Provider = ({
     return () => {
       observer.disconnect();
     };
-  }, [isBottomSticky, scrollToBottom]);
+  }, [isBottomSticky, getScrollMeasurements, scrollToBottom]);
 
   // optionally scroll to the bottom of the list before items are rendered
   useLayoutEffect(() => {
