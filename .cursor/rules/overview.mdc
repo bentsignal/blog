@@ -1,0 +1,6 @@
+---
+alwaysApply: true
+---
+
+This project has the react compiler enabled, so memoizing values or functions
+with useMemo or useCallback is not necessary most of the time.
