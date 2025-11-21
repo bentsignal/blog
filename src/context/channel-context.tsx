@@ -29,6 +29,8 @@ export const ChannelContext = createContext<ChannelContextType>(
   {} as ChannelContextType,
 );
 
+ChannelContext.displayName = "ChannelContext";
+
 export const useChannel = <T,>(
   selector: ContextSelector<ChannelContextType, T>,
 ) => useContextSelector(ChannelContext, selector);

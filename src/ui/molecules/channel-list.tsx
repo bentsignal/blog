@@ -9,16 +9,13 @@ import { Provider as ListProvider } from "@/context/list-context";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
-import { useHasParentContext } from "@fluentui/react-context-selector";
 import { useRouter } from "next/navigation";
 import * as List from "@/ui/atoms/list";
 import * as Shapes from "@/ui/atoms/shapes";
+import { useRequiredContext } from "@/hooks/use-required-context";
 
 export const ChannelList = () => {
-  const hasChannelListContext = useHasParentContext(ChannelListContext);
-  if (!hasChannelListContext) {
-    throw new Error("ChannelListContext not found");
-  }
+  useRequiredContext(ChannelListContext);
 
   const setCurrentChannelSlug = useChatWindow((c) => c.setCurrentChannelSlug);
   const channels = useChannelList((c) => c.channels);

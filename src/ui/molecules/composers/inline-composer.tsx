@@ -1,12 +1,9 @@
 import { MessageContext, useMessage } from "@/context/message-context";
-import { useHasParentContext } from "@fluentui/react-context-selector";
 import { EditComposer, ReplyComposer } from "@/ui/molecules/composers";
+import { useRequiredContext } from "@/hooks/use-required-context";
 
 export const InlineComposer = () => {
-  const hasMessageContext = useHasParentContext(MessageContext);
-  if (!hasMessageContext) {
-    throw new Error("MessageContext not found");
-  }
+  useRequiredContext(MessageContext);
 
   const interactionState = useMessage((c) => c.interactionState);
 

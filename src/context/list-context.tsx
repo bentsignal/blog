@@ -36,6 +36,8 @@ export const ListContext = createContext<ListContextType>(
   {} as ListContextType,
 );
 
+ListContext.displayName = "ListContext";
+
 export const useList = <T,>(selector: ContextSelector<ListContextType, T>) =>
   useContextSelector(ListContext, selector);
 
@@ -104,10 +106,10 @@ export const Provider = ({
 
     const distanceFromTop = containerRef.current?.scrollTop ?? 0;
     const distanceFromTopOfContent = distanceFromTop - heightOfTopSkeletons;
-    const thisIsTheTopValueWhenAtBottomOfContent =
+    const thisIsTheValueOfTopWhenAtBottom =
       heightOfContainer - heightOfScrollWindow - heightOfBottomSkeletons;
     const distanceFromBottomOfContent =
-      thisIsTheTopValueWhenAtBottomOfContent - distanceFromTop;
+      thisIsTheValueOfTopWhenAtBottom - distanceFromTop;
 
     return {
       heightOfContainer,
@@ -117,7 +119,7 @@ export const Provider = ({
       heightOfContent,
       distanceFromTop,
       distanceFromTopOfContent,
-      thisIsTheTopValueWhenAtBottomOfContent,
+      thisIsTheValueOfTopWhenAtBottom,
       distanceFromBottomOfContent,
     };
   }, []);
@@ -125,10 +127,9 @@ export const Provider = ({
   const scrollToBottom = useCallback(
     (behavior: "instant" | "smooth" = "instant") => {
       // scroll to the bottom of the content, but just above the bottom skeletons (if they exist)
-      const { thisIsTheTopValueWhenAtBottomOfContent } =
-        getScrollMeasurements();
+      const { thisIsTheValueOfTopWhenAtBottom } = getScrollMeasurements();
       containerRef.current?.scrollTo({
-        top: thisIsTheTopValueWhenAtBottomOfContent,
+        top: thisIsTheValueOfTopWhenAtBottom,
         behavior,
       });
     },
@@ -148,62 +149,52 @@ export const Provider = ({
   );
 
   // handle scroll events (determine if user is at bottom, load more items when close to top of list)
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current === null) return;
-      if (contentRef.current === null) return;
+  const handleScroll = useCallback(() => {
+    if (containerRef.current === null) return;
+    if (contentRef.current === null) return;
 
-      const {
-        heightOfScrollWindow,
-        heightOfContent,
-        distanceFromTopOfContent,
-        distanceFromBottomOfContent,
-      } = getScrollMeasurements();
+    const {
+      heightOfScrollWindow,
+      heightOfContent,
+      distanceFromTopOfContent,
+      distanceFromBottomOfContent,
+    } = getScrollMeasurements();
 
-      distanceFromBottomRef.current = distanceFromBottomOfContent;
+    distanceFromBottomRef.current = distanceFromBottomOfContent;
 
-      const closeEnoughToLoadMore =
-        distanceFromTopOfContent < loadMoreWhenThisCloseToTop;
-      if (
-        loadMore &&
-        closeEnoughToLoadMore &&
-        loadingStatusRef.current === "CanLoadMore"
-      ) {
-        loadMore();
-      }
+    const closeEnoughToLoadMore =
+      distanceFromTopOfContent < loadMoreWhenThisCloseToTop;
+    if (
+      loadMore &&
+      closeEnoughToLoadMore &&
+      loadingStatusRef.current === "CanLoadMore"
+    ) {
+      loadMore();
+    }
 
-      const newVagueScrollPosition =
-        distanceFromTopOfContent <= nearTopOrBottomThreshold
-          ? "top"
-          : distanceFromBottomOfContent <= nearTopOrBottomThreshold
-            ? "bottom"
-            : "middle";
-      vagueScrollPositionRef.current = newVagueScrollPosition;
-      setVagueScrollPosition(newVagueScrollPosition);
+    const newVagueScrollPosition =
+      distanceFromTopOfContent <= nearTopOrBottomThreshold
+        ? "top"
+        : distanceFromBottomOfContent <= nearTopOrBottomThreshold
+          ? "bottom"
+          : "middle";
+    vagueScrollPositionRef.current = newVagueScrollPosition;
+    setVagueScrollPosition(newVagueScrollPosition);
 
-      setContentFitsInContainer(heightOfContent <= heightOfScrollWindow);
+    setContentFitsInContainer(heightOfContent <= heightOfScrollWindow);
 
-      const newUnclampedPercentToBottom =
-        (distanceFromTopOfContent / (heightOfContent - heightOfScrollWindow)) *
-        100;
-      const newPercentToBottom =
-        newUnclampedPercentToBottom > 100
-          ? 100
-          : newUnclampedPercentToBottom < 0
-            ? 0
-            : newUnclampedPercentToBottom;
-      setPercentToBottom(newPercentToBottom);
+    const newUnclampedPercentToBottom =
+      (distanceFromTopOfContent / (heightOfContent - heightOfScrollWindow)) *
+      100;
+    const newPercentToBottom =
+      newUnclampedPercentToBottom > 100
+        ? 100
+        : newUnclampedPercentToBottom < 0
+          ? 0
+          : newUnclampedPercentToBottom;
+    setPercentToBottom(newPercentToBottom);
 
-      setHasScrollBeenMeasured(true);
-    };
-
-    const container = containerRef.current;
-    if (container === null) return;
-
-    container.addEventListener("scroll", handleScroll);
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-    };
+    setHasScrollBeenMeasured(true);
   }, [
     nearTopOrBottomThreshold,
     loadMore,
@@ -211,6 +202,16 @@ export const Provider = ({
     setPercentToBottom,
     getScrollMeasurements,
   ]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container === null) return;
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleScroll]);
 
   // handle updates in size of content
   useLayoutEffect(() => {

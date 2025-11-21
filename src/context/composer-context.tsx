@@ -23,6 +23,8 @@ export const ComposerContext = createContext<ComposerContextType>(
   {} as ComposerContextType,
 );
 
+ComposerContext.displayName = "ComposerContext";
+
 export const useComposer = <T,>(
   selector: ContextSelector<ComposerContextType, T>,
 ) => useContextSelector(ComposerContext, selector);

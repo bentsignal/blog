@@ -8,11 +8,11 @@ import {
 import { useAuth } from "@/context/auth-context";
 import { ComposerContext, useComposer } from "@/context/composer-context";
 import { cn } from "@/utils/style-utils";
-import { useHasParentContext } from "@fluentui/react-context-selector";
 import * as Icons from "lucide-react";
 import * as ToolTip from "./tooltip";
 import * as Auth from "@/ui/atoms/auth";
 import { Button } from "@/ui/atoms/button";
+import { useRequiredContext } from "@/hooks/use-required-context";
 
 export const Frame = ({
   className,
@@ -40,10 +40,7 @@ export const Input = ({
   placeholder?: string;
   className?: string;
 }) => {
-  const hasParentContext = useHasParentContext(ComposerContext);
-  if (!hasParentContext) {
-    throw new Error("ComposerContext not found");
-  }
+  useRequiredContext(ComposerContext);
 
   const inputRef = useComposer((c) => c.inputRef);
   const inputValue = useComposer((c) => c.inputValue);
@@ -106,10 +103,7 @@ export const Input = ({
 };
 
 export const Send = () => {
-  const hasParentContext = useHasParentContext(ComposerContext);
-  if (!hasParentContext) {
-    throw new Error("ComposerContext not found");
-  }
+  useRequiredContext(ComposerContext);
 
   const onSubmit = useComposer((c) => c.onSubmit);
   const submitDisabled = useComposer((c) => c.inputValue.trim() === "");
@@ -135,10 +129,7 @@ export const Send = () => {
 };
 
 export const Cancel = () => {
-  const hasParentContext = useHasParentContext(ComposerContext);
-  if (!hasParentContext) {
-    throw new Error("ComposerContext not found");
-  }
+  useRequiredContext(ComposerContext);
 
   const onCancel = useComposer((c) => c.onCancel);
 
@@ -155,10 +146,7 @@ export const Cancel = () => {
 };
 
 export const Save = () => {
-  const hasParentContext = useHasParentContext(ComposerContext);
-  if (!hasParentContext) {
-    throw new Error("ComposerContext not found");
-  }
+  useRequiredContext(ComposerContext);
 
   const onSubmit = useComposer((c) => c.onSubmit);
   const submitDisabled = useComposer((c) => c.submitDisabled);

@@ -23,6 +23,8 @@ export const ChatWindowContext = createContext<ChatWindowContextType>(
   {} as ChatWindowContextType,
 );
 
+ChatWindowContext.displayName = "ChatWindowContext";
+
 export const useChatWindow = <T,>(
   selector: ContextSelector<ChatWindowContextType, T>,
 ) => useContextSelector(ChatWindowContext, selector);

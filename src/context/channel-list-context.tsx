@@ -30,6 +30,8 @@ export const ChannelListContext = createContext<ChannelListContextType>(
   {} as ChannelListContextType,
 );
 
+ChannelListContext.displayName = "ChannelListContext";
+
 export const useChannelList = <T,>(
   selector: ContextSelector<ChannelListContextType, T>,
 ) => useContextSelector(ChannelListContext, selector);

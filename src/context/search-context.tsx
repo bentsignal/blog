@@ -17,6 +17,8 @@ export const SearchContext = createContext<SearchContextType>(
   {} as SearchContextType,
 );
 
+SearchContext.displayName = "SearchContext";
+
 export const useSearch = <T,>(
   selector: ContextSelector<SearchContextType, T>,
 ) => useContextSelector(SearchContext, selector);

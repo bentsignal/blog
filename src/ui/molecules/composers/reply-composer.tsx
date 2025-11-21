@@ -4,22 +4,14 @@ import { Provider as ComposerProvider } from "@/context/composer-context";
 import { ListContext, useList } from "@/context/list-context";
 import { MessageContext, useMessage } from "@/context/message-context";
 import { validateMessage } from "@/utils/message-utils";
-import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as ButtonGroup from "@/ui/atoms/button-group";
 import * as Composer from "@/ui/atoms/composer";
 import { useMessageActions } from "@/hooks/use-message-actions";
+import { useRequiredContext } from "@/hooks/use-required-context";
 
 export const ReplyComposer = () => {
-  const hasMessageContext = useHasParentContext(MessageContext);
-  const hasListContext = useHasParentContext(ListContext);
-
-  if (!hasMessageContext) {
-    throw new Error("MessageContext not found");
-  }
-  if (!hasListContext) {
-    throw new Error("ListContext not found");
-  }
+  useRequiredContext([MessageContext, ListContext]);
 
   const messageId = useMessage((c) => c._id);
   const inputRef = useMessage((c) => c.replyComposerInputRef);

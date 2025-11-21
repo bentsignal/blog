@@ -28,6 +28,8 @@ export const AuthContext = createContext<AuthContextType>(
   {} as AuthContextType,
 );
 
+AuthContext.displayName = "AuthContext";
+
 export const useAuth = <T,>(selector: ContextSelector<AuthContextType, T>) =>
   useContextSelector(AuthContext, selector);
 

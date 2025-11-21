@@ -5,21 +5,13 @@ import { useChatWindow } from "@/context/chat-window-context";
 import { Provider as ComposerProvider } from "@/context/composer-context";
 import { ListContext, useList } from "@/context/list-context";
 import { validateMessage } from "@/utils/message-utils";
-import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as Composer from "@/ui/atoms/composer";
 import { useMessageActions } from "@/hooks/use-message-actions";
+import { useRequiredContext } from "@/hooks/use-required-context";
 
 export const ChannelComposer = () => {
-  const hasChannelContext = useHasParentContext(ChannelContext);
-  const hasListContext = useHasParentContext(ListContext);
-
-  if (!hasChannelContext) {
-    throw new Error("ChannelContext not found");
-  }
-  if (!hasListContext) {
-    throw new Error("ListContext not found");
-  }
+  useRequiredContext([ChannelContext, ListContext]);
 
   const [inputValue, setInputValue] = useState("");
 

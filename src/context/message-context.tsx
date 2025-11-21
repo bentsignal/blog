@@ -25,6 +25,8 @@ export const MessageContext = createContext<MessageContextType>(
   {} as MessageContextType,
 );
 
+MessageContext.displayName = "MessageContext";
+
 export const useMessage = <T,>(
   selector: ContextSelector<MessageContextType, T>,
 ) => useContextSelector(MessageContext, selector);

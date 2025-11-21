@@ -2,17 +2,14 @@ import { useState } from "react";
 import { Provider as ComposerProvider } from "@/context/composer-context";
 import { MessageContext, useMessage } from "@/context/message-context";
 import { validateMessage } from "@/utils/message-utils";
-import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as ButtonGroup from "@/ui/atoms/button-group";
 import * as Composer from "@/ui/atoms/composer";
 import { useMessageActions } from "@/hooks/use-message-actions";
+import { useRequiredContext } from "@/hooks/use-required-context";
 
 export const EditComposer = () => {
-  const hasParentContext = useHasParentContext(MessageContext);
-  if (!hasParentContext) {
-    throw new Error("MessageContext not found");
-  }
+  useRequiredContext(MessageContext);
 
   const messageId = useMessage((c) => c._id);
   const inputRef = useMessage((c) => c.editComposerInputRef);

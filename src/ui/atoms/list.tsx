@@ -3,9 +3,9 @@
 import { cloneElement, isValidElement } from "react";
 import { ListContext, useList } from "@/context/list-context";
 import { cn } from "@/utils/style-utils";
-import { useHasParentContext } from "@fluentui/react-context-selector";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "./button";
+import { useRequiredContext } from "@/hooks/use-required-context";
 
 export const Frame = ({
   children,
@@ -33,10 +33,7 @@ export const Container = ({
   children: React.ReactNode;
   fade?: "sm" | "md" | "lg";
 }) => {
-  const hasListContext = useHasParentContext(ListContext);
-  if (!hasListContext) {
-    throw new Error("ListContext not found");
-  }
+  useRequiredContext(ListContext);
 
   const containerRef = useList((c) => c.containerRef);
   const showScrollbar = useList(
@@ -78,10 +75,7 @@ export const Content = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  const hasListContext = useHasParentContext(ListContext);
-  if (!hasListContext) {
-    throw new Error("ListContext not found");
-  }
+  useRequiredContext(ListContext);
 
   const contentRef = useList((c) => c.contentRef);
 
@@ -101,10 +95,7 @@ export const Skeletons = ({
   position?: "aboveContent" | "belowContent" | null;
   className?: string;
 }) => {
-  const hasListContext = useHasParentContext(ListContext);
-  if (!hasListContext) {
-    throw new Error("ListContext not found");
-  }
+  useRequiredContext(ListContext);
 
   const skeletonComponent = useList((c) => c.skeletonComponent);
   const loadingStatus = useList((c) => c.loadingStatus);
@@ -145,10 +136,7 @@ export const ScrollToBottomButton = ({
   className?: string;
   hideWhenAtBottom?: boolean;
 }) => {
-  const hasListContext = useHasParentContext(ListContext);
-  if (!hasListContext) {
-    throw new Error("ListContext not found");
-  }
+  useRequiredContext(ListContext);
 
   const disableScrollToBottomButton = useList(
     (c) => c.vagueScrollPosition === "bottom",
@@ -185,10 +173,7 @@ export const ScrollToTopButton = ({
   className?: string;
   hideWhenAtTop?: boolean;
 }) => {
-  const hasListContext = useHasParentContext(ListContext);
-  if (!hasListContext) {
-    throw new Error("ListContext not found");
-  }
+  useRequiredContext(ListContext);
 
   const disableScrollToTopButton = useList(
     (c) => c.vagueScrollPosition === "top",
@@ -219,10 +204,7 @@ export const ScrollToTopButton = ({
 };
 
 export const ProgressBar = () => {
-  const hasListContext = useHasParentContext(ListContext);
-  if (!hasListContext) {
-    throw new Error("ListContext not found");
-  }
+  useRequiredContext(ListContext);
 
   const percentToBottom = useList((c) => c.percentToBottom);
 

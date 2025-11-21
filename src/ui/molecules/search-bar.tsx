@@ -1,8 +1,8 @@
 import { SearchContext, useSearch } from "@/context/search-context";
 import { cn } from "@/utils/style-utils";
-import { useHasParentContext } from "@fluentui/react-context-selector";
 import { Search, X } from "lucide-react";
 import * as InputGroup from "@/ui/atoms/input-group";
+import { useRequiredContext } from "@/hooks/use-required-context";
 
 export const SearchBar = ({
   className,
@@ -11,10 +11,7 @@ export const SearchBar = ({
   className?: string;
   placeholder?: string;
 }) => {
-  const hasSearchContext = useHasParentContext(SearchContext);
-  if (!hasSearchContext) {
-    throw new Error("SearchContext not found");
-  }
+  useRequiredContext(SearchContext);
 
   const searchTerm = useSearch((c) => c.searchTerm);
   const setSearchTerm = useSearch((c) => c.setSearchTerm);
