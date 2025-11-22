@@ -8,15 +8,13 @@ import { useAuth } from "./auth-context";
 import { createContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
-interface ChatWindowContextType {
-  currentChannelSlug?: ChannelSlug;
-  setCurrentChannelSlug: (slug?: ChannelSlug) => void;
-  composerInputRef: RefObject<HTMLTextAreaElement | null>;
-  iJustRead: (messageId: Id<"messages">) => void;
-}
-
 export const { Context: ChatWindowContext, useContext: useChatWindow } =
-  createContext<ChatWindowContextType>({ displayName: "ChatWindowContext" });
+  createContext<{
+    currentChannelSlug?: ChannelSlug;
+    setCurrentChannelSlug: (slug?: ChannelSlug) => void;
+    composerInputRef: RefObject<HTMLTextAreaElement | null>;
+    iJustRead: (messageId: Id<"messages">) => void;
+  }>({ displayName: "ChatWindowContext" });
 
 export const Provider = ({
   slugFromHeaders,

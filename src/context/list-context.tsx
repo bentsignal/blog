@@ -28,18 +28,6 @@ export const { Context: ListContext, useContext: useList } = createContext<{
   hasScrollBeenMeasured: boolean;
 }>({ displayName: "ListContext" });
 
-interface ListProps {
-  children: ReactNode;
-  isBottomSticky?: boolean;
-  startAt?: "bottom" | "top";
-  loadingStatus?: PaginationStatus;
-  nearTopOrBottomThreshold?: number;
-  skeletonComponent?: ReactNode;
-  loadMoreWhenThisCloseToTop?: number;
-  loadMore?: () => void;
-  numberOfPages?: number;
-}
-
 export const Provider = ({
   children,
   isBottomSticky,
@@ -50,7 +38,17 @@ export const Provider = ({
   skeletonComponent,
   loadMore,
   numberOfPages,
-}: ListProps) => {
+}: {
+  children: ReactNode;
+  isBottomSticky?: boolean;
+  startAt?: "bottom" | "top";
+  loadingStatus?: PaginationStatus;
+  nearTopOrBottomThreshold?: number;
+  skeletonComponent?: ReactNode;
+  loadMoreWhenThisCloseToTop?: number;
+  loadMore?: () => void;
+  numberOfPages?: number;
+}) => {
   const distanceFromBottomRef = useRef(0); // px
 
   // container is scrollable container that houses the content and optional top and bottom skeletons
