@@ -1,17 +1,21 @@
 import { useState } from "react";
-import { useAuth } from "@/context/auth-context";
+import { AuthContext, useAuth } from "@/context/auth-context";
 import { ChannelContext, useChannel } from "@/context/channel-context";
-import { useChatWindow } from "@/context/chat-window-context";
+import {
+  ChatWindowContext,
+  useChatWindow,
+} from "@/context/chat-window-context";
 import { Provider as ComposerProvider } from "@/context/composer-context";
 import { ListContext, useList } from "@/context/list-context";
 import { validateMessage } from "@/utils/message-utils";
 import { toast } from "sonner";
 import * as Composer from "@/ui/atoms/composer";
-import { useRequiredContext } from "@/lib/context";
+import { useOptionalContext, useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const ChannelComposer = () => {
-  useRequiredContext([ChannelContext, ListContext]);
+  useRequiredContext([ChannelContext, ChatWindowContext, AuthContext]);
+  useOptionalContext(ListContext);
 
   const [inputValue, setInputValue] = useState("");
 

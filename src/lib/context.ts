@@ -29,10 +29,27 @@ export const useRequiredContext = (contexts: Context<any> | Context<any>[]) => {
   }
 };
 
-const useVerifyContextExistsInTree = (context: Context<any>) => {
+export const useOptionalContext = (contexts: Context<any> | Context<any>[]) => {
+  if (Array.isArray(contexts)) {
+    contexts.forEach((context) => useVerifyContextExistsInTree(context, false));
+  } else {
+    useVerifyContextExistsInTree(contexts, false);
+  }
+};
+
+const useVerifyContextExistsInTree = (
+  context: Context<any>,
+  required: boolean = true,
+) => {
   const hasContext = useHasParentContext(context);
-  if (!hasContext) {
+  if (hasContext) return;
+  if (required) {
     const contextName = context.displayName || "Unknown Context";
     throw new Error(`${contextName} is required but not found.`);
+  }
+  if (process.env.NODE_ENV === "development") {
+    console.warn(
+      `${context.displayName} is listed as optional, but not found.`,
+    );
   }
 };
