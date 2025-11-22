@@ -37,10 +37,14 @@ export const Frame = ({
         ? "bg-blue-300/20"
         : "transparent hover:bg-muted";
 
+  const setIsHovered = useMessage((c) => c.setIsHovered);
+
   return (
     <div
       className={cn("group/message relative px-6 py-0.5", className, bgColor)}
       ref={frameRef}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {children}
     </div>
@@ -160,11 +164,13 @@ export const SideTime = () => {
 };
 
 export const Actions = () => {
+  const isNotBeingHovered = useMessage((c) => !c.isHovered);
   const imNotSignedIn = useAuth((c) => !c.imSignedIn);
   const myProfileId = useAuth((c) => c.myProfileId);
   const messageProfileId = useMessage((c) => c.profile);
   const messageIsDeleted = useMessage((c) => c.content === null);
 
+  if (isNotBeingHovered) return null;
   if (imNotSignedIn) return null;
   if (messageIsDeleted) return null;
 

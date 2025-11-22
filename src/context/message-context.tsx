@@ -15,6 +15,8 @@ interface MessageContextType extends EnhancedMessage {
   editComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
   replyComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
   frameRef: React.RefObject<HTMLDivElement | null>;
+  isHovered: boolean;
+  setIsHovered: (isHovered: boolean) => void;
 }
 
 export const { Context: MessageContext, useContext: useMessage } =
@@ -27,6 +29,7 @@ export const Provider = ({
   message: EnhancedMessage;
   children: React.ReactNode;
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
   const [interactionState, setInteractionState] =
     useState<MessageInteractionState>("idle");
 
@@ -87,6 +90,8 @@ export const Provider = ({
       interactionState,
       setInteractionState,
       frameRef,
+      isHovered,
+      setIsHovered,
     }),
     [
       message._id,
@@ -105,6 +110,8 @@ export const Provider = ({
       interactionState,
       setInteractionState,
       message.content,
+      isHovered,
+      setIsHovered,
     ],
   );
 
