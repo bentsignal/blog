@@ -1,6 +1,6 @@
 import { MessageContext, useMessage } from "@/context/message-context";
 import { EditComposer, ReplyComposer } from "@/ui/molecules/composers";
-import { useRequiredContext } from "@/hooks/use-required-context";
+import { useRequiredContext } from "@/lib/context";
 
 export const InlineComposer = () => {
   useRequiredContext(MessageContext);

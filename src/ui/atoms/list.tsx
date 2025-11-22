@@ -5,7 +5,7 @@ import { ListContext, useList } from "@/context/list-context";
 import { cn } from "@/utils/style-utils";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "./button";
-import { useRequiredContext } from "@/hooks/use-required-context";
+import { useRequiredContext } from "@/lib/context";
 
 export const Frame = ({
   children,

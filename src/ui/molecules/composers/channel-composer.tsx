@@ -7,8 +7,8 @@ import { ListContext, useList } from "@/context/list-context";
 import { validateMessage } from "@/utils/message-utils";
 import { toast } from "sonner";
 import * as Composer from "@/ui/atoms/composer";
+import { useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
-import { useRequiredContext } from "@/hooks/use-required-context";
 
 export const ChannelComposer = () => {
   useRequiredContext([ChannelContext, ListContext]);

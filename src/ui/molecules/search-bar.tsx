@@ -2,7 +2,7 @@ import { SearchContext, useSearch } from "@/context/search-context";
 import { cn } from "@/utils/style-utils";
 import { Search, X } from "lucide-react";
 import * as InputGroup from "@/ui/atoms/input-group";
-import { useRequiredContext } from "@/hooks/use-required-context";
+import { useRequiredContext } from "@/lib/context";
 
 export const SearchBar = ({
   className,

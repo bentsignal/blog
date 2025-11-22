@@ -12,7 +12,7 @@ import { cn } from "@/utils/style-utils";
 import { useRouter } from "next/navigation";
 import * as List from "@/ui/atoms/list";
 import * as Shapes from "@/ui/atoms/shapes";
-import { useRequiredContext } from "@/hooks/use-required-context";
+import { useRequiredContext } from "@/lib/context";
 
 export const ChannelList = () => {
   useRequiredContext(ChannelListContext);

@@ -12,7 +12,7 @@ import * as Icons from "lucide-react";
 import * as ToolTip from "./tooltip";
 import * as Auth from "@/ui/atoms/auth";
 import { Button } from "@/ui/atoms/button";
-import { useRequiredContext } from "@/hooks/use-required-context";
+import { useRequiredContext } from "@/lib/context";
 
 export const Frame = ({
   className,

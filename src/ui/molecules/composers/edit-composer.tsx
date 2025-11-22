@@ -5,8 +5,8 @@ import { validateMessage } from "@/utils/message-utils";
 import { toast } from "sonner";
 import * as ButtonGroup from "@/ui/atoms/button-group";
 import * as Composer from "@/ui/atoms/composer";
+import { useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
-import { useRequiredContext } from "@/hooks/use-required-context";
 
 export const EditComposer = () => {
   useRequiredContext(MessageContext);
