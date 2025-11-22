@@ -6,7 +6,11 @@ import {
   useHasParentContext,
 } from "@fluentui/react-context-selector";
 
-export const createContext = <T>({ displayName }: { displayName: string }) => {
+export const createContext = <T extends object>({
+  displayName,
+}: {
+  displayName: string;
+}) => {
   const Context = createSelectorContext<T>({} as T);
   Context.displayName = displayName;
   const useContext = <U>(selector: ContextSelector<T, U>) =>
