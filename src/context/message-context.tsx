@@ -5,13 +5,9 @@ import {
   EnhancedMessage,
   MessageInteractionState,
 } from "@/types/message-types";
-import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-} from "@fluentui/react-context-selector";
 import { useAuth } from "./auth-context";
 import { useChatWindow } from "./chat-window-context";
+import { createContext } from "@/lib/context";
 
 interface MessageContextType extends EnhancedMessage {
   interactionState: MessageInteractionState;
@@ -21,15 +17,8 @@ interface MessageContextType extends EnhancedMessage {
   frameRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export const MessageContext = createContext<MessageContextType>(
-  {} as MessageContextType,
-);
-
-MessageContext.displayName = "MessageContext";
-
-export const useMessage = <T,>(
-  selector: ContextSelector<MessageContextType, T>,
-) => useContextSelector(MessageContext, selector);
+export const { Context: MessageContext, useContext: useMessage } =
+  createContext<MessageContextType>({ displayName: "MessageContext" });
 
 export const Provider = ({
   message,

@@ -4,12 +4,8 @@ import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { type ChannelSlug } from "@/data/channels";
 import { findChannelWithSlug } from "@/utils/slug-utils";
-import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-} from "@fluentui/react-context-selector";
 import { useAuth } from "./auth-context";
+import { createContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 interface ChatWindowContextType {
@@ -19,15 +15,8 @@ interface ChatWindowContextType {
   iJustRead: (messageId: Id<"messages">) => void;
 }
 
-export const ChatWindowContext = createContext<ChatWindowContextType>(
-  {} as ChatWindowContextType,
-);
-
-ChatWindowContext.displayName = "ChatWindowContext";
-
-export const useChatWindow = <T,>(
-  selector: ContextSelector<ChatWindowContextType, T>,
-) => useContextSelector(ChatWindowContext, selector);
+export const { Context: ChatWindowContext, useContext: useChatWindow } =
+  createContext<ChatWindowContextType>({ displayName: "ChatWindowContext" });
 
 export const Provider = ({
   slugFromHeaders,

@@ -5,40 +5,25 @@ import { INITIAL_PAGE_SIZE, PAGE_SIZE } from "@/config/channel-config";
 import { api } from "@/convex/_generated/api";
 import { channels, ChannelSlug, type Channel } from "@/data/channels";
 import { EnhancedMessage } from "@/types/message-types";
-import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-} from "@fluentui/react-context-selector";
 import { PaginationStatus, usePaginatedQuery } from "convex/react";
 import { useChatWindow } from "./chat-window-context";
+import { createContext } from "@/lib/context";
 
-type ChannelProps = {
-  slug: ChannelSlug;
-};
-
-interface ChannelContextType extends ChannelProps {
-  channel: Channel;
-  messages: EnhancedMessage[];
-  loadingStatus: PaginationStatus;
-  loadMoreMessages: () => void;
-  numberOfPages: number;
-}
-
-export const ChannelContext = createContext<ChannelContextType>(
-  {} as ChannelContextType,
-);
-
-ChannelContext.displayName = "ChannelContext";
-
-export const useChannel = <T,>(
-  selector: ContextSelector<ChannelContextType, T>,
-) => useContextSelector(ChannelContext, selector);
+export const { Context: ChannelContext, useContext: useChannel } =
+  createContext<{
+    slug: ChannelSlug;
+    channel: Channel;
+    messages: EnhancedMessage[];
+    loadingStatus: PaginationStatus;
+    loadMoreMessages: () => void;
+    numberOfPages: number;
+  }>({ displayName: "ChannelContext" });
 
 export const Provider = ({
   slug,
   children,
-}: ChannelProps & {
+}: {
+  slug: ChannelSlug;
   children: React.ReactNode;
 }) => {
   const chatWindowComposer = useChatWindow((c) => c.composerInputRef);

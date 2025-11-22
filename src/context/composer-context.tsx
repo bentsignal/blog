@@ -1,11 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
-import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-} from "@fluentui/react-context-selector";
+import { validateMessage } from "@/utils/message-utils";
+import { createContext } from "@/lib/context";
 
 interface ComposerInputProps {
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
@@ -19,15 +15,8 @@ interface ComposerContextType extends ComposerInputProps {
   submitDisabled: boolean;
 }
 
-export const ComposerContext = createContext<ComposerContextType>(
-  {} as ComposerContextType,
-);
-
-ComposerContext.displayName = "ComposerContext";
-
-export const useComposer = <T,>(
-  selector: ContextSelector<ComposerContextType, T>,
-) => useContextSelector(ComposerContext, selector);
+export const { Context: ComposerContext, useContext: useComposer } =
+  createContext<ComposerContextType>({ displayName: "ComposerContext" });
 
 export const Provider = ({
   onSubmit,
@@ -37,20 +26,17 @@ export const Provider = ({
   onCancel,
   children,
 }: ComposerInputProps & { children: React.ReactNode }) => {
-  const submitDisabled = inputValue.trim() === "";
+  const inputIsValid = validateMessage(inputValue) === "Valid";
+  const submitDisabled = !inputIsValid;
 
-  const contextValue = useMemo(
-    () => ({
-      inputRef,
-      inputValue,
-      setInputValue,
-      onSubmit,
-      onCancel,
-
-      submitDisabled,
-    }),
-    [inputRef, inputValue, setInputValue, onSubmit, onCancel, submitDisabled],
-  );
+  const contextValue = {
+    inputRef,
+    inputValue,
+    setInputValue,
+    onSubmit,
+    onCancel,
+    submitDisabled,
+  };
 
   return (
     <ComposerContext.Provider value={contextValue}>

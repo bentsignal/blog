@@ -10,14 +10,10 @@ import {
   useState,
 } from "react";
 import { VagueScrollPosition } from "@/types/list-types";
-import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-} from "@fluentui/react-context-selector";
 import { type PaginationStatus } from "convex/react";
+import { createContext } from "@/lib/context";
 
-export interface ListContextType {
+export const { Context: ListContext, useContext: useList } = createContext<{
   containerRef: RefObject<HTMLDivElement | null>;
   contentRef: RefObject<HTMLDivElement | null>;
   scrollToBottom: (behavior?: "instant" | "smooth") => void;
@@ -30,16 +26,7 @@ export interface ListContextType {
   topSkeletonContainerRef: RefObject<HTMLDivElement | null>;
   bottomSkeletonContainerRef: RefObject<HTMLDivElement | null>;
   hasScrollBeenMeasured: boolean;
-}
-
-export const ListContext = createContext<ListContextType>(
-  {} as ListContextType,
-);
-
-ListContext.displayName = "ListContext";
-
-export const useList = <T,>(selector: ContextSelector<ListContextType, T>) =>
-  useContextSelector(ListContext, selector);
+}>({ displayName: "ListContext" });
 
 interface ListProps {
   children: ReactNode;

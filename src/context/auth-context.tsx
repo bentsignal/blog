@@ -3,17 +3,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-} from "@fluentui/react-context-selector";
 import { useConvexAuth, useQuery } from "convex/react";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { createContext } from "@/lib/context";
 
-interface AuthContextType {
+export const { Context: AuthContext, useContext: useAuth } = createContext<{
   image: string | null | undefined;
   name: string | undefined;
   myProfileId: Id<"profiles"> | undefined;
@@ -22,16 +18,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   signIn: () => Promise<void>;
   deleteAccount: () => Promise<void>;
-}
-
-export const AuthContext = createContext<AuthContextType>(
-  {} as AuthContextType,
-);
-
-AuthContext.displayName = "AuthContext";
-
-export const useAuth = <T,>(selector: ContextSelector<AuthContextType, T>) =>
-  useContextSelector(AuthContext, selector);
+}>({ displayName: "AuthContext" });
 
 export const Provider = ({
   isAuthenticatedServerSide,

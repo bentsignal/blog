@@ -1,27 +1,13 @@
 "use client";
 
-import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-} from "@fluentui/react-context-selector";
+import { createContext } from "@/lib/context";
 import useDebouncedInput from "@/hooks/use-debounced-input";
 
-interface SearchContextType {
+export const { Context: SearchContext, useContext: useSearch } = createContext<{
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
   debouncedSearchTerm: string;
-}
-
-export const SearchContext = createContext<SearchContextType>(
-  {} as SearchContextType,
-);
-
-SearchContext.displayName = "SearchContext";
-
-export const useSearch = <T,>(
-  selector: ContextSelector<SearchContextType, T>,
-) => useContextSelector(SearchContext, selector);
+}>({ displayName: "SearchContext" });
 
 export const Provider = ({ children }: { children: React.ReactNode }) => {
   const {

@@ -7,14 +7,10 @@ import {
   type Channel,
   type ChannelSlug,
 } from "@/data/channels";
-import {
-  ContextSelector,
-  createContext,
-  useContextSelector,
-  useHasParentContext,
-} from "@fluentui/react-context-selector";
+import { useHasParentContext } from "@fluentui/react-context-selector";
 import { useQuery } from "convex/react";
 import { SearchContext, useSearch } from "./search-context";
+import { createContext } from "@/lib/context";
 
 interface ChannelWithPreview extends Channel {
   slug: ChannelSlug;
@@ -22,19 +18,10 @@ interface ChannelWithPreview extends Channel {
   previewString: string | null | undefined;
 }
 
-interface ChannelListContextType {
-  channels: ChannelWithPreview[];
-}
-
-export const ChannelListContext = createContext<ChannelListContextType>(
-  {} as ChannelListContextType,
-);
-
-ChannelListContext.displayName = "ChannelListContext";
-
-export const useChannelList = <T,>(
-  selector: ContextSelector<ChannelListContextType, T>,
-) => useContextSelector(ChannelListContext, selector);
+export const { Context: ChannelListContext, useContext: useChannelList } =
+  createContext<{ channels: ChannelWithPreview[] }>({
+    displayName: "ChannelListContext",
+  });
 
 export const Provider = ({ children }: { children: React.ReactNode }) => {
   const hasSearchContext = useHasParentContext(SearchContext);
