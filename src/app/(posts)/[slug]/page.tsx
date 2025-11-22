@@ -1,4 +1,3 @@
-import { Provider as ListProvider } from "@/context/list-context";
 import { posts, postSlugs, type PostSlug } from "@/data/posts";
 import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
@@ -7,7 +6,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import * as Abyss from "@/ui/atoms/abyss";
-import * as List from "@/ui/atoms/list";
+import * as Scroll from "@/ui/atoms/scroll";
 import { Separator } from "@/ui/atoms/separator";
 import { Socials } from "@/ui/molecules/socials";
 import { TopControls } from "@/ui/molecules/top-controls";
@@ -35,13 +34,13 @@ export default async function Page({
   const readingTimeString = `${post.readingTimeInMinutes} min read`;
 
   return (
-    <ListProvider>
-      <List.Frame>
-        <List.ProgressBar />
+    <Scroll.Provider>
+      <Scroll.Frame>
+        <Scroll.ProgressBar />
         <TopControls className="absolute top-0 left-0 z-6" />
         <Abyss.Top />
-        <List.Container fade="md">
-          <List.Content className="mx-auto flex max-w-xl flex-col gap-2 px-4 py-16">
+        <Scroll.Container fade="md">
+          <Scroll.Content className="mx-auto flex max-w-xl flex-col gap-2 px-4 py-16">
             <Link
               href="/"
               className="text-muted-foreground hover:text-primary flex cursor-pointer items-center gap-2 text-sm transition-colors duration-100"
@@ -73,15 +72,15 @@ export default async function Page({
               </span>
               <Socials />
             </div>
-          </List.Content>
-        </List.Container>
+          </Scroll.Content>
+        </Scroll.Container>
         <div className="absolute right-0 bottom-0 z-6 flex flex-col gap-2 p-4">
-          <List.ScrollToTopButton />
-          <List.ScrollToBottomButton />
+          <Scroll.ScrollToTopButton />
+          <Scroll.ScrollToBottomButton />
         </div>
         <Abyss.Bottom />
-      </List.Frame>
-    </ListProvider>
+      </Scroll.Frame>
+    </Scroll.Provider>
   );
 }
 

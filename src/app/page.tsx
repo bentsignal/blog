@@ -1,9 +1,8 @@
 import pfp from "@/assets/pfp.webp";
-import { Provider as ListProvider } from "@/context/list-context";
 import { posts, postSlugs } from "@/data/posts";
 import Image from "next/image";
 import * as Abyss from "@/ui/atoms/abyss";
-import * as List from "@/ui/atoms/list";
+import * as Scroll from "@/ui/atoms/scroll";
 import { Separator } from "@/ui/atoms/separator";
 import PostLink from "@/ui/molecules/post-link";
 import { Socials } from "@/ui/molecules/socials";
@@ -11,12 +10,12 @@ import { TopControls } from "@/ui/molecules/top-controls";
 
 export default function HomePage() {
   return (
-    <ListProvider>
-      <List.Frame>
+    <Scroll.Provider>
+      <Scroll.Frame>
         <TopControls className="absolute top-0 left-0 z-6" />
         <Abyss.Top />
-        <List.Container fade="md">
-          <List.Content className="mx-auto my-16 flex max-w-xl flex-col gap-4 px-4">
+        <Scroll.Container fade="md">
+          <Scroll.Content className="mx-auto my-16 flex max-w-xl flex-col gap-4 px-4">
             <div className="flex items-center gap-4">
               <Image
                 src={pfp}
@@ -60,10 +59,10 @@ export default function HomePage() {
                 );
               })}
             </div>
-          </List.Content>
-        </List.Container>
+          </Scroll.Content>
+        </Scroll.Container>
         <Abyss.Bottom />
-      </List.Frame>
-    </ListProvider>
+      </Scroll.Frame>
+    </Scroll.Provider>
   );
 }
