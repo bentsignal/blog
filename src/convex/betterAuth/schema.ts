@@ -14,7 +14,7 @@ export const tables = {
     createdAt: v.number(),
     updatedAt: v.number(),
     userId: v.optional(v.union(v.null(), v.string())),
-    ghUsername: v.optional(v.union(v.string())),
+    ghUsername: v.union(v.string()),
   })
     .index("email_name", ["email", "name"])
     .index("name", ["name"])

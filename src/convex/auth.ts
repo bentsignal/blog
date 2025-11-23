@@ -43,7 +43,7 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
           const profile = await ctx.db.insert("profiles", {
             user: authUser._id,
             name: authUser.name,
-            username: authUser.ghUsername ?? "",
+            username: authUser.ghUsername,
           });
           await ctx.db.insert("preferences", {
             profile,
@@ -62,7 +62,7 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
           if (!profile) return;
           await ctx.db.patch(profile._id, {
             name: authUser.name,
-            username: authUser.ghUsername ?? undefined,
+            username: authUser.ghUsername,
           });
         },
       },

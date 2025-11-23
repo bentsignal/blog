@@ -41,7 +41,7 @@ export type Mounts = {
                 createdAt: number;
                 email: string;
                 emailVerified: boolean;
-                ghUsername?: string;
+                ghUsername: string;
                 image?: null | string;
                 name: string;
                 updatedAt: number;
