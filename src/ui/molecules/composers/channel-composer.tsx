@@ -6,16 +6,17 @@ import {
   useChatWindow,
 } from "@/context/chat-window-context";
 import { Provider as ComposerProvider } from "@/context/composer-context";
-import { ListContext, useList } from "@/context/list-context";
 import { validateMessage } from "@/utils/message-utils";
+import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as Composer from "@/ui/atoms/composer";
-import { useOptionalContext, useRequiredContext } from "@/lib/context";
+import { ScrollContext, useScroll } from "@/ui/atoms/scroll";
+import { useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const ChannelComposer = () => {
   useRequiredContext([ChannelContext, ChatWindowContext, AuthContext]);
-  useOptionalContext(ListContext);
+  const hasScrollContext = useHasParentContext(ScrollContext);
 
   const [inputValue, setInputValue] = useState("");
 
@@ -23,7 +24,7 @@ export const ChannelComposer = () => {
   const composerInputRef = useChatWindow((c) => c.composerInputRef);
   const imNotSignedIn = useAuth((c) => !c.imSignedIn);
   const signIn = useAuth((c) => c.signIn);
-  const scrollToBottom = useList((c) => c.scrollToBottom);
+  const scrollToBottom = useScroll((c) => c.scrollToBottom);
 
   const { sendMessage } = useMessageActions();
 
@@ -47,7 +48,7 @@ export const ChannelComposer = () => {
       composerInputRef.current.style.height = "auto";
     }
     setTimeout(() => {
-      scrollToBottom();
+      if (hasScrollContext) scrollToBottom();
     }, 0);
   };
 

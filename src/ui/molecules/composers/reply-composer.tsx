@@ -1,17 +1,22 @@
 import { useState } from "react";
-import { useChatWindow } from "@/context/chat-window-context";
+import {
+  ChatWindowContext,
+  useChatWindow,
+} from "@/context/chat-window-context";
 import { Provider as ComposerProvider } from "@/context/composer-context";
-import { ListContext, useList } from "@/context/list-context";
 import { MessageContext, useMessage } from "@/context/message-context";
 import { validateMessage } from "@/utils/message-utils";
+import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as ButtonGroup from "@/ui/atoms/button-group";
 import * as Composer from "@/ui/atoms/composer";
+import { ScrollContext, useScroll } from "@/ui/atoms/scroll";
 import { useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const ReplyComposer = () => {
-  useRequiredContext([MessageContext, ListContext]);
+  useRequiredContext([MessageContext, ChatWindowContext]);
+  const hasScrollContext = useHasParentContext(ScrollContext);
 
   const messageId = useMessage((c) => c._id);
   const inputRef = useMessage((c) => c.replyComposerInputRef);
@@ -19,7 +24,7 @@ export const ReplyComposer = () => {
   const name = useMessage((c) => c.name);
   const slug = useMessage((c) => c.slug);
 
-  const scrollToBottom = useList((c) => c.scrollToBottom);
+  const scrollToBottom = useScroll((c) => c.scrollToBottom);
   const chatWindowComposer = useChatWindow((c) => c.composerInputRef);
 
   const [inputValue, setInputValue] = useState("");
@@ -45,7 +50,7 @@ export const ReplyComposer = () => {
         setInteractionState("idle");
         chatWindowComposer?.current?.focus();
         setTimeout(() => {
-          scrollToBottom();
+          if (hasScrollContext) scrollToBottom();
         }, 0);
       }}
       onCancel={() => {
