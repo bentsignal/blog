@@ -235,8 +235,7 @@ export const getPreviewsForChannels = query({
         const messageContent = getMessageContent(message.snapshots);
         const messageContentString =
           messageContent === null ? "Preview unavailable" : messageContent;
-        const displayName = profile.name;
-        const previewString = `${displayName}: ${messageContentString}`;
+        const previewString = `${profile.username}: ${messageContentString}`;
         return {
           slug,
           previewString,

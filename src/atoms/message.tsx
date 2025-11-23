@@ -175,7 +175,6 @@ export const Frame = ({
 
 export const PFP = () => {
   const pfp = useMessage((c) => c.pfp);
-  const username = useMessage((c) => c.username);
 
   const [imageState, setImageState] = useState<"loading" | "error" | "loaded">(
     "loading",
@@ -190,17 +189,15 @@ export const PFP = () => {
   }
 
   return (
-    <Link href={`https://www.github.com/${username}`} target="_blank">
-      <Image
-        src={pfp}
-        alt=""
-        width={40}
-        height={40}
-        className="size-10 flex-shrink-0 rounded-full"
-        onError={() => setImageState("error")}
-        onLoad={() => setImageState("loaded")}
-      />
-    </Link>
+    <Image
+      src={pfp}
+      alt=""
+      width={40}
+      height={40}
+      className="size-10 flex-shrink-0 rounded-full"
+      onError={() => setImageState("error")}
+      onLoad={() => setImageState("loaded")}
+    />
   );
 };
 
