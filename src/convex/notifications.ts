@@ -97,6 +97,7 @@ export const getMessages = internalQuery({
           pfp: replierProfile?.imageKey
             ? getFileURL(replierProfile.imageKey)
             : null,
+          username: replierProfile?.username ?? "",
           content: getMessageContent(replyMessage.snapshots),
           reactionSignature: getReactionsSignature(replyMessage.reactions),
         } satisfies EnhancedMessage;
@@ -111,6 +112,7 @@ export const getMessages = internalQuery({
           pfp: originalProfile?.imageKey
             ? getFileURL(originalProfile.imageKey)
             : null,
+          username: originalProfile?.username ?? "",
           content: getMessageContent(originalMessage.snapshots),
           reactionSignature: getReactionsSignature(originalMessage.reactions),
         } satisfies EnhancedMessage;
