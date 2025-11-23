@@ -21,7 +21,7 @@ export default defineSchema({
   profiles: defineTable({
     user: v.string(),
     name: v.string(),
-    username: v.optional(v.string()),
+    username: v.string(),
     imageKey: v.optional(v.string()),
   }).index("by_user", ["user"]),
   notifications: defineTable({
