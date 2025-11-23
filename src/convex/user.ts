@@ -12,6 +12,7 @@ import { getFileURL } from "./uploadthing";
 export type Profile = {
   name: string;
   image: string | null | undefined;
+  username: string;
 };
 
 export const getProfileByUserId = async (
@@ -44,6 +45,7 @@ export const getInfo = authedQuery({
     const profile = await getProfileByUserId(ctx, ctx.user.subject);
     return {
       name: profile.name,
+      username: profile.username,
       image: profile.imageKey ? getFileURL(profile.imageKey) : null,
       profileId: profile._id,
     };

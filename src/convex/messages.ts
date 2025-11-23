@@ -49,6 +49,7 @@ export const getPage = query({
         acc[profile] = {
           name: data.name,
           image: data.imageKey ? getFileURL(data.imageKey) : null,
+          username: data.username,
         };
         return acc;
       },
@@ -70,6 +71,7 @@ export const getPage = query({
           reply = {
             ...repliedToMessage,
             name: profile.name,
+            username: profile.username,
             pfp: profile.image,
             content: replyContent,
             reactions: repliedToMessage.reactions,
@@ -83,6 +85,7 @@ export const getPage = query({
           ...message,
           snapshots: message.snapshots.slice(-2),
           name: user.name,
+          username: user.username,
           pfp: user.image,
           content: getMessageContent(message.snapshots),
           reply,

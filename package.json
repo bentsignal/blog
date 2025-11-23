@@ -9,7 +9,7 @@
     "build": "pnpm run lint && pnpm run build:convex && pnpm run build:next",
     "build:next": "next build --turbopack",
     "build:convex": "convex deploy",
-    "build:auth": "cd src/convex/betterAuth && npx @better-auth/cli generate -y && cd ../../..",
+    "build:auth": "cd src/convex/betterAuth && pnpx @better-auth/cli generate -y && cd ../../..",
     "lint": "oxlint --type-aware",
     "format": "prettier --write ./src",
     "scan": "next dev & pnpx react-scan@latest http://localhost:3000"

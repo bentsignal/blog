@@ -3,6 +3,7 @@ import { Infer, v } from "convex/values";
 
 export interface EnhancedMessage extends Doc<"messages"> {
   name: string;
+  username: string;
   pfp: string | null | undefined;
   reply?: EnhancedMessage;
   content: string | null;

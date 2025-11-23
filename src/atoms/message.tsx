@@ -18,6 +18,7 @@ import {
 } from "@/utils/time-utils";
 import { Pencil, Reply, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "./button";
 import * as ButtonGroup from "./button-group";
 import * as Shapes from "./shapes";
@@ -95,6 +96,7 @@ export const Provider = ({
       profile: message.profile,
       name: message.name,
       pfp: message.pfp,
+      username: message.username,
       content: message.content,
       snapshots: message.snapshots,
       reply: message.reply,
@@ -116,6 +118,7 @@ export const Provider = ({
       message.profile,
       message.name,
       message.pfp,
+      message.username,
       message.snapshots,
       message.reply,
       message.slug,
@@ -172,6 +175,7 @@ export const Frame = ({
 
 export const PFP = () => {
   const pfp = useMessage((c) => c.pfp);
+  const username = useMessage((c) => c.username);
 
   const [imageState, setImageState] = useState<"loading" | "error" | "loaded">(
     "loading",
@@ -186,15 +190,17 @@ export const PFP = () => {
   }
 
   return (
-    <Image
-      src={pfp}
-      alt=""
-      width={40}
-      height={40}
-      className="size-10 flex-shrink-0 rounded-full"
-      onError={() => setImageState("error")}
-      onLoad={() => setImageState("loaded")}
-    />
+    <Link href={`https://www.github.com/${username}`} target="_blank">
+      <Image
+        src={pfp}
+        alt=""
+        width={40}
+        height={40}
+        className="size-10 flex-shrink-0 rounded-full"
+        onError={() => setImageState("error")}
+        onLoad={() => setImageState("loaded")}
+      />
+    </Link>
   );
 };
 
@@ -203,8 +209,7 @@ export const Time = ({ time }: { time: string }) => {
 };
 
 export const Header = () => {
-  const name = useMessage((c) => c.name);
-
+  const username = useMessage((c) => c.username);
   const _creationTime = useMessage((c) => c._creationTime);
   const timeStamp = isOverOneDayAgo(_creationTime)
     ? getFullTimestamp(_creationTime)
@@ -212,7 +217,13 @@ export const Header = () => {
 
   return (
     <div className="flex items-center gap-2">
-      <div className="text-sm font-bold">{name || "Unknown"}</div>
+      <Link
+        href={`https://www.github.com/${username}`}
+        target="_blank"
+        className="text-sm font-bold"
+      >
+        {username}
+      </Link>
       <Time time={timeStamp} />
     </div>
   );
