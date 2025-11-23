@@ -5,12 +5,12 @@ import { cn } from "@/utils/style-utils";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
-import { Button } from "@/ui/atoms/button";
-import { Input as BaseInput } from "@/ui/atoms/input";
-import { Separator as BaseSeparator } from "@/ui/atoms/separator";
-import * as Sheet from "@/ui/atoms/sheet";
-import { Skeleton } from "@/ui/atoms/skeleton";
-import * as Tooltip from "@/ui/atoms/tooltip";
+import { Button } from "@/atoms/button";
+import { Input as BaseInput } from "@/atoms/input";
+import { Separator as BaseSeparator } from "@/atoms/separator";
+import * as Sheet from "@/atoms/sheet";
+import { Skeleton } from "@/atoms/skeleton";
+import * as Tooltip from "@/atoms/tooltip";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";

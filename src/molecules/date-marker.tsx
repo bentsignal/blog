@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { getTextDateString, isToday, isYesterday } from "@/utils/time-utils";
-import { Separator } from "@/ui/atoms/separator";
+import { Separator } from "@/atoms/separator";
 
 export const DateMarker = memo(({ time }: { time: number }) => {
   const label = isToday(time)

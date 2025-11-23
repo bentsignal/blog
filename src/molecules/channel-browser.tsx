@@ -2,7 +2,7 @@
 
 import { SearchBar } from "./search-bar";
 import { TopControls } from "./top-controls";
-import { ChannelList } from "@/ui/molecules/channel-list";
+import { ChannelList } from "@/molecules/channel-list";
 
 export const ChannelBrowser = () => {
   return (

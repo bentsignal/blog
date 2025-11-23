@@ -4,15 +4,15 @@ import { Fragment } from "react";
 import { type EnhancedMessage } from "@/types/message-types";
 import { cn } from "@/utils/style-utils";
 import { areSameDay } from "@/utils/time-utils";
-import * as List from "@/ui/atoms/list";
-import * as Message from "@/ui/atoms/message";
-import * as Scroll from "@/ui/atoms/scroll";
-import { DateMarker } from "@/ui/molecules/date-marker";
+import * as List from "@/atoms/list";
+import * as Message from "@/atoms/message";
+import * as Scroll from "@/atoms/scroll";
+import { DateMarker } from "@/molecules/date-marker";
 import {
   ChainedMessage,
   ReplyMessage,
   StandardMessage,
-} from "@/ui/molecules/messages";
+} from "@/molecules/messages";
 import { useRequiredContext } from "@/lib/context";
 
 export const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {

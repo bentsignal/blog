@@ -1,9 +1,9 @@
-import { Provider as AuthProvider } from "@/context/auth-context";
 import { Provider as ChatWindowProvider } from "@/context/chat-window-context";
 import { Provider as ConvexProvider } from "@/context/convex-context";
 import { Provider as ThemeProvider } from "@/context/theme-context";
 import { headers } from "next/headers";
-import * as Sidebar from "@/ui/atoms/sidebar";
+import { Provider as AuthProvider } from "@/atoms/auth";
+import * as Sidebar from "@/atoms/sidebar";
 import { getToken } from "@/lib/auth-server";
 
 export const Providers = async ({

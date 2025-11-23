@@ -3,9 +3,9 @@
 import * as React from "react";
 import { cn } from "@/utils/style-utils";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Button as BaseButton } from "@/ui/atoms/button";
-import { Input as BaseInput } from "@/ui/atoms/input";
-import { Textarea as BaseTextarea } from "@/ui/atoms/textarea";
+import { Button as BaseButton } from "@/atoms/button";
+import { Input as BaseInput } from "@/atoms/input";
+import { Textarea as BaseTextarea } from "@/atoms/textarea";
 
 export function Frame({ className, ...props }: React.ComponentProps<"div">) {
   return (

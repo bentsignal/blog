@@ -5,11 +5,11 @@ import { MoveLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import * as Abyss from "@/ui/atoms/abyss";
-import * as Scroll from "@/ui/atoms/scroll";
-import { Separator } from "@/ui/atoms/separator";
-import { Socials } from "@/ui/molecules/socials";
-import { TopControls } from "@/ui/molecules/top-controls";
+import * as Abyss from "@/atoms/abyss";
+import * as Scroll from "@/atoms/scroll";
+import { Separator } from "@/atoms/separator";
+import { Socials } from "@/molecules/socials";
+import { TopControls } from "@/molecules/top-controls";
 
 export default async function Page({
   params,

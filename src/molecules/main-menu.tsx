@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import * as Auth from "@/ui/atoms/auth";
-import * as Popover from "@/ui/atoms/popover";
-import { Separator } from "@/ui/atoms/separator";
-import { ThemeToggle } from "@/ui/molecules/theme-toggle";
+import * as Auth from "@/atoms/auth";
+import * as Popover from "@/atoms/popover";
+import { Separator } from "@/atoms/separator";
+import { ThemeToggle } from "@/molecules/theme-toggle";
 
 export default function MainMenu() {
   const [open, setOpen] = useState(false);

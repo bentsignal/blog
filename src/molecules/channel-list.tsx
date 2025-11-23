@@ -1,17 +1,65 @@
 "use client";
 
-import {
-  ChannelListContext,
-  useChannelList,
-} from "@/context/channel-list-context";
 import { useChatWindow } from "@/context/chat-window-context";
+import { api } from "@/convex/_generated/api";
+import {
+  channels as baseChannels,
+  channelSlugs,
+  type Channel,
+  type ChannelSlug,
+} from "@/data/channels";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
+import { useHasParentContext } from "@fluentui/react-context-selector";
+import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
-import * as Scroll from "@/ui/atoms/scroll";
-import * as Shapes from "@/ui/atoms/shapes";
-import { useRequiredContext } from "@/lib/context";
+import * as Scroll from "@/atoms/scroll";
+import * as Shapes from "@/atoms/shapes";
+import { SearchContext, useSearch } from "@/molecules/search-bar";
+import { createContext, useRequiredContext } from "@/lib/context";
+
+interface ChannelWithPreview extends Channel {
+  slug: ChannelSlug;
+  // if null, then theres no preview. if undefined, then the preview is loading
+  previewString: string | null | undefined;
+}
+
+export const { Context: ChannelListContext, useContext: useChannelList } =
+  createContext<{ channels: ChannelWithPreview[] }>({
+    displayName: "ChannelListContext",
+  });
+
+export const Provider = ({ children }: { children: React.ReactNode }) => {
+  const hasSearchContext = useHasParentContext(SearchContext);
+  const searchTerm = useSearch((c) => c.searchTerm);
+
+  const slugsWithPreviews = useQuery(api.messages.getPreviewsForChannels);
+
+  const channels = channelSlugs
+    .map((slug) => {
+      return {
+        ...baseChannels[slug],
+        slug,
+        previewString: slugsWithPreviews?.find(
+          (preview) => preview.slug === slug,
+        )?.previewString,
+      };
+    })
+    .filter((channel) =>
+      hasSearchContext
+        ? channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+        : true,
+    );
+
+  const contextValue = { channels };
+
+  return (
+    <ChannelListContext.Provider value={contextValue}>
+      {children}
+    </ChannelListContext.Provider>
+  );
+};
 
 export const ChannelList = () => {
   useRequiredContext(ChannelListContext);
@@ -55,7 +103,7 @@ export const ChannelList = () => {
                   <span className="text-start text-sm font-bold">
                     {channel.name}
                   </span>
-                  <PreviewString value={channel.previewString} index={index} />
+                  <Preview value={channel.previewString} index={index} />
                 </div>
               </button>
             ))}
@@ -66,7 +114,7 @@ export const ChannelList = () => {
   );
 };
 
-const PreviewString = ({
+const Preview = ({
   value,
   index,
 }: {

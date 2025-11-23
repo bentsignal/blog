@@ -1,8 +1,8 @@
 "use client";
 
 import { useChatWindow } from "@/context/chat-window-context";
-import { ChannelBrowser } from "@/ui/molecules/channel-browser";
-import { ChannelPage } from "@/ui/molecules/channel-page";
+import { ChannelBrowser } from "@/molecules/channel-browser";
+import { ChannelPage } from "@/molecules/channel-page";
 
 export const ChatWindow = () => {
   const currentChannelSlug = useChatWindow((c) => c.currentChannelSlug);

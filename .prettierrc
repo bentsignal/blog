@@ -7,8 +7,8 @@
     "^react$",
     "<THIRD_PARTY_MODULES>",
     "^[.]",
-    "@/ui/atoms/(.*)$",
-    "@/ui/molecules(.*)$",
+    "@/atoms/(.*)$",
+    "@/molecules(.*)$",
     "@/lib/(.*)$",
     "@/hooks/(.*)$"
   ],

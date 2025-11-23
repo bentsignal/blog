@@ -1,10 +1,10 @@
-import { AuthContext, useAuth } from "@/context/auth-context";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { getReactionsSignature } from "@/utils/message-utils";
 import { useConvexMutation } from "@convex-dev/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { AuthContext, useAuth } from "@/atoms/auth";
 import { useRequiredContext } from "@/lib/context";
 
 export const useMessageActions = () => {

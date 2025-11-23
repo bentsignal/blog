@@ -1,28 +1,95 @@
 "use client";
 
-import {
-  Provider as ChannelProvider,
-  useChannel,
-} from "@/context/channel-context";
+import { useEffect, useMemo } from "react";
+import { INITIAL_PAGE_SIZE, PAGE_SIZE } from "@/config/channel-config";
 import { useChatWindow } from "@/context/chat-window-context";
-import { type ChannelSlug } from "@/data/channels";
+import { api } from "@/convex/_generated/api";
+import { channels, type Channel, type ChannelSlug } from "@/data/channels";
+import { EnhancedMessage } from "@/types/message-types";
+import { PaginationStatus, usePaginatedQuery } from "convex/react";
 import { ChevronLeft } from "lucide-react";
-import * as List from "@/ui/atoms/list";
-import * as Message from "@/ui/atoms/message";
-import * as Scroll from "@/ui/atoms/scroll";
-import { ChannelComposer } from "@/ui/molecules/composers";
-import { MessageList } from "@/ui/molecules/message-list";
-import { TopControls } from "@/ui/molecules/top-controls";
+import * as List from "@/atoms/list";
+import * as Message from "@/atoms/message";
+import * as Scroll from "@/atoms/scroll";
+import { ChannelComposer } from "@/molecules/composers";
+import { MessageList } from "@/molecules/message-list";
+import { TopControls } from "@/molecules/top-controls";
+import { createContext } from "@/lib/context";
+
+export const { Context: ChannelContext, useContext: useChannel } =
+  createContext<{
+    slug: ChannelSlug;
+    channel: Channel;
+    messages: EnhancedMessage[];
+    loadingStatus: PaginationStatus;
+    loadMoreMessages: () => void;
+    numberOfPages: number;
+  }>({ displayName: "ChannelContext" });
+
+export const Provider = ({
+  slug,
+  children,
+}: {
+  slug: ChannelSlug;
+  children: React.ReactNode;
+}) => {
+  const chatWindowComposer = useChatWindow((c) => c.composerInputRef);
+
+  useEffect(() => {
+    setTimeout(() => {
+      chatWindowComposer?.current?.focus();
+    }, 50);
+  }, [chatWindowComposer, slug]);
+
+  const channel = channels[slug];
+
+  const { results, status, loadMore } = usePaginatedQuery(
+    api.messages.getPage,
+    { slug },
+    {
+      initialNumItems: INITIAL_PAGE_SIZE,
+    },
+  );
+
+  const orderedResults = useMemo(() => results.slice().reverse(), [results]);
+
+  const numberOfPages = useMemo(
+    () =>
+      Math.max(
+        Math.ceil((results.length - INITIAL_PAGE_SIZE) / PAGE_SIZE) + 1,
+        1,
+      ),
+    [results.length],
+  );
+
+  const contextValue = useMemo(
+    () => ({
+      slug,
+      channel,
+      loadingStatus: status,
+      loadMoreMessages: () => loadMore(PAGE_SIZE),
+      messages: orderedResults,
+      numberOfPages,
+    }),
+    [slug, channel, orderedResults, status, loadMore, numberOfPages],
+  );
+
+  return (
+    <ChannelContext.Provider value={contextValue}>
+      {children}
+    </ChannelContext.Provider>
+  );
+};
 
 export const ChannelPage = ({ slug }: { slug: ChannelSlug }) => {
   return (
-    <ChannelProvider slug={slug}>
+    <Provider slug={slug}>
       <div className="flex h-full w-full flex-col">
         <TopControls className="md:hidden" />
         <Header />
         <Body />
       </div>
-    </ChannelProvider>
+    </Provider>
   );
 };
 

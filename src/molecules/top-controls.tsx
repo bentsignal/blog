@@ -2,7 +2,7 @@
 
 import { cn } from "@/utils/style-utils";
 import MainMenu from "./main-menu";
-import * as Sidebar from "@/ui/atoms/sidebar";
+import * as Sidebar from "@/atoms/sidebar";
 
 export const TopControls = ({ className }: { className?: string }) => {
   return (

@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Provider as ComposerProvider } from "@/context/composer-context";
-import { MessageContext, useMessage } from "@/context/message-context";
 import { validateMessage } from "@/utils/message-utils";
 import { toast } from "sonner";
-import * as ButtonGroup from "@/ui/atoms/button-group";
-import * as Composer from "@/ui/atoms/composer";
+import * as ButtonGroup from "@/atoms/button-group";
+import * as Composer from "@/atoms/composer";
+import { MessageContext, useMessage } from "@/atoms/message";
 import { useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
@@ -23,7 +22,7 @@ export const EditComposer = () => {
   const { editMessage } = useMessageActions();
 
   return (
-    <ComposerProvider
+    <Composer.Provider
       inputValue={inputValue}
       setInputValue={setInputValue}
       inputRef={inputRef}
@@ -53,6 +52,6 @@ export const EditComposer = () => {
           <Composer.Save />
         </ButtonGroup.Frame>
       </Composer.Frame>
-    </ComposerProvider>
+    </Composer.Provider>
   );
 };

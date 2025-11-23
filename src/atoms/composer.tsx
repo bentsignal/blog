@@ -5,14 +5,56 @@ import {
   MAX_MESSAGE_LENGTH,
   MIN_MESSAGE_LENGTH,
 } from "@/config/message-config";
-import { useAuth } from "@/context/auth-context";
-import { ComposerContext, useComposer } from "@/context/composer-context";
+import { validateMessage } from "@/utils/message-utils";
 import { cn } from "@/utils/style-utils";
 import * as Icons from "lucide-react";
 import * as ToolTip from "./tooltip";
-import * as Auth from "@/ui/atoms/auth";
-import { Button } from "@/ui/atoms/button";
-import { useRequiredContext } from "@/lib/context";
+import { useAuth } from "@/atoms/auth";
+import * as Auth from "@/atoms/auth";
+import { Button } from "@/atoms/button";
+import { createContext, useRequiredContext } from "@/lib/context";
+
+interface ComposerInputProps {
+  inputRef: React.RefObject<HTMLTextAreaElement | null>;
+  inputValue: string;
+  setInputValue: (value: string) => void;
+  onSubmit: () => void;
+  onCancel?: () => void;
+}
+
+interface ComposerContextType extends ComposerInputProps {
+  submitDisabled: boolean;
+}
+
+export const { Context: ComposerContext, useContext: useComposer } =
+  createContext<ComposerContextType>({ displayName: "ComposerContext" });
+
+export const Provider = ({
+  onSubmit,
+  inputValue,
+  setInputValue,
+  inputRef,
+  onCancel,
+  children,
+}: ComposerInputProps & { children: React.ReactNode }) => {
+  const inputIsValid = validateMessage(inputValue) === "Valid";
+  const submitDisabled = !inputIsValid;
+
+  const contextValue = {
+    inputRef,
+    inputValue,
+    setInputValue,
+    onSubmit,
+    onCancel,
+    submitDisabled,
+  };
+
+  return (
+    <ComposerContext.Provider value={contextValue}>
+      {children}
+    </ComposerContext.Provider>
+  );
+};
 
 export const Frame = ({
   className,

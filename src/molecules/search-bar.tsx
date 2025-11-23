@@ -1,8 +1,32 @@
-import { SearchContext, useSearch } from "@/context/search-context";
+"use client";
+
 import { cn } from "@/utils/style-utils";
 import { Search, X } from "lucide-react";
-import * as InputGroup from "@/ui/atoms/input-group";
-import { useRequiredContext } from "@/lib/context";
+import * as InputGroup from "@/atoms/input-group";
+import { createContext, useRequiredContext } from "@/lib/context";
+import useDebouncedInput from "@/hooks/use-debounced-input";
+
+export const { Context: SearchContext, useContext: useSearch } = createContext<{
+  searchTerm: string;
+  setSearchTerm: (searchTerm: string) => void;
+  debouncedSearchTerm: string;
+}>({ displayName: "SearchContext" });
+
+export const Provider = ({ children }: { children: React.ReactNode }) => {
+  const {
+    value: searchTerm,
+    setValue: setSearchTerm,
+    debouncedValue: debouncedSearchTerm,
+  } = useDebouncedInput();
+
+  const contextValue = { searchTerm, setSearchTerm, debouncedSearchTerm };
+
+  return (
+    <SearchContext.Provider value={contextValue}>
+      {children}
+    </SearchContext.Provider>
+  );
+};
 
 export const SearchBar = ({
   className,

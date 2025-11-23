@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Provider as ChannelListProvider } from "@/context/channel-list-context";
 import { Providers as GlobalProviders } from "@/context/global-context";
-import { Provider as SearchProvider } from "@/context/search-context";
-import * as Sidebar from "@/ui/atoms/sidebar";
-import { Toaster } from "@/ui/atoms/toast";
-import { ChatWindow } from "@/ui/molecules/chat-window";
+import * as Sidebar from "@/atoms/sidebar";
+import { Toaster } from "@/atoms/toast";
+import { Provider as ChannelListProvider } from "@/molecules/channel-list";
+import { ChatWindow } from "@/molecules/chat-window";
+import { Provider as SearchProvider } from "@/molecules/search-bar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

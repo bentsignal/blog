@@ -3,7 +3,7 @@ import { validateNotificationType } from "@/convex/notifications";
 import { fetchMutation } from "convex/nextjs";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Button } from "@/ui/atoms/button";
+import { Button } from "@/atoms/button";
 
 export default async function UnsubscribePage({
   searchParams,

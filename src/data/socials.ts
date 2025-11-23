@@ -1,5 +1,5 @@
 import { Mail } from "lucide-react";
-import * as Icons from "@/ui/atoms/icon";
+import * as Icons from "@/atoms/icon";
 
 type Company =
   | "github"

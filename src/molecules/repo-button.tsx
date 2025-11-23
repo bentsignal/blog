@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/ui/atoms/button";
-import * as Icons from "@/ui/atoms/icon";
+import { Button } from "@/atoms/button";
+import * as Icons from "@/atoms/icon";
 
 export const RepoButton = () => {
   return (

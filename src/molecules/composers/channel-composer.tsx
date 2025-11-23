@@ -1,16 +1,15 @@
 import { useState } from "react";
-import { AuthContext, useAuth } from "@/context/auth-context";
-import { ChannelContext, useChannel } from "@/context/channel-context";
 import {
   ChatWindowContext,
   useChatWindow,
 } from "@/context/chat-window-context";
-import { Provider as ComposerProvider } from "@/context/composer-context";
 import { validateMessage } from "@/utils/message-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
-import * as Composer from "@/ui/atoms/composer";
-import { ScrollContext, useScroll } from "@/ui/atoms/scroll";
+import { AuthContext, useAuth } from "@/atoms/auth";
+import * as Composer from "@/atoms/composer";
+import { ScrollContext, useScroll } from "@/atoms/scroll";
+import { ChannelContext, useChannel } from "@/molecules/channel-page";
 import { useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
@@ -53,7 +52,7 @@ export const ChannelComposer = () => {
   };
 
   return (
-    <ComposerProvider
+    <Composer.Provider
       onSubmit={onSubmit}
       inputValue={inputValue}
       setInputValue={setInputValue}
@@ -63,6 +62,6 @@ export const ChannelComposer = () => {
         <Composer.Input className="ml-1" />
         <Composer.Send />
       </Composer.Frame>
-    </ComposerProvider>
+    </Composer.Provider>
   );
 };

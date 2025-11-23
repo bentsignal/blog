@@ -1,12 +1,12 @@
 import pfp from "@/assets/pfp.webp";
 import { posts, postSlugs } from "@/data/posts";
 import Image from "next/image";
-import * as Abyss from "@/ui/atoms/abyss";
-import * as Scroll from "@/ui/atoms/scroll";
-import { Separator } from "@/ui/atoms/separator";
-import PostLink from "@/ui/molecules/post-link";
-import { Socials } from "@/ui/molecules/socials";
-import { TopControls } from "@/ui/molecules/top-controls";
+import * as Abyss from "@/atoms/abyss";
+import * as Scroll from "@/atoms/scroll";
+import { Separator } from "@/atoms/separator";
+import PostLink from "@/molecules/post-link";
+import { Socials } from "@/molecules/socials";
+import { TopControls } from "@/molecules/top-controls";
 
 export default function HomePage() {
   return (
