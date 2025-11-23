@@ -35,8 +35,7 @@ export default function HomePage() {
             </div>
             <span>
               This is a space for me to discuss software, photography,
-              videography, digital art, music, math, and anything else I find
-              interesting.
+              videography, music, math, and anything else I find interesting.
             </span>
             <Separator className="my-1" />
             <div className="flex flex-col gap-3">
