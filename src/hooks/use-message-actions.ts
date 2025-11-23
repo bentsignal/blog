@@ -12,6 +12,7 @@ export const useMessageActions = () => {
 
   const image = useAuth((c) => c.image);
   const name = useAuth((c) => c.name);
+  const username = useAuth((c) => c.username);
   const myProfileId = useAuth((c) => c.myProfileId);
 
   const toastError = (error: Error) => {
@@ -46,6 +47,7 @@ export const useMessageActions = () => {
         const newMessage = {
           name: name ?? "",
           pfp: image,
+          username: username ?? "",
           _id: ("optimistic-" +
             Math.random().toString(36).slice(2)) as Id<"messages">,
           _creationTime: Date.now(),

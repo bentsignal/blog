@@ -17,6 +17,7 @@ import { createContext } from "@/lib/context";
 export const { Context: AuthContext, useContext: useAuth } = createContext<{
   image: string | null | undefined;
   name: string | undefined;
+  username: string | undefined;
   myProfileId: Id<"profiles"> | undefined;
   imSignedIn: boolean;
   inProgress: boolean;
@@ -57,6 +58,7 @@ export const Provider = ({
 
   const image = useMemo(() => info?.image, [info]);
   const name = useMemo(() => info?.name, [info]);
+  const username = useMemo(() => info?.username, [info]);
   const myProfileId = useMemo(() => info?.profileId, [info]);
 
   const signOut = useCallback(async () => {
@@ -106,6 +108,7 @@ export const Provider = ({
   const contextValue = useMemo(
     () => ({
       image,
+      username,
       imSignedIn,
       myProfileId,
       name,
@@ -122,6 +125,7 @@ export const Provider = ({
       deleteAccount,
       image,
       name,
+      username,
       myProfileId,
     ],
   );
