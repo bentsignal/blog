@@ -5,12 +5,11 @@ import {
   useChannelList,
 } from "@/context/channel-list-context";
 import { useChatWindow } from "@/context/chat-window-context";
-import { Provider as ListProvider } from "@/context/list-context";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
 import { useRouter } from "next/navigation";
-import * as List from "@/ui/atoms/list";
+import * as Scroll from "@/ui/atoms/scroll";
 import * as Shapes from "@/ui/atoms/shapes";
 import { useRequiredContext } from "@/lib/context";
 
@@ -31,10 +30,10 @@ export const ChannelList = () => {
   }
 
   return (
-    <ListProvider>
-      <List.Frame>
-        <List.Container>
-          <List.Content className="flex flex-col gap-2 py-4">
+    <Scroll.Provider>
+      <Scroll.Frame>
+        <Scroll.Container>
+          <Scroll.Content className="flex flex-col gap-2 py-4">
             {channels.map((channel, index) => (
               <button
                 key={channel.slug}
@@ -60,10 +59,10 @@ export const ChannelList = () => {
                 </div>
               </button>
             ))}
-          </List.Content>
-        </List.Container>
-      </List.Frame>
-    </ListProvider>
+          </Scroll.Content>
+        </Scroll.Container>
+      </Scroll.Frame>
+    </Scroll.Provider>
   );
 };
 

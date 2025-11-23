@@ -4,7 +4,6 @@ import {
   ReactNode,
   RefObject,
   useCallback,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -21,9 +20,19 @@ export const { Context: ScrollContext, useContext: useScroll } = createContext<{
   scrollToBottom: (behavior?: "instant" | "smooth") => void;
   scrollToTop: (behavior?: "instant" | "smooth") => void;
   vagueScrollPosition: VagueScrollPosition;
+  vagueScrollPositionRef: RefObject<VagueScrollPosition>;
   contentFitsInContainer: boolean;
+  setContentFitsInContainer: (contentFitsInContainer: boolean) => void;
   percentToBottom: number;
-  haveMeasurementsBeenTaken: boolean;
+  getScrollMeasurements: () => {
+    heightOfContainer: number;
+    heightOfContent: number;
+    heightOfScrollWindow: number;
+    distanceFromTop: number;
+    distanceFromBottom: number;
+  };
+  haveCalculationsBeenMadeYet: boolean;
+  handleScroll: () => void;
 }>({ displayName: "ScrollContext" });
 
 export const Provider = ({
@@ -35,11 +44,9 @@ export const Provider = ({
   startAt?: "bottom" | "top";
   nearTopOrBottomThreshold?: number;
 }) => {
-  const distanceFromBottomRef = useRef(0); // px
-
-  // container is scrollable container that houses the content and optional top and bottom skeletons
+  // this is the scrollable container
   const containerRef = useRef<HTMLDivElement>(null);
-  // content only contains the actual page content (not the skeletons)
+  // this is the content inside the scrollable container
   const contentRef = useRef<HTMLDivElement>(null);
 
   const [percentToBottom, setPercentToBottom] = useState(
@@ -53,7 +60,7 @@ export const Provider = ({
   );
 
   const [contentFitsInContainer, setContentFitsInContainer] = useState(true);
-  const [haveMeasurementsBeenTaken, setHaveMeasurementsBeenTaken] =
+  const [haveCalculationsBeenMadeYet, setHaveCalculationsBeenMadeYet] =
     useState(false);
 
   const getScrollMeasurements = useCallback(() => {
@@ -62,27 +69,24 @@ export const Provider = ({
     const heightOfContent = contentRef.current?.clientHeight ?? 0;
 
     const distanceFromTop = containerRef.current?.scrollTop ?? 0;
-    const thisIsTheValueOfTopWhenAtBottom =
-      heightOfContainer - heightOfScrollWindow;
     const distanceFromBottom =
-      thisIsTheValueOfTopWhenAtBottom - distanceFromTop;
+      heightOfContainer - heightOfScrollWindow - distanceFromTop;
 
     return {
       heightOfContainer,
       heightOfContent,
       heightOfScrollWindow,
       distanceFromTop,
-      thisIsTheValueOfTopWhenAtBottom,
       distanceFromBottom,
     };
   }, []);
 
   const scrollToBottom = useCallback(
     (behavior: "instant" | "smooth" = "instant") => {
-      // scroll to the bottom of the content, but just above the bottom skeletons (if they exist)
-      const { thisIsTheValueOfTopWhenAtBottom } = getScrollMeasurements();
+      const { heightOfContainer, heightOfScrollWindow } =
+        getScrollMeasurements();
       containerRef.current?.scrollTo({
-        top: thisIsTheValueOfTopWhenAtBottom,
+        top: heightOfContainer - heightOfScrollWindow,
         behavior,
       });
     },
@@ -100,52 +104,40 @@ export const Provider = ({
   );
 
   // handle scroll events (determine if user is at bottom, load more items when close to top of list)
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current === null) return;
-      if (contentRef.current === null) return;
+  const handleScroll = useCallback(() => {
+    if (containerRef.current === null) return;
+    if (contentRef.current === null) return;
 
-      const {
-        heightOfScrollWindow,
-        heightOfContent,
-        distanceFromTop,
-        distanceFromBottom,
-      } = getScrollMeasurements();
+    const {
+      heightOfScrollWindow,
+      heightOfContent,
+      distanceFromTop,
+      distanceFromBottom,
+    } = getScrollMeasurements();
 
-      distanceFromBottomRef.current = distanceFromBottom;
+    const newVagueScrollPosition =
+      distanceFromTop <= nearTopOrBottomThreshold
+        ? "top"
+        : distanceFromBottom <= nearTopOrBottomThreshold
+          ? "bottom"
+          : "middle";
+    vagueScrollPositionRef.current = newVagueScrollPosition;
+    setVagueScrollPosition(newVagueScrollPosition);
 
-      const newVagueScrollPosition =
-        distanceFromTop <= nearTopOrBottomThreshold
-          ? "top"
-          : distanceFromBottom <= nearTopOrBottomThreshold
-            ? "bottom"
-            : "middle";
-      vagueScrollPositionRef.current = newVagueScrollPosition;
-      setVagueScrollPosition(newVagueScrollPosition);
+    setContentFitsInContainer(heightOfContent <= heightOfScrollWindow);
 
-      setContentFitsInContainer(heightOfContent <= heightOfScrollWindow);
+    const newUnclampedPercentToBottom =
+      (distanceFromTop / (heightOfContent - heightOfScrollWindow)) * 100;
+    const newPercentToBottom =
+      newUnclampedPercentToBottom > 100
+        ? 100
+        : newUnclampedPercentToBottom < 0
+          ? 0
+          : newUnclampedPercentToBottom;
+    setPercentToBottom(newPercentToBottom);
 
-      const newUnclampedPercentToBottom =
-        (distanceFromTop / (heightOfContent - heightOfScrollWindow)) * 100;
-      const newPercentToBottom =
-        newUnclampedPercentToBottom > 100
-          ? 100
-          : newUnclampedPercentToBottom < 0
-            ? 0
-            : newUnclampedPercentToBottom;
-      setPercentToBottom(newPercentToBottom);
-
-      setHaveMeasurementsBeenTaken(true);
-    };
-
-    const container = containerRef.current;
-    if (container === null) return;
-
-    container.addEventListener("scroll", handleScroll);
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-    };
-  }, [nearTopOrBottomThreshold, setPercentToBottom, getScrollMeasurements]);
+    setHaveCalculationsBeenMadeYet(true);
+  }, [nearTopOrBottomThreshold, getScrollMeasurements]);
 
   // optionally scroll to the bottom of the list before items are rendered
   useLayoutEffect(() => {
@@ -160,9 +152,13 @@ export const Provider = ({
     scrollToBottom,
     scrollToTop,
     vagueScrollPosition,
+    vagueScrollPositionRef,
     contentFitsInContainer,
+    setContentFitsInContainer,
     percentToBottom,
-    haveMeasurementsBeenTaken,
+    haveCalculationsBeenMadeYet,
+    getScrollMeasurements,
+    handleScroll,
   };
 
   return (
@@ -202,9 +198,9 @@ export const Container = ({
 
   const containerRef = useScroll((c) => c.containerRef);
   const showScrollbar = useScroll(
-    (c) => c.vagueScrollPosition === "middle" && c.haveMeasurementsBeenTaken,
+    (c) => c.vagueScrollPosition === "middle" && c.haveCalculationsBeenMadeYet,
   );
-
+  const handleScroll = useScroll((c) => c.handleScroll);
   const scrollbarClass = showScrollbar
     ? "scrollbar-thumb-muted-foreground/10"
     : "scrollbar-thumb-transparent";
@@ -227,6 +223,7 @@ export const Container = ({
         scrollbarClass,
       )}
       ref={containerRef}
+      onScroll={handleScroll}
     >
       {children}
     </div>
@@ -266,7 +263,7 @@ export const ScrollToBottomButton = ({
   const hideScrollToBottomButton = useScroll(
     (c) =>
       (hideWhenAtBottom && c.vagueScrollPosition === "bottom") ||
-      !c.haveMeasurementsBeenTaken ||
+      !c.haveCalculationsBeenMadeYet ||
       c.contentFitsInContainer,
   );
   const scrollToBottom = useScroll((c) => c.scrollToBottom);
@@ -302,7 +299,7 @@ export const ScrollToTopButton = ({
   const hideScrollToTopButton = useScroll(
     (c) =>
       (hideWhenAtTop && c.vagueScrollPosition === "top") ||
-      !c.haveMeasurementsBeenTaken ||
+      !c.haveCalculationsBeenMadeYet ||
       c.contentFitsInContainer,
   );
   const scrollToTop = useScroll((c) => c.scrollToTop);

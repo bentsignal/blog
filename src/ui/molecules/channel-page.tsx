@@ -5,11 +5,11 @@ import {
   useChannel,
 } from "@/context/channel-context";
 import { useChatWindow } from "@/context/chat-window-context";
-import { Provider as ListProvider } from "@/context/list-context";
 import { type ChannelSlug } from "@/data/channels";
 import { ChevronLeft } from "lucide-react";
 import * as List from "@/ui/atoms/list";
 import * as Message from "@/ui/atoms/message";
+import * as Scroll from "@/ui/atoms/scroll";
 import { ChannelComposer } from "@/ui/molecules/composers";
 import { MessageList } from "@/ui/molecules/message-list";
 import { TopControls } from "@/ui/molecules/top-controls";
@@ -55,30 +55,31 @@ const Body = () => {
 
   if (loadingStatus === "LoadingFirstPage") {
     return (
-      <ListProvider>
-        <List.Frame>
+      <Scroll.Provider>
+        <Scroll.Frame>
           <div className="flex flex-1 flex-col justify-end overflow-hidden mask-t-from-95%">
             {Array.from({ length: 30 }).map((_, index) => (
               <Message.Skeleton key={index} index={index} />
             ))}
           </div>
-        </List.Frame>
+        </Scroll.Frame>
         <ChannelComposer />
-      </ListProvider>
+      </Scroll.Provider>
     );
   }
 
   return (
-    <ListProvider
-      startAt="bottom"
-      isBottomSticky={true}
-      loadingStatus={loadingStatus}
-      skeletonComponent={<Message.Skeleton />}
-      loadMore={loadMoreMessages}
-      numberOfPages={numberOfPages}
-    >
-      <MessageList messages={messages} />
-      <ChannelComposer />
-    </ListProvider>
+    <Scroll.Provider startAt="bottom">
+      <List.Provider
+        isBottomSticky={true}
+        loadingStatus={loadingStatus}
+        skeletonComponent={<Message.Skeleton />}
+        loadMore={loadMoreMessages}
+        numberOfPages={numberOfPages}
+      >
+        <MessageList messages={messages} />
+        <ChannelComposer />
+      </List.Provider>
+    </Scroll.Provider>
   );
 };

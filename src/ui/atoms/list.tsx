@@ -1,83 +1,213 @@
 "use client";
 
-import { cloneElement, isValidElement } from "react";
-import { ListContext, useList } from "@/context/list-context";
+import {
+  cloneElement,
+  isValidElement,
+  ReactNode,
+  RefObject,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from "react";
 import { cn } from "@/utils/style-utils";
-import { ArrowDown, ArrowUp } from "lucide-react";
-import { Button } from "./button";
-import { useRequiredContext } from "@/lib/context";
+import { type PaginationStatus } from "convex/react";
+import { ScrollContext, useScroll } from "./scroll";
+import { createContext, useRequiredContext } from "@/lib/context";
 
-export const Frame = ({
+export const { Context: ListContext, useContext: useList } = createContext<{
+  loadingStatus?: PaginationStatus;
+  skeletonComponent?: ReactNode;
+  topSkeletonContainerRef: RefObject<HTMLDivElement | null>;
+  bottomSkeletonContainerRef: RefObject<HTMLDivElement | null>;
+}>({ displayName: "ListContext" });
+
+export const Provider = ({
+  children,
+  isBottomSticky,
+  loadingStatus,
+  loadMoreWhenThisCloseToTop = 700, // px
+  skeletonComponent,
+  loadMore,
+  numberOfPages,
+}: {
+  children: ReactNode;
+  isBottomSticky?: boolean;
+  loadingStatus?: PaginationStatus;
+  skeletonComponent?: ReactNode;
+  loadMoreWhenThisCloseToTop?: number;
+  loadMore?: () => void;
+  numberOfPages?: number;
+}) => {
+  useRequiredContext(ScrollContext);
+
+  const getScrollMeasurements = useScroll((c) => c.getScrollMeasurements);
+  const scrollToBottom = useScroll((c) => c.scrollToBottom);
+  const scrollToTop = useScroll((c) => c.scrollToTop);
+  const containerRef = useScroll((c) => c.containerRef);
+  const contentRef = useScroll((c) => c.contentRef);
+  const vagueScrollPositionRef = useScroll((c) => c.vagueScrollPositionRef);
+  const setContentFitsInContainer = useScroll(
+    (c) => c.setContentFitsInContainer,
+  );
+
+  // optional, to put skeletons on top or below content (or both)
+  const topSkeletonContainerRef = useRef<HTMLDivElement>(null);
+  const bottomSkeletonContainerRef = useRef<HTMLDivElement>(null);
+
+  const loadingStatusRef = useRef(loadingStatus);
+  loadingStatusRef.current = loadingStatus;
+
+  const numberOfPagesRef = useRef(numberOfPages);
+  numberOfPagesRef.current = numberOfPages;
+
+  const getListMeasurements = useCallback(() => {
+    const scrollMeasurements = getScrollMeasurements();
+    const { heightOfContainer, heightOfScrollWindow, distanceFromTop } =
+      scrollMeasurements;
+
+    const heightOfTopSkeletons =
+      topSkeletonContainerRef.current?.clientHeight ?? 0;
+    const heightOfBottomSkeletons =
+      bottomSkeletonContainerRef.current?.clientHeight ?? 0;
+
+    const distanceFromTopOfContent = distanceFromTop - heightOfTopSkeletons;
+    const distanceFromBottomOfContent =
+      heightOfContainer -
+      heightOfScrollWindow -
+      distanceFromTop -
+      heightOfBottomSkeletons;
+
+    return {
+      ...scrollMeasurements,
+      heightOfTopSkeletons,
+      heightOfBottomSkeletons,
+      distanceFromTopOfContent,
+      distanceFromBottomOfContent,
+    };
+  }, [getScrollMeasurements]);
+
+  const handleScroll = useCallback(() => {
+    if (containerRef.current === null) return;
+    if (contentRef.current === null) return;
+
+    const { distanceFromTopOfContent } = getListMeasurements();
+
+    const closeEnoughToLoadMore =
+      distanceFromTopOfContent < loadMoreWhenThisCloseToTop;
+    if (
+      loadMore &&
+      closeEnoughToLoadMore &&
+      loadingStatusRef.current === "CanLoadMore"
+    ) {
+      loadMore();
+    }
+  }, [
+    loadMore,
+    loadMoreWhenThisCloseToTop,
+    getListMeasurements,
+    containerRef,
+    contentRef,
+  ]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container === null) return;
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleScroll, containerRef, contentRef]);
+
+  // handle updates in size of content
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    const content = contentRef.current;
+
+    if (!container) return;
+    if (!content) return;
+
+    let previousHeightOfContainer = container.scrollHeight;
+    let previousNumberOfPages = numberOfPagesRef.current;
+
+    const observer = new ResizeObserver(() => {
+      const {
+        heightOfContainer,
+        heightOfScrollWindow,
+        heightOfContent,
+        distanceFromBottomOfContent,
+      } = getListMeasurements();
+
+      const changeInHeightOfContent = Math.abs(
+        heightOfContainer - previousHeightOfContainer,
+      );
+
+      setContentFitsInContainer(heightOfContent <= heightOfScrollWindow);
+
+      if (changeInHeightOfContent <= 0) return;
+
+      const contentWasAddedToTopOfList =
+        numberOfPagesRef.current !== previousNumberOfPages;
+      const wereAtTheBottomOfTheList =
+        vagueScrollPositionRef.current === "bottom";
+
+      // maintains scroll position when content is loaded and added to the top of the list
+      if (contentWasAddedToTopOfList && !wereAtTheBottomOfTheList) {
+        container.scrollTop =
+          heightOfContainer -
+          heightOfScrollWindow -
+          distanceFromBottomOfContent;
+      }
+
+      // if we're at the bottom and new content is added to the bottom, move to new bottom
+      if (wereAtTheBottomOfTheList && isBottomSticky) {
+        scrollToBottom();
+      }
+
+      previousNumberOfPages = numberOfPagesRef.current;
+      previousHeightOfContainer = heightOfContainer;
+    });
+
+    observer.observe(content);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [
+    isBottomSticky,
+    getListMeasurements,
+    scrollToBottom,
+    vagueScrollPositionRef,
+    containerRef,
+    contentRef,
+    setContentFitsInContainer,
+  ]);
+
+  const contextValue = {
+    topSkeletonContainerRef,
+    bottomSkeletonContainerRef,
+    scrollToBottom,
+    scrollToTop,
+    loadingStatus,
+    skeletonComponent,
+  };
+
+  return (
+    <ListContext.Provider value={contextValue}>{children}</ListContext.Provider>
+  );
+};
+
+export const Items = ({
   children,
   className,
 }: {
   children: React.ReactNode;
   className?: string;
 }) => {
-  return (
-    <div
-      className={cn(
-        "relative flex max-h-screen flex-1 flex-col overflow-y-hidden",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
-};
+  useRequiredContext(ScrollContext);
 
-export const Container = ({
-  children,
-  fade,
-}: {
-  children: React.ReactNode;
-  fade?: "sm" | "md" | "lg";
-}) => {
-  useRequiredContext(ListContext);
-
-  const containerRef = useList((c) => c.containerRef);
-  const showScrollbar = useList(
-    (c) => c.vagueScrollPosition === "middle" && c.hasScrollBeenMeasured,
-  );
-
-  const scrollbarClass = showScrollbar
-    ? "scrollbar-thumb-muted-foreground/10"
-    : "scrollbar-thumb-transparent";
-
-  const fadeClass =
-    fade === "sm"
-      ? "mask-t-from-99% mask-b-from-99%"
-      : fade === "md"
-        ? "mask-t-from-97% mask-b-from-97%"
-        : fade === "lg"
-          ? "mask-t-from-95% mask-b-from-95%"
-          : undefined;
-
-  return (
-    <div
-      className={cn(
-        "overflow-y-auto overscroll-contain",
-        "scrollbar-thin scrollbar-thumb-muted-foreground/10 scrollbar-track-transparent",
-        fadeClass,
-        scrollbarClass,
-      )}
-      ref={containerRef}
-    >
-      {children}
-    </div>
-  );
-};
-
-export const Content = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  useRequiredContext(ListContext);
-
-  const contentRef = useList((c) => c.contentRef);
+  const contentRef = useScroll((c) => c.contentRef);
 
   return (
     <div className={cn(className)} ref={contentRef}>
@@ -125,95 +255,6 @@ export const Skeletons = ({
             : skeletonComponent}
         </div>
       ))}
-    </div>
-  );
-};
-
-export const ScrollToBottomButton = ({
-  className,
-  hideWhenAtBottom = false,
-}: {
-  className?: string;
-  hideWhenAtBottom?: boolean;
-}) => {
-  useRequiredContext(ListContext);
-
-  const disableScrollToBottomButton = useList(
-    (c) => c.vagueScrollPosition === "bottom",
-  );
-  const hideScrollToBottomButton = useList(
-    (c) =>
-      (hideWhenAtBottom && c.vagueScrollPosition === "bottom") ||
-      !c.hasScrollBeenMeasured ||
-      c.contentFitsInContainer ||
-      c.loadingStatus === "LoadingFirstPage",
-  );
-  const scrollToBottom = useList((c) => c.scrollToBottom);
-
-  if (hideScrollToBottomButton) return null;
-
-  return (
-    <div className={cn(className)}>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => scrollToBottom()}
-        disabled={disableScrollToBottomButton}
-      >
-        <ArrowDown className="size-4" />
-      </Button>
-    </div>
-  );
-};
-
-export const ScrollToTopButton = ({
-  className,
-  hideWhenAtTop = false,
-}: {
-  className?: string;
-  hideWhenAtTop?: boolean;
-}) => {
-  useRequiredContext(ListContext);
-
-  const disableScrollToTopButton = useList(
-    (c) => c.vagueScrollPosition === "top",
-  );
-  const hideScrollToTopButton = useList(
-    (c) =>
-      (hideWhenAtTop && c.vagueScrollPosition === "top") ||
-      !c.hasScrollBeenMeasured ||
-      c.contentFitsInContainer ||
-      c.loadingStatus === "LoadingFirstPage",
-  );
-  const scrollToTop = useList((c) => c.scrollToTop);
-
-  if (hideScrollToTopButton) return null;
-
-  return (
-    <div className={cn(className)}>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => scrollToTop()}
-        disabled={disableScrollToTopButton}
-      >
-        <ArrowUp className="size-4" />
-      </Button>
-    </div>
-  );
-};
-
-export const ProgressBar = () => {
-  useRequiredContext(ListContext);
-
-  const percentToBottom = useList((c) => c.percentToBottom);
-
-  return (
-    <div className="absolute top-0 right-0 z-6 w-full">
-      <div
-        className="bg-primary h-1"
-        style={{ width: `${percentToBottom}%` }}
-      />
     </div>
   );
 };
