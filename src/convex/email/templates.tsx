@@ -94,7 +94,7 @@ const Message = ({ message }: { message: EnhancedMessage }) => {
             className="mr-4 rounded-full"
           />
         )}
-        <Text className="text-sm font-bold">{message.name}</Text>
+        <Text className="text-sm font-bold">{message.username}</Text>
       </div>
       <MessageContent content={message.content} />
     </Section>
