@@ -442,7 +442,7 @@ export const ReplyPreview = () => {
           className="mr-1 size-4 flex-shrink-0 rounded-full"
         />
       )}
-      <span className="text-muted-foreground max-w-64 truncate text-xs">
+      <span className="text-muted-foreground max-w-64 truncate text-xs sm:max-w-90">
         {isDeleted ? <i>Deleted message</i> : content}
       </span>
       {isEdited && <EditedIndicator />}
