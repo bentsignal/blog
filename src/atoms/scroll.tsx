@@ -31,7 +31,6 @@ export const { Context: ScrollContext, useContext: useScroll } = createContext<{
     distanceFromTop: number;
     distanceFromBottom: number;
   };
-  haveCalculationsBeenMadeYet: boolean;
   handleScroll: () => void;
 }>({ displayName: "ScrollContext" });
 
@@ -60,8 +59,6 @@ export const Provider = ({
   );
 
   const [contentFitsInContainer, setContentFitsInContainer] = useState(true);
-  const [haveCalculationsBeenMadeYet, setHaveCalculationsBeenMadeYet] =
-    useState(false);
 
   const getScrollMeasurements = useCallback(() => {
     const heightOfContainer = containerRef.current?.scrollHeight ?? 0;
@@ -135,9 +132,11 @@ export const Provider = ({
           ? 0
           : newUnclampedPercentToBottom;
     setPercentToBottom(newPercentToBottom);
-
-    setHaveCalculationsBeenMadeYet(true);
   }, [nearTopOrBottomThreshold, getScrollMeasurements]);
+
+  useLayoutEffect(() => {
+    handleScroll();
+  }, [handleScroll]);
 
   // optionally scroll to the bottom of the list before items are rendered
   useLayoutEffect(() => {
@@ -156,7 +155,6 @@ export const Provider = ({
     contentFitsInContainer,
     setContentFitsInContainer,
     percentToBottom,
-    haveCalculationsBeenMadeYet,
     getScrollMeasurements,
     handleScroll,
   };
@@ -197,9 +195,7 @@ export const Container = ({
   useRequiredContext(ScrollContext);
 
   const containerRef = useScroll((c) => c.containerRef);
-  const showScrollbar = useScroll(
-    (c) => c.vagueScrollPosition === "middle" && c.haveCalculationsBeenMadeYet,
-  );
+  const showScrollbar = useScroll((c) => c.vagueScrollPosition === "middle");
   const handleScroll = useScroll((c) => c.handleScroll);
   const scrollbarClass = showScrollbar
     ? "scrollbar-thumb-muted-foreground/10"
@@ -263,7 +259,6 @@ export const ScrollToBottomButton = ({
   const hideScrollToBottomButton = useScroll(
     (c) =>
       (hideWhenAtBottom && c.vagueScrollPosition === "bottom") ||
-      !c.haveCalculationsBeenMadeYet ||
       c.contentFitsInContainer,
   );
   const scrollToBottom = useScroll((c) => c.scrollToBottom);
@@ -299,7 +294,6 @@ export const ScrollToTopButton = ({
   const hideScrollToTopButton = useScroll(
     (c) =>
       (hideWhenAtTop && c.vagueScrollPosition === "top") ||
-      !c.haveCalculationsBeenMadeYet ||
       c.contentFitsInContainer,
   );
   const scrollToTop = useScroll((c) => c.scrollToTop);
