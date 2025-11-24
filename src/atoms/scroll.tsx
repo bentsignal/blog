@@ -8,11 +8,12 @@ import {
   useRef,
   useState,
 } from "react";
-import { VagueScrollPosition } from "@/types/list-types";
 import { cn } from "@/utils/style-utils";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "./button";
 import { createContext, useRequiredContext } from "@/lib/context";
+
+export type VagueScrollPosition = "top" | "middle" | "bottom";
 
 export const { Context: ScrollContext, useContext: useScroll } = createContext<{
   containerRef: RefObject<HTMLDivElement | null>;
