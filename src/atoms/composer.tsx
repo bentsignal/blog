@@ -114,7 +114,7 @@ export const Input = ({
         "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
         "resize-none select-none",
         "scrollbar-track-transparent scrollbar-thin scrollbar-thumb-card overflow-y-auto",
-        "text-sm transition-[color,box-shadow]",
+        "transition-[color,box-shadow] sm:text-sm",
         "focus-visible:ring-ring/0 outline-none",
         "selection:bg-primary selection:text-primary-foreground",
         className,
