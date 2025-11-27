@@ -1,10 +1,12 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import { ThemeContext, useTheme } from "@/atoms/theme";
+import { useRequiredContext } from "@/lib/context";
 
 const useThemeColor = () => {
-  const { resolvedTheme } = useTheme();
-  return resolvedTheme === "light" ? "black" : "white";
+  useRequiredContext(ThemeContext);
+  const theme = useTheme((c) => c.theme);
+  return theme === "light" ? "black" : "white";
 };
 
 export const Github = ({

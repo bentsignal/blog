@@ -3,7 +3,7 @@ import { Menu, X } from "lucide-react";
 import * as Auth from "@/atoms/auth";
 import * as Popover from "@/atoms/popover";
 import { Separator } from "@/atoms/separator";
-import { ThemeToggle } from "@/molecules/theme-toggle";
+import * as Theme from "@/atoms/theme";
 
 export default function MainMenu() {
   const [open, setOpen] = useState(false);
@@ -21,7 +21,7 @@ export default function MainMenu() {
           <Auth.PrimaryButton />
           {/* <Auth.DeleteAccountButton /> */}
           <Separator className="my-1" />
-          <ThemeToggle />
+          <Theme.ToggleButton />
         </Popover.Content>
       </Popover.Frame>
     </div>
