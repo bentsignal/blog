@@ -26,7 +26,6 @@ export const Providers = async ({
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
-          enableSystem
           disableTransitionOnChange
           themeCookieValue={themeCookie?.value}
         >
