@@ -19,7 +19,7 @@ SyntaxHighlighter.registerLanguage("javascript", js);
 
 export const { Context: CodeContext, useContext: useCode } = createContext<{
   code: string;
-  language: string | null | undefined;
+  language?: string;
   codeTheme: Record<string, React.CSSProperties>;
   showLineNumbers: boolean;
   setShowLineNumbers: Dispatch<SetStateAction<boolean>>;
@@ -42,7 +42,7 @@ export function Provider({
   const codeTheme = theme === "dark" ? tomorrowNight : tomorrow;
   const code = children.toString().trim();
   const languageString = className?.split("-")[1];
-  const language = languageString === "no_top_bar" ? null : languageString;
+  const language = languageString === "no_top_bar" ? undefined : languageString;
   const isInline = inline || languageString === undefined;
 
   const [showLineNumbers, setShowLineNumbers] = useState(false);
@@ -85,7 +85,7 @@ const TopBar = () => {
 
   const language = useCode((c) => c.language);
 
-  if (language === null || language === undefined) return null;
+  if (language === undefined) return null;
 
   return (
     <div className="bg-border flex h-14 w-full items-center justify-between px-4">
@@ -107,8 +107,6 @@ export const Block = () => {
   const code = useCode((c) => c.code);
   const language = useCode((c) => c.language);
   const showLineNumbers = useCode((c) => c.showLineNumbers);
-
-  if (language === null) return null;
 
   return (
     <div className="not-prose border-border group relative my-8 w-full overflow-hidden rounded-xl border-1">
