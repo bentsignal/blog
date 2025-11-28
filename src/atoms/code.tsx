@@ -19,7 +19,7 @@ SyntaxHighlighter.registerLanguage("javascript", js);
 
 export const { Context: CodeContext, useContext: useCode } = createContext<{
   code: string;
-  language?: string;
+  language: string | undefined;
   codeTheme: Record<string, React.CSSProperties>;
   showLineNumbers: boolean;
   setShowLineNumbers: Dispatch<SetStateAction<boolean>>;
