@@ -169,11 +169,10 @@ export function CopyButton() {
       const textToCopy = code.trim();
       await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
+      setTimeout(() => setCopied(false), 1000);
     } catch (err) {
       toast.error("Failed to copy text, see console for more details");
       console.error("Failed to copy text: ", err);
-    } finally {
-      setTimeout(() => setCopied(false), 1000);
     }
   };
 
