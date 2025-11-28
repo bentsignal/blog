@@ -1,9 +1,9 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { languages } from "@/data/languages";
 import { cn } from "@/utils/style-utils";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, List, ListOrdered } from "lucide-react";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import js from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
 import tomorrow from "react-syntax-highlighter/dist/esm/styles/hljs/tomorrow";
@@ -11,6 +11,7 @@ import tomorrowNight from "react-syntax-highlighter/dist/esm/styles/hljs/tomorro
 import { toast } from "sonner";
 import { Button } from "@/atoms/button";
 import { ThemeContext, useTheme } from "@/atoms/theme";
+import * as Tooltip from "@/atoms/tooltip";
 import { createContext, useRequiredContext } from "@/lib/context";
 import { useIsClient } from "@/hooks/use-is-client";
 
@@ -20,6 +21,8 @@ export const { Context: CodeContext, useContext: useCode } = createContext<{
   code: string;
   language: string | null | undefined;
   codeTheme: Record<string, React.CSSProperties>;
+  showLineNumbers: boolean;
+  setShowLineNumbers: Dispatch<SetStateAction<boolean>>;
 }>({ displayName: "CodeContext" });
 
 export function Provider({
@@ -42,7 +45,15 @@ export function Provider({
   const language = languageString === "no_top_bar" ? null : languageString;
   const isInline = inline || languageString === undefined;
 
-  const contextValue = { code, language, codeTheme };
+  const [showLineNumbers, setShowLineNumbers] = useState(false);
+
+  const contextValue = {
+    code,
+    language,
+    codeTheme,
+    showLineNumbers,
+    setShowLineNumbers,
+  };
 
   return (
     <CodeContext.Provider value={contextValue}>
@@ -82,6 +93,7 @@ const TopBar = () => {
         <Language />
       </div>
       <div className="flex items-center gap-2">
+        <LineNumbersButton />
         <CopyButton />
       </div>
     </div>
@@ -94,6 +106,7 @@ export const Block = () => {
   const codeTheme = useCode((c) => c.codeTheme);
   const code = useCode((c) => c.code);
   const language = useCode((c) => c.language);
+  const showLineNumbers = useCode((c) => c.showLineNumbers);
 
   if (language === null) return null;
 
@@ -110,7 +123,7 @@ export const Block = () => {
         <SyntaxHighlighter
           language={language}
           style={codeTheme}
-          showLineNumbers={true}
+          showLineNumbers={showLineNumbers}
           PreTag={({ children }) => (
             <pre className="m-1 overflow-x-auto bg-transparent p-5 text-xs">
               {children}
@@ -167,14 +180,52 @@ export function CopyButton() {
   };
 
   return (
-    <Button
-      onClick={handleCopy}
-      size="sm"
-      variant="ghost"
-      className="h-8 w-8 p-0"
-      disabled={disabled}
-    >
-      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-    </Button>
+    <Tooltip.Frame>
+      <Tooltip.Trigger asChild>
+        <Button
+          onClick={handleCopy}
+          size="sm"
+          variant="ghost"
+          className="h-8 w-8 p-0"
+          disabled={disabled}
+        >
+          {copied ? (
+            <Check className="h-4 w-4" />
+          ) : (
+            <Copy className="h-4 w-4" />
+          )}
+        </Button>
+      </Tooltip.Trigger>
+      <Tooltip.Content>{copied ? "Copied" : "Copy"}</Tooltip.Content>
+    </Tooltip.Frame>
   );
 }
+
+export const LineNumbersButton = () => {
+  useRequiredContext(CodeContext);
+
+  const showLineNumbers = useCode((c) => c.showLineNumbers);
+  const setShowLineNumbers = useCode((c) => c.setShowLineNumbers);
+
+  return (
+    <Tooltip.Frame>
+      <Tooltip.Trigger asChild>
+        <Button
+          onClick={() => setShowLineNumbers(!showLineNumbers)}
+          size="sm"
+          variant="ghost"
+          className="h-8 w-8 p-0"
+        >
+          {showLineNumbers ? (
+            <List className="h-4 w-4" />
+          ) : (
+            <ListOrdered className="h-4 w-4" />
+          )}
+        </Button>
+      </Tooltip.Trigger>
+      <Tooltip.Content>
+        {showLineNumbers ? "Hide line numbers" : "Show line numbers"}
+      </Tooltip.Content>
+    </Tooltip.Frame>
+  );
+};
