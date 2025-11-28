@@ -151,7 +151,7 @@ export function CopyButton() {
   const [copied, setCopied] = useState(false);
   const isClient = useIsClient();
 
-  const disabled = !navigator?.clipboard && isClient;
+  const disabled = (!navigator?.clipboard && isClient) || copied;
 
   const handleCopy = async () => {
     try {
