@@ -1,63 +1,71 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { languages } from "@/data/languages";
 import { cn } from "@/utils/style-utils";
 import { Check, Copy } from "lucide-react";
-import { useTheme } from "next-themes";
-import { codeToHtml } from "shiki";
+import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import js from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
+import tomorrow from "react-syntax-highlighter/dist/esm/styles/hljs/tomorrow";
+import tomorrowNight from "react-syntax-highlighter/dist/esm/styles/hljs/tomorrow-night";
 import { toast } from "sonner";
 import { Button } from "@/atoms/button";
+import { ThemeContext, useTheme } from "@/atoms/theme";
 import { createContext, useRequiredContext } from "@/lib/context";
+import { useIsClient } from "@/hooks/use-is-client";
+
+SyntaxHighlighter.registerLanguage("javascript", js);
 
 export const { Context: CodeContext, useContext: useCode } = createContext<{
   code: string;
-  language: string;
+  language: string | null | undefined;
+  codeTheme: Record<string, React.CSSProperties>;
 }>({ displayName: "CodeContext" });
 
 export function Provider({
+  inline = false,
   className,
   children,
 }: {
+  inline?: boolean;
   className?: string;
   children: ReactNode;
 }) {
+  useRequiredContext(ThemeContext);
+
   if (!children) return null;
 
-  const code = children.toString();
-  const language = className?.split("-")[1];
+  const theme = useTheme((c) => c.theme);
+  const codeTheme = theme === "dark" ? tomorrowNight : tomorrow;
+  const code = children.toString().trim();
+  const languageString = className?.split("-")[1];
+  const language = languageString === "no_top_bar" ? null : languageString;
+  const isInline = inline || languageString === undefined;
 
-  const isInline = language === undefined;
-  if (isInline) {
-    return (
-      <code
-        className={cn(
-          "not-prose bg-muted rounded-md px-1.5 py-0.5 font-mono text-sm",
-          className,
-        )}
-      >
-        {code}
-      </code>
-    );
-  }
-
-  const contextValue = { code, language };
+  const contextValue = { code, language, codeTheme };
 
   return (
     <CodeContext.Provider value={contextValue}>
-      <Block />
+      {isInline ? <Inline /> : <Block />}
     </CodeContext.Provider>
   );
 }
 
-export const Block = () => {
+export const Inline = () => {
+  useRequiredContext(CodeContext);
+  const codeTheme = useCode((c) => c.codeTheme);
+  const code = useCode((c) => c.code);
   return (
-    <div className="not-prose border-border group relative my-8 w-full overflow-hidden rounded-xl border-1">
-      <TopBar />
-      <Container>
-        <Content />
-      </Container>
-    </div>
+    <SyntaxHighlighter
+      style={codeTheme}
+      PreTag={({ children }) => (
+        <code className="not-prose bg-card dark:bg-muted inline-flex overflow-x-auto rounded-md px-1.5 py-0.5 font-mono text-sm">
+          {children}
+        </code>
+      )}
+    >
+      {code}
+    </SyntaxHighlighter>
   );
 };
 
@@ -66,9 +74,7 @@ const TopBar = () => {
 
   const language = useCode((c) => c.language);
 
-  if (language === "no_top_bar") {
-    return null;
-  }
+  if (language === null || language === undefined) return null;
 
   return (
     <div className="bg-border flex h-14 w-full items-center justify-between px-4">
@@ -82,79 +88,48 @@ const TopBar = () => {
   );
 };
 
-export function Container({ children }: { children: ReactNode }) {
-  return (
-    <div
-      className={cn(
-        "not-prose flex w-full flex-col overflow-clip border",
-        "border-border bg-card supports-[backdrop-filter]:bg-card/50 text-card-foreground rounded-xl backdrop-blur-sm",
-        "rounded-t-none border-none bg-transparent p-6",
-      )}
-    >
-      {children}
-    </div>
-  );
-}
-
-export function Content() {
+export const Block = () => {
   useRequiredContext(CodeContext);
 
+  const codeTheme = useCode((c) => c.codeTheme);
   const code = useCode((c) => c.code);
   const language = useCode((c) => c.language);
 
-  const { theme } = useTheme();
+  if (language === null) return null;
 
-  const [highlightedHtml, setHighlightedHtml] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function highlight() {
-      if (!code) {
-        setHighlightedHtml("<pre><code></code></pre>");
-        return;
-      }
-
-      const html = await codeToHtml(code, {
-        lang: language,
-        theme: theme === "dark" ? "github-dark" : "github-light",
-        transformers: [
-          {
-            pre(node) {
-              node.properties.style = undefined;
-            },
-            code(node) {
-              node.properties.style = undefined;
-            },
-          },
-        ],
-      });
-      setHighlightedHtml(html);
-    }
-    highlight();
-  }, [code, language, theme]);
-
-  const classNames = cn(
-    "w-full overflow-auto text-[13px]",
-    "scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent",
-  );
-
-  return highlightedHtml ? (
-    <div
-      className={classNames}
-      dangerouslySetInnerHTML={{ __html: highlightedHtml }}
-    />
-  ) : (
-    <div className={classNames}>
-      <pre>
-        <code>{code}</code>
-      </pre>
+  return (
+    <div className="not-prose border-border group relative my-8 w-full overflow-hidden rounded-xl border-1">
+      <TopBar />
+      <div
+        className={cn(
+          "not-prose flex w-full flex-col overflow-clip border",
+          "border-border bg-card supports-[backdrop-filter]:bg-card/50 text-card-foreground rounded-xl backdrop-blur-sm",
+          "rounded-t-none border-none bg-transparent",
+        )}
+      >
+        <SyntaxHighlighter
+          language={language}
+          style={codeTheme}
+          showLineNumbers={true}
+          PreTag={({ children }) => (
+            <pre className="m-1 overflow-x-auto bg-transparent p-5 text-xs">
+              {children}
+            </pre>
+          )}
+        >
+          {code}
+        </SyntaxHighlighter>
+      </div>
     </div>
   );
-}
+};
 
 export const Language = () => {
   useRequiredContext(CodeContext);
 
   const language = useCode((c) => c.language);
+
+  if (!language) return null;
 
   if (language in languages) {
     const { label } = languages[language as keyof typeof languages];
@@ -166,8 +141,6 @@ export const Language = () => {
       </div>
     );
   }
-
-  return null;
 };
 
 export function CopyButton() {
@@ -176,13 +149,9 @@ export function CopyButton() {
   const code = useCode((c) => c.code);
 
   const [copied, setCopied] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const isClient = useIsClient();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!navigator?.clipboard && mounted) return null;
+  const disabled = !navigator?.clipboard && isClient;
 
   const handleCopy = async () => {
     try {
@@ -203,6 +172,7 @@ export function CopyButton() {
       size="sm"
       variant="ghost"
       className="h-8 w-8 p-0"
+      disabled={disabled}
     >
       {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
     </Button>
