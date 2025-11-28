@@ -123,7 +123,7 @@ export const Block = () => {
           style={codeTheme}
           showLineNumbers={showLineNumbers}
           PreTag={({ children }) => (
-            <pre className="m-1 overflow-x-auto bg-transparent p-5 text-xs">
+            <pre className="my-1 overflow-x-auto bg-transparent px-6 py-5 text-xs">
               {children}
             </pre>
           )}
