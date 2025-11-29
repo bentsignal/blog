@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { ReactNode, useState } from "react";
 import { languages } from "@/data/languages";
 import { cn } from "@/utils/style-utils";
 import { Check, Copy, List, ListOrdered } from "lucide-react";
@@ -22,7 +22,7 @@ export const { Context: CodeContext, useContext: useCode } = createContext<{
   language: string | undefined;
   codeTheme: Record<string, React.CSSProperties>;
   showLineNumbers: boolean;
-  setShowLineNumbers: Dispatch<SetStateAction<boolean>>;
+  toggleShowLineNumbers: () => void;
 }>({ displayName: "CodeContext" });
 
 export function Provider({
@@ -47,12 +47,14 @@ export function Provider({
 
   if (!children) return null;
 
+  const toggleShowLineNumbers = () => setShowLineNumbers((prev) => !prev);
+
   const contextValue = {
     code,
     language,
     codeTheme,
     showLineNumbers,
-    setShowLineNumbers,
+    toggleShowLineNumbers,
   };
 
   return (
@@ -202,13 +204,13 @@ export const LineNumbersButton = () => {
   useRequiredContext(CodeContext);
 
   const showLineNumbers = useCode((c) => c.showLineNumbers);
-  const setShowLineNumbers = useCode((c) => c.setShowLineNumbers);
+  const toggleShowLineNumbers = useCode((c) => c.toggleShowLineNumbers);
 
   return (
     <Tooltip.Frame>
       <Tooltip.Trigger asChild>
         <Button
-          onClick={() => setShowLineNumbers(!showLineNumbers)}
+          onClick={toggleShowLineNumbers}
           size="sm"
           variant="ghost"
           className="h-8 w-8 p-0"
