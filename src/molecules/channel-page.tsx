@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { INITIAL_PAGE_SIZE, PAGE_SIZE } from "@/config/channel-config";
 import { useChatWindow } from "@/context/chat-window-context";
 import { api } from "@/convex/_generated/api";
 import { channels, type Channel, type ChannelSlug } from "@/data/channels";
@@ -15,6 +14,9 @@ import { ChannelComposer } from "@/molecules/composers";
 import { MessageList } from "@/molecules/message-list";
 import { TopControls } from "@/molecules/top-controls";
 import { createContext } from "@/lib/context";
+
+const INITIAL_PAGE_SIZE = 50;
+const PAGE_SIZE = 100;
 
 export const { Context: ChannelContext, useContext: useChannel } =
   createContext<{
