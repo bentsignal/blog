@@ -36,16 +36,16 @@ export function Provider({
 }) {
   useRequiredContext(ThemeContext);
 
-  if (!children) return null;
-
   const theme = useTheme((c) => c.theme);
   const codeTheme = theme === "dark" ? tomorrowNight : tomorrow;
-  const code = children.toString().trim();
+  const code = children?.toString().trim() ?? "";
   const languageString = className?.split("-")[1];
   const language = languageString === "no_top_bar" ? undefined : languageString;
   const isInline = inline || languageString === undefined;
 
   const [showLineNumbers, setShowLineNumbers] = useState(false);
+
+  if (!children) return null;
 
   const contextValue = {
     code,
