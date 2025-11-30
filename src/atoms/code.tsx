@@ -40,7 +40,7 @@ export function Provider({
   const codeTheme = theme === "dark" ? tomorrowNight : tomorrow;
   const code = children?.toString().trim() ?? "";
   const languageString = className?.split("-")[1];
-  const language = languageString === "no_top_bar" ? undefined : languageString;
+  const language = languageString === "no_header" ? undefined : languageString;
   const isInline = inline || languageString === undefined;
 
   const [showLineNumbers, setShowLineNumbers] = useState(false);
@@ -82,7 +82,7 @@ export const Inline = () => {
   );
 };
 
-const TopBar = () => {
+const Header = () => {
   useRequiredContext(CodeContext);
 
   const language = useCode((c) => c.language);
@@ -112,7 +112,7 @@ export const Block = () => {
 
   return (
     <div className="not-prose border-border group relative my-8 w-full overflow-hidden rounded-xl border-1">
-      <TopBar />
+      <Header />
       <div
         className={cn(
           "not-prose flex w-full flex-col overflow-clip border",
