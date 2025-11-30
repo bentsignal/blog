@@ -1,7 +1,7 @@
 import { Doc } from "@/convex/_generated/dataModel";
 import { Infer, v } from "convex/values";
 
-export interface EnhancedMessage extends Doc<"messages"> {
+interface EnhancedMessage extends Doc<"messages"> {
   name: string;
   username: string;
   pfp: string | null | undefined;
@@ -10,24 +10,34 @@ export interface EnhancedMessage extends Doc<"messages"> {
   reactionSignature: string;
 }
 
-export type MessageInteractionState = "idle" | "editing" | "replying";
+type MessageInteractionState = "idle" | "editing" | "replying";
 
-export const vSnapshot = v.object({
+const vSnapshot = v.object({
   content: v.string(),
   timestamp: v.number(),
 });
 
-export type Snapshot = Infer<typeof vSnapshot>;
+type Snapshot = Infer<typeof vSnapshot>;
 
-export const REACTION_EMOJIS = ["❤️", "😂", "👍", "👎"] as const;
-export const vReactionEmoji = v.union(
+const REACTION_EMOJIS = ["❤️", "😂", "👍", "👎"] as const;
+const vReactionEmoji = v.union(
   ...REACTION_EMOJIS.map((emoji) => v.literal(emoji)),
 );
-export type ReactionEmoji = Infer<typeof vReactionEmoji>;
+type ReactionEmoji = Infer<typeof vReactionEmoji>;
 
-export const vReaction = v.object({
+const vReaction = v.object({
   profile: v.id("profiles"),
   emoji: vReactionEmoji,
 });
 
-export type Reaction = Infer<typeof vReaction>;
+type Reaction = Infer<typeof vReaction>;
+
+export {
+  type EnhancedMessage,
+  type MessageInteractionState,
+  type Snapshot,
+  type Reaction,
+  type ReactionEmoji,
+};
+export { REACTION_EMOJIS };
+export { vSnapshot, vReactionEmoji, vReaction };
