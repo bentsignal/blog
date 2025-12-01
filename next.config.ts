@@ -24,7 +24,6 @@ const nextConfig: NextConfig = {
         search: "",
       },
     ],
-    imageSizes: [16, 100],
     formats: ["image/avif", "image/webp"],
   },
   pageExtensions: ["ts", "tsx", "md", "mdx"],

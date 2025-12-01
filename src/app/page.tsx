@@ -43,7 +43,7 @@ export default function HomePage() {
                 const post = posts[slug];
                 return (
                   <PostLink slug={slug} key={slug}>
-                    <div className="text-muted-foreground hover:text-primary flex items-center justify-between gap-1 rounded-md transition-colors duration-100">
+                    <div className="text-muted-foreground hover:text-primary flex flex-col items-start justify-between gap-1 rounded-md transition-colors duration-100 lg:flex-row lg:items-center">
                       <h2 className="font-semibold">{post.title}</h2>
                       <p className="text-sm">
                         {post.datePosted.toLocaleDateString(undefined, {

@@ -24,7 +24,7 @@ export default async function Page({
   }
 
   const post = posts[validatedSlug];
-  const { default: Post } = await import(`@/posts/${validatedSlug}.mdx`);
+  const { default: Post } = await import(`@/posts/${validatedSlug}/page.mdx`);
 
   const dateString = post.datePosted.toLocaleDateString(undefined, {
     year: "numeric",
@@ -48,7 +48,7 @@ export default async function Page({
               <MoveLeft className="size-3" /> Back to Home
             </Link>
             <div className="my-4 flex flex-col gap-2">
-              <h2 className="text-2xl font-semibold">{post.title}</h2>
+              <h1 className="text-2xl font-semibold">{post.title}</h1>
               <div className="flex items-center justify-between">
                 <p className="text-muted-foreground">
                   {dateString} • {readingTimeString}
@@ -59,12 +59,11 @@ export default async function Page({
               className={cn(
                 "prose dark:prose-invert",
                 "prose-headings:mt-8 prose-headings:font-semibold",
-                "prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl prose-h4:text-2xl prose-h5:text-xl prose-h6:text-lg",
+                "prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs",
               )}
             >
               <Post />
             </div>
-
             <Separator className="my-4" />
             <div className="flex flex-col items-center gap-2">
               <span className="text-muted-foreground text-sm">
@@ -94,7 +93,7 @@ export async function generateMetadata({
 
   return {
     title: post.title,
-    description: post.subtitle,
+    description: post.description,
   };
 }
 

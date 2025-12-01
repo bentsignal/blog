@@ -8,6 +8,9 @@ export const channels = {
   general: {
     name: "General",
   },
+  // "organizing-react-projects": {
+  //   name: "Organizing React Projects",
+  // },
 } as const satisfies Partial<Record<Slug, Channel>>;
 
 export type ChannelSlug = keyof typeof channels;

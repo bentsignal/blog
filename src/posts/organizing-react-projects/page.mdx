@@ -1,0 +1,395 @@
+import { basicProject } from "./folders";
+import { FolderView } from "@/molecules/folder-view";
+
+If you've worked in a modern React project before, then you've probably seen
+something like this:
+
+<FolderView directory={basicProject} />
+
+```no_header
+
+📁 components
+├─ 📁 ui
+│  ├─ button.tsx
+│  ├─ input.tsx
+│  └─ card.tsx
+├─ 📁 pages
+│  ├─ home-page.tsx
+│  └─ settings-page.tsx
+├─ footer.tsx
+└─ nav.tsx
+
+📁 hooks
+├─ use-mobile.ts
+└─ use-is-client.ts
+
+📁 types
+└─ index.ts
+
+📁 lib
+├─ auth-client.ts
+└─ util.ts
+```
+
+Where files are split up across folders depending on what type of code lives
+inside them. Components live with other components, hooks live with other hooks,
+etc.
+
+For a simple project like the one outlined above, this tends to work fine. But
+as your codebase scales, you end up with _low feature cohesion_. Making changes
+to one area of your app requires editing multiple files scattered far and wide
+across different directories.
+
+Lets take a look at a more complicated project: **a messaging app**.
+
+```no_header
+📁 components
+├─ 📁 ui
+│  ├─ button.tsx
+│  ├─ input.tsx
+│  ├─ sidebar.tsx
+│  └─ card.tsx
+├─ 📁 pages
+│  ├─ home-page.tsx
+│  ├─ settings-page.tsx
+│  ├─ channel-page.tsx
+│  ├─ login-page.tsx
+│  └─ thread-page.tsx
+├─ 📁 auth
+│  ├─ sign-in-form.tsx
+│  ├─ sign-up-form.tsx
+│  ├─ sign-in-button.tsx
+│  ├─ sign-up-button.tsx
+│  └─ sign-out-button.tsx
+├─ 📁 messages
+│  ├─ user-message.tsx
+│  ├─ assistant-message.tsx
+│  └─ system-message.tsx
+├─ 📁 composer
+│  ├─ channel-composer.tsx
+│  ├─ edit-composer.tsx
+│  └─ reply-composer.tsx
+├─ search-bar.tsx
+├─ message-list.tsx
+├─ header.tsx
+├─ footer.tsx
+└─ nav.tsx
+
+📁 hooks
+├─ use-mobile.ts
+├─ use-message-actions.ts
+├─ use-debounced-input.ts
+├─ use-auth.ts
+├─ use-composer.ts
+├─ use-theme.ts
+└─ use-is-client.ts
+
+📁 context
+├─ auth-context.tsx
+├─ message-context.tsx
+├─ search-context.tsx
+├─ channel-context.tsx
+└─ composer-context.tsx
+
+📁 types
+├─ index.ts
+├─ composer-types.ts
+└─ message-types.ts
+
+📁 lib
+├─ auth-client.ts
+└─ util.ts
+```
+
+As you can see, things are starting to get out of hand. `📁/components` is
+growing much faster than the other directories, which makes sense. In React,
+everything you can see on your screen is a component, so this folder is destined
+to grow larger and larger as we add new features.
+
+Earlier I mentioned that this way of building leads to low feature cohesion, and
+now we can start to see why. If I'm overhauling messages, I may need to access
+the message components, the message hook, the message context, and the message
+type. These files all live in separate folders, with the only indication that
+they are related being:
+
+1. that they all have _message_ somewhere in their name
+2. they likely import from each other.
+
+So what should we do?
+
+Maybe we make a new rule: if a feature has different types of code that
+previously would have gone into separate folders, we house all of the files in a
+new folder: `📁/features`
+
+Lets try this, and see how things look.
+
+```no_header
+📁 components
+├─ 📁 ui
+│  ├─ button.tsx
+│  ├─ input.tsx
+│  ├─ sidebar.tsx
+│  └─ card.tsx
+├─ search-bar.tsx
+├─ header.tsx
+├─ footer.tsx
+└─ nav.tsx
+
+📁 pages
+├─ home-page.tsx
+├─ settings-page.tsx
+├─ channel-page.tsx
+├─ login-page.tsx
+└─ thread-page.tsx
+
+📁 features
+├─ 📁 message
+│  ├─ 📁 components
+│  │  ├─ user-message.tsx
+│  │  ├─ assistant-message.tsx
+│  │  ├─ system-message.tsx
+│  │  └─ message-list.tsx
+│  ├─ 📁 hooks
+│  │  └─ use-message-actions.ts
+│  ├─ 📁 context
+│  │  └─ message-context.ts
+│  └─ 📁 types
+│     └─ message-types.ts
+├─ 📁 auth
+│  ├─ 📁 components
+│  │  ├─ sign-in-form.tsx
+│  │  ├─ sign-up-form.tsx
+│  │  ├─ sign-in-button.tsx
+│  │  ├─ sign-up-button.tsx
+│  │  └─ sign-out-button.tsx
+│  ├─ 📁 hooks
+│  │  └─ use-auth.ts
+│  ├─ 📁 context
+│  │  └─ auth-context.ts
+│  ├─ 📁 lib
+│  │  └─ auth-client.ts
+│  └─ 📁 types
+│     └─ message-types.ts
+└─ 📁 composer
+   ├─ 📁 components
+   │  ├─ channel-composer.tsx
+   │  ├─ edit-composer.tsx
+   │  └─ reply-composer.tsx
+   ├─ 📁 hooks
+   │  └─ use-composer.ts
+   ├─ 📁 context
+   │  └─ composer-context.ts
+   └─ 📁 types
+      └─ composer-types.ts
+
+📁 hooks
+├─ use-mobile.ts
+├─ use-debounced-input.ts
+├─ use-theme.ts
+└─ use-is-client.ts
+
+📁 context
+├─ search-context.tsx
+├─ channel-context.tsx
+
+📁 types
+└─ index.ts
+
+📁 lib
+└─ util.ts
+```
+
+Much better.
+
+_note_: one thing I did without mentioning was move `📁/pages` up and out of
+`📁/components`.
+
+---
+
+---
+
+---
+
+---
+
+---
+
+---
+
+---
+
+---
+
+---
+
+Where `📁/components/ui` contains prebuilt components from a library like
+[shadcn](https://ui.shadcn.com/), and the components you build yourself live in
+`📁/components`.
+
+But this convention doesn't draw clear lines with regards to what code belongs
+where. Does having some of the files in `📁/ui` mean that the others aren't UI?
+Is the code in these files solely React components? We're in `📁/components`, so
+does that mean that the code in these files is solely component code?
+
+Typically the answer to both of those questions is no.
+
+Below is the first 30 lines of the sidebar component from shadcn. As we can see,
+it defines constants, a type, a context, and a hook before we get to any
+component code.
+
+```jsx
+// sidebar.tsx
+
+const SIDEBAR_COOKIE_NAME = "sidebar_state";
+const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+const SIDEBAR_WIDTH = "40rem";
+const SIDEBAR_WIDTH_MOBILE = "100vw";
+const SIDEBAR_WIDTH_ICON = "3rem";
+const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+
+type SidebarContextProps = {
+  state: "expanded" | "collapsed";
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  openMobile: boolean;
+  setOpenMobile: (open: boolean) => void;
+  isMobile: boolean;
+  toggleSidebar: () => void;
+};
+
+const SidebarContext = React.createContext<SidebarContextProps | null>(null);
+
+export function useSidebar() {
+  const context = React.useContext(SidebarContext);
+  if (!context) {
+    throw new Error("useSidebar must be used within a SidebarProvider.");
+  }
+
+  return context;
+}
+```
+
+So then what should we do? Should we move all of this code into separate files?
+
+- sidebar-constants.ts
+- sidebar-context.ts
+- sidebar.tsx
+
+Many projects do this, keeping designated folders for hooks, types, contexts,
+and whatever else. While this may be useful for small pieces of code that are
+truly just a hook or type, I don't think we should do this with our sidebar.
+Having monolithic folders containing all of the hooks or types in our entire
+codebase becomes increasingly more difficult to manage as our project grows. I
+think we can do better.
+
+So what then? Maybe a features folder?
+
+We could create `📁/features/sidebar` and put the previously mentioned files in
+there. This feels like a step in the right direction as it keeps related code
+closer together. But how strictly will we follow this paradigm. Will we create
+`sidebar-types.ts` even if we just have one single type definition? That feels a
+bit unnecessary.
+
+I'm starting to think maybe we had it right in the first place, colocating all
+of our related code in one file. Maybe a better solution is to embrace that
+mental model to a fuller extent, and rethink how we organize our projects from
+the ground up.
+
+But how?
+
+While trying to find a good answer to this question, I stumbled upon
+[Atomic Design](https://atomicdesign.bradfrost.com/table-of-contents/) by
+[Brad Frost](https://bradfrost.com/). While most of it was written close to a
+decade ago, I think the principles transfer over nicely to the the way we
+currently build in React.
+
+Brad outlines 5 different categories of UI: Atoms, Molecules, Organisms,
+Templates, and Pages.
+
+![Atomic Design Process](https://wr5t080c48.ufs.sh/f/Br1KpCv2wzAdP6d1F4069FNjRoqZEfamk1IlrK8PD4tOXTQL)
+
+He gives an quick overview of what defines each of these categories in the
+following [blog post](https://bradfrost.com/blog/post/atomic-web-design/), but
+to summarize:
+
+- Atoms are the smallest building blocks (buttons, labels, inputs)
+- Molecules are composed of atoms (search bar)
+- Organisms are composed of molecules (nav, footer, carousel)
+- Templates stitch organisms together
+- Pages are specific instances of Templates
+
+At first glance I really resonated with this hierarchy. But as I tried to adopt
+it this codebase, I found it difficult to draw lines between the 3 chemsitry
+categories: _atoms, molecules, and organisms_.
+
+What I ended up doing was getting rid of organisms, and just using atoms &
+molecules. My rules dividing them aren't perfectly analagous to their
+relationship in chemistry, but its close enough that the analogy holds.
+
+### Atoms
+
+- Broad, don't serve a specific purpose
+- Used as blocks to build more niche components
+- **_Can_** contain other atoms
+- **_Cannot_** contain molecules
+- ex: button, sidebar, list, card, message
+
+### Molecules
+
+- More specific, but broad enough that they're reusable across different pages
+- **_Can_** contain other molecules
+- ex: message list, search bar, variants (user message, assistant message,
+  system message)
+
+These rules have even helped me make better decisions about my code while
+working on this post. While creating the code atom (seen below), I had imported
+and used a molecule component named `CopyButton`. If this hadn't broken my atoms
+& moleules rule, I wouldn't have thought twice about it.
+
+```python
+var foo = "bar"
+```
+
+But as we now know, atoms can't import molecules. So I thought on it. I realized
+quickly that the only place I would use the `CopyButton` component is inside the
+code block, so it made sense to have it just be another component in the `Code`
+atom.
+
+But won't this make our files unbearably long?
+
+Yes, but I'd argue it shouldn't matter. In a top down framework like React, you
+shouldn't be opening random files and trying to make sense of the code. You
+should start at your page components and work your way down the tree to
+understand how things are actually layered in your app. When you do this, cmd
+clicking your way down the tree, it doesn't matter if your editor takes you to
+line 10, or line 1000. You get exactly where you need.
+
+```no_header
+atoms/
+├─ message.tsx
+├─ composer.tsx
+├─ list.tsx
+└─ channel.tsx
+
+molecules/
+├─ composers/
+│  ├─ channel-composer.tsx
+│  ├─ edit-composer.tsx
+│  └─ reply-composer.tsx
+├─ messages/
+│  ├─ user-message.tsx
+│  ├─ assistant-message.tsx
+│  └─ system-message.tsx
+├─ message-list.tsx
+└─ channel-list.tsx
+
+templates/
+├─ centered.tsx
+└─ two-column.tsx
+
+pages/
+├─ channel-page.tsx
+├─ thread-page.tsx
+├─ home-page.tsx
+└─ settings-page.tsx
+```
