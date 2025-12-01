@@ -16,6 +16,7 @@ export const Providers = async ({
 
   const cookieStore = await cookies();
   const themeCookie = cookieStore.get("theme");
+  const sidebarCookie = cookieStore.get("sidebar_state");
 
   const token = await getToken();
   const authed = token !== undefined;
@@ -30,7 +31,9 @@ export const Providers = async ({
           themeCookieValue={themeCookie?.value}
         >
           <ChatWindowProvider slugFromHeaders={slug}>
-            <Sidebar.Provider>{children}</Sidebar.Provider>
+            <Sidebar.Provider defaultOpen={sidebarCookie?.value === "true"}>
+              {children}
+            </Sidebar.Provider>
           </ChatWindowProvider>
         </ThemeProvider>
       </AuthProvider>
