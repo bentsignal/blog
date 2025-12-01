@@ -3,7 +3,13 @@
 import { memo, useCallback, useState } from "react";
 import { cn } from "@/utils/style-utils";
 import equal from "fast-deep-equal";
-import { ListChevronsDownUp, ListChevronsUpDown } from "lucide-react";
+import {
+  File,
+  Folder as FolderIcon,
+  FolderOpen as FolderOpenIcon,
+  ListChevronsDownUp,
+  ListChevronsUpDown,
+} from "lucide-react";
 import { Button } from "@/atoms/button";
 import * as Tooltip from "@/atoms/tooltip";
 import { createContext, useRequiredContext } from "@/lib/context";
@@ -17,8 +23,8 @@ type FileType = {
 
 type FolderType = {
   name: string;
-  contents: Array<FileType | FolderType>;
   isOpen?: boolean;
+  contents: Array<FileType | FolderType>;
 };
 
 const { Context: DirectoryContext, useContext: useDirectory } = createContext<{
@@ -126,7 +132,10 @@ const Header = () => {
 
   return (
     <div className="bg-border flex h-14 w-full items-center justify-between px-4">
-      <span className="text-sm font-bold">📁 {rootName}</span>
+      <div className="ml-1 flex items-center gap-1.5">
+        <FolderIcon fill="white" className="h-4 w-4" />
+        <span className="mb-0.5 font-bold">{rootName}</span>
+      </div>
       <div className="flex items-center gap-2">
         <CollapseButton />
         <ExpandButton />
@@ -139,10 +148,8 @@ const Body = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       className={cn(
-        "not-prose flex w-full flex-col overflow-clip border",
-        "border-border text-card-foreground rounded-xl",
-        "rounded-t-none border-none bg-transparent",
-        "my-1 overflow-x-auto bg-transparent px-6 py-5 text-xs",
+        "flex w-full flex-col gap-1",
+        "my-1 overflow-x-auto px-6 py-5",
       )}
     >
       {children}
@@ -156,8 +163,8 @@ const Folder = memo(
     const openOrCloseFolder = useDirectory((c) => c.openOrCloseFolder);
     return (
       <div className="flex flex-col">
-        <span
-          className="cursor-pointer select-none"
+        <div
+          className="hover:text-primary cursor-pointer"
           onClick={() =>
             openOrCloseFolder(
               path,
@@ -166,10 +173,17 @@ const Folder = memo(
             )
           }
         >
-          {folder.isOpen ? "📂" : "📁"} {folder.name}
-        </span>
+          <div className="flex items-center gap-1">
+            {folder.isOpen ? (
+              <FolderOpenIcon className="h-3 w-3" />
+            ) : (
+              <FolderIcon fill="white" className="h-3 w-3" />
+            )}{" "}
+            <span className="text-sm select-none">{folder.name}</span>
+          </div>
+        </div>
         {folder.isOpen && (
-          <div className="border-border flex flex-col border-l-2 py-1 pl-4">
+          <div className="border-border my-1 flex flex-col gap-1 border-l-2 py-1 pl-4">
             {folder.contents.map((content) => {
               if ("contents" in content) {
                 return (
@@ -197,9 +211,12 @@ const FileItem = memo(
     return (
       <Tooltip.Frame>
         <Tooltip.Trigger asChild>
-          <span className="w-fit">
-            {file.name}.{file.type}
-          </span>
+          <div className="flex w-fit items-center gap-1">
+            <File className="h-3 w-3" />
+            <span className="text-sm select-none">
+              {file.name}.{file.type}
+            </span>
+          </div>
         </Tooltip.Trigger>
         <Tooltip.Content side="right">
           {`${path.join("/")}/${file.name}.${file.type}`}

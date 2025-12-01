@@ -1,35 +1,14 @@
-import { basicProject } from "./folders";
+import {
+  basicProject,
+  messagingAppFirstIteration,
+  messagingAppSecondIteration,
+} from "./folders";
 import { FolderView } from "@/molecules/folder-view";
 
 If you've worked in a modern React project before, then you've probably seen
 something like this:
 
 <FolderView directory={basicProject} />
-
-```no_header
-
-📁 components
-├─ 📁 ui
-│  ├─ button.tsx
-│  ├─ input.tsx
-│  └─ card.tsx
-├─ 📁 pages
-│  ├─ home-page.tsx
-│  └─ settings-page.tsx
-├─ footer.tsx
-└─ nav.tsx
-
-📁 hooks
-├─ use-mobile.ts
-└─ use-is-client.ts
-
-📁 types
-└─ index.ts
-
-📁 lib
-├─ auth-client.ts
-└─ util.ts
-```
 
 Where files are split up across folders depending on what type of code lives
 inside them. Components live with other components, hooks live with other hooks,
@@ -42,64 +21,7 @@ across different directories.
 
 Lets take a look at a more complicated project: **a messaging app**.
 
-```no_header
-📁 components
-├─ 📁 ui
-│  ├─ button.tsx
-│  ├─ input.tsx
-│  ├─ sidebar.tsx
-│  └─ card.tsx
-├─ 📁 pages
-│  ├─ home-page.tsx
-│  ├─ settings-page.tsx
-│  ├─ channel-page.tsx
-│  ├─ login-page.tsx
-│  └─ thread-page.tsx
-├─ 📁 auth
-│  ├─ sign-in-form.tsx
-│  ├─ sign-up-form.tsx
-│  ├─ sign-in-button.tsx
-│  ├─ sign-up-button.tsx
-│  └─ sign-out-button.tsx
-├─ 📁 messages
-│  ├─ user-message.tsx
-│  ├─ assistant-message.tsx
-│  └─ system-message.tsx
-├─ 📁 composer
-│  ├─ channel-composer.tsx
-│  ├─ edit-composer.tsx
-│  └─ reply-composer.tsx
-├─ search-bar.tsx
-├─ message-list.tsx
-├─ header.tsx
-├─ footer.tsx
-└─ nav.tsx
-
-📁 hooks
-├─ use-mobile.ts
-├─ use-message-actions.ts
-├─ use-debounced-input.ts
-├─ use-auth.ts
-├─ use-composer.ts
-├─ use-theme.ts
-└─ use-is-client.ts
-
-📁 context
-├─ auth-context.tsx
-├─ message-context.tsx
-├─ search-context.tsx
-├─ channel-context.tsx
-└─ composer-context.tsx
-
-📁 types
-├─ index.ts
-├─ composer-types.ts
-└─ message-types.ts
-
-📁 lib
-├─ auth-client.ts
-└─ util.ts
-```
+<FolderView directory={messagingAppFirstIteration} />
 
 As you can see, things are starting to get out of hand. `📁/components` is
 growing much faster than the other directories, which makes sense. In React,
@@ -123,86 +45,9 @@ new folder: `📁/features`
 
 Lets try this, and see how things look.
 
-```no_header
-📁 components
-├─ 📁 ui
-│  ├─ button.tsx
-│  ├─ input.tsx
-│  ├─ sidebar.tsx
-│  └─ card.tsx
-├─ search-bar.tsx
-├─ header.tsx
-├─ footer.tsx
-└─ nav.tsx
-
-📁 pages
-├─ home-page.tsx
-├─ settings-page.tsx
-├─ channel-page.tsx
-├─ login-page.tsx
-└─ thread-page.tsx
-
-📁 features
-├─ 📁 message
-│  ├─ 📁 components
-│  │  ├─ user-message.tsx
-│  │  ├─ assistant-message.tsx
-│  │  ├─ system-message.tsx
-│  │  └─ message-list.tsx
-│  ├─ 📁 hooks
-│  │  └─ use-message-actions.ts
-│  ├─ 📁 context
-│  │  └─ message-context.ts
-│  └─ 📁 types
-│     └─ message-types.ts
-├─ 📁 auth
-│  ├─ 📁 components
-│  │  ├─ sign-in-form.tsx
-│  │  ├─ sign-up-form.tsx
-│  │  ├─ sign-in-button.tsx
-│  │  ├─ sign-up-button.tsx
-│  │  └─ sign-out-button.tsx
-│  ├─ 📁 hooks
-│  │  └─ use-auth.ts
-│  ├─ 📁 context
-│  │  └─ auth-context.ts
-│  ├─ 📁 lib
-│  │  └─ auth-client.ts
-│  └─ 📁 types
-│     └─ message-types.ts
-└─ 📁 composer
-   ├─ 📁 components
-   │  ├─ channel-composer.tsx
-   │  ├─ edit-composer.tsx
-   │  └─ reply-composer.tsx
-   ├─ 📁 hooks
-   │  └─ use-composer.ts
-   ├─ 📁 context
-   │  └─ composer-context.ts
-   └─ 📁 types
-      └─ composer-types.ts
-
-📁 hooks
-├─ use-mobile.ts
-├─ use-debounced-input.ts
-├─ use-theme.ts
-└─ use-is-client.ts
-
-📁 context
-├─ search-context.tsx
-├─ channel-context.tsx
-
-📁 types
-└─ index.ts
-
-📁 lib
-└─ util.ts
-```
+<FolderView directory={messagingAppSecondIteration} />
 
 Much better.
-
-_note_: one thing I did without mentioning was move `📁/pages` up and out of
-`📁/components`.
 
 ---
 
