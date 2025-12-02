@@ -1,4 +1,4 @@
-import * as Directory from "@/atoms/directory";
+import * as Directory from "@/features/directory";
 
 const FolderView = ({ directory }: { directory: Directory.FolderType }) => {
   return (

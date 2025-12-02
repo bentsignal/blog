@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useState } from "react";
+import { memo } from "react";
 import { cn } from "@/utils/style-utils";
 import equal from "fast-deep-equal";
 import {
@@ -10,112 +10,11 @@ import {
   ListChevronsDownUp,
   ListChevronsUpDown,
 } from "lucide-react";
+import { DirectoryContext, useDirectory } from "./directory-context";
+import type { FileType, FolderType } from "./directory-types";
 import { Button } from "@/atoms/button";
 import * as Tooltip from "@/atoms/tooltip";
-import { createContext, useRequiredContext } from "@/lib/context";
-
-type Extension = "ts" | "tsx";
-
-type FileType = {
-  name: string;
-  type: Extension;
-};
-
-type FolderType = {
-  name: string;
-  isOpen?: boolean;
-  contents: Array<FileType | FolderType>;
-};
-
-const { Context: DirectoryContext, useContext: useDirectory } = createContext<{
-  root: FolderType;
-  openOrCloseFolder: (
-    path: Array<string>,
-    folderName: string,
-    newValue: "open" | "closed",
-  ) => void;
-}>({ displayName: "DirectoryContext" });
-
-const Provider = ({
-  initialRoot,
-  children,
-}: {
-  initialRoot: FolderType;
-  children: React.ReactNode;
-}) => {
-  const [root, setRoot] = useState(initialRoot);
-
-  const openOrCloseFolder = useCallback(
-    (path: Array<string>, folderName: string, newValue: "open" | "closed") => {
-      const updateFolder = (
-        folder: FolderType,
-        pathSegments: Array<string>,
-      ): FolderType => {
-        if (pathSegments.length === 0) {
-          return folder;
-        }
-
-        if (pathSegments.length === 1) {
-          if (folder.name === pathSegments[0] && folder.name === folderName) {
-            return {
-              ...folder,
-              isOpen: newValue === "open",
-            };
-          }
-
-          const updatedContents = folder.contents.map((item) => {
-            if (
-              "contents" in item &&
-              item.name === pathSegments[0] &&
-              item.name === folderName
-            ) {
-              return {
-                ...item,
-                isOpen: newValue === "open",
-              };
-            }
-            return item;
-          });
-
-          return {
-            ...folder,
-            contents: updatedContents,
-          };
-        }
-
-        const [currentSegment, ...remainingSegments] = pathSegments;
-
-        const updatedContents = folder.contents.map((item) => {
-          if ("contents" in item && item.name === currentSegment) {
-            return updateFolder(item, remainingSegments);
-          }
-          return item;
-        });
-
-        return {
-          ...folder,
-          contents: updatedContents,
-        };
-      };
-
-      setRoot((prevRoot) => {
-        if (path.length > 0 && path[0] === prevRoot.name) {
-          return updateFolder(prevRoot, path.slice(1));
-        }
-        return updateFolder(prevRoot, path);
-      });
-    },
-    [],
-  );
-
-  const contextValue = { root, openOrCloseFolder };
-
-  return (
-    <DirectoryContext.Provider value={contextValue}>
-      {children}
-    </DirectoryContext.Provider>
-  );
-};
+import { useRequiredContext } from "@/lib/context";
 
 const Frame = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -131,14 +30,14 @@ const Header = () => {
   const rootName = useDirectory((c) => c.root.name);
 
   return (
-    <div className="bg-border flex h-14 w-full items-center justify-between px-4">
+    <div className="dark:bg-border bg-input flex h-14 w-full items-center justify-between px-4">
       <div className="ml-1 flex items-center gap-1.5">
         <FolderIcon fill="white" className="h-4 w-4" />
         <span className="mb-0.5 font-bold">{rootName}</span>
       </div>
       <div className="flex items-center gap-2">
-        <CollapseButton />
-        <ExpandButton />
+        <CloseAllButton />
+        <OpenAllButton />
       </div>
     </div>
   );
@@ -166,11 +65,7 @@ const Folder = memo(
         <div
           className="hover:text-primary cursor-pointer"
           onClick={() =>
-            openOrCloseFolder(
-              path,
-              folder.name,
-              folder.isOpen ? "closed" : "open",
-            )
+            openOrCloseFolder(path, folder.isOpen ? "closed" : "open")
           }
         >
           <div className="flex items-center gap-1">
@@ -235,22 +130,20 @@ const List = () => {
   return root.contents.map((content) => {
     if ("contents" in content) {
       return (
-        <Folder
-          key={content.name}
-          folder={content}
-          path={[root.name, content.name]}
-        />
+        <Folder key={content.name} folder={content} path={[content.name]} />
       );
     }
     return <FileItem key={content.name} file={content} path={[root.name]} />;
   });
 };
 
-const CollapseButton = () => {
+const CloseAllButton = () => {
+  useRequiredContext(DirectoryContext);
+  const closeAll = useDirectory((c) => c.closeAll);
   return (
     <Tooltip.Frame>
       <Tooltip.Trigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" onClick={closeAll}>
           <ListChevronsDownUp className="h-4 w-4" />
         </Button>
       </Tooltip.Trigger>
@@ -259,11 +152,13 @@ const CollapseButton = () => {
   );
 };
 
-const ExpandButton = () => {
+const OpenAllButton = () => {
+  useRequiredContext(DirectoryContext);
+  const openAll = useDirectory((c) => c.openAll);
   return (
     <Tooltip.Frame>
       <Tooltip.Trigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" onClick={openAll}>
           <ListChevronsUpDown className="h-4 w-4" />
         </Button>
       </Tooltip.Trigger>
@@ -272,6 +167,4 @@ const ExpandButton = () => {
   );
 };
 
-export { type Extension, type FileType, type FolderType };
-export { DirectoryContext, useDirectory, Provider };
 export { Folder, FileItem, Header, Frame, Body, List };

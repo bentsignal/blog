@@ -90,7 +90,7 @@ const Header = () => {
   if (language === undefined) return null;
 
   return (
-    <div className="bg-border flex h-14 w-full items-center justify-between px-4">
+    <div className="dark:bg-border bg-input flex h-14 w-full items-center justify-between px-4">
       <div className="flex items-center gap-2">
         <Language />
       </div>

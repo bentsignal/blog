@@ -1,4 +1,4 @@
-import * as Directory from "@/atoms/directory";
+import * as Directory from "@/features/directory";
 
 const basicProject = {
   name: "src",
