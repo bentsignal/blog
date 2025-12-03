@@ -130,7 +130,11 @@ const List = () => {
   return root.contents.map((content) => {
     if ("contents" in content) {
       return (
-        <Folder key={content.name} folder={content} path={[content.name]} />
+        <Folder
+          key={content.name}
+          folder={content}
+          path={[root.name, content.name]}
+        />
       );
     }
     return <FileItem key={content.name} file={content} path={[root.name]} />;

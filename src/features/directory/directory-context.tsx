@@ -28,7 +28,8 @@ const Provider = ({
   const openOrCloseFolder = useCallback(
     (path: Array<string>, newValue: "open" | "closed") => {
       setRoot((prevRoot) => {
-        return openOrCloseOneFolder(prevRoot, path, newValue);
+        const pathWithoutRoot = path.slice(1);
+        return openOrCloseOneFolder(prevRoot, pathWithoutRoot, newValue);
       });
     },
     [],

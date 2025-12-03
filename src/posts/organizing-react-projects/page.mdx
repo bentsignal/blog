@@ -1,14 +1,10 @@
 import { FolderView } from "@/features/directory/molecules/folder-view";
-import {
-  basicProject,
-  messagingAppFirstIteration,
-  messagingAppSecondIteration,
-} from "./folders";
+import * as folders from "./folders";
 
 If you've worked in a modern React project before, then you've probably seen
 something like this:
 
-<FolderView directory={basicProject} />
+<FolderView directory={folders.basicProject} />
 
 Where files are split up across folders depending on what type of code lives
 inside them. Components live with other components, hooks live with other hooks,
@@ -21,69 +17,61 @@ across different directories.
 
 Lets take a look at a more complicated project: **a messaging app**.
 
-<FolderView directory={messagingAppFirstIteration} />
+<FolderView directory={folders.messagingAppFirstIteration} />
 
 As you can see, things are starting to get out of hand. `📁/components` is
 growing much faster than the other directories, which makes sense. In React,
 everything you can see on your screen is a component, so this folder is destined
-to grow larger and larger as we add new features.
+to grow quickly.
 
 Earlier I mentioned that this way of building leads to low feature cohesion, and
-now we can start to see why. If I'm overhauling messages, I may need to access
-the message components, the message hook, the message context, and the message
-type. These files all live in separate folders, with the only indication that
-they are related being:
+now we can start to see why. If you want to overhaul the code for messages, you
+may need to access the message components, the message hook, the message
+context, and the message type. These files all live in separate folders, with
+the only indication that they are related being that:
 
-1. that they all have _message_ somewhere in their name
+1. they all have _message_ somewhere in their name
 2. they likely import from each other.
 
 So what should we do?
 
 Maybe we make a new rule: if a feature has different types of code that
-previously would have gone into separate folders, we house all of the files in a
-new folder: `📁/features`
+previously would have been spread across multiple folders, we house all of the
+files in a new folder: `📁/features`
 
 Lets try this, and see how things look.
 
-<FolderView directory={messagingAppSecondIteration} />
+<FolderView directory={folders.messagingAppSecondIteration} />
 
-Much better.
+This feels much better. Now when we want to make changes to messages, all of the
+code is in one place: `📁/features/message`
 
----
+So is that it? Are we done?
 
----
+We could be. You can get far with our new layout. Keeping code for related
+features close together will make things much easier to manage as we scale our
+app.
 
----
+But I think we can do even better.
 
----
+Lets take a closer look at our components folder. In modern React projects, its
+very common to have a folder named `📁/components/ui` which contains prebuilt
+components from a [shadcn](https://ui.shadcn.com/) registry.
 
----
-
----
-
----
-
----
-
----
-
-Where `📁/components/ui` contains prebuilt components from a library like
-[shadcn](https://ui.shadcn.com/), and the components you build yourself live in
-`📁/components`.
+<FolderView directory={folders.closerLookAtComponents} />
 
 But this convention doesn't draw clear lines with regards to what code belongs
-where. Does having some of the files in `📁/ui` mean that the others aren't UI?
-Is the code in these files solely React components? We're in `📁/components`, so
-does that mean that the code in these files is solely component code?
+where. Is the code in this folder solely React components? Does having some of
+our component files in `📁/ui` mean that the others aren't UI?
 
 Typically the answer to both of those questions is no.
 
-Below is the first 30 lines of the sidebar component from shadcn. As we can see,
-it defines constants, a type, a context, and a hook before we get to any
-component code.
+Below is the first 30 lines of the sidebar component from official shadcn
+registry. As we can see, it defines constants, a type, a context, and a hook
+before we get to any component code.
 
 ```jsx
-// sidebar.tsx
+// components/ui/sidebar.tsx
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -115,41 +103,31 @@ export function useSidebar() {
 ```
 
 So then what should we do? Should we move all of this code into separate files?
+Should we then put them in a new folder in `📁/features`?
 
-- sidebar-constants.ts
-- sidebar-context.ts
-- sidebar.tsx
+I say: no.
 
-Many projects do this, keeping designated folders for hooks, types, contexts,
-and whatever else. While this may be useful for small pieces of code that are
-truly just a hook or type, I don't think we should do this with our sidebar.
-Having monolithic folders containing all of the hooks or types in our entire
-codebase becomes increasingly more difficult to manage as our project grows. I
-think we can do better.
+Let me explain. I think moving code into separate files can be helpful if we
+expect to expand on the feature down the road. For example: as our app grows and
+we add new features, there's a good chance we'll be making changes and
+refactoring messages along the way. I think separating the code out makes this
+easier, as you don't have to swim through one monolithic file to find what
+you're looking for.
 
-So what then? Maybe a features folder?
+But for something like the sidebar, I think its actually quite nice to have all
+of the code colocated in one file. While we may need to make some changes to
+adapt it to our project, chances are we won't be making changes to it often.
 
-We could create `📁/features/sidebar` and put the previously mentioned files in
-there. This feels like a step in the right direction as it keeps related code
-closer together. But how strictly will we follow this paradigm. Will we create
-`sidebar-types.ts` even if we just have one single type definition? That feels a
-bit unnecessary.
+I think this file is fine just the way it is. I think it just needs a new home.
 
-I'm starting to think maybe we had it right in the first place, colocating all
-of our related code in one file. Maybe a better solution is to embrace that
-mental model to a fuller extent, and rethink how we organize our projects from
-the ground up.
+Enter: [Atomic Design](https://atomicdesign.bradfrost.com/table-of-contents/).
 
-But how?
+Atomic design is a book written by [Brad Frost](https://bradfrost.com/). Despite
+being mostly written before React's mass adoption (book was completed in 2016),
+it aligns surprisingly well with the way we built in React today.
 
-While trying to find a good answer to this question, I stumbled upon
-[Atomic Design](https://atomicdesign.bradfrost.com/table-of-contents/) by
-[Brad Frost](https://bradfrost.com/). While most of it was written close to a
-decade ago, I think the principles transfer over nicely to the the way we
-currently build in React.
-
-Brad outlines 5 different categories of UI: Atoms, Molecules, Organisms,
-Templates, and Pages.
+In his book, Brad outlines 5 different categories of UI: Atoms, Molecules,
+Organisms, Templates, and Pages.
 
 ![Atomic Design Process](https://wr5t080c48.ufs.sh/f/Br1KpCv2wzAdP6d1F4069FNjRoqZEfamk1IlrK8PD4tOXTQL)
 
@@ -163,28 +141,40 @@ to summarize:
 - Templates stitch organisms together
 - Pages are specific instances of Templates
 
-At first glance I really resonated with this hierarchy. But as I tried to adopt
-it this codebase, I found it difficult to draw lines between the 3 chemsitry
-categories: _atoms, molecules, and organisms_.
+As I read along, I really resonated with this hierarchy. It feels like the way
+most of us are already building in React, it just draws some good lines for how
+big to make different types of components.
+
+In the words of
+[Katia Wheeler](https://medium.com/@wheeler.katia/thinking-about-react-atomically-608c865d2262):
+
+> React, at its core, follows Atomic Design inherently by encouraging developers
+> to keep components as simple and as broken down as possible. From this
+> simplicity, we can create more complex components and containers of components
+> to create the user interfaces of our applications.
+
+While I did find myself agreeing with Brad on most things, I ran into some
+issues trying to strictly adopt these patterns into my codebase. My main issue
+was drawing the lines between molecules and organisms.
 
 What I ended up doing was getting rid of organisms, and just using atoms &
-molecules. My rules dividing them aren't perfectly analagous to their
+molecules. My rules dividing them aren't perfectly aligned with their
 relationship in chemistry, but its close enough that the analogy holds.
 
 ### Atoms
 
 - Broad, don't serve a specific purpose
-- Used as blocks to build more niche components
+- Used as blocks to build more components with a more specific purpose
 - **_Can_** contain other atoms
 - **_Cannot_** contain molecules
 - ex: button, sidebar, list, card, message
 
 ### Molecules
 
-- More specific, but broad enough that they're reusable across different pages
+- More specific, but broad enough that they're reusable across different areas
+- **_Can_** contain atoms
 - **_Can_** contain other molecules
-- ex: message list, search bar, variants (user message, assistant message,
-  system message)
+- ex: message list, search bar
 
 These rules have even helped me make better decisions about my code while
 working on this post. While creating the code atom (seen below), I had imported
@@ -208,33 +198,3 @@ should start at your page components and work your way down the tree to
 understand how things are actually layered in your app. When you do this, cmd
 clicking your way down the tree, it doesn't matter if your editor takes you to
 line 10, or line 1000. You get exactly where you need.
-
-```no_header
-atoms/
-├─ message.tsx
-├─ composer.tsx
-├─ list.tsx
-└─ channel.tsx
-
-molecules/
-├─ composers/
-│  ├─ channel-composer.tsx
-│  ├─ edit-composer.tsx
-│  └─ reply-composer.tsx
-├─ messages/
-│  ├─ user-message.tsx
-│  ├─ assistant-message.tsx
-│  └─ system-message.tsx
-├─ message-list.tsx
-└─ channel-list.tsx
-
-templates/
-├─ centered.tsx
-└─ two-column.tsx
-
-pages/
-├─ channel-page.tsx
-├─ thread-page.tsx
-├─ home-page.tsx
-└─ settings-page.tsx
-```

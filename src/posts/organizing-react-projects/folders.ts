@@ -165,6 +165,7 @@ const messagingAppSecondIteration = {
       contents: [
         {
           name: "message",
+          isOpen: true,
           contents: [
             {
               name: "components",
@@ -293,8 +294,30 @@ const messagingAppSecondIteration = {
   ],
 } as const satisfies Directory.FolderType;
 
+const closerLookAtComponents = {
+  name: "components",
+  isOpen: true,
+  contents: [
+    {
+      name: "ui",
+      isOpen: true,
+      contents: [
+        { name: "button", type: "tsx" },
+        { name: "input", type: "tsx" },
+        { name: "sidebar", type: "tsx" },
+        { name: "card", type: "tsx" },
+      ],
+    },
+    { name: "search-bar", type: "tsx" },
+    { name: "header", type: "tsx" },
+    { name: "footer", type: "tsx" },
+    { name: "nav", type: "tsx" },
+  ],
+} as const satisfies Directory.FolderType;
+
 export {
   basicProject,
   messagingAppFirstIteration,
   messagingAppSecondIteration,
+  closerLookAtComponents,
 };
