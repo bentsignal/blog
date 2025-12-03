@@ -15,18 +15,18 @@ as your codebase scales, you end up with _low feature cohesion_. Making changes
 to one area of your app requires editing multiple files scattered far and wide
 across different directories.
 
-Lets take a look at a more complicated project: **a messaging app**.
+To see this in action, lets take a look at a more complicated project: **a
+messaging app**.
 
 <FolderView directory={folders.messagingAppFirstIteration} />
 
-As you can see, things are starting to get out of hand. `📁/components` is
-growing much faster than the other directories, which makes sense. In React,
-everything you can see on your screen is a component, so this folder is destined
-to grow quickly.
+Things are starting to get out of hand. `📁/components` is growing much faster
+than the other directories, which makes sense. In React, everything you can see
+on your screen is a component, so this folder is destined to grow quickly.
 
 Earlier I mentioned that this way of building leads to low feature cohesion, and
 now we can start to see why. If you want to overhaul the code for messages, you
-may need to access the message components, the message hook, the message
+may need to access the message components, the message actions hook, the message
 context, and the message type. These files all live in separate folders, with
 the only indication that they are related being that:
 
@@ -105,18 +105,17 @@ export function useSidebar() {
 So then what should we do? Should we move all of this code into separate files?
 Should we then put them in a new folder in `📁/features`?
 
-I say: no.
+I don't think we should.
 
-Let me explain. I think moving code into separate files can be helpful if we
-expect to expand on the feature down the road. For example: as our app grows and
-we add new features, there's a good chance we'll be making changes and
-refactoring messages along the way. I think separating the code out makes this
-easier, as you don't have to swim through one monolithic file to find what
-you're looking for.
+I think moving code into separate files can be helpful if we expect to work with
+it regularly down the road. For example: as our app grows and we add new
+features, there's a good chance we'll be making changes and refactoring messages
+along the way. I think separating out the code makes this easier, as you don't
+have to swim through one monolithic file to find what you're looking for.
 
 But for something like the sidebar, I think its actually quite nice to have all
-of the code colocated in one file. While we may need to make some changes to
-adapt it to our project, chances are we won't be making changes to it often.
+of the code colocated in a single file. While we may need to make some changes
+here and there to adapt it to our project, chances are it won't be very often.
 
 I think this file is fine just the way it is. I think it just needs a new home.
 
@@ -142,8 +141,8 @@ to summarize:
 - Pages are specific instances of Templates
 
 As I read along, I really resonated with this hierarchy. It feels like the way
-most of us are already building in React, it just draws some good lines for how
-big to make different types of components.
+most of us are already building in React, but with explicit guidelines for how
+to order components.
 
 In the words of
 [Katia Wheeler](https://medium.com/@wheeler.katia/thinking-about-react-atomically-608c865d2262):
@@ -155,7 +154,7 @@ In the words of
 
 While I did find myself agreeing with Brad on most things, I ran into some
 issues trying to strictly adopt these patterns into my codebase. My main issue
-was drawing the lines between molecules and organisms.
+was drawing the lines between atoms, molecules, and organisms.
 
 What I ended up doing was getting rid of organisms, and just using atoms &
 molecules. My rules dividing them aren't perfectly aligned with their

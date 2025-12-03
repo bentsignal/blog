@@ -1,5 +1,31 @@
 import * as Directory from "@/features/directory";
 
+const shadcnComponents = {
+  name: "ui",
+  contents: [
+    {
+      name: "button",
+      type: "tsx",
+      link: "https://ui.shadcn.com/docs/components/button",
+    },
+    {
+      name: "input",
+      type: "tsx",
+      link: "https://ui.shadcn.com/docs/components/input",
+    },
+    {
+      name: "sidebar",
+      type: "tsx",
+      link: "https://ui.shadcn.com/docs/components/sidebar",
+    },
+    {
+      name: "card",
+      type: "tsx",
+      link: "https://ui.shadcn.com/docs/components/card",
+    },
+  ],
+} as const satisfies Directory.FolderType;
+
 const basicProject = {
   name: "src",
   contents: [
@@ -15,28 +41,23 @@ const basicProject = {
       name: "components",
       isOpen: true,
       contents: [
-        {
-          name: "ui",
-          contents: [
-            { name: "button", type: "tsx" },
-            { name: "input", type: "tsx" },
-            { name: "card", type: "tsx" },
-          ],
-        },
+        { ...shadcnComponents, isOpen: true },
         { name: "nav", type: "tsx" },
         { name: "footer", type: "tsx" },
       ],
     },
     {
       name: "hooks",
+      isOpen: true,
       contents: [
         { name: "use-mobile", type: "ts" },
         { name: "use-is-client", type: "ts" },
       ],
     },
-    { name: "types", contents: [{ name: "index", type: "ts" }] },
+    { name: "types", isOpen: true, contents: [{ name: "index", type: "ts" }] },
     {
       name: "lib",
+      isOpen: true,
       contents: [
         { name: "auth-client", type: "ts" },
         { name: "util", type: "ts" },
@@ -63,15 +84,7 @@ const messagingAppFirstIteration = {
       name: "components",
       isOpen: true,
       contents: [
-        {
-          name: "ui",
-          contents: [
-            { name: "button", type: "tsx" },
-            { name: "input", type: "tsx" },
-            { name: "sidebar", type: "tsx" },
-            { name: "card", type: "tsx" },
-          ],
-        },
+        shadcnComponents,
         {
           name: "auth",
           contents: [
@@ -252,15 +265,7 @@ const messagingAppSecondIteration = {
       name: "components",
       isOpen: true,
       contents: [
-        {
-          name: "ui",
-          contents: [
-            { name: "button", type: "tsx" },
-            { name: "input", type: "tsx" },
-            { name: "sidebar", type: "tsx" },
-            { name: "card", type: "tsx" },
-          ],
-        },
+        shadcnComponents,
         { name: "search-bar", type: "tsx" },
         { name: "header", type: "tsx" },
         { name: "footer", type: "tsx" },
@@ -298,16 +303,7 @@ const closerLookAtComponents = {
   name: "components",
   isOpen: true,
   contents: [
-    {
-      name: "ui",
-      isOpen: true,
-      contents: [
-        { name: "button", type: "tsx" },
-        { name: "input", type: "tsx" },
-        { name: "sidebar", type: "tsx" },
-        { name: "card", type: "tsx" },
-      ],
-    },
+    { ...shadcnComponents, isOpen: true },
     { name: "search-bar", type: "tsx" },
     { name: "header", type: "tsx" },
     { name: "footer", type: "tsx" },

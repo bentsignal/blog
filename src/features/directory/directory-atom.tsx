@@ -4,6 +4,7 @@ import { memo } from "react";
 import { cn } from "@/utils/style-utils";
 import equal from "fast-deep-equal";
 import {
+  ExternalLink,
   File,
   Folder as FolderIcon,
   FolderOpen as FolderOpenIcon,
@@ -113,8 +114,13 @@ const FileItem = memo(
             </span>
           </div>
         </Tooltip.Trigger>
-        <Tooltip.Content side="right">
-          {`${path.join("/")}/${file.name}.${file.type}`}
+        <Tooltip.Content side="right" className="flex items-center gap-1">
+          <span>{`${path.join("/")}/${file.name}.${file.type}`}</span>
+          {file.link && (
+            <a href={file.link} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          )}
         </Tooltip.Content>
       </Tooltip.Frame>
     );

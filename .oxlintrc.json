@@ -1,4 +1,11 @@
 {
   "plugins": ["typescript", "react", "nextjs", "react-perf"],
-  "ignorePatterns": ["src/convex/_generated/**/*"]
+  "ignorePatterns": ["src/convex/_generated/**/*"],
+  "overrides": [
+    {
+      "rules": {
+        "eslint-plugin-next(no-html-link-for-pages)": "off"
+      }
+    }
+  ]
 }

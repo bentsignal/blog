@@ -3,6 +3,7 @@ type Extension = "ts" | "tsx";
 type FileType = {
   name: string;
   type: Extension;
+  link?: string;
 };
 
 type FolderType = {
