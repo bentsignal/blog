@@ -7,6 +7,7 @@ const components: MDXComponents = {
   code: Code.Provider,
   pre: ({ children }) => <>{children}</>,
   a: ({ href, children, ...props }) => {
+    if (!href) return null;
     const isExternalLink = /^https?:\/\//.test(href);
     if (isExternalLink) {
       return (
