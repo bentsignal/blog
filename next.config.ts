@@ -31,7 +31,10 @@ const nextConfig: NextConfig = {
 
 const withMDX = createMDX({
   options: {
-    remarkPlugins: ["remark-gfm"],
+    remarkPlugins: [
+      ["remark-gfm"],
+      ["remark-rehype", { footnoteBackContent: "↗" }],
+    ],
     rehypePlugins: ["rehype-slug"],
   },
 });
