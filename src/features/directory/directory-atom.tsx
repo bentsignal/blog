@@ -33,8 +33,10 @@ const Header = () => {
   return (
     <div className="dark:bg-border bg-input flex h-14 w-full items-center justify-between px-4">
       <div className="ml-1 flex items-center gap-1.5">
-        <FolderIcon fill="white" className="h-4 w-4" />
-        <span className="mb-0.5 font-bold">{rootName}</span>
+        <FolderIcon fill="white" className="h-3 w-3" />
+        <span className="text-muted-foreground mb-0.5 text-sm font-semibold">
+          {rootName}
+        </span>
       </div>
       <div className="flex items-center gap-2">
         <CloseAllButton />

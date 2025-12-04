@@ -2,13 +2,24 @@ import type { MDXComponents } from "mdx/types";
 import Image from "next/image";
 import Link from "next/link";
 import * as Code from "@/atoms/code";
+import HashLink from "@/molecules/hash-link";
 
 const components: MDXComponents = {
   code: Code.Provider,
   pre: ({ children }) => <>{children}</>,
   a: ({ href, children, ...props }) => {
-    if (!href) return null;
-    const isExternalLink = /^https?:\/\//.test(href);
+    const isHashLink = href?.startsWith("#");
+    if (isHashLink) {
+      return (
+        <HashLink href={href} {...props}>
+          {children}
+        </HashLink>
+      );
+    }
+
+    const isProtocolRelative = href?.startsWith("//");
+    const hasProtocol = href?.includes("://");
+    const isExternalLink = isProtocolRelative || hasProtocol;
     if (isExternalLink) {
       return (
         // eslint-disable-next-line
@@ -17,6 +28,7 @@ const components: MDXComponents = {
         </a>
       );
     }
+
     return (
       <Link href={href} {...props}>
         {children}
