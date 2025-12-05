@@ -10,6 +10,7 @@ const HashLink = ({
 }: { href: string; children: React.ReactNode } & React.ComponentProps<"a">) => {
   useRequiredContext(ScrollContext);
   const containerRef = useScroll((c) => c.containerRef);
+  const getScrollMeasurements = useScroll((c) => c.getScrollMeasurements);
 
   return (
     // eslint-disable-next-line
@@ -24,30 +25,35 @@ const HashLink = ({
 
         e.preventDefault();
 
-        const distanceFromTopToTarget = target.getBoundingClientRect().top;
+        const { distanceFromTop, heightOfContainer, heightOfScrollWindow } =
+          getScrollMeasurements();
 
-        const targetIsNearTop = distanceFromTopToTarget < 300;
-        if (targetIsNearTop) {
+        const distanceFromTargetToTopOfScrollWindow =
+          target.getBoundingClientRect().top;
+        const distanceFromTargetToTopOfContainer =
+          distanceFromTop + distanceFromTargetToTopOfScrollWindow;
+
+        const targetIsNearTopOfContainer =
+          distanceFromTargetToTopOfContainer < 300;
+        if (targetIsNearTopOfContainer) {
           container.scrollTo({
             top: 0,
           });
           return;
         }
 
+        const maxValueOfTop = heightOfContainer - heightOfScrollWindow;
         const targetIsNearBottom =
-          distanceFromTopToTarget >
-          container.scrollHeight - container.clientHeight - 300;
+          distanceFromTargetToTopOfContainer > heightOfContainer;
         if (targetIsNearBottom) {
           container.scrollTo({
-            top: container.scrollHeight - container.clientHeight,
+            top: Math.min(maxValueOfTop, distanceFromTargetToTopOfContainer),
           });
           return;
         }
 
-        // add a bit of extra top padding when scrolling to an item
-        // in the middle of the page to make it easier to read.
         container.scrollTo({
-          top: distanceFromTopToTarget - 100,
+          top: distanceFromTargetToTopOfContainer - 100,
         });
       }}
     >
