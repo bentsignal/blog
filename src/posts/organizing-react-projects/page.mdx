@@ -1,5 +1,6 @@
 import { FolderView } from "@/features/directory/molecules/folder-view";
 import * as folders from "./folders";
+import { SearchBar, SearchContext } from "@/molecules/search-bar";
 
 If you've worked in a modern React project before, then you've probably seen
 something like this:
@@ -15,56 +16,63 @@ as your codebase scales, you end up with _low feature cohesion_. Making changes
 to one area of your app requires editing multiple files scattered far and wide
 across different directories.
 
-To see this in action, lets take a look at a more complicated project: **a
-messaging app**.
+To see this in action, lets take a look at a project with a bit more complexity:
+**a messaging app**.
 
 <FolderView directory={folders.messagingAppFirstIteration} />
 
-Things are starting to get out of hand. `📁/components` is growing much faster
-than the other directories, which makes sense. In React, everything you can see
-on your screen is a component, so this folder is destined to grow quickly.
-
-Earlier I mentioned that this way of building leads to low feature cohesion, and
-now we can start to see why. If you want to overhaul the code for messages, you
-may need to access the message components, the message actions hook, the message
-context, and the message type. These files all live in separate folders, with
-the only indication that they are related being that:
+I mentioned that this way of building leads to low feature cohesion, and now we
+can start to see why. If you want to overhaul messages, you may need to access
+components, hooks, contexts, and types. This code lives in separate files in
+separate folders, with the only indication that they are related being that:
 
 1. they all have _message_ somewhere in their name
 2. they likely import from each other.
 
 So what should we do?
 
-Maybe we make a new rule: if a feature has different types of code that
-previously would have been spread across multiple folders, we house all of the
-files in a new folder: `📁/features`
+Lets make a new rule: if a feature has different types of code that previously
+would have been spread across multiple folders, we create a dedicated folder for
+that feature. So for example, all our code for messages would now live in
+`📁/features/messages`
 
 Lets try this, and see how things look.
 
 <FolderView directory={folders.messagingAppSecondIteration} />
 
-This feels much better. Now when we want to make changes to messages, all of the
-code is in one place: `📁/features/message`
+This feels much better. Now when you want to make changes to messages, all of
+the code is in one place: `📁/features/messages`
 
 So is that it? Are we done?
 
-We could be. You can get far with our new layout. Keeping code for related
-features close together will make things much easier to manage as we scale our
-app.
+We could be. This pattern can take you far. Keeping code for related features
+close together will make things much easier to manage as you scale your app.
 
 But I think we can do even better.
 
 Lets take a closer look at our components folder. In modern React projects, its
-very common to have a folder named `📁/components/ui` which contains prebuilt
-components from a [shadcn](https://ui.shadcn.com/) registry.
+very common to have a folder which contains prebuilt components from a
+[shadcn](https://ui.shadcn.com/) registry[^1]. These are usually found in
+`📁/components/ui`
+
+[^1]:
+    Most people think shadcn is a component library. While I suppose this is
+    technically true, it only gives you half the picture. Shadcn is a
+    [person](https://x.com/shadcn), who build a **standard** for building
+    component libraries (naming the standard after himself). His personal
+    component library built with this standard is very popular, and is why most
+    people think it is just your everyday component library. But it is more than
+    that. This distinction is important because I wish more people knew about
+    this and used the standard to build their own component libaries.
 
 <FolderView directory={folders.closerLookAtComponents} />
 
 But this convention doesn't draw clear lines with regards to what code belongs
-where. Is the code in this folder solely React components? Does having some of
-our component files in `📁/ui` mean that the others aren't UI?
+where. Does having some of the component files in `📁/ui` mean that the others
+**aren't** UI? Since its the components folder, that mean that all of this is
+component code, right?
 
-Typically the answer to both of those questions is no.
+Typically, the answer to both of those questions is no.
 
 Below is the first 30 lines of the sidebar component from official shadcn
 registry. As we can see, it defines constants, a type, a context, and a hook
@@ -102,47 +110,40 @@ export function useSidebar() {
 }
 ```
 
-So then what should we do? Should we move all of this code into separate files?
-Should we then put them in a new folder in `📁/features`?
+So then what should we do? Should we move all of this code into separate files
+and put them in a new folder in `📁/features`?
 
-I don't think we should.
+We could, but sidebar isn't really a feature though. Looking over the
+[documentation](https://ui.shadcn.com/docs/components/sidebar) for it, you can
+see that its more like a collection of building blocks that we can put together
+to build a sidebar tailored to the specific needs of our app.
 
-I think moving code into separate files can be helpful if we expect to work with
-it regularly down the road. For example: as our app grows and we add new
-features, there's a good chance we'll be making changes and refactoring messages
-along the way. I think separating out the code makes this easier, as you don't
-have to swim through one monolithic file to find what you're looking for.
+I think the sidebar code needs a new home, but somewhere different than
+`📁/features`. This brings us to our next topic: **_Atomic Design_**.
 
-But for something like the sidebar, I think its actually quite nice to have all
-of the code colocated in a single file. While we may need to make some changes
-here and there to adapt it to our project, chances are it won't be very often.
-
-I think this file is fine just the way it is. I think it just needs a new home.
-
-Enter: [Atomic Design](https://atomicdesign.bradfrost.com/table-of-contents/).
-
-Atomic design is a book written by [Brad Frost](https://bradfrost.com/). Despite
-being mostly written before React's mass adoption (book was completed in 2016),
-it aligns surprisingly well with the way we built in React today.
-
-In his book, Brad outlines 5 different categories of UI: Atoms, Molecules,
-Organisms, Templates, and Pages.
+[Atomic Design](https://atomicdesign.bradfrost.com/table-of-contents/) is a book
+written by [Brad Frost](https://bradfrost.com/). It outlines best practices for
+building UI by defining 5 different categories: Atoms, Molecules, Organisms,
+Templates, and Pages.
 
 ![Atomic Design Process](https://wr5t080c48.ufs.sh/f/Br1KpCv2wzAdP6d1F4069FNjRoqZEfamk1IlrK8PD4tOXTQL)
 
-He gives an quick overview of what defines each of these categories in the
-following [blog post](https://bradfrost.com/blog/post/atomic-web-design/), but
-to summarize:
+Brad wrote a [short article](https://bradfrost.com/blog/post/atomic-web-design/)
+going over what defines each of these categories, but to summarize:
 
-- Atoms are the smallest building blocks (buttons, labels, inputs)
-- Molecules are composed of atoms (search bar)
-- Organisms are composed of molecules (nav, footer, carousel)
-- Templates stitch organisms together
-- Pages are specific instances of Templates
+- **Atoms** are the smallest building blocks (buttons, labels, inputs)
+- **Molecules** are composed of atoms (search bar, product card)
+- **Organisms** are composed of molecules (masthead, product grid)
+- **Templates** stitch organisms together
+- **Pages** are specific instances of Templates
 
-As I read along, I really resonated with this hierarchy. It feels like the way
-most of us are already building in React, but with explicit guidelines for how
-to order components.
+Despite being written over a decade ago[^2], this methodology aligns
+surprisingly well with the way we're already building in React today.
+
+[^2]:
+    Brad and team worked on Atomic Design between 2013 and 2016, so at the time
+    of writing this (December 2025) some of the content has not yet reached its
+    10th birthday.
 
 In the words of
 [Katia Wheeler](https://medium.com/@wheeler.katia/thinking-about-react-atomically-608c865d2262):
@@ -152,28 +153,64 @@ In the words of
 > simplicity, we can create more complex components and containers of components
 > to create the user interfaces of our applications.
 
-While I did find myself agreeing with Brad on most things, I ran into some
-issues trying to strictly adopt these patterns into my codebase. My main issue
-was drawing the lines between atoms, molecules, and organisms.
+After reading through the book, I set off to build something with this new
+mental model. I figured the best way to see how I truly feel about it would be
+to try it out myself. I decided to build a simple messaging app[^3], strictly
+following the principles of Atomic Design.
 
-What I ended up doing was getting rid of organisms, and just using atoms &
-molecules. My rules dividing them aren't perfectly aligned with their
-relationship in chemistry, but its close enough that the analogy holds.
+[^3]:
+    The result of this endeavour is the chatroom / discussion board thing in the
+    sidebar on the left side of your screen. As I continued building and
+    collected more opinions on the matter, I started writing them down.
+    Eventually, I decided to make this whole thing into a blog website, with
+    those opinions as the first post - and here we are.
+
+Issues began to arise shortly after beginning the project. I found it difficult
+to decide whether certain components should be classified as molecules or
+organisms. I also didn't have many components that fit Brad's definition of an
+atom. This led me to the realization that maybe the best route is to adopt the
+_sentiment_ of atomic design, while adjusting the definitions to better fit the
+needs of a modern React project.
+
+My first modification was to get rid of organisms, and use atoms and molecules
+as the units to measure components. My rules dividing them aren't perfectly
+aligned with their relationship in chemistry, but its close enough that the
+analogy holds.
 
 ### Atoms
 
-- Broad, don't serve a specific purpose
-- Used as blocks to build more components with a more specific purpose
-- **_Can_** contain other atoms
-- **_Cannot_** contain molecules
+- Can contain components, types, hooks, context, constants, and any other code
+  that feels like it should belong together
+- Can contain potentially dozens of components that can be used as blocks to
+  build components with a more specific purpose
+- ✅ **_Can_** contain other atoms
+- ❌ **_Cannot_** contain molecules
 - ex: button, sidebar, list, card, message
 
 ### Molecules
 
-- More specific, but broad enough that they're reusable across different areas
-- **_Can_** contain atoms
-- **_Can_** contain other molecules
+- More specific, but broad enough that they're reusable
+- ✅ **_Can_** contain atoms
+- ✅ **_Can_** contain other molecules
 - ex: message list, search bar
+
+This modified analogy allows fits very well with the current practice of
+building around component libraries. Everything you download from the shadcn
+registry can be thought of as an atom. These atoms are then used to build the
+molecules that serve a more specific purpose while still being reusable.
+
+For example, lets consider a search bar molecule.
+
+You might construct it using the button and input atoms. It has the specific
+purpose of letting your user search for something, but it can still be used in
+multiple places throughout your app.
+
+An important distinction I included in my definitions is that atoms **_cannot_**
+use molecules.
+
+So how does this all tie together?
+
+---
 
 These rules have even helped me make better decisions about my code while
 working on this post. While creating the code atom (seen below), I had imported
@@ -197,3 +234,5 @@ should start at your page components and work your way down the tree to
 understand how things are actually layered in your app. When you do this, cmd
 clicking your way down the tree, it doesn't matter if your editor takes you to
 line 10, or line 1000. You get exactly where you need.
+
+### Footnotes

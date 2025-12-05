@@ -1,4 +1,4 @@
-import * as Directory from "@/features/directory";
+import * as Directory from "@/features/directory/atom";
 
 const shadcnComponents = {
   name: "ui",
@@ -177,7 +177,7 @@ const messagingAppSecondIteration = {
       isOpen: true,
       contents: [
         {
-          name: "message",
+          name: "messages",
           isOpen: true,
           contents: [
             {
