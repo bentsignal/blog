@@ -3,7 +3,14 @@
 import { ReactNode, useState } from "react";
 import { languages } from "@/data/languages";
 import { cn } from "@/utils/style-utils";
-import { Check, Copy, List, ListOrdered } from "lucide-react";
+import {
+  Check,
+  Copy,
+  List,
+  ListOrdered,
+  TextAlignStart,
+  TextWrap,
+} from "lucide-react";
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import {
@@ -25,6 +32,8 @@ export const { Context: CodeContext, useContext: useCode } = createContext<{
   codeTheme: Record<string, React.CSSProperties>;
   showLineNumbers: boolean;
   toggleShowLineNumbers: () => void;
+  wrapLines: boolean;
+  toggleLineWrapping: () => void;
 }>({ displayName: "CodeContext" });
 
 export function Provider({
@@ -46,10 +55,12 @@ export function Provider({
   const isInline = inline || languageString === undefined;
 
   const [showLineNumbers, setShowLineNumbers] = useState(false);
+  const [wrapLines, setWrapLines] = useState(isInline ? false : true);
 
   if (!children) return null;
 
   const toggleShowLineNumbers = () => setShowLineNumbers((prev) => !prev);
+  const toggleLineWrapping = () => setWrapLines((prev) => !prev);
 
   const contextValue = {
     code,
@@ -57,6 +68,8 @@ export function Provider({
     codeTheme,
     showLineNumbers,
     toggleShowLineNumbers,
+    wrapLines,
+    toggleLineWrapping,
   };
 
   return (
@@ -98,6 +111,7 @@ const Header = () => {
         <Language />
       </div>
       <div className="flex items-center gap-2">
+        <LineWrappingButton />
         <LineNumbersButton />
         <CopyButton />
       </div>
@@ -112,6 +126,7 @@ export const Block = () => {
   const code = useCode((c) => c.code);
   const language = useCode((c) => c.language);
   const showLineNumbers = useCode((c) => c.showLineNumbers);
+  const wrapLines = useCode((c) => c.wrapLines);
 
   return (
     <div className="not-prose border-border group relative my-8 w-full overflow-hidden rounded-xl border-1">
@@ -127,9 +142,23 @@ export const Block = () => {
           language={language}
           style={codeTheme}
           showLineNumbers={showLineNumbers}
-          codeTagProps={{ className: "bg-transparent" }}
+          codeTagProps={{
+            className: "bg-transparent",
+            style: {
+              whiteSpace: wrapLines ? "pre-wrap" : "pre",
+              wordBreak: wrapLines ? "break-word" : "normal",
+              overflowWrap: wrapLines ? "anywhere" : "normal",
+            },
+          }}
           PreTag={({ children }) => (
-            <pre className="my-1 overflow-x-auto bg-transparent px-6 py-5 text-xs">
+            <pre
+              className={cn(
+                "my-1 bg-transparent px-6 py-5 text-xs",
+                wrapLines
+                  ? "overflow-x-auto whitespace-pre-wrap"
+                  : "overflow-x-auto whitespace-pre",
+              )}
+            >
               {children}
             </pre>
           )}
@@ -228,6 +257,35 @@ export const LineNumbersButton = () => {
       </Tooltip.Trigger>
       <Tooltip.Content>
         {showLineNumbers ? "Hide line numbers" : "Show line numbers"}
+      </Tooltip.Content>
+    </Tooltip.Frame>
+  );
+};
+
+export const LineWrappingButton = () => {
+  useRequiredContext(CodeContext);
+
+  const wrapLines = useCode((c) => c.wrapLines);
+  const toggleLineWrapping = useCode((c) => c.toggleLineWrapping);
+
+  return (
+    <Tooltip.Frame>
+      <Tooltip.Trigger asChild>
+        <Button
+          onClick={toggleLineWrapping}
+          size="sm"
+          variant="ghost"
+          className="h-8 w-8 p-0"
+        >
+          {wrapLines ? (
+            <TextAlignStart className="h-4 w-4" />
+          ) : (
+            <TextWrap className="h-4 w-4" />
+          )}
+        </Button>
+      </Tooltip.Trigger>
+      <Tooltip.Content>
+        {wrapLines ? "Disable line wrapping" : "Enable line wrapping"}
       </Tooltip.Content>
     </Tooltip.Frame>
   );
