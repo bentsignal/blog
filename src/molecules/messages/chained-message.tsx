@@ -10,10 +10,10 @@ export const ChainedMessage = memo(
         <Message.Frame>
           <div className="flex items-center">
             <Message.SideTime />
-            <div className="flex flex-col">
+            <Message.Body>
               <Message.Content />
               <Message.Reactions />
-            </div>
+            </Message.Body>
           </div>
           <Message.Actions />
         </Message.Frame>

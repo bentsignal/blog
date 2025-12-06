@@ -173,6 +173,10 @@ export const Frame = ({
   );
 };
 
+export const Body = ({ children }: { children: React.ReactNode }) => {
+  return <div className="flex flex-col">{children}</div>;
+};
+
 export const PFP = () => {
   const pfp = useMessage((c) => c.pfp);
 

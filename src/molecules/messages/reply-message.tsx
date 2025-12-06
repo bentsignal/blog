@@ -12,11 +12,11 @@ export const ReplyMessage = memo(
             <Message.ReplyPreview />
             <div className="flex gap-3">
               <Message.PFP />
-              <div className="flex flex-col">
+              <Message.Body>
                 <Message.Header />
                 <Message.Content />
                 <Message.Reactions />
-              </div>
+              </Message.Body>
             </div>
           </div>
           <Message.Actions />

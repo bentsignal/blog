@@ -10,11 +10,11 @@ export const StandardMessage = memo(
         <Message.Frame className="mt-3">
           <div className="flex gap-3">
             <Message.PFP />
-            <div className="flex flex-col">
+            <Message.Body>
               <Message.Header />
               <Message.Content />
               <Message.Reactions />
-            </div>
+            </Message.Body>
           </div>
           <Message.Actions />
         </Message.Frame>
