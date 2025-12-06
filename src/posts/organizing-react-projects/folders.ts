@@ -1,47 +1,36 @@
 import * as Directory from "@/features/directory/atom";
 
-const shadcnComponents = {
-  name: "ui",
-  contents: [
-    {
-      name: "button",
-      type: "tsx",
-      link: "https://ui.shadcn.com/docs/components/button",
-    },
-    {
-      name: "input",
-      type: "tsx",
-      link: "https://ui.shadcn.com/docs/components/input",
-    },
-    {
-      name: "sidebar",
-      type: "tsx",
-      link: "https://ui.shadcn.com/docs/components/sidebar",
-    },
-    {
-      name: "card",
-      type: "tsx",
-      link: "https://ui.shadcn.com/docs/components/card",
-    },
-  ],
-} as const satisfies Directory.FolderType;
+const shadcnComponents = [
+  {
+    name: "button",
+    type: "tsx",
+    link: "https://ui.shadcn.com/docs/components/button",
+  },
+  {
+    name: "input",
+    type: "tsx",
+    link: "https://ui.shadcn.com/docs/components/input",
+  },
+  {
+    name: "sidebar",
+    type: "tsx",
+    link: "https://ui.shadcn.com/docs/components/sidebar",
+  },
+  {
+    name: "card",
+    type: "tsx",
+    link: "https://ui.shadcn.com/docs/components/card",
+  },
+] as const satisfies Directory.FileType[];
 
 const basicProject = {
   name: "src",
   contents: [
     {
-      name: "pages",
-      isOpen: true,
-      contents: [
-        { name: "home-page", type: "tsx" },
-        { name: "settings-page", type: "tsx" },
-      ],
-    },
-    {
       name: "components",
       isOpen: true,
       contents: [
-        { ...shadcnComponents, isOpen: true },
+        { name: "ui", contents: shadcnComponents, isOpen: true },
         { name: "nav", type: "tsx" },
         { name: "footer", type: "tsx" },
       ],
@@ -70,21 +59,10 @@ const messagingAppFirstIteration = {
   name: "src",
   contents: [
     {
-      name: "pages",
-      isOpen: true,
-      contents: [
-        { name: "home-page", type: "tsx" },
-        { name: "settings-page", type: "tsx" },
-        { name: "channel-page", type: "tsx" },
-        { name: "login-page", type: "tsx" },
-        { name: "thread-page", type: "tsx" },
-      ],
-    },
-    {
       name: "components",
       isOpen: true,
       contents: [
-        shadcnComponents,
+        { name: "ui", contents: shadcnComponents },
         {
           name: "auth",
           contents: [
@@ -161,17 +139,6 @@ const messagingAppFirstIteration = {
 const messagingAppSecondIteration = {
   name: "src",
   contents: [
-    {
-      name: "pages",
-      isOpen: true,
-      contents: [
-        { name: "home-page", type: "tsx" },
-        { name: "settings-page", type: "tsx" },
-        { name: "channel-page", type: "tsx" },
-        { name: "login-page", type: "tsx" },
-        { name: "thread-page", type: "tsx" },
-      ],
-    },
     {
       name: "features",
       isOpen: true,
@@ -263,9 +230,8 @@ const messagingAppSecondIteration = {
     },
     {
       name: "components",
-      isOpen: true,
       contents: [
-        shadcnComponents,
+        { name: "ui", contents: shadcnComponents },
         { name: "search-bar", type: "tsx" },
         { name: "header", type: "tsx" },
         { name: "footer", type: "tsx" },
@@ -303,7 +269,7 @@ const closerLookAtComponents = {
   name: "components",
   isOpen: true,
   contents: [
-    { ...shadcnComponents, isOpen: true },
+    { name: "ui", contents: shadcnComponents, isOpen: true },
     { name: "search-bar", type: "tsx" },
     { name: "header", type: "tsx" },
     { name: "footer", type: "tsx" },
@@ -311,9 +277,71 @@ const closerLookAtComponents = {
   ],
 } as const satisfies Directory.FolderType;
 
+const moveShadcnComponentsToAtoms = {
+  name: "src",
+  contents: [
+    {
+      name: "components",
+      isOpen: true,
+      contents: [
+        { name: "search-bar", type: "tsx" },
+        { name: "header", type: "tsx" },
+        { name: "footer", type: "tsx" },
+        { name: "nav", type: "tsx" },
+      ],
+    },
+    {
+      name: "atoms",
+      isOpen: true,
+      contents: shadcnComponents,
+    },
+  ],
+} as const satisfies Directory.FolderType;
+
+export const sidebarAtomSplitUp = {
+  name: "atoms",
+  isOpen: true,
+  contents: [
+    {
+      name: "sidebar",
+      isOpen: true,
+      contents: [
+        {
+          name: "sidebar-components",
+          type: "tsx",
+        },
+        {
+          name: "sidebar-constants",
+          type: "ts",
+        },
+        {
+          name: "sidebar-context",
+          type: "tsx",
+        },
+      ],
+    },
+    {
+      name: "button",
+      type: "tsx",
+      link: "https://ui.shadcn.com/docs/components/button",
+    },
+    {
+      name: "input",
+      type: "tsx",
+      link: "https://ui.shadcn.com/docs/components/input",
+    },
+    {
+      name: "card",
+      type: "tsx",
+      link: "https://ui.shadcn.com/docs/components/card",
+    },
+  ],
+};
+
 export {
   basicProject,
   messagingAppFirstIteration,
   messagingAppSecondIteration,
   closerLookAtComponents,
+  moveShadcnComponentsToAtoms,
 };
