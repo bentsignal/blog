@@ -4,10 +4,12 @@ import { ReactNode, useState } from "react";
 import { languages } from "@/data/languages";
 import { cn } from "@/utils/style-utils";
 import { Check, Copy, List, ListOrdered } from "lucide-react";
-import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-import js from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
-import tomorrow from "react-syntax-highlighter/dist/esm/styles/hljs/tomorrow";
-import tomorrowNight from "react-syntax-highlighter/dist/esm/styles/hljs/tomorrow-night";
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
+import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
+import {
+  base16AteliersulphurpoolLight,
+  nord,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "sonner";
 import { Button } from "@/atoms/button";
 import { ThemeContext, useTheme } from "@/atoms/theme";
@@ -15,7 +17,7 @@ import * as Tooltip from "@/atoms/tooltip";
 import { createContext, useRequiredContext } from "@/lib/context";
 import { useIsClient } from "@/hooks/use-is-client";
 
-SyntaxHighlighter.registerLanguage("javascript", js);
+SyntaxHighlighter.registerLanguage("tsx", tsx);
 
 export const { Context: CodeContext, useContext: useCode } = createContext<{
   code: string;
@@ -37,7 +39,7 @@ export function Provider({
   useRequiredContext(ThemeContext);
 
   const theme = useTheme((c) => c.theme);
-  const codeTheme = theme === "dark" ? tomorrowNight : tomorrow;
+  const codeTheme = theme === "dark" ? nord : base16AteliersulphurpoolLight;
   const code = children?.toString().trim() ?? "";
   const languageString = className?.split("-")[1];
   const language = languageString === "no_header" ? undefined : languageString;
@@ -71,6 +73,7 @@ export const Inline = () => {
   return (
     <SyntaxHighlighter
       style={codeTheme}
+      codeTagProps={{ className: "bg-transparent" }}
       PreTag={({ children }) => (
         <code className="not-prose bg-card dark:bg-muted inline-flex overflow-x-auto rounded-md px-1.5 py-0.5 font-mono text-sm">
           {children}
@@ -124,6 +127,7 @@ export const Block = () => {
           language={language}
           style={codeTheme}
           showLineNumbers={showLineNumbers}
+          codeTagProps={{ className: "bg-transparent" }}
           PreTag={({ children }) => (
             <pre className="my-1 overflow-x-auto bg-transparent px-6 py-5 text-xs">
               {children}
