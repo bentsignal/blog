@@ -7,9 +7,8 @@ something like this:
 
 <FolderView directory={folders.basicProject} />
 
-Where files are split up across folders depending on what type of code lives
-inside them. Components live with other components, hooks live with other hooks,
-etc.
+Where files are split up depending on the type of code they contain. Hooks live
+with other hooks, components with other components, etc.
 
 For a simple project like the one outlined above, this tends to work fine. But
 as your codebase scales, you end up with _low feature cohesion_. Making changes
@@ -26,8 +25,8 @@ can start to see why. If you want to overhaul messages, you may need to access
 components, hooks, contexts, and types. This code lives in separate files &
 folders, with the only indication that they are related being that:
 
-1. they all have _message_ somewhere in their name
-2. they likely import from each other.
+1. they all _likely_ have message somewhere in their name
+2. they _probably_ import from each other.
 
 So what should we do?
 
@@ -40,8 +39,8 @@ Lets try this, and see how things look.
 
 <FolderView directory={folders.messagingAppSecondIteration} />
 
-This feels much better. Now when you want to make changes to messages, all of
-the code is in one place: `📁/features/messages`
+This feels much better. Now when you want to make changes to messages, you only
+have to look in one place: `📁/features/messages`
 
 So is that it? Are we done?
 
@@ -51,7 +50,7 @@ close together will make things much easier to manage as you scale your app.
 But I think we can do even better.
 
 Lets take a closer look at our components folder. In modern React projects, its
-very common to have a folder which contains prebuilt components from a
+very common to have a folder thast contains prebuilt components from a
 [shadcn](https://ui.shadcn.com/) registry[^1]. These are usually found in
 `📁/components/ui`
 
@@ -168,25 +167,24 @@ Issues arose early on into the project. I found it difficult to decide whether
 certain components should be classified as molecules or organisms. I also didn't
 have many components that fit Brad's definition of an atom. This led me to the
 realization that maybe the best route is to adopt the _sentiment_ of Atomic
-Design, while adjusting the definitions to better fit the needs of a modern
+Design, while adjusting the definitions to better fit the needs of the modern
 React project.
 
-To start, I decided not make any changes regarding _pages_ and _templates_. I
-think the best course of action is to stick to whatever the meta-framework
-you're building in prescribes. For example, `layout.tsx` and `page.tsx` in
-Next.js are fairly analogous to templates and pages, so I think I'll just stick
-with those primitives.
+To start, I decided not to embrace his idea of _pages_ and _templates_. I think
+the best course of action here is to stick to whatever the meta-framework you're
+building in prescribes. For example, `layout.tsx` and `page.tsx` in Next.js are
+fairly analogous to templates and pages, so I think I'll just stick with those
+for now.
 
 I also decided to get rid of organisms, leaving atoms and molecules as the units
-to measure the complexity and size of components. My updated rules separating
-them aren't perfectly aligned with their relationship in chemistry, but its
-close enough that the analogy is still useful.
+to measure the complexity and size of components. My updated rules aren't
+perfectly aligned with their real relationship in chemistry, but its close
+enough that the analogy is still useful.
 
 ### Atoms
 
 - Should be general purpose and reusable
-- Contain any code that feels like it should belong together
-- Multiple components per file is fine, encouraged even
+- Can contain any kind of code, multiple components per file is encouraged
 - ✅ **_Can_** be built with other atoms
 - ❌ **_Cannot_** be built with molecules
 - ex: button, sidebar, list, card, message
@@ -195,7 +193,7 @@ close enough that the analogy is still useful.
 
 - Tailored to a specific use case, but possibly reusable across different areas
   of your app
-- Can contain any code, but typically one component per file
+- Can contain any kind of code, typically one component per file
 - ✅ **_Can_** be built with atoms
 - ✅ **_Can_** be built with other molecules
 - ex: message list, search bar, admin sidebar, dashboard sidebar
@@ -210,13 +208,14 @@ into a new folder: `📁/atoms`
 <FolderView directory={folders.moveShadcnComponentsToAtoms} />
 
 Earlier we discussed the fact that the sidebar atom is quite large, containing
-hundreds of lines of code. If you'd like to split it up, feel free to create a
-sidebar folder and separate the code by type.
+hundreds of lines of code. If you'd like to split it up, feel free to do so by
+creating a sidebar folder and separating the code by type.
 
 <FolderView directory={folders.sidebarAtomSplitUp} />
 
 I find it helps to create an index file to clean up the imports across your
-project:
+project. That way you can still think of all of the sidebar code as living
+together, even though it is spread across different files.
 
 ```tsx
 // atoms/sidebar/index.tsx
@@ -232,7 +231,7 @@ export * from "./sidebar-constants";
 // ❌ import { Frame, Content, MenuItem } from "@/atoms/sidebar-components";
 // ❌ import { Provider } from "@/atoms/sidebar/sidebar-context";
 
-// ✅ as long as your bundler can handle it.
+// ✅ as long as your bundler can handle it
 import * as Sidebar from "@/atoms/sidebar.tsx";
 
 function AdminSidebar() {
@@ -250,10 +249,80 @@ function AdminSidebar() {
 export default AdminSidebar;
 ```
 
-But you should also build your own atoms. For the messaging app, I built
-message, list, and scroll atoms. Each of these contains many components that
-aren't terribly useful on their own. But when put together, it becomes trivial
-to compose something like the molecule shown below.
+Great! We've given all of our downloaded[^4] components a new home. What about
+the components we wrote ourselves, what should we do with those?
+
+[^4]:
+    Don't forget to modify `components.json` to have all new component code
+    saved into the atoms folder.
+
+Lets take another look at the feature folder we created earlier for our messages
+code:
+
+<FolderView directory={folders.closerLookAtMessagesFeature} />
+
+Currently, we have three different kinds of message:
+
+1. `user-message.tsx`
+2. `assistant-message.tsx`
+3. `system-message.tsx`
+
+And `message-list.tsx` to string them all together.
+
+Our different types of messages almost certainly have similarities, parts of
+their code that serve simliar or possibly identical purposes. If we split that
+code out into reusable pieces, then it could be shared among our different types
+of messages.
+
+Bells should be ringing in your head right now. Lets create a message atom[^5],
+containing small reusable components that our message variants share. Then we
+can compose our three message variants as molecules, built off of the message
+atom.
+
+[^5]:
+    I won't include code snippets for any of the atoms I've built since they're
+    all fairly long. If you're interesting in reading through them, check out
+    the [repo](https://github.com/bentsignal/blog) for this site.
+
+```tsx
+import * as Message from "@/features/messages/atom";
+
+function UserMessage({ message }: { message: Message.Message }) {
+  return (
+    <Message.Provider message={message}>
+      <Message.Frame className="mt-3">
+        <div className="flex gap-3">
+          <Message.PFP />
+          <Message.Body>
+            <Message.Header />
+            <Message.Content />
+            <Message.Reactions />
+          </Message.Body>
+        </div>
+        <Message.Actions />
+      </Message.Frame>
+      <InlineComposer />
+    </Message.Provider>
+  );
+}
+
+export default UserMessage;
+```
+
+This practice[^6] will give us an easier path to consistency within our UI, make
+it easier to build new message variants down the road, and make it much easier
+for both humans and AI to understand and modify our code.
+
+[^6]:
+    This is all part of a larger pattern: building your components like shadcn.
+    To better understand the power of building like this, I highly recommend you
+    watch
+    [Composition Is All You Need](https://www.youtube.com/watch?v=4KvbVq3Eg5w),
+    an excellent talk by [Fernando Rojo](https://x.com/fernandorojo).
+
+I also built _list_ & _scroll_ atoms. Each of these contains many components
+that aren't terribly useful on their own. But when put together, it becomes
+trivial to compose something like the message list molecule shown below.
 
 ```tsx
 import * as List from "@/atoms/list";
@@ -285,32 +354,37 @@ function MessageList({ messages }: { messages: Message.Message[] }) {
 export default MessageList;
 ```
 
-UserMessage, AssistantMessage, and SystemMessage are also molecules, composed
-with the Message atom.
+Lets take another look at our messages feature folder now that we've reorganized
+things:
 
-```tsx
-import * as Message from "@/atoms/message";
+<FolderView directory={folders.messagesFeatureAfterAtomicDesign} />
 
-function UserMessage({ message }: { message: Message.Message }) {
-  return (
-    <Message.Provider message={message}>
-      <Message.Frame className="mt-3">
-        <div className="flex gap-3">
-          <Message.PFP />
-          <Message.Body>
-            <Message.Header />
-            <Message.Content />
-            <Message.Reactions />
-          </Message.Body>
-        </div>
-        <Message.Actions />
-      </Message.Frame>
-      <InlineComposer />
-    </Message.Provider>
-  );
-}
+This is great. When we have an atom like messages and molecules that are tied
+closely to it, we can store them all in a feature folder. For more vague atoms
+like the previously mentioned _list_ and _scroll_, we can just store them in
+`📁/atoms`
 
-export default UserMessage;
-```
+So thats it!
+
+By following these principles:
+
+1. Grouping code by feature
+2. Building atoms, and then composing molecules from those atoms.
+
+We can dramatically improve the readability, maintainability, composability —
+basically all the \*abilities of our code.
+
+I'm not claiming this system is perfect for any and all codebases. I've never
+encountered the challeneges that lie from codebases with hundreds of thousands
+of lines of code.
+
+But for the 10,000 or so lines of code it took to create this blog site with the
+messaging app in the sidebar, I found this practice incredibly plesant to use.
+
+But now I want to know what YOU think about it. Leave me a message on the left,
+and lets chat about it. You can also find me on pretty much any social media,
+all links at the bottom.
+
+Thanks for reading!
 
 ### Footnotes

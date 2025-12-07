@@ -47,10 +47,7 @@ const basicProject = {
     {
       name: "lib",
       isOpen: true,
-      contents: [
-        { name: "auth-client", type: "ts" },
-        { name: "util", type: "ts" },
-      ],
+      contents: [{ name: "util", type: "ts" }],
     },
   ],
 } as const satisfies Directory.FolderType;
@@ -338,10 +335,195 @@ export const sidebarAtomSplitUp = {
   ],
 };
 
+const closerLookAtMessagesFeature = {
+  name: "features",
+  isOpen: true,
+  contents: [
+    {
+      name: "messages",
+      isOpen: true,
+      contents: [
+        {
+          name: "components",
+          isOpen: true,
+          contents: [
+            { name: "user-message", type: "tsx" },
+            { name: "assistant-message", type: "tsx" },
+            { name: "system-message", type: "tsx" },
+            { name: "message-list", type: "tsx" },
+          ],
+        },
+        {
+          name: "hooks",
+          contents: [{ name: "use-message-actions", type: "ts" }],
+        },
+        {
+          name: "context",
+          contents: [{ name: "message-context", type: "ts" }],
+        },
+        {
+          name: "types",
+          contents: [{ name: "message-types", type: "ts" }],
+        },
+      ],
+    },
+    {
+      name: "auth",
+      contents: [
+        {
+          name: "components",
+          contents: [
+            { name: "sign-in-form", type: "tsx" },
+            { name: "sign-up-form", type: "tsx" },
+            { name: "sign-in-button", type: "tsx" },
+            { name: "sign-up-button", type: "tsx" },
+            { name: "sign-out-button", type: "tsx" },
+          ],
+        },
+        {
+          name: "hooks",
+          contents: [{ name: "use-auth", type: "ts" }],
+        },
+        {
+          name: "context",
+          contents: [{ name: "auth-context", type: "ts" }],
+        },
+        {
+          name: "lib",
+          contents: [{ name: "auth-client", type: "ts" }],
+        },
+        {
+          name: "types",
+          contents: [{ name: "message-types", type: "ts" }],
+        },
+      ],
+    },
+    {
+      name: "composer",
+      contents: [
+        {
+          name: "components",
+          contents: [
+            { name: "channel-composer", type: "tsx" },
+            { name: "edit-composer", type: "tsx" },
+            { name: "reply-composer", type: "tsx" },
+          ],
+        },
+        {
+          name: "hooks",
+          contents: [{ name: "use-composer", type: "ts" }],
+        },
+        {
+          name: "context",
+          contents: [{ name: "composer-context", type: "ts" }],
+        },
+        {
+          name: "types",
+          contents: [{ name: "composer-types", type: "ts" }],
+        },
+      ],
+    },
+  ],
+} as const satisfies Directory.FolderType;
+
+const messagesFeatureAfterAtomicDesign = {
+  name: "features",
+  isOpen: true,
+  contents: [
+    {
+      name: "messages",
+      isOpen: true,
+      contents: [
+        {
+          name: "atom",
+          isOpen: true,
+          contents: [
+            { name: "message-components", type: "tsx" },
+            { name: "message-context", type: "tsx" },
+            { name: "message-types", type: "ts" },
+          ],
+        },
+        {
+          name: "molecules",
+          isOpen: true,
+          contents: [
+            { name: "user-message", type: "tsx" },
+            { name: "assistant-message", type: "tsx" },
+            { name: "system-message", type: "tsx" },
+            { name: "message-list", type: "tsx" },
+          ],
+        },
+        {
+          name: "hooks",
+          contents: [{ name: "use-message-actions", type: "ts" }],
+        },
+      ],
+    },
+    {
+      name: "auth",
+      contents: [
+        {
+          name: "components",
+          contents: [
+            { name: "sign-in-form", type: "tsx" },
+            { name: "sign-up-form", type: "tsx" },
+            { name: "sign-in-button", type: "tsx" },
+            { name: "sign-up-button", type: "tsx" },
+            { name: "sign-out-button", type: "tsx" },
+          ],
+        },
+        {
+          name: "hooks",
+          contents: [{ name: "use-auth", type: "ts" }],
+        },
+        {
+          name: "context",
+          contents: [{ name: "auth-context", type: "ts" }],
+        },
+        {
+          name: "lib",
+          contents: [{ name: "auth-client", type: "ts" }],
+        },
+        {
+          name: "types",
+          contents: [{ name: "message-types", type: "ts" }],
+        },
+      ],
+    },
+    {
+      name: "composer",
+      contents: [
+        {
+          name: "components",
+          contents: [
+            { name: "channel-composer", type: "tsx" },
+            { name: "edit-composer", type: "tsx" },
+            { name: "reply-composer", type: "tsx" },
+          ],
+        },
+        {
+          name: "hooks",
+          contents: [{ name: "use-composer", type: "ts" }],
+        },
+        {
+          name: "context",
+          contents: [{ name: "composer-context", type: "ts" }],
+        },
+        {
+          name: "types",
+          contents: [{ name: "composer-types", type: "ts" }],
+        },
+      ],
+    },
+  ],
+} as const satisfies Directory.FolderType;
+
 export {
   basicProject,
   messagingAppFirstIteration,
   messagingAppSecondIteration,
   closerLookAtComponents,
   moveShadcnComponentsToAtoms,
+  closerLookAtMessagesFeature,
+  messagesFeatureAfterAtomicDesign,
 };
