@@ -2,7 +2,7 @@ import { FolderView } from "@/features/directory/molecules/folder-view";
 import * as folders from "./folders";
 import { SearchBar, SearchContext } from "@/molecules/search-bar";
 
-If you've worked in a modern React project before, then you've probably seen
+If you've worked inside a modern React project before, then you've probably seen
 something like this:
 
 <FolderView directory={folders.basicProject} />
@@ -32,7 +32,7 @@ So what should we do?
 
 Lets make a new rule: if a feature has different types of code that previously
 would have been spread across multiple folders, we create a dedicated folder for
-that feature. So for example, all the code for messages would now live in
+that feature. For example, all the code for messages will now live in
 `📁/features/messages`
 
 Lets try this, and see how things look.
@@ -50,7 +50,7 @@ close together will make things much easier to manage as you scale your app.
 But I think we can do even better.
 
 Lets take a closer look at our components folder. In modern React projects, its
-very common to have a folder thast contains prebuilt components from a
+very common to have a folder that contains prebuilt components from a
 [shadcn](https://ui.shadcn.com/) registry[^1]. These are usually found in
 `📁/components/ui`
 
@@ -112,13 +112,13 @@ export function useSidebar() {
 So then what should we do? Should we move all of this code into separate files
 and put them in a new folder in `📁/features`?
 
-We could, sidebar isn't really a feature though. Looking over the
-[documentation](https://ui.shadcn.com/docs/components/sidebar) for it, you can
-see that its more like a collection of building blocks that we can put together
-to build a sidebar _tailored to the specific needs_ of our app.
+We could. Is sidebar really a feature though? Looking over the
+[docs](https://ui.shadcn.com/docs/components/sidebar) for it, you can see that
+its more like a collection of building blocks that we can put together to build
+a sidebar tailored to the _specific needs of our app_.
 
-I think the sidebar code needs a new home, somewhere different than
-`📁/features`. Which brings us to our next topic: **_Atomic Design_**.
+I think the sidebar code needs a new home, somewhere different than our features
+folder. Which brings us to our next topic: **_Atomic Design_**.
 
 [Atomic Design](https://atomicdesign.bradfrost.com/table-of-contents/) is a book
 written by [Brad Frost](https://bradfrost.com/). It outlines best practices for
@@ -153,8 +153,8 @@ In the words of
 > to create the user interfaces of our applications.
 
 I figured the best way to see how I truly feel about this mental model would be
-to try it out myself. I decided to build the messaging app[^3] we outlined
-earlier, strictly following the principles of Atomic Design.
+to try it out myself. I decided to build the messaging app[^3] we've been
+outlining, strictly following the principles of Atomic Design.
 
 [^3]:
     The result of this endeavour is the chatroom / discussion board thing in the
@@ -167,8 +167,7 @@ Issues arose early on into the project. I found it difficult to decide whether
 certain components should be classified as molecules or organisms. I also didn't
 have many components that fit Brad's definition of an atom. This led me to the
 realization that maybe the best route is to adopt the _sentiment_ of Atomic
-Design, while adjusting the definitions to better fit the needs of the modern
-React project.
+Design, adjusting the definitions to better fit the needs of React.
 
 To start, I decided not to embrace his idea of _pages_ and _templates_. I think
 the best course of action here is to stick to whatever the meta-framework you're
@@ -178,12 +177,12 @@ for now.
 
 I also decided to get rid of organisms, leaving atoms and molecules as the units
 to measure the complexity and size of components. My updated rules aren't
-perfectly aligned with their real relationship in chemistry, but its close
-enough that the analogy is still useful.
+perfectly aligned with their relationship in chemistry, but its close enough
+that the analogy is still useful.
 
 ### Atoms
 
-- Should be general purpose and reusable
+- Should be simple and reusable
 - Can contain any kind of code, multiple components per file is encouraged
 - ✅ **_Can_** be built with other atoms
 - ❌ **_Cannot_** be built with molecules
@@ -214,8 +213,8 @@ creating a sidebar folder and separating the code by type.
 <FolderView directory={folders.sidebarAtomSplitUp} />
 
 I find it helps to create an index file to clean up the imports across your
-project. That way you can still think of all of the sidebar code as living
-together, even though it is spread across different files.
+project. That way you can still think of all of the sidebar code as being
+encapsulated in one object, even though it is spread across different files.
 
 ```tsx
 // atoms/sidebar/index.tsx
@@ -231,7 +230,7 @@ export * from "./sidebar-constants";
 // ❌ import { Frame, Content, MenuItem } from "@/atoms/sidebar-components";
 // ❌ import { Provider } from "@/atoms/sidebar/sidebar-context";
 
-// ✅ as long as your bundler can handle it
+// ✅ most bundlers can handle this without increasing bundle size
 import * as Sidebar from "@/atoms/sidebar.tsx";
 
 function AdminSidebar() {
@@ -359,32 +358,32 @@ things:
 
 <FolderView directory={folders.messagesFeatureAfterAtomicDesign} />
 
-This is great. When we have an atom like messages and molecules that are tied
-closely to it, we can store them all in a feature folder. For more vague atoms
-like the previously mentioned _list_ and _scroll_, we can just store them in
-`📁/atoms`
+This is great. When we have an atom and molecules that are tied closely to it,
+we can store them all in a feature folder. General purpose atoms like the
+previously mentioned _list_ and _scroll_, can just be stored in `📁/atoms`
 
-So thats it!
+Thats the last piece of the puzzle, lets and see how things look after applying
+our new Atomic Design principles to every corner of the app:
+
+<FolderView directory={folders.messagingAppThirdIteration} />
 
 By following these principles:
 
-1. Grouping code by feature
-2. Building atoms, and then composing molecules from those atoms.
+1. Grouping code by **feature**
+2. Building **atoms**, and then composing **molecules** from those atoms.
 
-We can dramatically improve the readability, maintainability, composability —
+We have dramatically improved the readability, maintainability, composability —
 basically all the \*abilities of our code.
 
-I'm not claiming this system is perfect for any and all codebases. I've never
-encountered the challeneges that lie from codebases with hundreds of thousands
+I'm not claiming this system is perfect for any and all projects. I've never
+encountered the challeneges that come from codebases with hundreds of thousands
 of lines of code.
 
-But for the 10,000 or so lines of code it took to create this blog site with the
-messaging app in the sidebar, I found this practice incredibly plesant to use.
+But for the 10,000 or so lines of code it took to create this blog site with a
+messaging app in the sidebar, I found this practice incredibly pleasant to use.
 
-But now I want to know what YOU think about it. Leave me a message on the left,
-and lets chat about it. You can also find me on pretty much any social media,
-all links at the bottom.
-
-Thanks for reading!
+But now I want to know what YOU think about it. Would you consider adopting this
+pattern into your projects? If not, what issues do you see with it? What would
+you do differently?
 
 ### Footnotes

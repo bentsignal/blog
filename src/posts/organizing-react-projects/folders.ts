@@ -99,8 +99,6 @@ const messagingAppFirstIteration = {
         { name: "use-mobile", type: "ts" },
         { name: "use-message-actions", type: "ts" },
         { name: "use-debounced-input", type: "ts" },
-        { name: "use-auth", type: "ts" },
-        { name: "use-composer", type: "ts" },
         { name: "use-theme", type: "ts" },
         { name: "use-is-client", type: "ts" },
       ],
@@ -181,10 +179,6 @@ const messagingAppSecondIteration = {
               ],
             },
             {
-              name: "hooks",
-              contents: [{ name: "use-auth", type: "ts" }],
-            },
-            {
               name: "context",
               contents: [{ name: "auth-context", type: "ts" }],
             },
@@ -194,7 +188,7 @@ const messagingAppSecondIteration = {
             },
             {
               name: "types",
-              contents: [{ name: "message-types", type: "ts" }],
+              contents: [{ name: "auth-types", type: "ts" }],
             },
           ],
         },
@@ -208,10 +202,6 @@ const messagingAppSecondIteration = {
                 { name: "edit-composer", type: "tsx" },
                 { name: "reply-composer", type: "tsx" },
               ],
-            },
-            {
-              name: "hooks",
-              contents: [{ name: "use-composer", type: "ts" }],
             },
             {
               name: "context",
@@ -381,10 +371,6 @@ const closerLookAtMessagesFeature = {
           ],
         },
         {
-          name: "hooks",
-          contents: [{ name: "use-auth", type: "ts" }],
-        },
-        {
           name: "context",
           contents: [{ name: "auth-context", type: "ts" }],
         },
@@ -394,7 +380,7 @@ const closerLookAtMessagesFeature = {
         },
         {
           name: "types",
-          contents: [{ name: "message-types", type: "ts" }],
+          contents: [{ name: "auth-types", type: "ts" }],
         },
       ],
     },
@@ -408,10 +394,6 @@ const closerLookAtMessagesFeature = {
             { name: "edit-composer", type: "tsx" },
             { name: "reply-composer", type: "tsx" },
           ],
-        },
-        {
-          name: "hooks",
-          contents: [{ name: "use-composer", type: "ts" }],
         },
         {
           name: "context",
@@ -473,10 +455,6 @@ const messagesFeatureAfterAtomicDesign = {
           ],
         },
         {
-          name: "hooks",
-          contents: [{ name: "use-auth", type: "ts" }],
-        },
-        {
           name: "context",
           contents: [{ name: "auth-context", type: "ts" }],
         },
@@ -486,7 +464,7 @@ const messagesFeatureAfterAtomicDesign = {
         },
         {
           name: "types",
-          contents: [{ name: "message-types", type: "ts" }],
+          contents: [{ name: "auth-types", type: "ts" }],
         },
       ],
     },
@@ -502,10 +480,6 @@ const messagesFeatureAfterAtomicDesign = {
           ],
         },
         {
-          name: "hooks",
-          contents: [{ name: "use-composer", type: "ts" }],
-        },
-        {
           name: "context",
           contents: [{ name: "composer-context", type: "ts" }],
         },
@@ -518,6 +492,158 @@ const messagesFeatureAfterAtomicDesign = {
   ],
 } as const satisfies Directory.FolderType;
 
+const messagingAppThirdIteration = {
+  name: "src",
+  contents: [
+    {
+      name: "atoms",
+      contents: [
+        {
+          name: "sidebar",
+          contents: [
+            {
+              name: "sidebar-components",
+              type: "tsx",
+            },
+            {
+              name: "sidebar-constants",
+              type: "ts",
+            },
+            {
+              name: "sidebar-context",
+              type: "tsx",
+            },
+          ],
+        },
+        {
+          name: "button",
+          type: "tsx",
+          link: "https://ui.shadcn.com/docs/components/button",
+        },
+        {
+          name: "input",
+          type: "tsx",
+          link: "https://ui.shadcn.com/docs/components/input",
+        },
+        {
+          name: "card",
+          type: "tsx",
+          link: "https://ui.shadcn.com/docs/components/card",
+        },
+      ],
+    },
+    {
+      name: "molecules",
+      contents: [
+        { name: "search-bar", type: "tsx" },
+        { name: "header", type: "tsx" },
+        { name: "footer", type: "tsx" },
+        { name: "nav", type: "tsx" },
+      ],
+    },
+    {
+      name: "features",
+      contents: [
+        {
+          name: "messages",
+          contents: [
+            {
+              name: "atom",
+              contents: [
+                { name: "message-components", type: "tsx" },
+                { name: "message-context", type: "tsx" },
+                { name: "message-types", type: "ts" },
+              ],
+            },
+            {
+              name: "molecules",
+              contents: [
+                { name: "user-message", type: "tsx" },
+                { name: "assistant-message", type: "tsx" },
+                { name: "system-message", type: "tsx" },
+                { name: "message-list", type: "tsx" },
+              ],
+            },
+            {
+              name: "hooks",
+              contents: [{ name: "use-message-actions", type: "ts" }],
+            },
+          ],
+        },
+        {
+          name: "auth",
+          contents: [
+            {
+              name: "atom",
+              contents: [
+                { name: "auth-components", type: "tsx" },
+                { name: "auth-context", type: "tsx" },
+                { name: "auth-types", type: "ts" },
+                { name: "auth-client", type: "ts" },
+              ],
+            },
+            {
+              name: "molecules",
+              contents: [
+                { name: "sign-in-form", type: "tsx" },
+                { name: "sign-up-form", type: "tsx" },
+                { name: "sign-in-button", type: "tsx" },
+                { name: "sign-up-button", type: "tsx" },
+                { name: "sign-out-button", type: "tsx" },
+              ],
+            },
+          ],
+        },
+        {
+          name: "composer",
+          contents: [
+            {
+              name: "atom",
+              contents: [
+                { name: "composer-components", type: "tsx" },
+                { name: "composer-context", type: "tsx" },
+                { name: "composer-types", type: "ts" },
+              ],
+            },
+            {
+              name: "molecules",
+              contents: [
+                { name: "channel-composer", type: "tsx" },
+                { name: "edit-composer", type: "tsx" },
+                { name: "reply-composer", type: "tsx" },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "hooks",
+      contents: [
+        { name: "use-mobile", type: "ts" },
+        { name: "use-debounced-input", type: "ts" },
+        { name: "use-theme", type: "ts" },
+        { name: "use-is-client", type: "ts" },
+      ],
+    },
+    {
+      name: "context",
+      contents: [
+        { name: "search-context", type: "tsx" },
+        { name: "channel-context", type: "tsx" },
+      ],
+    },
+    {
+      name: "types",
+      contents: [{ name: "index", type: "ts" }],
+    },
+    {
+      name: "lib",
+      contents: [{ name: "util", type: "ts" }],
+    },
+  ],
+} as const satisfies Directory.FolderType;
+
 export {
   basicProject,
   messagingAppFirstIteration,
@@ -526,4 +652,5 @@ export {
   moveShadcnComponentsToAtoms,
   closerLookAtMessagesFeature,
   messagesFeatureAfterAtomicDesign,
+  messagingAppThirdIteration,
 };
