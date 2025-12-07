@@ -269,14 +269,13 @@ Currently, we have three different kinds of message:
 And `message-list.tsx` to string them all together.
 
 Our different types of messages almost certainly have similarities, parts of
-their code that serve simliar or possibly identical purposes. If we split that
-code out into reusable pieces, then it could be shared among our different types
-of messages.
+their code that may even serve identical purposes. If we split that code out
+into reusable pieces, then it could be shared among our different types of
+messages.
 
-Bells should be ringing in your head right now. Lets create a message atom[^5],
-containing small reusable components that our message variants share. Then we
-can compose our three message variants as molecules, built off of the message
-atom.
+Lets create a message atom[^5], containing small reusable components that our
+message variants share. We can then use this atom to compose our three message
+variants as molecules.
 
 [^5]:
     I won't include code snippets for any of the atoms I've built since they're
@@ -308,9 +307,9 @@ function UserMessage({ message }: { message: Message.Message }) {
 export default UserMessage;
 ```
 
-This practice[^6] will give us an easier path to consistency within our UI, make
-it easier to build new message variants down the road, and make it much easier
-for both humans and AI to understand and modify our code.
+Adopting this practice[^6] throughout our entire codebase will put us on a path
+towards consistency within our UI, simplify the process of creating new message
+variants down the road, and improve code clarity for both humans and AI.
 
 [^6]:
     This is all part of a larger pattern: building your components like shadcn.
@@ -319,9 +318,9 @@ for both humans and AI to understand and modify our code.
     [Composition Is All You Need](https://www.youtube.com/watch?v=4KvbVq3Eg5w),
     an excellent talk by [Fernando Rojo](https://x.com/fernandorojo).
 
-I also built _list_ & _scroll_ atoms. Each of these contains many components
-that aren't terribly useful on their own. But when put together, it becomes
-trivial to compose something like the message list molecule shown below.
+I also built two atoms named list and scroll. Each of these contains many
+components that aren't terribly useful on their own. But when put together, it
+becomes trivial to compose something like the message list molecule shown below.
 
 ```tsx
 import * as List from "@/atoms/list";
@@ -353,14 +352,14 @@ function MessageList({ messages }: { messages: Message.Message[] }) {
 export default MessageList;
 ```
 
-Lets take another look at our messages feature folder now that we've reorganized
-things:
+Lets take another look at our messages feature folder now that we've
+restructured our code:
 
 <FolderView directory={folders.messagesFeatureAfterAtomicDesign} />
 
-This is great. When we have an atom and molecules that are tied closely to it,
-we can store them all in a feature folder. General purpose atoms like the
-previously mentioned _list_ and _scroll_, can just be stored in `📁/atoms`
+Great. Now when we have molecules that are tied closely to one specific atom, we
+can store them all in a feature folder. Meanwhile, general purpose atoms like
+list and scroll can stay in `📁/atoms`
 
 Thats the last piece of the puzzle, lets and see how things look after applying
 our new Atomic Design principles to every corner of the app:
@@ -369,21 +368,25 @@ our new Atomic Design principles to every corner of the app:
 
 By following these principles:
 
-1. Grouping code by **feature**
-2. Building **atoms**, and then composing **molecules** from those atoms.
+1. Grouping code for **features** close together
+2. Building **atoms**, and then using them to compose **molecules**.
 
 We have dramatically improved the readability, maintainability, composability —
 basically all the \*abilities of our code.
 
-I'm not claiming this system is perfect for any and all projects. I've never
-encountered the challeneges that come from codebases with hundreds of thousands
-of lines of code.
+This system may not be the best fit for all projects. I've never encountered the
+challeneges that come from codebases with hundreds of thousands of lines of
+code. But for the 10,000 or so lines of code it took to create this blog site
+with a messaging app in the sidebar, I found this practice incredibly pleasant
+to use.
 
-But for the 10,000 or so lines of code it took to create this blog site with a
-messaging app in the sidebar, I found this practice incredibly pleasant to use.
+You can also adopt this pattern incrementally, no need to overhaul your entire
+project in one go.
 
-But now I want to know what YOU think about it. Would you consider adopting this
-pattern into your projects? If not, what issues do you see with it? What would
-you do differently?
+Enough yapping from me. I want to know what you think. Would you consider
+adopting this pattern into your projects? If not, what issues do you see with
+it? What would you do differently?
+
+← let me know !
 
 ### Footnotes
