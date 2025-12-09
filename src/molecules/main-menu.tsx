@@ -1,6 +1,6 @@
 import { useState } from "react";
+import * as Auth from "@/features/auth";
 import { Menu, X } from "lucide-react";
-import * as Auth from "@/atoms/auth";
 import * as Popover from "@/atoms/popover";
 import { Separator } from "@/atoms/separator";
 import * as Theme from "@/atoms/theme";

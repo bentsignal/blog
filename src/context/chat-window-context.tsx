@@ -3,8 +3,8 @@
 import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { type ChannelSlug } from "@/data/channels";
+import { useAuth } from "@/features/auth";
 import { findChannelWithSlug } from "@/utils/slug-utils";
-import { useAuth } from "@/atoms/auth";
 import { createContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 

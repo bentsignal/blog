@@ -3,10 +3,10 @@ import {
   ChatWindowContext,
   useChatWindow,
 } from "@/context/chat-window-context";
+import { AuthContext, useAuth } from "@/features/auth";
 import { validateMessage } from "@/utils/message-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
-import { AuthContext, useAuth } from "@/atoms/auth";
 import * as Composer from "@/atoms/composer";
 import { ScrollContext, useScroll } from "@/atoms/scroll";
 import { ChannelContext, useChannel } from "@/molecules/channel-page";

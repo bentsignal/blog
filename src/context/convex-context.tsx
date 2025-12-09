@@ -2,11 +2,11 @@
 
 import { ReactNode } from "react";
 import { env } from "@/env";
+import * as Auth from "@/features/auth";
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConvexReactClient } from "convex/react";
-import * as Auth from "@/atoms/auth";
 
 const convex = new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL, {});
 

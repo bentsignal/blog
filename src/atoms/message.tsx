@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChatWindow } from "@/context/chat-window-context";
+import { useAuth } from "@/features/auth";
 import {
   EnhancedMessage,
   MessageInteractionState,
@@ -23,7 +24,6 @@ import { Button } from "./button";
 import * as ButtonGroup from "./button-group";
 import * as Shapes from "./shapes";
 import * as ToolTip from "./tooltip";
-import { useAuth } from "@/atoms/auth";
 import { createContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 

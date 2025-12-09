@@ -1,8 +1,8 @@
 import { Provider as ChatWindowProvider } from "@/context/chat-window-context";
 import { Provider as ConvexProvider } from "@/context/convex-context";
+import { Provider as AuthProvider } from "@/features/auth";
+import { getServersideToken } from "@/features/auth/lib/auth-server";
 import { cookies, headers } from "next/headers";
-import { Provider as AuthProvider } from "@/atoms/auth";
-import { getServersideToken } from "@/atoms/auth/lib/auth-server";
 import * as Sidebar from "@/atoms/sidebar";
 import { Provider as ThemeProvider } from "@/atoms/theme";
 

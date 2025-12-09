@@ -5,12 +5,12 @@ import {
   MAX_MESSAGE_LENGTH,
   MIN_MESSAGE_LENGTH,
 } from "@/config/message-config";
+import { useAuth } from "@/features/auth";
+import * as Auth from "@/features/auth";
 import { validateMessage } from "@/utils/message-utils";
 import { cn } from "@/utils/style-utils";
 import * as Icons from "lucide-react";
 import * as ToolTip from "./tooltip";
-import { useAuth } from "@/atoms/auth";
-import * as Auth from "@/atoms/auth";
 import { Button } from "@/atoms/button";
 import { createContext, useRequiredContext } from "@/lib/context";
 
