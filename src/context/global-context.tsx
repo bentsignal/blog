@@ -2,9 +2,9 @@ import { Provider as ChatWindowProvider } from "@/context/chat-window-context";
 import { Provider as ConvexProvider } from "@/context/convex-context";
 import { cookies, headers } from "next/headers";
 import { Provider as AuthProvider } from "@/atoms/auth";
+import { getServersideToken } from "@/atoms/auth/lib/auth-server";
 import * as Sidebar from "@/atoms/sidebar";
 import { Provider as ThemeProvider } from "@/atoms/theme";
-import { getToken } from "@/lib/auth-server";
 
 export const Providers = async ({
   children,
@@ -18,7 +18,7 @@ export const Providers = async ({
   const themeCookie = cookieStore.get("theme");
   const sidebarCookie = cookieStore.get("sidebar_state");
 
-  const token = await getToken();
+  const token = await getServersideToken();
   const authed = token !== undefined;
 
   return (
