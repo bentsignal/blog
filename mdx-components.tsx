@@ -1,4 +1,4 @@
-import CodeSnippet from "@/features/code/molecules/code-snippet";
+import { CodeSnippet } from "@/features/code/molecules";
 import type { MDXComponents } from "mdx/types";
 import Image from "next/image";
 import Link from "next/link";

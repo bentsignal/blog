@@ -1,8 +1,8 @@
 "use client";
 
 import { getLanguage } from "../languages/language-utils";
-import FramedCodeBlock from "./framed-code-block";
-import InlineCode from "./inline-code";
+import { FramedCodeBlock } from "./framed-code-block";
+import { InlineCode } from "./inline-code";
 
 const CodeSnippet = ({
   children,
@@ -24,4 +24,4 @@ const CodeSnippet = ({
   return <FramedCodeBlock code={code} language={language} />;
 };
 
-export default CodeSnippet;
+export { CodeSnippet };
