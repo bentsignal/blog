@@ -1,11 +1,11 @@
+import CodeSnippet from "@/features/code/molecules/code-snippet";
 import type { MDXComponents } from "mdx/types";
 import Image from "next/image";
 import Link from "next/link";
-import * as Code from "@/atoms/code";
 import HashLink from "@/molecules/hash-link";
 
 const components: MDXComponents = {
-  code: Code.Provider,
+  code: CodeSnippet,
   pre: ({ children }) => <>{children}</>,
   a: ({ href, children, ...props }) => {
     const isHashLink = href?.startsWith("#");

@@ -1,60 +1,33 @@
 "use client";
 
 import { memo } from "react";
-import { cn } from "@/utils/style-utils";
+import { getLanguage } from "@/features/code/languages";
 import equal from "fast-deep-equal";
 import {
+  File as DefaultFileIcon,
   ExternalLink,
-  File,
   Folder as FolderIcon,
   FolderOpen as FolderOpenIcon,
   ListChevronsDownUp,
   ListChevronsUpDown,
 } from "lucide-react";
 import { DirectoryContext, useDirectory } from "./directory-context";
-import type { FileType, FolderType } from "./directory-types";
+import type { FileExtension, FileType, FolderType } from "./directory-types";
 import { Button } from "@/atoms/button";
 import * as Tooltip from "@/atoms/tooltip";
 import { useRequiredContext } from "@/lib/context";
 
-const Frame = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="not-prose border-border bg-card/50 group relative my-8 w-full overflow-hidden rounded-xl border-1">
-      {children}
-    </div>
-  );
-};
-
-const Header = () => {
+const FolderIdentifier = () => {
   useRequiredContext(DirectoryContext);
 
   const rootName = useDirectory((c) => c.root.name);
 
   return (
-    <div className="dark:bg-border bg-input flex h-14 w-full items-center justify-between px-4">
-      <div className="ml-1 flex items-center gap-1.5">
-        <FolderIcon fill="white" className="h-3 w-3" />
-        <span className="text-muted-foreground mb-0.5 text-sm font-semibold">
-          {rootName}
-        </span>
-      </div>
-      <div className="flex items-center gap-2">
-        <CloseAllButton />
-        <OpenAllButton />
-      </div>
-    </div>
-  );
-};
-
-const Body = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div
-      className={cn(
-        "flex w-full flex-col gap-1",
-        "my-1 overflow-x-auto px-6 py-5",
-      )}
-    >
-      {children}
+    <div className="ml-1 flex items-center gap-1.5">
+      <FolderIcon fill="white" className="h-3 w-3" />
+      <span className="text-muted-foreground mb-0.5 text-sm font-semibold">
+        {rootName}
+      </span>
     </div>
   );
 };
@@ -109,15 +82,15 @@ const FileItem = memo(
     return (
       <Tooltip.Frame>
         <Tooltip.Trigger asChild>
-          <div className="flex w-fit items-center gap-1">
-            <File className="h-3 w-3" />
+          <div className="flex w-fit items-center gap-1.5">
+            <FileIcon extension={file.extension} />
             <span className="text-sm select-none">
-              {file.name}.{file.type}
+              {file.name}.{file.extension}
             </span>
           </div>
         </Tooltip.Trigger>
         <Tooltip.Content side="right" className="flex items-center gap-1">
-          <span>{`${path.join("/")}/${file.name}.${file.type}`}</span>
+          <span>{`${path.join("/")}/${file.name}.${file.extension}`}</span>
           {file.link && (
             <a href={file.link} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="h-3 w-3" />
@@ -131,6 +104,17 @@ const FileItem = memo(
     return equal(prev.file, next.file) && equal(prev.path, next.path);
   },
 );
+
+const FileIcon = ({ extension }: { extension: FileExtension }) => {
+  const language = getLanguage(extension);
+  if (!language) return <DefaultFileIcon className="h-3 w-3" />;
+  const { icon: Icon } = language;
+  return Icon ? (
+    <Icon className="h-3 w-3" />
+  ) : (
+    <DefaultFileIcon className="h-3 w-3" />
+  );
+};
 
 const List = () => {
   useRequiredContext(DirectoryContext);
@@ -179,4 +163,11 @@ const OpenAllButton = () => {
   );
 };
 
-export { Folder, FileItem, Header, Frame, Body, List };
+export {
+  Folder,
+  FileItem,
+  FolderIdentifier,
+  List,
+  CloseAllButton,
+  OpenAllButton,
+};

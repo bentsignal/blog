@@ -1,8 +1,8 @@
-type Extension = "ts" | "tsx";
+type FileExtension = "ts" | "tsx";
 
 type FileType = {
   name: string;
-  type: Extension;
+  extension: FileExtension;
   link?: string;
 };
 
@@ -12,4 +12,4 @@ type FolderType = {
   contents: Array<FileType | FolderType>;
 };
 
-export type { Extension, FileType, FolderType };
+export type { FileExtension, FileType, FolderType };

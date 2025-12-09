@@ -1,14 +1,21 @@
 import * as Directory from "@/features/directory/atom";
+import * as Frame from "@/atoms/frame";
 
 const FolderView = ({ directory }: { directory: Directory.FolderType }) => {
   return (
     <Directory.Provider initialRoot={directory}>
-      <Directory.Frame>
-        <Directory.Header />
-        <Directory.Body>
+      <Frame.Container>
+        <Frame.Header>
+          <Directory.FolderIdentifier />
+          <div className="flex items-center gap-2">
+            <Directory.CloseAllButton />
+            <Directory.OpenAllButton />
+          </div>
+        </Frame.Header>
+        <Frame.Body>
           <Directory.List />
-        </Directory.Body>
-      </Directory.Frame>
+        </Frame.Body>
+      </Frame.Container>
     </Directory.Provider>
   );
 };
