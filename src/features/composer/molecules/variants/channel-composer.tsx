@@ -5,13 +5,13 @@ import {
 } from "@/context/chat-window-context";
 import { AuthContext, useAuth } from "@/features/auth";
 import * as Composer from "@/features/composer/atom";
-import { validateMessage } from "@/utils/message-utils";
+import { validateMessage } from "@/features/messages/atom";
+import { useMessageActions } from "@/features/messages/hooks";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import { ScrollContext, useScroll } from "@/atoms/scroll";
 import { ChannelContext, useChannel } from "@/molecules/channel-page";
 import { useRequiredContext } from "@/lib/context";
-import { useMessageActions } from "@/hooks/use-message-actions";
 
 const ChannelComposer = () => {
   useRequiredContext([ChannelContext, ChatWindowContext, AuthContext]);

@@ -5,13 +5,12 @@ import { useChatWindow } from "@/context/chat-window-context";
 import { api } from "@/convex/_generated/api";
 import { channels, type Channel, type ChannelSlug } from "@/data/channels";
 import { ChannelComposer } from "@/features/composer/molecules";
-import { EnhancedMessage } from "@/types/message-types";
+import * as Message from "@/features/messages/atom";
+import { MessageList } from "@/features/messages/molecules";
 import { PaginationStatus, usePaginatedQuery } from "convex/react";
 import { ChevronLeft } from "lucide-react";
 import * as List from "@/atoms/list";
-import * as Message from "@/atoms/message";
 import * as Scroll from "@/atoms/scroll";
-import { MessageList } from "@/molecules/message-list";
 import { TopControls } from "@/molecules/top-controls";
 import { createContext } from "@/lib/context";
 
@@ -22,7 +21,7 @@ export const { Context: ChannelContext, useContext: useChannel } =
   createContext<{
     slug: ChannelSlug;
     channel: Channel;
-    messages: EnhancedMessage[];
+    messages: Message.EnhancedMessage[];
     loadingStatus: PaginationStatus;
     loadMoreMessages: () => void;
     numberOfPages: number;
