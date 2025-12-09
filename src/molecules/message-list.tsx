@@ -45,7 +45,7 @@ export const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
   }
 
   return (
-    <Scroll.Frame>
+    <Scroll.Wrapper>
       <Scroll.Container fade="sm">
         <List.Skeletons position="aboveContent" className="pt-4" />
         <List.Items className="pb-4">
@@ -82,6 +82,6 @@ export const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
         className="absolute right-0 bottom-0 z-6 p-4"
         hideWhenAtBottom={true}
       />
-    </Scroll.Frame>
+    </Scroll.Wrapper>
   );
 };

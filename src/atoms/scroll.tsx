@@ -167,7 +167,7 @@ export const Provider = ({
   );
 };
 
-export const Frame = ({
+export const Wrapper = ({
   children,
   className,
 }: {

@@ -79,7 +79,7 @@ export const ChannelList = () => {
 
   return (
     <Scroll.Provider>
-      <Scroll.Frame>
+      <Scroll.Wrapper>
         <Scroll.Container>
           <Scroll.Content className="flex flex-col gap-2 py-4">
             {channels.map((channel, index) => (
@@ -109,7 +109,7 @@ export const ChannelList = () => {
             ))}
           </Scroll.Content>
         </Scroll.Container>
-      </Scroll.Frame>
+      </Scroll.Wrapper>
     </Scroll.Provider>
   );
 };

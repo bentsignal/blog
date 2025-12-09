@@ -59,13 +59,13 @@ export const ReplyComposer = () => {
       <Composer.InlineHeader>
         Replying to <span className="font-semibold">{name}</span>
       </Composer.InlineHeader>
-      <Composer.Frame className="mb-3 rounded-none px-6">
+      <Composer.Container className="mb-3 rounded-none px-6">
         <Composer.Input />
         <ButtonGroup.Frame>
           <Composer.Cancel />
           <Composer.Send />
         </ButtonGroup.Frame>
-      </Composer.Frame>
+      </Composer.Container>
     </Composer.Provider>
   );
 };

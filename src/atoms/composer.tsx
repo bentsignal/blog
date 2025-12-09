@@ -56,7 +56,7 @@ export const Provider = ({
   );
 };
 
-export const Frame = ({
+export const Container = ({
   className,
   children,
 }: {

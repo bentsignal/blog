@@ -58,10 +58,10 @@ export const ChannelComposer = () => {
       setInputValue={setInputValue}
       inputRef={composerInputRef}
     >
-      <Composer.Frame className="mx-4 mb-4">
+      <Composer.Container className="mx-4 mb-4">
         <Composer.Input className="ml-1" />
         <Composer.Send />
-      </Composer.Frame>
+      </Composer.Container>
     </Composer.Provider>
   );
 };

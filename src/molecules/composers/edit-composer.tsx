@@ -45,13 +45,13 @@ export const EditComposer = () => {
         setInteractionState("idle");
       }}
     >
-      <Composer.Frame className="my-3 rounded-none px-6">
+      <Composer.Container className="my-3 rounded-none px-6">
         <Composer.Input placeholder={previousContent} />
         <ButtonGroup.Frame>
           <Composer.Cancel />
           <Composer.Save />
         </ButtonGroup.Frame>
-      </Composer.Frame>
+      </Composer.Container>
     </Composer.Provider>
   );
 };

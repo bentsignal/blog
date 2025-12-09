@@ -125,13 +125,13 @@ const Body = () => {
   if (loadingStatus === "LoadingFirstPage") {
     return (
       <Scroll.Provider>
-        <Scroll.Frame>
+        <Scroll.Wrapper>
           <div className="flex flex-1 flex-col justify-end overflow-hidden mask-t-from-95%">
             {Array.from({ length: 30 }).map((_, index) => (
               <Message.Skeleton key={index} index={index} />
             ))}
           </div>
-        </Scroll.Frame>
+        </Scroll.Wrapper>
         <ChannelComposer />
       </Scroll.Provider>
     );

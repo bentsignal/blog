@@ -329,7 +329,7 @@ import * as Scroll from "@/atoms/scroll";
 
 function MessageList({ messages }: { messages: Message.Message[] }) {
   return (
-    <Scroll.Frame>
+    <Scroll.Wrapper>
       <Scroll.Container fade="sm">
         <List.Skeletons position="aboveContent" className="pt-4" />
         <List.Items className="pb-4">
@@ -345,7 +345,7 @@ function MessageList({ messages }: { messages: Message.Message[] }) {
         </List.Items>
       </Scroll.Container>
       <Scroll.ScrollToBottomButton />
-    </Scroll.Frame>
+    </Scroll.Wrapper>
   );
 }
 

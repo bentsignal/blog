@@ -35,7 +35,7 @@ export default async function Page({
 
   return (
     <Scroll.Provider>
-      <Scroll.Frame>
+      <Scroll.Wrapper>
         <Scroll.ProgressBar />
         <TopControls className="absolute top-0 left-0 z-6" />
         <Abyss.Top />
@@ -78,7 +78,7 @@ export default async function Page({
           <Scroll.ScrollToBottomButton />
         </div>
         <Abyss.Bottom />
-      </Scroll.Frame>
+      </Scroll.Wrapper>
     </Scroll.Provider>
   );
 }

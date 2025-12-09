@@ -11,7 +11,7 @@ import { TopControls } from "@/molecules/top-controls";
 export default function HomePage() {
   return (
     <Scroll.Provider>
-      <Scroll.Frame>
+      <Scroll.Wrapper>
         <TopControls className="absolute top-0 left-0 z-6" />
         <Abyss.Top />
         <Scroll.Container fade="md">
@@ -60,7 +60,7 @@ export default function HomePage() {
           </Scroll.Content>
         </Scroll.Container>
         <Abyss.Bottom />
-      </Scroll.Frame>
+      </Scroll.Wrapper>
     </Scroll.Provider>
   );
 }
