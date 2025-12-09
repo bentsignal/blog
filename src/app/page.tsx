@@ -1,11 +1,11 @@
 import pfp from "@/assets/pfp.webp";
 import { posts, postSlugs } from "@/data/posts";
+import SocialsBar from "@/features/socials/socials-bar";
 import Image from "next/image";
 import * as Abyss from "@/atoms/abyss";
 import * as Scroll from "@/atoms/scroll";
 import { Separator } from "@/atoms/separator";
 import PostLink from "@/molecules/post-link";
-import { Socials } from "@/molecules/socials";
 import { TopControls } from "@/molecules/top-controls";
 
 export default function HomePage() {
@@ -30,7 +30,7 @@ export default function HomePage() {
                 <span className="text-muted-foreground mb-3 text-sm">
                   @bentsignal
                 </span>
-                <Socials />
+                <SocialsBar />
               </div>
             </div>
             <span>

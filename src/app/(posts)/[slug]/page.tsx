@@ -1,4 +1,5 @@
 import { posts, postSlugs, type PostSlug } from "@/data/posts";
+import SocialsBar from "@/features/socials/socials-bar";
 import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
 import { MoveLeft } from "lucide-react";
@@ -8,7 +9,6 @@ import { notFound } from "next/navigation";
 import * as Abyss from "@/atoms/abyss";
 import * as Scroll from "@/atoms/scroll";
 import { Separator } from "@/atoms/separator";
-import { Socials } from "@/molecules/socials";
 import { TopControls } from "@/molecules/top-controls";
 
 export default async function Page({
@@ -69,7 +69,7 @@ export default async function Page({
               <span className="text-muted-foreground text-sm">
                 @bentsignal on everything
               </span>
-              <Socials />
+              <SocialsBar />
             </div>
           </Scroll.Content>
         </Scroll.Container>
