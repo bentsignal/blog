@@ -32,4 +32,4 @@ const FramedCodeBlock = ({
   );
 };
 
-export default FramedCodeBlock;
+export { FramedCodeBlock };
