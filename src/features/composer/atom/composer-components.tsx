@@ -7,56 +7,14 @@ import {
 } from "@/config/message-config";
 import { useAuth } from "@/features/auth";
 import * as Auth from "@/features/auth";
-import { validateMessage } from "@/utils/message-utils";
 import { cn } from "@/utils/style-utils";
 import * as Icons from "lucide-react";
-import * as ToolTip from "./tooltip";
+import { ComposerContext, useComposer } from "./composer-context";
 import { Button } from "@/atoms/button";
-import { createContext, useRequiredContext } from "@/lib/context";
+import * as ToolTip from "@/atoms/tooltip";
+import { useRequiredContext } from "@/lib/context";
 
-interface ComposerInputProps {
-  inputRef: React.RefObject<HTMLTextAreaElement | null>;
-  inputValue: string;
-  setInputValue: (value: string) => void;
-  onSubmit: () => void;
-  onCancel?: () => void;
-}
-
-interface ComposerContextType extends ComposerInputProps {
-  submitDisabled: boolean;
-}
-
-export const { Context: ComposerContext, useContext: useComposer } =
-  createContext<ComposerContextType>({ displayName: "ComposerContext" });
-
-export const Provider = ({
-  onSubmit,
-  inputValue,
-  setInputValue,
-  inputRef,
-  onCancel,
-  children,
-}: ComposerInputProps & { children: React.ReactNode }) => {
-  const inputIsValid = validateMessage(inputValue) === "Valid";
-  const submitDisabled = !inputIsValid;
-
-  const contextValue = {
-    inputRef,
-    inputValue,
-    setInputValue,
-    onSubmit,
-    onCancel,
-    submitDisabled,
-  };
-
-  return (
-    <ComposerContext.Provider value={contextValue}>
-      {children}
-    </ComposerContext.Provider>
-  );
-};
-
-export const Container = ({
+const Container = ({
   className,
   children,
 }: {
@@ -75,7 +33,7 @@ export const Container = ({
   );
 };
 
-export const Input = ({
+const Input = ({
   placeholder = "Aa",
   className,
 }: {
@@ -144,7 +102,7 @@ export const Input = ({
   );
 };
 
-export const Send = () => {
+const Send = () => {
   useRequiredContext(ComposerContext);
 
   const onSubmit = useComposer((c) => c.onSubmit);
@@ -170,7 +128,7 @@ export const Send = () => {
   );
 };
 
-export const Cancel = () => {
+const Cancel = () => {
   useRequiredContext(ComposerContext);
 
   const onCancel = useComposer((c) => c.onCancel);
@@ -187,7 +145,7 @@ export const Cancel = () => {
   );
 };
 
-export const Save = () => {
+const Save = () => {
   useRequiredContext(ComposerContext);
 
   const onSubmit = useComposer((c) => c.onSubmit);
@@ -210,10 +168,12 @@ export const Save = () => {
   );
 };
 
-export const InlineHeader = ({ children }: { children: React.ReactNode }) => {
+const InlineHeader = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="bg-muted/40 mt-3 flex w-full items-center gap-1 p-2">
       <span className="text-muted-foreground text-sm">{children}</span>
     </div>
   );
 };
+
+export { Container, Input, Send, Cancel, Save, InlineHeader };

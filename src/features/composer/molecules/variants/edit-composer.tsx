@@ -1,13 +1,13 @@
 import { useState } from "react";
+import * as Composer from "@/features/composer/atom";
 import { validateMessage } from "@/utils/message-utils";
 import { toast } from "sonner";
 import * as ButtonGroup from "@/atoms/button-group";
-import * as Composer from "@/atoms/composer";
 import { MessageContext, useMessage } from "@/atoms/message";
 import { useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
-export const EditComposer = () => {
+const EditComposer = () => {
   useRequiredContext(MessageContext);
 
   const messageId = useMessage((c) => c._id);
@@ -55,3 +55,5 @@ export const EditComposer = () => {
     </Composer.Provider>
   );
 };
+
+export { EditComposer };

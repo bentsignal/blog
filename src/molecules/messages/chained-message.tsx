@@ -1,7 +1,7 @@
 import { memo } from "react";
+import { InlineComposer } from "@/features/composer/molecules";
 import { EnhancedMessage } from "@/types/message-types";
 import * as Message from "@/atoms/message";
-import { InlineComposer } from "@/molecules/composers";
 
 export const ChainedMessage = memo(
   ({ message }: { message: EnhancedMessage }) => {
