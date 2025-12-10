@@ -137,6 +137,7 @@ export const LineNumbersButton = () => {
           onClick={toggleLineNumbers}
           size="sm"
           variant="ghost"
+          aria-label="Toggle line numbers next to each line of code"
           className="h-8 w-8 p-0"
         >
           {showLineNumbers ? (
@@ -167,6 +168,7 @@ export const LineWrappingButton = () => {
           size="sm"
           variant="ghost"
           className="h-8 w-8 p-0"
+          aria-label="Toggle line wrapping"
         >
           {wrapLines ? (
             <TextAlignStart className="h-4 w-4" />

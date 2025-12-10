@@ -112,6 +112,7 @@ const ScrollToBottomButton = ({
       <Button
         variant="outline"
         size="icon"
+        aria-label="Scroll to bottom button"
         onClick={() => scrollToBottom()}
         disabled={disableScrollToBottomButton}
       >
@@ -147,6 +148,7 @@ const ScrollToTopButton = ({
       <Button
         variant="outline"
         size="icon"
+        aria-label="Scroll to top button"
         onClick={() => scrollToTop()}
         disabled={disableScrollToTopButton}
       >

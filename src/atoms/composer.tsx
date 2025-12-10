@@ -160,6 +160,7 @@ export const Send = () => {
           size="icon"
           disabled={submitDisabled}
           className="bg-green-800 hover:bg-green-900"
+          aria-label="Send message button"
         >
           <Icons.Send className="h-4 w-4 text-white" />
         </Button>

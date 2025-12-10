@@ -104,6 +104,7 @@ const Header = () => {
         <button
           onClick={() => setCurrentChannelSlug(undefined)}
           className="cursor-pointer px-0.5 py-1"
+          aria-label="Close channel button, takes you back to the channel list"
         >
           <ChevronLeft className="size-5" />
         </button>

@@ -10,7 +10,10 @@ export default function MainMenu() {
   return (
     <div className="flex cursor-pointer items-center">
       <Popover.Frame open={open} onOpenChange={setOpen}>
-        <Popover.Trigger className="cursor-pointer p-3 pl-8 outline-none!">
+        <Popover.Trigger
+          className="cursor-pointer p-3 pl-8 outline-none!"
+          aria-label="Main menu button: sign in or out and change theme"
+        >
           {open ? (
             <X className="size-4.5 cursor-pointer" />
           ) : (
