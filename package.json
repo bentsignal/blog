@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"pnpm run dev:next\" \"pnpm run dev:convex\"",
+    "dev": "concurrently -c '#504269,#edb06b' \"pnpm run dev:next\" \"pnpm run dev:convex\"",
     "dev:next": "next dev --turbopack -H 0.0.0.0",
     "dev:convex": "convex dev",
     "build": "pnpm run lint && pnpm run build:convex && pnpm run build:next",
