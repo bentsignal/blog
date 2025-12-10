@@ -8,6 +8,7 @@ import {
   type Channel,
   type ChannelSlug,
 } from "@/data/channels";
+import * as Search from "@/features/search/atom";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
@@ -16,7 +17,6 @@ import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import * as Scroll from "@/atoms/scroll";
 import * as Shapes from "@/atoms/shapes";
-import { SearchContext, useSearch } from "@/molecules/search-bar";
 import { createContext, useRequiredContext } from "@/lib/context";
 
 interface ChannelWithPreview extends Channel {
@@ -31,8 +31,8 @@ export const { Context: ChannelListContext, useContext: useChannelList } =
   });
 
 export const Provider = ({ children }: { children: React.ReactNode }) => {
-  const hasSearchContext = useHasParentContext(SearchContext);
-  const searchTerm = useSearch((c) => c.searchTerm);
+  const hasSearchContext = useHasParentContext(Search.Context);
+  const searchTerm = Search.useContext((c) => c.searchTerm);
 
   const slugsWithPreviews = useQuery(api.messages.getPreviewsForChannels);
 

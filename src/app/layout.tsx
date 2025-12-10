@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers as GlobalProviders } from "@/context/global-context";
+import * as Search from "@/features/search/atom";
 import * as Sidebar from "@/atoms/sidebar";
 import { Toaster } from "@/atoms/toast";
 import { Provider as ChannelListProvider } from "@/molecules/channel-list";
 import { ChatWindow } from "@/molecules/chat-window";
-import { Provider as SearchProvider } from "@/molecules/search-bar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,11 +43,11 @@ export default async function RootLayout({
           <Toaster />
           <Sidebar.Frame className="max-w-screen sm:max-w-lg">
             <Sidebar.Content className="flex items-center">
-              <SearchProvider>
+              <Search.Provider>
                 <ChannelListProvider>
                   <ChatWindow />
                 </ChannelListProvider>
-              </SearchProvider>
+              </Search.Provider>
             </Sidebar.Content>
           </Sidebar.Frame>
           {children}

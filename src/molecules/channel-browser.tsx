@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchBar } from "./search-bar";
+import { SearchBar } from "@/features/search/molecules";
 import { TopControls } from "./top-controls";
 import { ChannelList } from "@/molecules/channel-list";
 
