@@ -96,6 +96,7 @@ const FileItem = memo(
         <Tooltip.Content side="right" className="flex items-center gap-1">
           <span>{`${path.join("/")}/${file.name}.${file.extension}`}</span>
           {file.link && (
+            // eslint-disable-next-line
             <a href={file.link} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="h-3 w-3" />
             </a>
