@@ -1,4 +1,4 @@
-import type { ChannelSlug } from "@/data/channels";
+import type { ChannelSlug } from "@/blog/channels";
 import * as Channel from "@/features/channel/atom";
 import { ChannelBody } from "./channel-body";
 import { TopControls } from "@/molecules/top-controls";

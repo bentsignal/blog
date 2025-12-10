@@ -1,5 +1,7 @@
-import { channelSlugs, type ChannelSlug } from "@/data/channels";
-import { postSlugs, type PostSlug } from "@/data/posts";
+import { channelSlugs } from "@/blog/channels";
+import type { ChannelSlug } from "@/blog/channels";
+import type { PostSlug } from "@/blog/posts";
+import { postSlugs } from "@/blog/posts";
 
 export const getSlugFromPathname = (pathname: string) => {
   const isStatic =

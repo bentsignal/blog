@@ -1,6 +1,6 @@
 "use client";
 
-import { PostSlug } from "@/data/posts";
+import type { PostSlug } from "@/blog/posts";
 import * as Chat from "@/features/chat/atom";
 import { findChannelWithSlug } from "@/utils/slug-utils";
 import Link from "next/link";

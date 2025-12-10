@@ -1,5 +1,5 @@
-import { channelSlugs } from "@/data/channels";
-import { vSlug } from "@/data/slugs";
+import { channelSlugs } from "@/blog/channels";
+import { vSlug } from "@/blog/slugs";
 import type { EnhancedMessage } from "@/features/messages/types";
 import { vReactionEmoji } from "@/features/messages/types";
 import {

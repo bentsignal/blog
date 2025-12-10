@@ -1,5 +1,5 @@
 import pfp from "@/assets/pfp.webp";
-import { posts, postSlugs } from "@/data/posts";
+import { posts, postSlugs } from "@/blog/posts";
 import SocialsBar from "@/features/socials/socials-bar";
 import Image from "next/image";
 import * as Abyss from "@/atoms/abyss";

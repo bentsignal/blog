@@ -1,4 +1,4 @@
-import { posts, postSlugs, type PostSlug } from "@/data/posts";
+import { posts, postSlugs, type PostSlug } from "@/blog/posts";
 import SocialsBar from "@/features/socials/socials-bar";
 import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
@@ -24,7 +24,9 @@ export default async function Page({
   }
 
   const post = posts[validatedSlug];
-  const { default: Post } = await import(`@/posts/${validatedSlug}/page.mdx`);
+  const { default: Post } = await import(
+    `@/blog/content/${validatedSlug}/page.mdx`
+  );
 
   const dateString = post.datePosted.toLocaleDateString(undefined, {
     year: "numeric",
