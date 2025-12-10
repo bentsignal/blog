@@ -1,13 +1,13 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import * as Auth from "@/features/auth/atom";
-import { getReactionsSignature } from "@/utils/message-utils";
+import { getReactionsSignature } from "@/features/messages/utils/message-utils";
 import { useConvexMutation } from "@convex-dev/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRequiredContext } from "@/lib/context";
 
-export const useMessageActions = () => {
+const useMessageActions = () => {
   useRequiredContext(Auth.Context);
 
   const image = Auth.useContext((c) => c.image);
@@ -238,3 +238,5 @@ export const useMessageActions = () => {
     reactToMessage,
   };
 };
+
+export { useMessageActions };

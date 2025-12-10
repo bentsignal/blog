@@ -1,15 +1,15 @@
 import {
   MAX_MESSAGE_LENGTH,
   MIN_MESSAGE_LENGTH,
-} from "@/config/message-config";
-import {
+} from "@/features/messages/config";
+import type {
   Reaction,
-  REACTION_EMOJIS,
   ReactionEmoji,
   Snapshot,
-} from "@/types/message-types";
+} from "@/features/messages/types";
+import { REACTION_EMOJIS } from "@/features/messages/types";
 
-export const validateMessage = (content: string) => {
+const validateMessage = (content: string) => {
   if (!content) return "Message cannot be empty";
   if (content.length > MAX_MESSAGE_LENGTH)
     return `Message must be less than ${MAX_MESSAGE_LENGTH} characters`;
@@ -23,12 +23,12 @@ export const validateMessage = (content: string) => {
  * @param snapshots each snapshot represents the message at a given point in time
  * @returns the message content if it exists, or null if the message has been deleted
  */
-export const getMessageContent = (snapshots: Snapshot[]) => {
+const getMessageContent = (snapshots: Snapshot[]) => {
   if (snapshots.length === 0) return null;
   return snapshots[snapshots.length - 1].content;
 };
 
-export const getReactionCounts = (reactions: Reaction[]) => {
+const getReactionCounts = (reactions: Reaction[]) => {
   return reactions.reduce(
     (acc, reaction) => {
       acc[reaction.emoji] = (acc[reaction.emoji] || 0) + 1;
@@ -38,9 +38,16 @@ export const getReactionCounts = (reactions: Reaction[]) => {
   );
 };
 
-export const getReactionsSignature = (reactions: Reaction[]) => {
+const getReactionsSignature = (reactions: Reaction[]) => {
   const reactionCounts = getReactionCounts(reactions);
   return REACTION_EMOJIS.map(
     (emoji) => `${emoji}-${reactionCounts[emoji] ?? 0}`,
   ).join("-");
+};
+
+export {
+  validateMessage,
+  getMessageContent,
+  getReactionCounts,
+  getReactionsSignature,
 };

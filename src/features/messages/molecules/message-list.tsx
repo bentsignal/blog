@@ -1,21 +1,21 @@
 "use client";
 
 import { Fragment } from "react";
-import { type EnhancedMessage } from "@/types/message-types";
-import { cn } from "@/utils/style-utils";
-import { areSameDay } from "@/utils/time-utils";
-import * as List from "@/atoms/list";
-import * as Message from "@/atoms/message";
-import * as Scroll from "@/atoms/scroll";
-import { DateMarker } from "@/molecules/date-marker";
+import * as Message from "@/features/messages/atom";
 import {
   ChainedMessage,
   ReplyMessage,
   StandardMessage,
-} from "@/molecules/messages";
+} from "@/features/messages/molecules";
+import type { EnhancedMessage } from "@/features/messages/types";
+import { cn } from "@/utils/style-utils";
+import { areSameDay } from "@/utils/time-utils";
+import * as List from "@/atoms/list";
+import * as Scroll from "@/atoms/scroll";
+import { DateMarker } from "@/molecules/date-marker";
 import { useRequiredContext } from "@/lib/context";
 
-export const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
+const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
   useRequiredContext(List.Context);
   useRequiredContext(Scroll.Context);
 
@@ -86,3 +86,5 @@ export const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
     </Scroll.Wrapper>
   );
 };
+
+export { MessageList };

@@ -3,27 +3,27 @@ import {
   ChatWindowContext,
   useChatWindow,
 } from "@/context/chat-window-context";
-import { validateMessage } from "@/utils/message-utils";
+import * as Message from "@/features/messages/atom";
+import { useMessageActions } from "@/features/messages/hooks";
+import { validateMessage } from "@/features/messages/utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as ButtonGroup from "@/atoms/button-group";
 import * as Composer from "@/atoms/composer";
-import { MessageContext, useMessage } from "@/atoms/message";
 import * as Scroll from "@/atoms/scroll";
 import { useRequiredContext } from "@/lib/context";
-import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const ReplyComposer = () => {
-  useRequiredContext(MessageContext);
+  useRequiredContext(Message.Context);
   useRequiredContext(ChatWindowContext);
 
   const hasScrollContext = useHasParentContext(Scroll.Context);
 
-  const messageId = useMessage((c) => c._id);
-  const inputRef = useMessage((c) => c.replyComposerInputRef);
-  const setInteractionState = useMessage((c) => c.setInteractionState);
-  const name = useMessage((c) => c.name);
-  const slug = useMessage((c) => c.slug);
+  const messageId = Message.useContext((c) => c._id);
+  const inputRef = Message.useContext((c) => c.replyComposerInputRef);
+  const setInteractionState = Message.useContext((c) => c.setInteractionState);
+  const name = Message.useContext((c) => c.name);
+  const slug = Message.useContext((c) => c.slug);
 
   const scrollToBottom = Scroll.useContext((c) => c.scrollToBottom);
   const chatWindowComposer = useChatWindow((c) => c.composerInputRef);

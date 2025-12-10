@@ -1,8 +1,8 @@
 import { FolderView } from "@/features/directory/molecules";
 import * as folders from "./folders";
 
-If you've worked inside a modern React project before, then you've probably seen
-something like this:
+If you clicked on this post, then chances are you've probably seen something
+like this before:
 
 <FolderView directory={folders.basicProject} />
 
@@ -287,7 +287,7 @@ import * as Message from "@/features/messages/atom";
 function UserMessage({ message }: { message: Message.Message }) {
   return (
     <Message.Provider message={message}>
-      <Message.Frame className="mt-3">
+      <Message.Container className="mt-3">
         <div className="flex gap-3">
           <Message.PFP />
           <Message.Body>
@@ -297,7 +297,7 @@ function UserMessage({ message }: { message: Message.Message }) {
           </Message.Body>
         </div>
         <Message.Actions />
-      </Message.Frame>
+      </Message.Container>
       <InlineComposer />
     </Message.Provider>
   );

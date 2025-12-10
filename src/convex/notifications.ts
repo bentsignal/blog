@@ -1,12 +1,12 @@
-import { EnhancedMessage } from "@/types/message-types";
+import type { EnhancedMessage } from "@/features/messages/types";
+import {
+  getMessageContent,
+  getReactionsSignature,
+} from "@/features/messages/utils";
 import {
   NotificationType,
   vNotificationType,
 } from "@/types/notification-types";
-import {
-  getMessageContent,
-  getReactionsSignature,
-} from "@/utils/message-utils";
 import { getTimeInMs } from "@/utils/time-utils";
 import { validate } from "convex-helpers/validators";
 import { v } from "convex/values";

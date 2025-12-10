@@ -1,15 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useChatWindow } from "@/context/chat-window-context";
+import { useState } from "react";
 import * as Auth from "@/features/auth/atom";
-import {
-  EnhancedMessage,
-  MessageInteractionState,
-  REACTION_EMOJIS,
-  ReactionEmoji,
-} from "@/types/message-types";
-import { getReactionCounts } from "@/utils/message-utils";
+import { useMessageActions } from "@/features/messages/hooks";
+import type { ReactionEmoji } from "@/features/messages/types";
+import { REACTION_EMOJIS } from "@/features/messages/types";
+import { getReactionCounts } from "@/features/messages/utils";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { cn } from "@/utils/style-utils";
 import {
@@ -20,131 +16,17 @@ import {
 import { Pencil, Reply, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./button";
-import * as ButtonGroup from "./button-group";
-import * as Shapes from "./shapes";
-import * as ToolTip from "./tooltip";
-import { createContext, useRequiredContext } from "@/lib/context";
-import { useMessageActions } from "@/hooks/use-message-actions";
+import { Button } from "../../../atoms/button";
+import * as ButtonGroup from "../../../atoms/button-group";
+import * as Shapes from "../../../atoms/shapes";
+import * as ToolTip from "../../../atoms/tooltip";
+import {
+  Context as MessageContext,
+  useContext as useMessage,
+} from "./message-context";
+import { useRequiredContext } from "@/lib/context";
 
-interface MessageContextType extends EnhancedMessage {
-  interactionState: MessageInteractionState;
-  setInteractionState: (interactionState: MessageInteractionState) => void;
-  editComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
-  replyComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
-  frameRef: React.RefObject<HTMLDivElement | null>;
-  isHovered: boolean;
-  setIsHovered: (isHovered: boolean) => void;
-}
-
-export const { Context: MessageContext, useContext: useMessage } =
-  createContext<MessageContextType>({ displayName: "MessageContext" });
-
-export const Provider = ({
-  message,
-  children,
-}: {
-  message: EnhancedMessage;
-  children: React.ReactNode;
-}) => {
-  useRequiredContext(Auth.Context);
-
-  const [isHovered, setIsHovered] = useState(false);
-  const [interactionState, setInteractionState] =
-    useState<MessageInteractionState>("idle");
-
-  const editComposerInputRef = useRef<HTMLTextAreaElement>(null);
-  const replyComposerInputRef = useRef<HTMLTextAreaElement>(null);
-
-  const myProfileId = Auth.useContext((c) => c.myProfileId);
-  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
-
-  const frameRef = useRef<HTMLDivElement>(null);
-
-  // determine if user has seen message
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const iJustRead = useChatWindow((c) => c.iJustRead);
-  useEffect(() => {
-    if (imNotSignedIn) return;
-
-    const frame = frameRef.current;
-    if (!frame) return;
-
-    const iSentThisMessage = myProfileId === message.profile;
-    if (iSentThisMessage) return;
-
-    const iHaveAlreadySeenThisMessage = message.seenBy.some(
-      (viewer) => viewer.profile === myProfileId,
-    );
-    if (iHaveAlreadySeenThisMessage) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          iJustRead(message._id);
-        }
-      },
-      { threshold: 0.1 },
-    );
-    observerRef.current = observer;
-    observer.observe(frame);
-    return () => observer.unobserve(frame);
-  }, [myProfileId, message, iJustRead, imNotSignedIn]);
-
-  const contextValue = useMemo(
-    () => ({
-      _id: message._id,
-      _creationTime: message._creationTime,
-      profile: message.profile,
-      name: message.name,
-      pfp: message.pfp,
-      username: message.username,
-      content: message.content,
-      snapshots: message.snapshots,
-      reply: message.reply,
-      slug: message.slug,
-      seenBy: message.seenBy,
-      reactions: message.reactions,
-      reactionSignature: message.reactionSignature,
-      editComposerInputRef,
-      replyComposerInputRef,
-      interactionState,
-      setInteractionState,
-      frameRef,
-      isHovered,
-      setIsHovered,
-    }),
-    [
-      message._id,
-      message._creationTime,
-      message.profile,
-      message.name,
-      message.pfp,
-      message.username,
-      message.snapshots,
-      message.reply,
-      message.slug,
-      message.seenBy,
-      message.reactions,
-      message.reactionSignature,
-      editComposerInputRef,
-      replyComposerInputRef,
-      interactionState,
-      setInteractionState,
-      message.content,
-      isHovered,
-      setIsHovered,
-    ],
-  );
-
-  return (
-    <MessageContext.Provider value={contextValue}>
-      {children}
-    </MessageContext.Provider>
-  );
-};
-
-export const Frame = ({
+const Container = ({
   className,
   children,
 }: {
@@ -175,11 +57,11 @@ export const Frame = ({
   );
 };
 
-export const Body = ({ children }: { children: React.ReactNode }) => {
+const Body = ({ children }: { children: React.ReactNode }) => {
   return <div className="flex flex-col">{children}</div>;
 };
 
-export const PFP = () => {
+const PFP = () => {
   const pfp = useMessage((c) => c.pfp);
 
   const [imageState, setImageState] = useState<"loading" | "error" | "loaded">(
@@ -207,11 +89,11 @@ export const PFP = () => {
   );
 };
 
-export const Time = ({ time }: { time: string }) => {
+const Time = ({ time }: { time: string }) => {
   return <div className="text-muted-foreground text-xxs">{time}</div>;
 };
 
-export const Header = () => {
+const Header = () => {
   const username = useMessage((c) => c.username);
   const _creationTime = useMessage((c) => c._creationTime);
   const timeStamp = isOverOneDayAgo(_creationTime)
@@ -240,7 +122,7 @@ const EditedIndicator = () => {
   );
 };
 
-export const Content = () => {
+const Content = () => {
   const content = useMessage((c) => c.content);
   const isEdited = useMessage((c) => c.snapshots.length > 1);
 
@@ -260,7 +142,7 @@ export const Content = () => {
   );
 };
 
-export const Skeleton = ({
+const Skeleton = ({
   index,
   animate = true,
 }: {
@@ -287,7 +169,7 @@ export const Skeleton = ({
   );
 };
 
-export const SideTime = () => {
+const SideTime = () => {
   const time = useMessage((c) => c._creationTime);
   return (
     <div className="invisible w-13 flex-shrink-0 group-hover/message:visible">
@@ -296,7 +178,7 @@ export const SideTime = () => {
   );
 };
 
-export const Actions = () => {
+const Actions = () => {
   useRequiredContext(Auth.Context);
   useRequiredContext(MessageContext);
 
@@ -426,7 +308,7 @@ const DeleteButton = () => {
   );
 };
 
-export const ReplyPreview = () => {
+const ReplyPreview = () => {
   const name = useMessage((c) => c.reply?.name);
   const pfp = useMessage((c) => c.reply?.pfp);
   const content = useMessage((c) => c.reply?.content);
@@ -495,7 +377,7 @@ const ReactionButtons = () => {
   });
 };
 
-export const Reactions = () => {
+const Reactions = () => {
   useRequiredContext(Auth.Context);
   useRequiredContext(MessageContext);
 
@@ -544,4 +426,17 @@ export const Reactions = () => {
         })}
     </div>
   );
+};
+
+export {
+  Container,
+  Body,
+  PFP,
+  Header,
+  Content,
+  Skeleton,
+  SideTime,
+  Actions,
+  ReplyPreview,
+  Reactions,
 };

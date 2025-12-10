@@ -4,14 +4,14 @@ import {
   useChatWindow,
 } from "@/context/chat-window-context";
 import * as Auth from "@/features/auth/atom";
-import { validateMessage } from "@/utils/message-utils";
+import { useMessageActions } from "@/features/messages/hooks";
+import { validateMessage } from "@/features/messages/utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as Composer from "@/atoms/composer";
 import * as Scroll from "@/atoms/scroll";
 import { ChannelContext, useChannel } from "@/molecules/channel-page";
 import { useRequiredContext } from "@/lib/context";
-import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const ChannelComposer = () => {
   useRequiredContext(ChannelContext);

@@ -1,11 +1,11 @@
-import { MessageContext, useMessage } from "@/atoms/message";
+import * as Message from "@/features/messages/atom";
 import { EditComposer, ReplyComposer } from "@/molecules/composers";
 import { useRequiredContext } from "@/lib/context";
 
 export const InlineComposer = () => {
-  useRequiredContext(MessageContext);
+  useRequiredContext(Message.Context);
 
-  const interactionState = useMessage((c) => c.interactionState);
+  const interactionState = Message.useContext((c) => c.interactionState);
 
   if (interactionState === "replying") {
     return <ReplyComposer />;

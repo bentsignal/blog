@@ -1,13 +1,13 @@
 import { memo } from "react";
-import { EnhancedMessage } from "@/types/message-types";
-import * as Message from "@/atoms/message";
+import * as Message from "@/features/messages/atom";
+import type { EnhancedMessage } from "@/features/messages/types";
 import { InlineComposer } from "@/molecules/composers";
 
-export const ReplyMessage = memo(
+const ReplyMessage = memo(
   ({ message }: { message: EnhancedMessage }) => {
     return (
       <Message.Provider message={message}>
-        <Message.Frame className="mt-3">
+        <Message.Container className="mt-3">
           <div className="flex flex-col">
             <Message.ReplyPreview />
             <div className="flex gap-3">
@@ -20,7 +20,7 @@ export const ReplyMessage = memo(
             </div>
           </div>
           <Message.Actions />
-        </Message.Frame>
+        </Message.Container>
         <InlineComposer />
       </Message.Provider>
     );
@@ -39,3 +39,5 @@ export const ReplyMessage = memo(
     return true;
   },
 );
+
+export { ReplyMessage };

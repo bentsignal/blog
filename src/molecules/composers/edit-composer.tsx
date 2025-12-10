@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { validateMessage } from "@/utils/message-utils";
+import * as Message from "@/features/messages/atom";
+import { useMessageActions } from "@/features/messages/hooks";
+import { validateMessage } from "@/features/messages/utils";
 import { toast } from "sonner";
 import * as ButtonGroup from "@/atoms/button-group";
 import * as Composer from "@/atoms/composer";
-import { MessageContext, useMessage } from "@/atoms/message";
 import { useRequiredContext } from "@/lib/context";
-import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const EditComposer = () => {
-  useRequiredContext(MessageContext);
+  useRequiredContext(Message.Context);
 
-  const messageId = useMessage((c) => c._id);
-  const inputRef = useMessage((c) => c.editComposerInputRef);
-  const setInteractionState = useMessage((c) => c.setInteractionState);
-  const previousContent = useMessage(
+  const messageId = Message.useContext((c) => c._id);
+  const inputRef = Message.useContext((c) => c.editComposerInputRef);
+  const setInteractionState = Message.useContext((c) => c.setInteractionState);
+  const previousContent = Message.useContext(
     (c) => c.snapshots[c.snapshots.length - 1].content,
   );
 

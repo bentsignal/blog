@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
+import * as Auth from "@/features/auth/atom";
 import {
   MAX_MESSAGE_LENGTH,
   MIN_MESSAGE_LENGTH,
-} from "@/config/message-config";
-import * as Auth from "@/features/auth/atom";
-import { validateMessage } from "@/utils/message-utils";
+} from "@/features/messages/config";
+import { validateMessage } from "@/features/messages/utils";
 import { cn } from "@/utils/style-utils";
 import * as Icons from "lucide-react";
 import * as ToolTip from "./tooltip";

@@ -32,12 +32,11 @@ const vReaction = v.object({
 
 type Reaction = Infer<typeof vReaction>;
 
-export {
-  type EnhancedMessage,
-  type MessageInteractionState,
-  type Snapshot,
-  type Reaction,
-  type ReactionEmoji,
+export type {
+  EnhancedMessage,
+  MessageInteractionState,
+  Snapshot,
+  Reaction,
+  ReactionEmoji,
 };
-export { REACTION_EMOJIS };
-export { vSnapshot, vReactionEmoji, vReaction };
+export { REACTION_EMOJIS, vSnapshot, vReactionEmoji, vReaction };
