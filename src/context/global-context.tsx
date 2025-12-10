@@ -1,6 +1,6 @@
 import { Provider as ChatWindowProvider } from "@/context/chat-window-context";
 import { Provider as ConvexProvider } from "@/context/convex-context";
-import { Provider as AuthProvider } from "@/features/auth";
+import * as Auth from "@/features/auth/atom";
 import { getServersideToken } from "@/features/auth/lib/auth-server";
 import { cookies, headers } from "next/headers";
 import * as Sidebar from "@/atoms/sidebar";
@@ -21,9 +21,16 @@ export const Providers = async ({
   const token = await getServersideToken();
   const authed = token !== undefined;
 
+  const shouldShowSidebar =
+    sidebarCookie?.value === undefined
+      ? true
+      : sidebarCookie.value === "true"
+        ? true
+        : false;
+
   return (
     <ConvexProvider>
-      <AuthProvider isAuthenticatedServerSide={authed}>
+      <Auth.Provider isAuthenticatedServerSide={authed}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -31,12 +38,12 @@ export const Providers = async ({
           themeCookieValue={themeCookie?.value}
         >
           <ChatWindowProvider slugFromHeaders={slug}>
-            <Sidebar.Provider defaultOpen={sidebarCookie?.value === "true"}>
+            <Sidebar.Provider defaultOpen={shouldShowSidebar}>
               {children}
             </Sidebar.Provider>
           </ChatWindowProvider>
         </ThemeProvider>
-      </AuthProvider>
+      </Auth.Provider>
     </ConvexProvider>
   );
 };

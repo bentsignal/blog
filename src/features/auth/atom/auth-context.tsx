@@ -6,10 +6,10 @@ import { Id } from "@/convex/_generated/dataModel";
 import { useConvexAuth, useQuery } from "convex/react";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
-import { client as authClient } from "./lib";
+import { authClient } from "../lib/auth-client";
 import { createContext } from "@/lib/context";
 
-export const { Context: AuthContext, useContext: useAuth } = createContext<{
+const { Context, useContext } = createContext<{
   image: string | null | undefined;
   name: string | undefined;
   username: string | undefined;
@@ -21,7 +21,7 @@ export const { Context: AuthContext, useContext: useAuth } = createContext<{
   deleteAccount: () => Promise<void>;
 }>({ displayName: "AuthContext" });
 
-export const Provider = ({
+const Provider = ({
   isAuthenticatedServerSide,
   children,
 }: {
@@ -125,7 +125,7 @@ export const Provider = ({
     ],
   );
 
-  return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-  );
+  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };
+
+export { Provider, Context, useContext };

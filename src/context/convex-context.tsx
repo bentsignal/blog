@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { env } from "@/env";
-import * as Auth from "@/features/auth";
+import { authClient } from "@/features/auth/lib/auth-client";
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -24,7 +24,7 @@ convexQueryClient.connect(queryClient);
 
 export const Provider = ({ children }: { children: ReactNode }) => {
   return (
-    <ConvexBetterAuthProvider client={convex} authClient={Auth.client}>
+    <ConvexBetterAuthProvider client={convex} authClient={authClient}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </ConvexBetterAuthProvider>
   );

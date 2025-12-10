@@ -5,8 +5,7 @@ import {
   MAX_MESSAGE_LENGTH,
   MIN_MESSAGE_LENGTH,
 } from "@/config/message-config";
-import { useAuth } from "@/features/auth";
-import * as Auth from "@/features/auth";
+import * as Auth from "@/features/auth/atom";
 import { validateMessage } from "@/utils/message-utils";
 import { cn } from "@/utils/style-utils";
 import * as Icons from "lucide-react";
@@ -90,7 +89,7 @@ export const Input = ({
   const onSubmit = useComposer((c) => c.onSubmit);
   const submitDisabled = useComposer((c) => c.submitDisabled);
   const onCancel = useComposer((c) => c.onCancel);
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
 
   useEffect(() => {
     const textarea = inputRef.current;
@@ -149,7 +148,7 @@ export const Send = () => {
 
   const onSubmit = useComposer((c) => c.onSubmit);
   const submitDisabled = useComposer((c) => c.inputValue.trim() === "");
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
 
   if (imNotSignedIn) return <Auth.JoinButton />;
 

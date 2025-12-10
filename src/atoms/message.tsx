@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChatWindow } from "@/context/chat-window-context";
-import { useAuth } from "@/features/auth";
+import * as Auth from "@/features/auth/atom";
 import {
   EnhancedMessage,
   MessageInteractionState,
@@ -24,7 +24,7 @@ import { Button } from "./button";
 import * as ButtonGroup from "./button-group";
 import * as Shapes from "./shapes";
 import * as ToolTip from "./tooltip";
-import { createContext } from "@/lib/context";
+import { createContext, useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 interface MessageContextType extends EnhancedMessage {
@@ -47,6 +47,8 @@ export const Provider = ({
   message: EnhancedMessage;
   children: React.ReactNode;
 }) => {
+  useRequiredContext(Auth.Context);
+
   const [isHovered, setIsHovered] = useState(false);
   const [interactionState, setInteractionState] =
     useState<MessageInteractionState>("idle");
@@ -54,8 +56,8 @@ export const Provider = ({
   const editComposerInputRef = useRef<HTMLTextAreaElement>(null);
   const replyComposerInputRef = useRef<HTMLTextAreaElement>(null);
 
-  const myProfileId = useAuth((c) => c.myProfileId);
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+  const myProfileId = Auth.useContext((c) => c.myProfileId);
+  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
 
   const frameRef = useRef<HTMLDivElement>(null);
 
@@ -295,9 +297,12 @@ export const SideTime = () => {
 };
 
 export const Actions = () => {
+  useRequiredContext(Auth.Context);
+  useRequiredContext(MessageContext);
+
   const isNotBeingHovered = useMessage((c) => !c.isHovered);
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
-  const myProfileId = useAuth((c) => c.myProfileId);
+  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
+  const myProfileId = Auth.useContext((c) => c.myProfileId);
   const messageProfileId = useMessage((c) => c.profile);
   const messageIsDeleted = useMessage((c) => c.content === null);
 
@@ -455,12 +460,15 @@ export const ReplyPreview = () => {
 };
 
 const ReactionButtons = () => {
-  const { reactToMessage } = useMessageActions();
+  useRequiredContext(Auth.Context);
+  useRequiredContext(MessageContext);
+
   const reactions = useMessage((c) => c.reactions);
   const messageId = useMessage((c) => c._id);
-  const myProfileId = useAuth((c) => c.myProfileId);
+  const myProfileId = Auth.useContext((c) => c.myProfileId);
+  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
 
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+  const { reactToMessage } = useMessageActions();
 
   if (imNotSignedIn) return null;
 
@@ -488,14 +496,17 @@ const ReactionButtons = () => {
 };
 
 export const Reactions = () => {
-  const { reactToMessage } = useMessageActions();
+  useRequiredContext(Auth.Context);
+  useRequiredContext(MessageContext);
 
   const messageId = useMessage((c) => c._id);
   const reactions = useMessage((c) => c.reactions);
 
-  const myProfileId = useAuth((c) => c.myProfileId);
-  const imSignedIn = useAuth((c) => c.imSignedIn);
+  const myProfileId = Auth.useContext((c) => c.myProfileId);
+  const imSignedIn = Auth.useContext((c) => c.imSignedIn);
   const imNotSignedIn = !imSignedIn;
+
+  const { reactToMessage } = useMessageActions();
 
   if (reactions.length === 0) return null;
 

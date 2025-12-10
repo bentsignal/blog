@@ -2,7 +2,7 @@
 
 import { LogIn, LogOut, UserRoundX } from "lucide-react";
 import { useTheme } from "next-themes";
-import { AuthContext, useAuth } from "./auth-context";
+import { Context as AuthContext, useContext as useAuth } from "./auth-context";
 import { Button } from "@/atoms/button";
 import * as Icons from "@/atoms/icon";
 import { Spinner } from "@/atoms/spinner";

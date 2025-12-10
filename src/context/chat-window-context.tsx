@@ -3,9 +3,9 @@
 import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { type ChannelSlug } from "@/data/channels";
-import { useAuth } from "@/features/auth";
+import * as Auth from "@/features/auth/atom";
 import { findChannelWithSlug } from "@/utils/slug-utils";
-import { createContext } from "@/lib/context";
+import { createContext, useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const { Context: ChatWindowContext, useContext: useChatWindow } =
@@ -23,12 +23,14 @@ export const Provider = ({
   slugFromHeaders: string | null;
   children: React.ReactNode;
 }) => {
+  useRequiredContext(Auth.Context);
+
   const validatedSlug = findChannelWithSlug(slugFromHeaders);
   const [currentChannelSlug, setCurrentChannelSlug] = useState(validatedSlug);
   const composerInputRef = useRef<HTMLTextAreaElement>(null);
 
   const { markAsRead } = useMessageActions();
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
 
   // periodically check if the user has read new messages, if so mark them as read
   const intervalTime = 1000 * 5; // check every 5 seconds

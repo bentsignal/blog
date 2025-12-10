@@ -1,6 +1,6 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { AuthContext, useAuth } from "@/features/auth";
+import * as Auth from "@/features/auth/atom";
 import { getReactionsSignature } from "@/utils/message-utils";
 import { useConvexMutation } from "@convex-dev/react-query";
 import { useMutation } from "@tanstack/react-query";
@@ -8,12 +8,12 @@ import { toast } from "sonner";
 import { useRequiredContext } from "@/lib/context";
 
 export const useMessageActions = () => {
-  useRequiredContext(AuthContext);
+  useRequiredContext(Auth.Context);
 
-  const image = useAuth((c) => c.image);
-  const name = useAuth((c) => c.name);
-  const username = useAuth((c) => c.username);
-  const myProfileId = useAuth((c) => c.myProfileId);
+  const image = Auth.useContext((c) => c.image);
+  const name = Auth.useContext((c) => c.name);
+  const username = Auth.useContext((c) => c.username);
+  const myProfileId = Auth.useContext((c) => c.myProfileId);
 
   const toastError = (error: Error) => {
     console.error(error);

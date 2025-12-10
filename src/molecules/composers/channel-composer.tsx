@@ -3,7 +3,7 @@ import {
   ChatWindowContext,
   useChatWindow,
 } from "@/context/chat-window-context";
-import { AuthContext, useAuth } from "@/features/auth";
+import * as Auth from "@/features/auth/atom";
 import { validateMessage } from "@/utils/message-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
@@ -16,7 +16,7 @@ import { useMessageActions } from "@/hooks/use-message-actions";
 export const ChannelComposer = () => {
   useRequiredContext(ChannelContext);
   useRequiredContext(ChatWindowContext);
-  useRequiredContext(AuthContext);
+  useRequiredContext(Auth.Context);
 
   const hasScrollContext = useHasParentContext(Scroll.Context);
 
@@ -24,8 +24,8 @@ export const ChannelComposer = () => {
 
   const slug = useChannel((c) => c.slug);
   const composerInputRef = useChatWindow((c) => c.composerInputRef);
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
-  const signIn = useAuth((c) => c.signIn);
+  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
+  const signIn = Auth.useContext((c) => c.signIn);
   const scrollToBottom = Scroll.useContext((c) => c.scrollToBottom);
 
   const { sendMessage } = useMessageActions();
