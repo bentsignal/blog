@@ -1,8 +1,8 @@
 "use client";
 
 import { Fragment } from "react";
-import { type EnhancedMessage } from "@/features/messages/atom";
 import * as Message from "@/features/messages/atom";
+import { type EnhancedMessage } from "@/features/messages/types";
 import { cn } from "@/utils/style-utils";
 import { areSameDay } from "@/utils/time-utils";
 import { ChainedMessage, ReplyMessage, StandardMessage } from "./variants";
@@ -12,7 +12,8 @@ import { DateMarker } from "@/molecules/date-marker";
 import { useRequiredContext } from "@/lib/context";
 
 const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
-  useRequiredContext([List.ListContext, Scroll.ScrollContext]);
+  useRequiredContext(List.Context);
+  useRequiredContext(Scroll.Context);
 
   if (messages.length === 0) {
     return (

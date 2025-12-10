@@ -8,33 +8,28 @@ import {
   useHasParentContext,
 } from "@fluentui/react-context-selector";
 
-export const createContext = <T extends object>({
+const createContext = <T extends object>({
   displayName,
 }: {
   displayName: string;
 }) => {
   const Context = createSelectorContext<T>({} as T);
   Context.displayName = displayName;
-  const useContext = <U>(selector: ContextSelector<T, U>) =>
+  const use = <U>(selector: ContextSelector<T, U>) =>
     useContextSelector(Context, selector);
   return {
     Context,
-    useContext,
+    use,
   };
 };
 
-export const useRequiredContext = (contexts: Context<any> | Context<any>[]) => {
-  if (Array.isArray(contexts)) {
-    contexts.forEach((context) => useVerifyContextExistsInTree(context));
-  } else {
-    useVerifyContextExistsInTree(contexts);
+const useRequiredContext = (context: Context<any>) => {
+  const hasContext = useHasParentContext(context);
+  if (!hasContext) {
+    throw new Error(
+      `${context?.displayName || "Unknown Context"} is required but not found.`,
+    );
   }
 };
 
-const useVerifyContextExistsInTree = (context: Context<any>) => {
-  const hasContext = useHasParentContext(context);
-  if (!hasContext) {
-    const contextName = context.displayName || "Unknown Context";
-    throw new Error(`${contextName} is required but not found.`);
-  }
-};
+export { createContext, useRequiredContext };

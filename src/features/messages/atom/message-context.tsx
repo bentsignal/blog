@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useChatWindow } from "@/context/chat-window-context";
-import { useAuth } from "@/features/auth";
-import { EnhancedMessage, MessageInteractionState } from "./message-types";
-import { createContext } from "@/lib/context";
+import * as Auth from "@/features/auth/atom";
+import * as Chat from "@/features/chat/atom";
+import {
+  EnhancedMessage,
+  MessageInteractionState,
+} from "../types/message-types";
+import { createContext, useRequiredContext } from "@/lib/context";
 
 interface MessageContextType extends EnhancedMessage {
   interactionState: MessageInteractionState;
@@ -16,8 +19,9 @@ interface MessageContextType extends EnhancedMessage {
   setIsHovered: (isHovered: boolean) => void;
 }
 
-const { Context: MessageContext, useContext: useMessage } =
-  createContext<MessageContextType>({ displayName: "MessageContext" });
+const { Context, use } = createContext<MessageContextType>({
+  displayName: "MessageContext",
+});
 
 const Provider = ({
   message,
@@ -26,6 +30,9 @@ const Provider = ({
   message: EnhancedMessage;
   children: React.ReactNode;
 }) => {
+  useRequiredContext(Auth.Context);
+  useRequiredContext(Chat.Context);
+
   const [isHovered, setIsHovered] = useState(false);
   const [interactionState, setInteractionState] =
     useState<MessageInteractionState>("idle");
@@ -33,14 +40,14 @@ const Provider = ({
   const editComposerInputRef = useRef<HTMLTextAreaElement>(null);
   const replyComposerInputRef = useRef<HTMLTextAreaElement>(null);
 
-  const myProfileId = useAuth((c) => c.myProfileId);
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+  const myProfileId = Auth.use((c) => c.myProfileId);
+  const imNotSignedIn = Auth.use((c) => !c.imSignedIn);
 
   const frameRef = useRef<HTMLDivElement>(null);
 
   // determine if user has seen message
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const iJustRead = useChatWindow((c) => c.iJustRead);
+  const iJustRead = Chat.use((c) => c.iJustRead);
   useEffect(() => {
     if (imNotSignedIn) return;
 
@@ -114,11 +121,7 @@ const Provider = ({
     ],
   );
 
-  return (
-    <MessageContext.Provider value={contextValue}>
-      {children}
-    </MessageContext.Provider>
-  );
+  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };
 
-export { Provider, MessageContext, useMessage };
+export { Provider, Context, use };

@@ -8,19 +8,12 @@ export interface Post {
 }
 
 export const posts = {
-  // "organizing-react-projects": {
-  //   title: "How should we organize our React projects?",
-  //   description:
-  //     "A guide on thinking through how we should manage the code, filers, and folders in our React projects.",
-  //   datePosted: new Date("2025-11-24"),
-  //   readingTimeInMinutes: 1,
-  // },
-  "under-construction": {
-    title: "Under Construction",
+  "organizing-react-projects": {
+    title: "How should we organize our React projects?",
     description:
-      "This post is still under construction. It will be updated soon.",
-    datePosted: new Date("2025-12-01"),
-    readingTimeInMinutes: 0,
+      "A guide on thinking through how we should manage the code, filers, and folders in our React projects.",
+    datePosted: new Date("2025-12-02"),
+    readingTimeInMinutes: 10,
   },
 } as const satisfies Partial<Record<Slug, Post>>;
 

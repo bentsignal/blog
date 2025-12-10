@@ -4,7 +4,7 @@ import { ReactNode, useState } from "react";
 import { type Language } from "@/features/code/languages";
 import { createContext } from "@/lib/context";
 
-export const { Context: CodeContext, useContext: useCode } = createContext<{
+const { Context, use } = createContext<{
   code: string;
   language: Language;
   showLineNumbers: boolean;
@@ -13,7 +13,7 @@ export const { Context: CodeContext, useContext: useCode } = createContext<{
   toggleLineWrapping: () => void;
 }>({ displayName: "CodeContext" });
 
-export function Provider({
+const Provider = ({
   code,
   language,
   children,
@@ -21,7 +21,7 @@ export function Provider({
   code: string;
   language: Language;
   children: ReactNode;
-}) {
+}) => {
   const [showLineNumbers, setShowLineNumbers] = useState(false);
   const [wrapLines, setWrapLines] = useState(true);
 
@@ -39,7 +39,7 @@ export function Provider({
 
   if (!children) return null;
 
-  return (
-    <CodeContext.Provider value={contextValue}>{children}</CodeContext.Provider>
-  );
-}
+  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
+};
+
+export { Provider, Context, use };

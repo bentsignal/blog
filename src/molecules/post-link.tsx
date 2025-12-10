@@ -1,9 +1,10 @@
 "use client";
 
-import { useChatWindow } from "@/context/chat-window-context";
 import { PostSlug } from "@/data/posts";
+import * as Chat from "@/features/chat/atom";
 import { findChannelWithSlug } from "@/utils/slug-utils";
 import Link from "next/link";
+import { useRequiredContext } from "@/lib/context";
 
 export default function PostLink({
   slug,
@@ -12,7 +13,9 @@ export default function PostLink({
   slug: PostSlug;
   children: React.ReactNode;
 }) {
-  const setCurrentChannelSlug = useChatWindow((c) => c.setCurrentChannelSlug);
+  useRequiredContext(Chat.Context);
+
+  const setCurrentChannelSlug = Chat.use((c) => c.setCurrentChannelSlug);
 
   return (
     <Link

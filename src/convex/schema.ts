@@ -1,5 +1,5 @@
 import { vSlug } from "@/data/slugs";
-import { vReaction, vSnapshot } from "@/types/message-types";
+import { vReaction, vSnapshot } from "@/features/messages/types";
 import { vNotificationSettings } from "@/types/notification-types";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";

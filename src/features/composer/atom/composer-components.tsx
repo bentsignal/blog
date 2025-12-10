@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAuth } from "@/features/auth";
-import * as Auth from "@/features/auth";
+import * as Auth from "@/features/auth/atom";
 import {
   MAX_MESSAGE_LENGTH,
   MIN_MESSAGE_LENGTH,
-} from "@/features/messages/atom";
+} from "@/features/messages/config";
 import { cn } from "@/utils/style-utils";
 import * as Icons from "lucide-react";
-import { ComposerContext, useComposer } from "./composer-context";
+import {
+  Context as ComposerContext,
+  use as useComposer,
+} from "./composer-context";
 import { Button } from "@/atoms/button";
 import * as ToolTip from "@/atoms/tooltip";
 import { useRequiredContext } from "@/lib/context";
@@ -48,7 +50,7 @@ const Input = ({
   const onSubmit = useComposer((c) => c.onSubmit);
   const submitDisabled = useComposer((c) => c.submitDisabled);
   const onCancel = useComposer((c) => c.onCancel);
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+  const imNotSignedIn = Auth.use((c) => !c.imSignedIn);
 
   useEffect(() => {
     const textarea = inputRef.current;
@@ -107,7 +109,7 @@ const Send = () => {
 
   const onSubmit = useComposer((c) => c.onSubmit);
   const submitDisabled = useComposer((c) => c.inputValue.trim() === "");
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+  const imNotSignedIn = Auth.use((c) => !c.imSignedIn);
 
   if (imNotSignedIn) return <Auth.JoinButton />;
 

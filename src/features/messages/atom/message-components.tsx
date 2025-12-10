@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/features/auth";
-import { useMessageActions } from "@/features/messages/hooks";
+import * as Auth from "@/features/auth/atom";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { cn } from "@/utils/style-utils";
 import {
@@ -13,9 +12,13 @@ import {
 import { Pencil, Reply, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { MessageContext, useMessage } from "./message-context";
-import { REACTION_EMOJIS, ReactionEmoji } from "./message-types";
-import { getReactionCounts } from "./message-utils";
+import { useMessageActions } from "../hooks";
+import { REACTION_EMOJIS, type ReactionEmoji } from "../types";
+import { getReactionCounts } from "../utils";
+import {
+  Context as MessageContext,
+  use as useMessage,
+} from "./message-context";
 import { Button } from "@/atoms/button";
 import * as ButtonGroup from "@/atoms/button-group";
 import * as Shapes from "@/atoms/shapes";
@@ -185,10 +188,11 @@ const SideTime = () => {
 
 const Actions = () => {
   useRequiredContext(MessageContext);
+  useRequiredContext(Auth.Context);
 
   const isNotBeingHovered = useMessage((c) => !c.isHovered);
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
-  const myProfileId = useAuth((c) => c.myProfileId);
+  const imNotSignedIn = Auth.use((c) => !c.imSignedIn);
+  const myProfileId = Auth.use((c) => c.myProfileId);
   const messageProfileId = useMessage((c) => c.profile);
   const messageIsDeleted = useMessage((c) => c.content === null);
 
@@ -352,13 +356,14 @@ const ReplyPreview = () => {
 
 const ReactionButtons = () => {
   useRequiredContext(MessageContext);
+  useRequiredContext(Auth.Context);
 
   const { reactToMessage } = useMessageActions();
   const reactions = useMessage((c) => c.reactions);
   const messageId = useMessage((c) => c._id);
-  const myProfileId = useAuth((c) => c.myProfileId);
+  const myProfileId = Auth.use((c) => c.myProfileId);
 
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
+  const imNotSignedIn = Auth.use((c) => !c.imSignedIn);
 
   if (imNotSignedIn) return null;
 
@@ -387,14 +392,15 @@ const ReactionButtons = () => {
 
 const Reactions = () => {
   useRequiredContext(MessageContext);
+  useRequiredContext(Auth.Context);
 
   const { reactToMessage } = useMessageActions();
 
   const messageId = useMessage((c) => c._id);
   const reactions = useMessage((c) => c.reactions);
 
-  const myProfileId = useAuth((c) => c.myProfileId);
-  const imSignedIn = useAuth((c) => c.imSignedIn);
+  const myProfileId = Auth.use((c) => c.myProfileId);
+  const imSignedIn = Auth.use((c) => c.imSignedIn);
   const imNotSignedIn = !imSignedIn;
 
   if (reactions.length === 0) return null;

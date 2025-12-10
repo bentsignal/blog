@@ -1,33 +1,29 @@
 import { useState } from "react";
-import {
-  ChatWindowContext,
-  useChatWindow,
-} from "@/context/chat-window-context";
+import * as Chat from "@/features/chat/atom";
 import * as Composer from "@/features/composer/atom";
-import {
-  MessageContext,
-  useMessage,
-  validateMessage,
-} from "@/features/messages/atom";
+import * as Message from "@/features/messages/atom";
 import { useMessageActions } from "@/features/messages/hooks";
+import { validateMessage } from "@/features/messages/utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as ButtonGroup from "@/atoms/button-group";
-import { ScrollContext, useScroll } from "@/atoms/scroll";
+import * as Scroll from "@/atoms/scroll";
 import { useRequiredContext } from "@/lib/context";
 
 const ReplyComposer = () => {
-  useRequiredContext([MessageContext, ChatWindowContext]);
-  const hasScrollContext = useHasParentContext(ScrollContext);
+  useRequiredContext(Message.Context);
+  useRequiredContext(Chat.Context);
 
-  const messageId = useMessage((c) => c._id);
-  const inputRef = useMessage((c) => c.replyComposerInputRef);
-  const setInteractionState = useMessage((c) => c.setInteractionState);
-  const name = useMessage((c) => c.name);
-  const slug = useMessage((c) => c.slug);
+  const hasScrollContext = useHasParentContext(Scroll.Context);
 
-  const scrollToBottom = useScroll((c) => c.scrollToBottom);
-  const chatWindowComposer = useChatWindow((c) => c.composerInputRef);
+  const messageId = Message.use((c) => c._id);
+  const inputRef = Message.use((c) => c.replyComposerInputRef);
+  const setInteractionState = Message.use((c) => c.setInteractionState);
+  const name = Message.use((c) => c.name);
+  const slug = Message.use((c) => c.slug);
+
+  const scrollToBottom = Scroll.use((c) => c.scrollToBottom);
+  const chatWindowComposer = Chat.use((c) => c.composerInputRef);
 
   const [inputValue, setInputValue] = useState("");
   const { sendMessage } = useMessageActions();

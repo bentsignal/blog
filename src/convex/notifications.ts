@@ -1,8 +1,8 @@
+import { type EnhancedMessage } from "@/features/messages/types";
 import {
   getMessageContent,
   getReactionsSignature,
-  type EnhancedMessage,
-} from "@/features/messages/atom";
+} from "@/features/messages/utils";
 import {
   NotificationType,
   vNotificationType,

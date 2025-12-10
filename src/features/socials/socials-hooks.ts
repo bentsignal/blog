@@ -1,11 +1,11 @@
 "use client";
 
-import { ThemeContext, useTheme } from "@/atoms/theme";
+import * as Theme from "@/atoms/theme";
 import { useRequiredContext } from "@/lib/context";
 
 const useThemeColor = () => {
-  useRequiredContext(ThemeContext);
-  const theme = useTheme((c) => c.theme);
+  useRequiredContext(Theme.Context);
+  const theme = Theme.use((c) => c.theme);
   return theme === "light" ? "black" : "white";
 };
 

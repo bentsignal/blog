@@ -1,15 +1,15 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import type { FolderType } from "./directory-types";
+import type { FolderType } from "../types";
 import {
   closeAllFolders,
   openAllFolders,
   openOrCloseOneFolder,
-} from "./directory-utils";
+} from "../utils";
 import { createContext } from "@/lib/context";
 
-const { Context: DirectoryContext, useContext: useDirectory } = createContext<{
+const { Context, use } = createContext<{
   root: FolderType;
   openOrCloseFolder: (path: Array<string>, newValue: "open" | "closed") => void;
   openAll: () => void;
@@ -49,11 +49,7 @@ const Provider = ({
 
   const contextValue = { root, openOrCloseFolder, openAll, closeAll };
 
-  return (
-    <DirectoryContext.Provider value={contextValue}>
-      {children}
-    </DirectoryContext.Provider>
-  );
+  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };
 
-export { DirectoryContext, useDirectory, Provider };
+export { Context, use, Provider };

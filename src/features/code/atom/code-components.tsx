@@ -14,7 +14,7 @@ import {
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
 import { useCodeTheme } from "../hooks/use-code-theme";
-import { CodeContext, useCode } from "./code-context";
+import { Context as CodeContext, use as useCode } from "./code-context";
 import { Button } from "@/atoms/button";
 import * as Tooltip from "@/atoms/tooltip";
 import { useRequiredContext } from "@/lib/context";

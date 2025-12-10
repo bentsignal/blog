@@ -1,9 +1,10 @@
 import { memo } from "react";
 import { InlineComposer } from "@/features/composer/molecules";
 import * as Message from "@/features/messages/atom";
+import { type EnhancedMessage } from "@/features/messages/types";
 
 export const StandardMessage = memo(
-  ({ message }: { message: Message.EnhancedMessage }) => {
+  ({ message }: { message: EnhancedMessage }) => {
     return (
       <Message.Provider message={message}>
         <Message.Frame className="mt-3">

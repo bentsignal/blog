@@ -1,6 +1,6 @@
 "use client";
 
-import { validateMessage } from "@/features/messages/atom";
+import { validateMessage } from "@/features/messages/utils";
 import { createContext } from "@/lib/context";
 
 interface ComposerInputProps {
@@ -15,8 +15,9 @@ interface ComposerContextType extends ComposerInputProps {
   submitDisabled: boolean;
 }
 
-const { Context: ComposerContext, useContext: useComposer } =
-  createContext<ComposerContextType>({ displayName: "ComposerContext" });
+const { Context, use } = createContext<ComposerContextType>({
+  displayName: "ComposerContext",
+});
 
 const Provider = ({
   onSubmit,
@@ -38,11 +39,7 @@ const Provider = ({
     submitDisabled,
   };
 
-  return (
-    <ComposerContext.Provider value={contextValue}>
-      {children}
-    </ComposerContext.Provider>
-  );
+  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };
 
-export { Provider, ComposerContext, useComposer };
+export { Provider, Context, use };
