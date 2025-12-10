@@ -14,7 +14,10 @@ import { useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const ChannelComposer = () => {
-  useRequiredContext([ChannelContext, ChatWindowContext, AuthContext]);
+  useRequiredContext(ChannelContext);
+  useRequiredContext(ChatWindowContext);
+  useRequiredContext(AuthContext);
+
   const hasScrollContext = useHasParentContext(ScrollContext);
 
   const [inputValue, setInputValue] = useState("");

@@ -14,7 +14,9 @@ import { useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const ReplyComposer = () => {
-  useRequiredContext([MessageContext, ChatWindowContext]);
+  useRequiredContext(MessageContext);
+  useRequiredContext(ChatWindowContext);
+
   const hasScrollContext = useHasParentContext(ScrollContext);
 
   const messageId = useMessage((c) => c._id);
