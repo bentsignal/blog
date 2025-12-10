@@ -4,16 +4,16 @@ import {
   useChatWindow,
 } from "@/context/chat-window-context";
 import * as Auth from "@/features/auth/atom";
+import * as Composer from "@/features/composer/atom";
 import { useMessageActions } from "@/features/messages/hooks";
 import { validateMessage } from "@/features/messages/utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
-import * as Composer from "@/atoms/composer";
 import * as Scroll from "@/atoms/scroll";
 import { ChannelContext, useChannel } from "@/molecules/channel-page";
 import { useRequiredContext } from "@/lib/context";
 
-export const ChannelComposer = () => {
+const ChannelComposer = () => {
   useRequiredContext(ChannelContext);
   useRequiredContext(ChatWindowContext);
   useRequiredContext(Auth.Context);
@@ -68,3 +68,5 @@ export const ChannelComposer = () => {
     </Composer.Provider>
   );
 };
+
+export { ChannelComposer };

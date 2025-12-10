@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useChatWindow } from "@/context/chat-window-context";
 import { api } from "@/convex/_generated/api";
 import { channels, type Channel, type ChannelSlug } from "@/data/channels";
+import { ChannelComposer } from "@/features/composer/molecules";
 import * as Message from "@/features/messages/atom";
 import { MessageList } from "@/features/messages/molecules";
 import type { EnhancedMessage } from "@/features/messages/types";
@@ -11,7 +12,6 @@ import { PaginationStatus, usePaginatedQuery } from "convex/react";
 import { ChevronLeft } from "lucide-react";
 import * as List from "@/atoms/list";
 import * as Scroll from "@/atoms/scroll";
-import { ChannelComposer } from "@/molecules/composers";
 import { TopControls } from "@/molecules/top-controls";
 import { createContext } from "@/lib/context";
 

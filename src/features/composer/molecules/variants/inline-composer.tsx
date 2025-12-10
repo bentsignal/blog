@@ -1,8 +1,9 @@
 import * as Message from "@/features/messages/atom";
-import { EditComposer, ReplyComposer } from "@/molecules/composers";
+import { EditComposer } from "./edit-composer";
+import { ReplyComposer } from "./reply-composer";
 import { useRequiredContext } from "@/lib/context";
 
-export const InlineComposer = () => {
+const InlineComposer = () => {
   useRequiredContext(Message.Context);
 
   const interactionState = Message.useContext((c) => c.interactionState);
@@ -15,3 +16,5 @@ export const InlineComposer = () => {
   }
   return null;
 };
+
+export { InlineComposer };

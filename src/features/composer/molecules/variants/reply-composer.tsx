@@ -3,17 +3,17 @@ import {
   ChatWindowContext,
   useChatWindow,
 } from "@/context/chat-window-context";
+import * as Composer from "@/features/composer/atom";
 import * as Message from "@/features/messages/atom";
 import { useMessageActions } from "@/features/messages/hooks";
 import { validateMessage } from "@/features/messages/utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as ButtonGroup from "@/atoms/button-group";
-import * as Composer from "@/atoms/composer";
 import * as Scroll from "@/atoms/scroll";
 import { useRequiredContext } from "@/lib/context";
 
-export const ReplyComposer = () => {
+const ReplyComposer = () => {
   useRequiredContext(Message.Context);
   useRequiredContext(ChatWindowContext);
 
@@ -71,3 +71,5 @@ export const ReplyComposer = () => {
     </Composer.Provider>
   );
 };
+
+export { ReplyComposer };
