@@ -26,7 +26,7 @@ interface ComposerContextType extends ComposerInputProps {
   submitDisabled: boolean;
 }
 
-export const { Context: ComposerContext, use: useComposer } =
+export const { Context: ComposerContext, useContext: useComposer } =
   createContext<ComposerContextType>({ displayName: "ComposerContext" });
 
 export const Provider = ({

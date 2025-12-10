@@ -25,7 +25,7 @@ interface ChannelWithPreview extends Channel {
   previewString: string | null | undefined;
 }
 
-export const { Context: ChannelListContext, use: useChannelList } =
+export const { Context: ChannelListContext, useContext: useChannelList } =
   createContext<{ channels: ChannelWithPreview[] }>({
     displayName: "ChannelListContext",
   });

@@ -15,11 +15,11 @@ const createContext = <T extends object>({
 }) => {
   const Context = createSelectorContext<T>({} as T);
   Context.displayName = displayName;
-  const use = <U>(selector: ContextSelector<T, U>) =>
+  const useContext = <U>(selector: ContextSelector<T, U>) =>
     useContextSelector(Context, selector);
   return {
     Context,
-    use,
+    useContext,
   };
 };
 

@@ -4,7 +4,7 @@ import { ReactNode, useState } from "react";
 import { type Language } from "@/features/code/languages";
 import { createContext } from "@/lib/context";
 
-export const { Context: CodeContext, use: useCode } = createContext<{
+export const { Context: CodeContext, useContext: useCode } = createContext<{
   code: string;
   language: Language;
   showLineNumbers: boolean;

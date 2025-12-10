@@ -11,7 +11,7 @@ import { useIsClient } from "@/hooks/use-is-client";
 
 type Theme = "light" | "dark";
 
-export const { Context: ThemeContext, use: useTheme } = createContext<{
+export const { Context: ThemeContext, useContext: useTheme } = createContext<{
   theme: Theme;
   setTheme: (theme: Theme) => void;
 }>({ displayName: "ThemeContext" });

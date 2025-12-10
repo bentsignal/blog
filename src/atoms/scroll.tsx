@@ -15,7 +15,7 @@ import { createContext, useRequiredContext } from "@/lib/context";
 
 export type VagueScrollPosition = "top" | "middle" | "bottom";
 
-export const { Context: ScrollContext, use: useScroll } = createContext<{
+export const { Context: ScrollContext, useContext: useScroll } = createContext<{
   containerRef: RefObject<HTMLDivElement | null>;
   contentRef: RefObject<HTMLDivElement | null>;
   scrollToBottom: (behavior?: "instant" | "smooth") => void;

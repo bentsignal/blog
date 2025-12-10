@@ -15,7 +15,7 @@ import { type PaginationStatus } from "convex/react";
 import { ScrollContext, useScroll } from "./scroll";
 import { createContext, useRequiredContext } from "@/lib/context";
 
-export const { Context: ListContext, use: useList } = createContext<{
+export const { Context: ListContext, useContext: useList } = createContext<{
   loadingStatus?: PaginationStatus;
   skeletonComponent?: ReactNode;
   topSkeletonContainerRef: RefObject<HTMLDivElement | null>;
