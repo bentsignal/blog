@@ -3,7 +3,7 @@
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import { useCodeTheme } from "../hooks/use-code-theme";
 
-const InlineCode = ({ code }: { code: string }) => {
+export const InlineCode = ({ code }: { code: string }) => {
   const codeTheme = useCodeTheme();
   return (
     <SyntaxHighlighter
@@ -20,4 +20,4 @@ const InlineCode = ({ code }: { code: string }) => {
   );
 };
 
-export { InlineCode };
+export default InlineCode;
