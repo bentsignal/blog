@@ -1,5 +1,5 @@
 import { env } from "@/convex/convex.env";
-import { type EnhancedMessage } from "@/features/messages/atom";
+import { EnhancedMessage } from "@/types/message-types";
 import {
   Body,
   Button,
