@@ -1,8 +1,6 @@
 "use client";
 
 import {
-  cloneElement,
-  isValidElement,
   ReactNode,
   RefObject,
   useCallback,
@@ -10,19 +8,18 @@ import {
   useLayoutEffect,
   useRef,
 } from "react";
-import { cn } from "@/utils/style-utils";
 import { type PaginationStatus } from "convex/react";
-import { ScrollContext, useScroll } from "./scroll";
+import * as Scroll from "@/atoms/scroll";
 import { createContext, useRequiredContext } from "@/lib/context";
 
-export const { Context: ListContext, useContext: useList } = createContext<{
+const { Context, useContext } = createContext<{
   loadingStatus?: PaginationStatus;
   skeletonComponent?: ReactNode;
   topSkeletonContainerRef: RefObject<HTMLDivElement | null>;
   bottomSkeletonContainerRef: RefObject<HTMLDivElement | null>;
 }>({ displayName: "ListContext" });
 
-export const Provider = ({
+const Provider = ({
   children,
   isBottomSticky,
   loadingStatus,
@@ -39,15 +36,19 @@ export const Provider = ({
   loadMore?: () => void;
   numberOfPages?: number;
 }) => {
-  useRequiredContext(ScrollContext);
+  useRequiredContext(Scroll.Context);
 
-  const getScrollMeasurements = useScroll((c) => c.getScrollMeasurements);
-  const scrollToBottom = useScroll((c) => c.scrollToBottom);
-  const scrollToTop = useScroll((c) => c.scrollToTop);
-  const containerRef = useScroll((c) => c.containerRef);
-  const contentRef = useScroll((c) => c.contentRef);
-  const vagueScrollPositionRef = useScroll((c) => c.vagueScrollPositionRef);
-  const setContentFitsInContainer = useScroll(
+  const getScrollMeasurements = Scroll.useContext(
+    (c) => c.getScrollMeasurements,
+  );
+  const scrollToBottom = Scroll.useContext((c) => c.scrollToBottom);
+  const scrollToTop = Scroll.useContext((c) => c.scrollToTop);
+  const containerRef = Scroll.useContext((c) => c.containerRef);
+  const contentRef = Scroll.useContext((c) => c.contentRef);
+  const vagueScrollPositionRef = Scroll.useContext(
+    (c) => c.vagueScrollPositionRef,
+  );
+  const setContentFitsInContainer = Scroll.useContext(
     (c) => c.setContentFitsInContainer,
   );
 
@@ -56,10 +57,12 @@ export const Provider = ({
   const bottomSkeletonContainerRef = useRef<HTMLDivElement>(null);
 
   const loadingStatusRef = useRef(loadingStatus);
-  loadingStatusRef.current = loadingStatus;
-
   const numberOfPagesRef = useRef(numberOfPages);
-  numberOfPagesRef.current = numberOfPages;
+
+  useLayoutEffect(() => {
+    loadingStatusRef.current = loadingStatus;
+    numberOfPagesRef.current = numberOfPages;
+  }, [numberOfPages, loadingStatus]);
 
   const getListMeasurements = useCallback(() => {
     const scrollMeasurements = getScrollMeasurements();
@@ -193,68 +196,7 @@ export const Provider = ({
     skeletonComponent,
   };
 
-  return (
-    <ListContext.Provider value={contextValue}>{children}</ListContext.Provider>
-  );
+  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };
 
-export const Items = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  useRequiredContext(ScrollContext);
-
-  const contentRef = useScroll((c) => c.contentRef);
-
-  return (
-    <div className={cn(className)} ref={contentRef}>
-      {children}
-    </div>
-  );
-};
-
-export const Skeletons = ({
-  count = 30,
-  position = null,
-  className,
-}: {
-  count?: number;
-  position?: "aboveContent" | "belowContent" | null;
-  className?: string;
-}) => {
-  useRequiredContext(ListContext);
-
-  const skeletonComponent = useList((c) => c.skeletonComponent);
-  const loadingStatus = useList((c) => c.loadingStatus);
-  const topSkeletonContainerRef = useList((c) => c.topSkeletonContainerRef);
-  const bottomSkeletonContainerRef = useList(
-    (c) => c.bottomSkeletonContainerRef,
-  );
-
-  const showSkeleton =
-    loadingStatus && skeletonComponent && loadingStatus !== "Exhausted";
-
-  if (!showSkeleton) return null;
-
-  const ref =
-    position === "aboveContent"
-      ? topSkeletonContainerRef
-      : position === "belowContent"
-        ? bottomSkeletonContainerRef
-        : null;
-
-  return (
-    <div className={cn(className)} ref={ref}>
-      {Array.from({ length: count }).map((_, index) => (
-        <div key={index}>
-          {isValidElement(skeletonComponent)
-            ? cloneElement(skeletonComponent as any, { index } as any)
-            : skeletonComponent}
-        </div>
-      ))}
-    </div>
-  );
-};
+export { Provider, Context, useContext };

@@ -16,8 +16,8 @@ import {
 import { useRequiredContext } from "@/lib/context";
 
 export const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
-  useRequiredContext(List.ListContext);
-  useRequiredContext(Scroll.ScrollContext);
+  useRequiredContext(List.Context);
+  useRequiredContext(Scroll.Context);
 
   if (messages.length === 0) {
     return (

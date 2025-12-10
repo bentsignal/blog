@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollContext, useScroll } from "@/atoms/scroll";
+import * as Scroll from "@/atoms/scroll";
 import { useRequiredContext } from "@/lib/context";
 
 const HashLink = ({
@@ -8,9 +8,12 @@ const HashLink = ({
   children,
   ...props
 }: { href: string; children: React.ReactNode } & React.ComponentProps<"a">) => {
-  useRequiredContext(ScrollContext);
-  const containerRef = useScroll((c) => c.containerRef);
-  const getScrollMeasurements = useScroll((c) => c.getScrollMeasurements);
+  useRequiredContext(Scroll.Context);
+
+  const containerRef = Scroll.useContext((c) => c.containerRef);
+  const getScrollMeasurements = Scroll.useContext(
+    (c) => c.getScrollMeasurements,
+  );
 
   return (
     // eslint-disable-next-line

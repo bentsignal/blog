@@ -1,17 +1,15 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
 import {
   ThemeProvider as NextThemeProvider,
   useTheme as useNextTheme,
 } from "next-themes";
-import { Button } from "@/atoms/button";
-import { createContext, useRequiredContext } from "@/lib/context";
+import { createContext } from "@/lib/context";
 import { useIsClient } from "@/hooks/use-is-client";
 
 type Theme = "light" | "dark";
 
-export const { Context: ThemeContext, useContext: useTheme } = createContext<{
+const { Context, useContext } = createContext<{
   theme: Theme;
   setTheme: (theme: Theme) => void;
 }>({ displayName: "ThemeContext" });
@@ -19,7 +17,7 @@ export const { Context: ThemeContext, useContext: useTheme } = createContext<{
 // this is the outer theme provider, where next-themes wraps the custom theme
 // provider we use throughout the app. the reason it has to wrap the custom
 // provider is so that the custom one can use useTheme from next-themes.
-export function Provider({
+function Provider({
   children,
   themeCookieValue,
   ...props
@@ -56,34 +54,7 @@ function CustomThemeProvider({
 
   const contextValue = { theme: theme as Theme, setTheme };
 
-  return (
-    <ThemeContext.Provider value={contextValue}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 }
 
-export const ToggleButton = () => {
-  useRequiredContext(ThemeContext);
-
-  const theme = useTheme((c) => c.theme);
-  const setTheme = useTheme((c) => c.setTheme);
-
-  const oppositeTheme = theme === "dark" ? "light" : "dark";
-
-  return (
-    <Button
-      variant="link"
-      onClick={() => setTheme(oppositeTheme)}
-      className="focus-visible:ring-0"
-      aria-label="Toggle theme"
-    >
-      {theme === "dark" ? (
-        <Sun className="size-4" />
-      ) : (
-        <Moon className="size-4" />
-      )}
-      Switch to {oppositeTheme} mode
-    </Button>
-  );
-};
+export { Provider, Context, useContext };

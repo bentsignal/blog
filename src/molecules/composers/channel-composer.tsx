@@ -8,7 +8,7 @@ import { validateMessage } from "@/utils/message-utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as Composer from "@/atoms/composer";
-import { ScrollContext, useScroll } from "@/atoms/scroll";
+import * as Scroll from "@/atoms/scroll";
 import { ChannelContext, useChannel } from "@/molecules/channel-page";
 import { useRequiredContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
@@ -18,7 +18,7 @@ export const ChannelComposer = () => {
   useRequiredContext(ChatWindowContext);
   useRequiredContext(AuthContext);
 
-  const hasScrollContext = useHasParentContext(ScrollContext);
+  const hasScrollContext = useHasParentContext(Scroll.Context);
 
   const [inputValue, setInputValue] = useState("");
 
@@ -26,7 +26,7 @@ export const ChannelComposer = () => {
   const composerInputRef = useChatWindow((c) => c.composerInputRef);
   const imNotSignedIn = useAuth((c) => !c.imSignedIn);
   const signIn = useAuth((c) => c.signIn);
-  const scrollToBottom = useScroll((c) => c.scrollToBottom);
+  const scrollToBottom = Scroll.useContext((c) => c.scrollToBottom);
 
   const { sendMessage } = useMessageActions();
 
