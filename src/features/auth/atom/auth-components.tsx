@@ -1,11 +1,11 @@
 "use client";
 
+import * as SocialIcons from "@/features/socials/socials-icons";
 import { LogIn, LogOut, UserRoundX } from "lucide-react";
-import { useTheme } from "next-themes";
 import { Context as AuthContext, useContext as useAuth } from "./auth-context";
 import { Button } from "@/atoms/button";
-import * as Icons from "@/atoms/icon";
 import { Spinner } from "@/atoms/spinner";
+import * as Theme from "@/atoms/theme";
 import { useRequiredContext } from "@/lib/context";
 
 export const PrimaryButton = () => {
@@ -71,11 +71,12 @@ export const DeleteAccountButton = () => {
 
 export const JoinButton = () => {
   useRequiredContext(AuthContext);
+  useRequiredContext(Theme.Context);
+
   const inProgress = useAuth((c) => c.inProgress);
   const signIn = useAuth((c) => c.signIn);
-
-  const { resolvedTheme } = useTheme();
-  const color = resolvedTheme === "light" ? "white" : "black";
+  const theme = Theme.useContext((c) => c.theme);
+  const color = theme === "dark" ? "black" : "white";
 
   return (
     <Button className="min-w-52 font-bold" onClick={signIn}>
@@ -84,7 +85,7 @@ export const JoinButton = () => {
       ) : (
         <div className="flex items-center gap-2">
           Join the conversation
-          <Icons.Github color={color} />
+          <SocialIcons.Github color={color} />
         </div>
       )}
     </Button>
