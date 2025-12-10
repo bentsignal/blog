@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { client as authClient } from "./lib";
 import { createContext } from "@/lib/context";
 
-export const { Context: AuthContext, useContext: useAuth } = createContext<{
+export const { Context: AuthContext, use: useAuth } = createContext<{
   image: string | null | undefined;
   name: string | undefined;
   username: string | undefined;

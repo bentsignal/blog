@@ -18,15 +18,14 @@ import { createContext } from "@/lib/context";
 const INITIAL_PAGE_SIZE = 50;
 const PAGE_SIZE = 100;
 
-export const { Context: ChannelContext, useContext: useChannel } =
-  createContext<{
-    slug: ChannelSlug;
-    channel: Channel;
-    messages: EnhancedMessage[];
-    loadingStatus: PaginationStatus;
-    loadMoreMessages: () => void;
-    numberOfPages: number;
-  }>({ displayName: "ChannelContext" });
+export const { Context: ChannelContext, use: useChannel } = createContext<{
+  slug: ChannelSlug;
+  channel: Channel;
+  messages: EnhancedMessage[];
+  loadingStatus: PaginationStatus;
+  loadMoreMessages: () => void;
+  numberOfPages: number;
+}>({ displayName: "ChannelContext" });
 
 export const Provider = ({
   slug,

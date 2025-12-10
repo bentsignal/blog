@@ -9,7 +9,7 @@ import {
 } from "./directory-utils";
 import { createContext } from "@/lib/context";
 
-const { Context: DirectoryContext, useContext: useDirectory } = createContext<{
+const { Context: DirectoryContext, use: useDirectory } = createContext<{
   root: FolderType;
   openOrCloseFolder: (path: Array<string>, newValue: "open" | "closed") => void;
   openAll: () => void;

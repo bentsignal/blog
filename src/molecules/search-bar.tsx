@@ -6,7 +6,7 @@ import * as InputGroup from "@/atoms/input-group";
 import { createContext, useRequiredContext } from "@/lib/context";
 import useDebouncedInput from "@/hooks/use-debounced-input";
 
-export const { Context: SearchContext, useContext: useSearch } = createContext<{
+export const { Context: SearchContext, use: useSearch } = createContext<{
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
   debouncedSearchTerm: string;

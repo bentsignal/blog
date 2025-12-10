@@ -37,7 +37,7 @@ interface MessageContextType extends EnhancedMessage {
   setIsHovered: (isHovered: boolean) => void;
 }
 
-export const { Context: MessageContext, useContext: useMessage } =
+export const { Context: MessageContext, use: useMessage } =
   createContext<MessageContextType>({ displayName: "MessageContext" });
 
 export const Provider = ({

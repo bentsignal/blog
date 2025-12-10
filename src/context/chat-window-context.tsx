@@ -8,7 +8,7 @@ import { findChannelWithSlug } from "@/utils/slug-utils";
 import { createContext } from "@/lib/context";
 import { useMessageActions } from "@/hooks/use-message-actions";
 
-export const { Context: ChatWindowContext, useContext: useChatWindow } =
+export const { Context: ChatWindowContext, use: useChatWindow } =
   createContext<{
     currentChannelSlug?: ChannelSlug;
     setCurrentChannelSlug: (slug?: ChannelSlug) => void;
