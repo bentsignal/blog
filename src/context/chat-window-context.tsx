@@ -2,7 +2,7 @@
 
 import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
-import { type ChannelSlug } from "@/data/channels";
+import type { ChannelSlug } from "@/data/channels";
 import * as Auth from "@/features/auth/atom";
 import { useMessageActions } from "@/features/messages/hooks";
 import { findChannelWithSlug } from "@/utils/slug-utils";

@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useState } from "react";
-import { type Language } from "@/features/code/languages";
+import type { Language } from "@/features/code/languages";
 import { createContext } from "@/lib/context";
 
 export const { Context: CodeContext, useContext: useCode } = createContext<{

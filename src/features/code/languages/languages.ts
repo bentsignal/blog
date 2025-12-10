@@ -1,5 +1,5 @@
 import * as Icons from "./language-icons";
-import { type Language } from "./language-types";
+import type { Language } from "./language-types";
 
 export const languages = {
   react: {

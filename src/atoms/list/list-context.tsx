@@ -8,7 +8,7 @@ import {
   useLayoutEffect,
   useRef,
 } from "react";
-import { type PaginationStatus } from "convex/react";
+import type { PaginationStatus } from "convex/react";
 import * as Scroll from "@/atoms/scroll";
 import { createContext, useRequiredContext } from "@/lib/context";
 

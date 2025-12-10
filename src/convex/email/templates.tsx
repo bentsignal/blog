@@ -14,7 +14,7 @@ import {
   Text,
 } from "@react-email/components";
 import { pretty, render } from "@react-email/render";
-import { type NotificationType } from "../../types/notification-types";
+import type { NotificationType } from "../../types/notification-types";
 
 const MAX_MESSAGES_TO_SHOW = 5;
 

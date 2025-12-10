@@ -1,4 +1,4 @@
-import { type Language } from "./language-types";
+import type { Language } from "./language-types";
 import { languages } from "./languages";
 
 const getLanguage = (language: string): Language => {
