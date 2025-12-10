@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  ChatWindowContext,
-  useChatWindow,
-} from "@/context/chat-window-context";
+import * as Chat from "@/features/chat/atom";
 import * as Composer from "@/features/composer/atom";
 import * as Message from "@/features/messages/atom";
 import { useMessageActions } from "@/features/messages/hooks";
@@ -15,7 +12,7 @@ import { useRequiredContext } from "@/lib/context";
 
 const ReplyComposer = () => {
   useRequiredContext(Message.Context);
-  useRequiredContext(ChatWindowContext);
+  useRequiredContext(Chat.Context);
 
   const hasScrollContext = useHasParentContext(Scroll.Context);
 
@@ -26,7 +23,7 @@ const ReplyComposer = () => {
   const slug = Message.useContext((c) => c.slug);
 
   const scrollToBottom = Scroll.useContext((c) => c.scrollToBottom);
-  const chatWindowComposer = useChatWindow((c) => c.composerInputRef);
+  const chatWindowComposer = Chat.useContext((c) => c.composerInputRef);
 
   const [inputValue, setInputValue] = useState("");
   const { sendMessage } = useMessageActions();

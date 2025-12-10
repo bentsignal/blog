@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useChatWindow } from "@/context/chat-window-context";
 import * as Auth from "@/features/auth/atom";
+import * as Chat from "@/features/chat/atom";
 import type {
   EnhancedMessage,
   MessageInteractionState,
@@ -31,6 +31,7 @@ const Provider = ({
   children: React.ReactNode;
 }) => {
   useRequiredContext(Auth.Context);
+  useRequiredContext(Chat.Context);
 
   const [isHovered, setIsHovered] = useState(false);
   const [interactionState, setInteractionState] =
@@ -46,7 +47,7 @@ const Provider = ({
 
   // determine if user has seen message
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const iJustRead = useChatWindow((c) => c.iJustRead);
+  const iJustRead = Chat.useContext((c) => c.iJustRead);
   useEffect(() => {
     if (imNotSignedIn) return;
 

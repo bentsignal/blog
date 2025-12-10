@@ -8,15 +8,14 @@ import { useMessageActions } from "@/features/messages/hooks";
 import { findChannelWithSlug } from "@/utils/slug-utils";
 import { createContext, useRequiredContext } from "@/lib/context";
 
-export const { Context: ChatWindowContext, useContext: useChatWindow } =
-  createContext<{
-    currentChannelSlug?: ChannelSlug;
-    setCurrentChannelSlug: (slug?: ChannelSlug) => void;
-    composerInputRef: RefObject<HTMLTextAreaElement | null>;
-    iJustRead: (messageId: Id<"messages">) => void;
-  }>({ displayName: "ChatWindowContext" });
+const { Context, useContext } = createContext<{
+  currentChannelSlug?: ChannelSlug;
+  setCurrentChannelSlug: (slug?: ChannelSlug) => void;
+  composerInputRef: RefObject<HTMLTextAreaElement | null>;
+  iJustRead: (messageId: Id<"messages">) => void;
+}>({ displayName: "ChatWindowContext" });
 
-export const Provider = ({
+const Provider = ({
   slugFromHeaders,
   children,
 }: {
@@ -69,9 +68,7 @@ export const Provider = ({
     iJustRead,
   };
 
-  return (
-    <ChatWindowContext.Provider value={contextValue}>
-      {children}
-    </ChatWindowContext.Provider>
-  );
+  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
 };
+
+export { Provider, Context, useContext };

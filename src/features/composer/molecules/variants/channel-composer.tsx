@@ -1,29 +1,26 @@
 import { useState } from "react";
-import {
-  ChatWindowContext,
-  useChatWindow,
-} from "@/context/chat-window-context";
 import * as Auth from "@/features/auth/atom";
+import * as Channel from "@/features/channel/atom";
+import * as Chat from "@/features/chat/atom";
 import * as Composer from "@/features/composer/atom";
 import { useMessageActions } from "@/features/messages/hooks";
 import { validateMessage } from "@/features/messages/utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
 import * as Scroll from "@/atoms/scroll";
-import { ChannelContext, useChannel } from "@/molecules/channel-page";
 import { useRequiredContext } from "@/lib/context";
 
 const ChannelComposer = () => {
-  useRequiredContext(ChannelContext);
-  useRequiredContext(ChatWindowContext);
+  useRequiredContext(Channel.Context);
+  useRequiredContext(Chat.Context);
   useRequiredContext(Auth.Context);
 
   const hasScrollContext = useHasParentContext(Scroll.Context);
 
   const [inputValue, setInputValue] = useState("");
 
-  const slug = useChannel((c) => c.slug);
-  const composerInputRef = useChatWindow((c) => c.composerInputRef);
+  const slug = Channel.useContext((c) => c.slug);
+  const composerInputRef = Chat.useContext((c) => c.composerInputRef);
   const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
   const signIn = Auth.useContext((c) => c.signIn);
   const scrollToBottom = Scroll.useContext((c) => c.scrollToBottom);
