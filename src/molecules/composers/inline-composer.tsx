@@ -1,8 +1,8 @@
-import { EditComposer, ReplyComposer } from "./variants";
 import { MessageContext, useMessage } from "@/atoms/message";
+import { EditComposer, ReplyComposer } from "@/molecules/composers";
 import { useRequiredContext } from "@/lib/context";
 
-const InlineComposer = () => {
+export const InlineComposer = () => {
   useRequiredContext(MessageContext);
 
   const interactionState = useMessage((c) => c.interactionState);
@@ -15,5 +15,3 @@ const InlineComposer = () => {
   }
   return null;
 };
-
-export { InlineComposer };
