@@ -1,4 +1,4 @@
-import * as Directory from "@/features/directory/atom";
+import type { FileType, FolderType } from "@/features/directory/types";
 
 const shadcnComponents = [
   {
@@ -21,7 +21,7 @@ const shadcnComponents = [
     extension: "tsx",
     link: "https://ui.shadcn.com/docs/components/card",
   },
-] as const satisfies Directory.FileType[];
+] as const satisfies FileType[];
 
 const basicProject = {
   name: "src",
@@ -54,7 +54,7 @@ const basicProject = {
       contents: [{ name: "util", extension: "ts" }],
     },
   ],
-} as const satisfies Directory.FolderType;
+} as const satisfies FolderType;
 
 const messagingAppFirstIteration = {
   name: "src",
@@ -133,7 +133,7 @@ const messagingAppFirstIteration = {
       ],
     },
   ],
-} as const satisfies Directory.FolderType;
+} as const satisfies FolderType;
 
 const messagingAppSecondIteration = {
   name: "src",
@@ -254,7 +254,7 @@ const messagingAppSecondIteration = {
       contents: [{ name: "util", extension: "ts" }],
     },
   ],
-} as const satisfies Directory.FolderType;
+} as const satisfies FolderType;
 
 const closerLookAtComponents = {
   name: "components",
@@ -266,7 +266,7 @@ const closerLookAtComponents = {
     { name: "footer", extension: "tsx" },
     { name: "nav", extension: "tsx" },
   ],
-} as const satisfies Directory.FolderType;
+} as const satisfies FolderType;
 
 const moveShadcnComponentsToAtoms = {
   name: "src",
@@ -287,7 +287,7 @@ const moveShadcnComponentsToAtoms = {
       contents: shadcnComponents,
     },
   ],
-} as const satisfies Directory.FolderType;
+} as const satisfies FolderType;
 
 export const sidebarAtomSplitUp = {
   name: "atoms",
@@ -327,7 +327,7 @@ export const sidebarAtomSplitUp = {
       link: "https://ui.shadcn.com/docs/components/card",
     },
   ],
-};
+} as const satisfies FolderType;
 
 const closerLookAtMessagesFeature = {
   name: "features",
@@ -410,7 +410,7 @@ const closerLookAtMessagesFeature = {
       ],
     },
   ],
-} as const satisfies Directory.FolderType;
+} as const satisfies FolderType;
 
 const messagesFeatureAfterAtomicDesign = {
   name: "features",
@@ -494,7 +494,7 @@ const messagesFeatureAfterAtomicDesign = {
       ],
     },
   ],
-} as const satisfies Directory.FolderType;
+} as const satisfies FolderType;
 
 const messagingAppThirdIteration = {
   name: "src",
@@ -646,7 +646,7 @@ const messagingAppThirdIteration = {
       contents: [{ name: "util", extension: "ts" }],
     },
   ],
-} as const satisfies Directory.FolderType;
+} as const satisfies FolderType;
 
 export {
   basicProject,

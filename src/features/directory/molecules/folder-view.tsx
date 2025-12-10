@@ -1,7 +1,8 @@
 import * as Directory from "@/features/directory/atom";
+import type { FolderType } from "../types";
 import * as Frame from "@/atoms/frame";
 
-const FolderView = ({ directory }: { directory: Directory.FolderType }) => {
+const FolderView = ({ directory }: { directory: FolderType }) => {
   return (
     <Directory.Provider initialRoot={directory}>
       <Frame.Container>

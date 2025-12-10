@@ -1,12 +1,12 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import type { FolderType } from "./directory-types";
+import type { FolderType } from "../types/directory-types";
 import {
   closeAllFolders,
   openAllFolders,
   openOrCloseOneFolder,
-} from "./directory-utils";
+} from "../utils/directory-utils";
 import { createContext } from "@/lib/context";
 
 const { Context: DirectoryContext, useContext: useDirectory } = createContext<{
