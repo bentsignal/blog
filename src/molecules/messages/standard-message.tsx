@@ -1,15 +1,17 @@
 import { memo } from "react";
 import { InlineComposer } from "@/features/composer/molecules";
-import * as Message from "@/features/messages/atom";
+import { EnhancedMessage } from "@/types/message-types";
+import * as Message from "@/atoms/message";
 
-export const ChainedMessage = memo(
-  ({ message }: { message: Message.EnhancedMessage }) => {
+export const StandardMessage = memo(
+  ({ message }: { message: EnhancedMessage }) => {
     return (
       <Message.Provider message={message}>
-        <Message.Frame>
-          <div className="flex items-center">
-            <Message.SideTime />
+        <Message.Frame className="mt-3">
+          <div className="flex gap-3">
+            <Message.PFP />
             <Message.Body>
+              <Message.Header />
               <Message.Content />
               <Message.Reactions />
             </Message.Body>

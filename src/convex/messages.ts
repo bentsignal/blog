@@ -1,12 +1,11 @@
 import { channelSlugs } from "@/data/channels";
 import { vSlug } from "@/data/slugs";
+import { EnhancedMessage, vReactionEmoji } from "@/types/message-types";
 import {
   getMessageContent,
   getReactionsSignature,
   validateMessage,
-  vReactionEmoji,
-  type EnhancedMessage,
-} from "@/features/messages/atom";
+} from "@/utils/message-utils";
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { Id } from "./_generated/dataModel";

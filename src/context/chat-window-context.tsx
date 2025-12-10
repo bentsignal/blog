@@ -4,9 +4,9 @@ import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { type ChannelSlug } from "@/data/channels";
 import { useAuth } from "@/features/auth";
-import { useMessageActions } from "@/features/messages/hooks";
 import { findChannelWithSlug } from "@/utils/slug-utils";
 import { createContext } from "@/lib/context";
+import { useMessageActions } from "@/hooks/use-message-actions";
 
 export const { Context: ChatWindowContext, useContext: useChatWindow } =
   createContext<{

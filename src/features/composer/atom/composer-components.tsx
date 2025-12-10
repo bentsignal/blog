@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAuth } from "@/features/auth";
-import * as Auth from "@/features/auth";
 import {
   MAX_MESSAGE_LENGTH,
   MIN_MESSAGE_LENGTH,
-} from "@/features/messages/atom";
+} from "@/config/message-config";
+import { useAuth } from "@/features/auth";
+import * as Auth from "@/features/auth";
 import { cn } from "@/utils/style-utils";
 import * as Icons from "lucide-react";
 import { ComposerContext, useComposer } from "./composer-context";

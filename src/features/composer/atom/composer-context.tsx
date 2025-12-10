@@ -1,6 +1,6 @@
 "use client";
 
-import { validateMessage } from "@/features/messages/atom";
+import { validateMessage } from "@/utils/message-utils";
 import { createContext } from "@/lib/context";
 
 interface ComposerInputProps {

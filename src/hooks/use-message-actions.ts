@@ -1,7 +1,7 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { AuthContext, useAuth } from "@/features/auth";
-import { getReactionsSignature } from "@/features/messages/atom";
+import { getReactionsSignature } from "@/utils/message-utils";
 import { useConvexMutation } from "@convex-dev/react-query";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
