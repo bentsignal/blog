@@ -11,12 +11,11 @@ import {
   ListChevronsDownUp,
   ListChevronsUpDown,
 } from "lucide-react";
-import type {
-  FileExtension,
-  FileType,
-  FolderType,
-} from "../types/directory-types";
-import { DirectoryContext, useDirectory } from "./directory-context";
+import type { FileExtension, FileType, FolderType } from "../types";
+import {
+  Context as DirectoryContext,
+  useContext as useDirectory,
+} from "./directory-context";
 import { Button } from "@/atoms/button";
 import * as Tooltip from "@/atoms/tooltip";
 import { useRequiredContext } from "@/lib/context";

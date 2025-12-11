@@ -1,4 +1,4 @@
-import type { FolderType } from "../types/directory-types";
+import type { FolderType } from "./types";
 
 const openOrCloseOneFolder = (
   directory: FolderType,
