@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers as GlobalProviders } from "@/context/global-context";
-import { ChatWindow } from "@/features/chat/molecules";
+import { ChatWindow } from "@/features/chat/molecules/chat-window";
 import * as Search from "@/features/search/atom";
 import * as Sidebar from "@/atoms/sidebar";
 import { Toaster } from "@/atoms/toast";
