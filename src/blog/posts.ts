@@ -5,6 +5,7 @@ export interface Post {
   description: string;
   datePosted: Date;
   readingTimeInMinutes: number;
+  tags?: string[];
 }
 
 export const posts = {
@@ -13,7 +14,8 @@ export const posts = {
     description:
       "A deep dive into reevaluating how we manage the code, files, and folders in our React projects.",
     datePosted: new Date("2025-12-11"),
-    readingTimeInMinutes: 10,
+    readingTimeInMinutes: 7,
+    tags: ["React", "Atomic Design"],
   },
 } as const satisfies Partial<Record<Slug, Post>>;
 

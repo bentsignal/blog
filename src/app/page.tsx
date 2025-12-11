@@ -45,7 +45,7 @@ export default function HomePage() {
                   <PostLink slug={slug} key={slug}>
                     <div className="text-muted-foreground hover:text-primary flex flex-col items-start justify-between gap-1 rounded-md transition-colors duration-100 lg:flex-row lg:items-center">
                       <h2 className="font-semibold">{post.title}</h2>
-                      <p className="text-sm">
+                      <p className="hidden text-sm sm:block">
                         {post.datePosted.toLocaleDateString(undefined, {
                           year: "numeric",
                           month: "long",
