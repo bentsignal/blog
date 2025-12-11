@@ -159,14 +159,8 @@ const messagingAppSecondIteration = {
               name: "hooks",
               contents: [{ name: "use-message-actions", extension: "ts" }],
             },
-            {
-              name: "context",
-              contents: [{ name: "message-context", extension: "ts" }],
-            },
-            {
-              name: "types",
-              contents: [{ name: "message-types", extension: "ts" }],
-            },
+            { name: "context", extension: "ts" },
+            { name: "types", extension: "ts" },
           ],
         },
         {
@@ -183,17 +177,11 @@ const messagingAppSecondIteration = {
               ],
             },
             {
-              name: "context",
-              contents: [{ name: "auth-context", extension: "ts" }],
-            },
-            {
               name: "lib",
               contents: [{ name: "auth-client", extension: "ts" }],
             },
-            {
-              name: "types",
-              contents: [{ name: "auth-types", extension: "ts" }],
-            },
+            { name: "context", extension: "ts" },
+            { name: "types", extension: "ts" },
           ],
         },
         {
@@ -207,14 +195,8 @@ const messagingAppSecondIteration = {
                 { name: "reply-composer", extension: "tsx" },
               ],
             },
-            {
-              name: "context",
-              contents: [{ name: "composer-context", extension: "ts" }],
-            },
-            {
-              name: "types",
-              contents: [{ name: "composer-types", extension: "ts" }],
-            },
+            { name: "context", extension: "ts" },
+            { name: "types", extension: "ts" },
           ],
         },
       ],
@@ -355,14 +337,8 @@ const closerLookAtMessagesFeature = {
           name: "hooks",
           contents: [{ name: "use-message-actions", extension: "ts" }],
         },
-        {
-          name: "context",
-          contents: [{ name: "message-context", extension: "ts" }],
-        },
-        {
-          name: "types",
-          contents: [{ name: "message-types", extension: "ts" }],
-        },
+        { name: "context", extension: "ts" },
+        { name: "types", extension: "ts" },
       ],
     },
     {
@@ -379,17 +355,11 @@ const closerLookAtMessagesFeature = {
           ],
         },
         {
-          name: "context",
-          contents: [{ name: "auth-context", extension: "ts" }],
-        },
-        {
           name: "lib",
           contents: [{ name: "auth-client", extension: "ts" }],
         },
-        {
-          name: "types",
-          contents: [{ name: "auth-types", extension: "ts" }],
-        },
+        { name: "context", extension: "ts" },
+        { name: "types", extension: "ts" },
       ],
     },
     {
@@ -403,14 +373,8 @@ const closerLookAtMessagesFeature = {
             { name: "reply-composer", extension: "tsx" },
           ],
         },
-        {
-          name: "context",
-          contents: [{ name: "composer-context", extension: "ts" }],
-        },
-        {
-          name: "types",
-          contents: [{ name: "composer-types", extension: "ts" }],
-        },
+        { name: "context", extension: "ts" },
+        { name: "types", extension: "ts" },
       ],
     },
   ],
@@ -447,10 +411,7 @@ const messagesFeatureAfterAtomicDesign = {
           name: "hooks",
           contents: [{ name: "use-message-actions", extension: "ts" }],
         },
-        {
-          name: "types",
-          contents: [{ name: "message-types", extension: "ts" }],
-        },
+        { name: "types", extension: "ts" },
       ],
     },
     {
@@ -467,17 +428,11 @@ const messagesFeatureAfterAtomicDesign = {
           ],
         },
         {
-          name: "context",
-          contents: [{ name: "auth-context", extension: "ts" }],
-        },
-        {
           name: "lib",
           contents: [{ name: "auth-client", extension: "ts" }],
         },
-        {
-          name: "types",
-          contents: [{ name: "auth-types", extension: "ts" }],
-        },
+        { name: "context", extension: "ts" },
+        { name: "types", extension: "ts" },
       ],
     },
     {
@@ -491,14 +446,8 @@ const messagesFeatureAfterAtomicDesign = {
             { name: "reply-composer", extension: "tsx" },
           ],
         },
-        {
-          name: "context",
-          contents: [{ name: "composer-context", extension: "ts" }],
-        },
-        {
-          name: "types",
-          contents: [{ name: "composer-types", extension: "ts" }],
-        },
+        { name: "context", extension: "ts" },
+        { name: "types", extension: "ts" },
       ],
     },
   ],
@@ -564,7 +513,7 @@ const messagingAppThirdIteration = {
               contents: [
                 { name: "message-components", extension: "tsx" },
                 { name: "message-context", extension: "tsx" },
-                { name: "message-types", extension: "ts" },
+                { name: "index", extension: "tsx" },
               ],
             },
             {
@@ -580,6 +529,7 @@ const messagingAppThirdIteration = {
               name: "hooks",
               contents: [{ name: "use-message-actions", extension: "ts" }],
             },
+            { name: "types", extension: "ts" },
           ],
         },
         {
@@ -590,8 +540,7 @@ const messagingAppThirdIteration = {
               contents: [
                 { name: "auth-components", extension: "tsx" },
                 { name: "auth-context", extension: "tsx" },
-                { name: "auth-types", extension: "ts" },
-                { name: "auth-client", extension: "ts" },
+                { name: "index", extension: "tsx" },
               ],
             },
             {
@@ -604,6 +553,11 @@ const messagingAppThirdIteration = {
                 { name: "sign-out-button", extension: "tsx" },
               ],
             },
+            {
+              name: "lib",
+              contents: [{ name: "auth-client", extension: "ts" }],
+            },
+            { name: "types", extension: "ts" },
           ],
         },
         {
@@ -614,7 +568,7 @@ const messagingAppThirdIteration = {
               contents: [
                 { name: "composer-components", extension: "tsx" },
                 { name: "composer-context", extension: "tsx" },
-                { name: "composer-types", extension: "ts" },
+                { name: "index", extension: "tsx" },
               ],
             },
             {
@@ -625,6 +579,7 @@ const messagingAppThirdIteration = {
                 { name: "reply-composer", extension: "tsx" },
               ],
             },
+            { name: "types", extension: "ts" },
           ],
         },
       ],
