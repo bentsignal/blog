@@ -1,5 +1,5 @@
-import type { Language } from "./language-types";
 import { languages } from "./languages";
+import type { Language } from "./types";
 
 const getLanguage = (language: string): Language => {
   const lang = language.toLowerCase().trim();

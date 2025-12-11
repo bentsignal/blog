@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { getLanguage } from "@/features/code/languages";
+import { getLanguage } from "@/features/code/languages/utils";
 import equal from "fast-deep-equal";
 import {
   File as DefaultFileIcon,

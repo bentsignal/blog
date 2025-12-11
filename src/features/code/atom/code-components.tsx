@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { registerLanguages } from "@/features/code/languages";
+import { registerLanguages } from "@/features/code/languages/registry";
 import { cn } from "@/utils/style-utils";
 import {
   Check,
@@ -14,7 +14,7 @@ import {
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
 import { useCodeTheme } from "../hooks/use-code-theme";
-import { CodeContext, useCode } from "./code-context";
+import { Context as CodeContext, useContext as useCode } from "./code-context";
 import { Button } from "@/atoms/button";
 import * as Tooltip from "@/atoms/tooltip";
 import { useRequiredContext } from "@/lib/context";
@@ -23,7 +23,7 @@ import { useIsClient } from "@/hooks/use-is-client";
 // init syntax highlighter
 registerLanguages();
 
-export const Block = () => {
+const Block = () => {
   useRequiredContext(CodeContext);
 
   const codeTheme = useCodeTheme();
@@ -63,7 +63,7 @@ export const Block = () => {
   );
 };
 
-export const LanguageIdentifier = () => {
+const LanguageIdentifier = () => {
   useRequiredContext(CodeContext);
 
   const language = useCode((c) => c.language);
@@ -80,7 +80,7 @@ export const LanguageIdentifier = () => {
   );
 };
 
-export function CopyButton() {
+const CopyButton = () => {
   useRequiredContext(CodeContext);
 
   const code = useCode((c) => c.code);
@@ -122,9 +122,9 @@ export function CopyButton() {
       <Tooltip.Content>{copied ? "Copied" : "Copy"}</Tooltip.Content>
     </Tooltip.Frame>
   );
-}
+};
 
-export const LineNumbersButton = () => {
+const LineNumbersButton = () => {
   useRequiredContext(CodeContext);
 
   const showLineNumbers = useCode((c) => c.showLineNumbers);
@@ -154,7 +154,7 @@ export const LineNumbersButton = () => {
   );
 };
 
-export const LineWrappingButton = () => {
+const LineWrappingButton = () => {
   useRequiredContext(CodeContext);
 
   const wrapLines = useCode((c) => c.wrapLines);
@@ -182,4 +182,12 @@ export const LineWrappingButton = () => {
       </Tooltip.Content>
     </Tooltip.Frame>
   );
+};
+
+export {
+  Block,
+  LanguageIdentifier,
+  CopyButton,
+  LineNumbersButton,
+  LineWrappingButton,
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { getLanguage } from "../languages/language-utils";
+import { getLanguage } from "@/features/code/languages/utils";
 import { FramedCodeBlock } from "./framed-code-block";
 import { InlineCode } from "./inline-code";
 
