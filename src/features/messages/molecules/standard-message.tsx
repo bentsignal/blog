@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { InlineComposer } from "@/features/composer/molecules";
+import { InlineComposer } from "@/features/composer/molecules/inline-composer";
 import * as Message from "@/features/messages/atom";
 import type { EnhancedMessage } from "@/features/messages/types";
 
