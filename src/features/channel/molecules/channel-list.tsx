@@ -1,11 +1,11 @@
 "use client";
 
-import { useChannelList } from "@/features/channel/hooks";
 import * as Chat from "@/features/chat/atom";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
 import { useRouter } from "next/navigation";
+import { useChannelList } from "../hooks/use-channel-list";
 import * as Scroll from "@/atoms/scroll";
 import * as Shapes from "@/atoms/shapes";
 import { useRequiredContext } from "@/lib/context";
