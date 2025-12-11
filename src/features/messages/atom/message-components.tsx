@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import * as Auth from "@/features/auth/atom";
-import { useMessageActions } from "@/features/messages/hooks";
+import { useMessageActions } from "@/features/messages/hooks/use-message-actions";
 import type { ReactionEmoji } from "@/features/messages/types";
 import { REACTION_EMOJIS } from "@/features/messages/types";
 import { getReactionCounts } from "@/features/messages/utils";

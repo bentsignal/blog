@@ -4,7 +4,7 @@ import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import type { ChannelSlug } from "@/blog/channels";
 import { Id } from "@/convex/_generated/dataModel";
 import * as Auth from "@/features/auth/atom";
-import { useMessageActions } from "@/features/messages/hooks";
+import { useMessageActions } from "@/features/messages/hooks/use-message-actions";
 import { findChannelWithSlug } from "@/utils/slug-utils";
 import { createContext, useRequiredContext } from "@/lib/context";
 

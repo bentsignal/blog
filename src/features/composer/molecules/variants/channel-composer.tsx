@@ -3,7 +3,7 @@ import * as Auth from "@/features/auth/atom";
 import * as Channel from "@/features/channel/atom";
 import * as Chat from "@/features/chat/atom";
 import * as Composer from "@/features/composer/atom";
-import { useMessageActions } from "@/features/messages/hooks";
+import { useMessageActions } from "@/features/messages/hooks/use-message-actions";
 import { validateMessage } from "@/features/messages/utils";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";

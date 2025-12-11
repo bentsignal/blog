@@ -2,14 +2,12 @@
 
 import { Fragment } from "react";
 import * as Message from "@/features/messages/atom";
-import {
-  ChainedMessage,
-  ReplyMessage,
-  StandardMessage,
-} from "@/features/messages/molecules";
 import type { EnhancedMessage } from "@/features/messages/types";
 import { cn } from "@/utils/style-utils";
 import { areSameDay } from "@/utils/time-utils";
+import { ChainedMessage } from "./chained-message";
+import { ReplyMessage } from "./reply-message";
+import { StandardMessage } from "./standard-message";
 import * as List from "@/atoms/list";
 import * as Scroll from "@/atoms/scroll";
 import { DateMarker } from "@/molecules/date-marker";
