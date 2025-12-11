@@ -1,6 +1,6 @@
 import { Mail as MailIcon } from "lucide-react";
-import * as Icons from "./socials-icons";
-import type { Company, Metadata } from "./socials-types";
+import * as Icons from "./icons";
+import type { Company, Metadata } from "./types";
 
 const socials = {
   github: {

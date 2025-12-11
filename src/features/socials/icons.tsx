@@ -1,6 +1,6 @@
 "use client";
 
-import { useThemeColor } from "./socials-hooks";
+import { useThemeColor } from "./use-theme-color";
 
 const Github = ({
   color,

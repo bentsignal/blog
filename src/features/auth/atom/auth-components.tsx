@@ -1,6 +1,6 @@
 "use client";
 
-import * as SocialIcons from "@/features/socials/socials-icons";
+import * as SocialIcons from "@/features/socials/icons";
 import { LogIn, LogOut, UserRoundX } from "lucide-react";
 import { Context as AuthContext, useContext as useAuth } from "./auth-context";
 import { Button } from "@/atoms/button";

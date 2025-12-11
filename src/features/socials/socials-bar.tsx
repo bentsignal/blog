@@ -1,6 +1,6 @@
 import { cn } from "@/utils/style-utils";
 import Link from "next/link";
-import { companies, socials } from "./socials-data";
+import { companies, socials } from "./data";
 
 const SocialsBar = () => {
   return (
