@@ -16,7 +16,7 @@ const HashLink = ({
   );
 
   return (
-    // eslint-disable-next-line
+    // eslint-disable-next-line next/no-html-link-for-pages
     <a
       {...props}
       href={href}

@@ -22,7 +22,7 @@ const components: MDXComponents = {
     const isExternalLink = isProtocolRelative || hasProtocol;
     if (isExternalLink) {
       return (
-        // eslint-disable-next-line
+        // eslint-disable-next-line next/no-html-link-for-pages
         <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
           {children}
         </a>

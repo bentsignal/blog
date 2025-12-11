@@ -41,7 +41,7 @@ const Folder = memo(
     const openOrCloseFolder = useDirectory((c) => c.openOrCloseFolder);
     return (
       <div className="flex flex-col">
-        <div
+        <button
           className="hover:text-primary cursor-pointer"
           onClick={() =>
             openOrCloseFolder(path, folder.isOpen ? "closed" : "open")
@@ -55,7 +55,7 @@ const Folder = memo(
             )}{" "}
             <span className="text-sm select-none">{folder.name}</span>
           </div>
-        </div>
+        </button>
         {folder.isOpen && (
           <div className="border-border my-1 flex flex-col gap-1 border-l-2 py-1 pl-4">
             {folder.contents.map((content) => {
@@ -95,7 +95,7 @@ const FileItem = memo(
         <Tooltip.Content side="right" className="flex items-center gap-1">
           <span>{`${path.join("/")}/${file.name}.${file.extension}`}</span>
           {file.link && (
-            // eslint-disable-next-line
+            // eslint-disable-next-line next/no-html-link-for-pages
             <a href={file.link} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="h-3 w-3" />
             </a>

@@ -62,6 +62,7 @@ export function Addon({
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof addonVariants>) {
   return (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <div
       role="group"
       data-slot="input-group-addon"

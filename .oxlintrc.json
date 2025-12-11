@@ -1,7 +1,18 @@
 {
-  "plugins": ["typescript", "react", "nextjs", "react-perf"],
-  "ignorePatterns": ["src/convex/_generated/**/*"],
+  "plugins": [
+    "eslint",
+    "oxc",
+    "typescript",
+    "unicorn",
+    "react",
+    "nextjs",
+    "react-perf",
+    "import",
+    "jsx-a11y"
+  ],
   "rules": {
-    "eslint-plugin-next(no-html-link-for-pages)": "off"
-  }
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn"
+  },
+  "ignorePatterns": ["convex/**/_generated/**"]
 }
