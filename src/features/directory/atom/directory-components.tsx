@@ -47,7 +47,7 @@ const Folder = memo(
             openOrCloseFolder(path, folder.isOpen ? "closed" : "open")
           }
         >
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             {folder.isOpen ? (
               <FolderOpenIcon className="h-3 w-3" />
             ) : (
