@@ -298,16 +298,20 @@ export const sidebarAtomSplitUp = {
       isOpen: true,
       contents: [
         {
+          name: "index",
+          extension: "tsx",
+        },
+        {
           name: "sidebar-components",
+          extension: "tsx",
+        },
+        {
+          name: "sidebar-context",
           extension: "tsx",
         },
         {
           name: "sidebar-constants",
           extension: "ts",
-        },
-        {
-          name: "sidebar-context",
-          extension: "tsx",
         },
       ],
     },
@@ -426,7 +430,7 @@ const messagesFeatureAfterAtomicDesign = {
           contents: [
             { name: "message-components", extension: "tsx" },
             { name: "message-context", extension: "tsx" },
-            { name: "message-types", extension: "ts" },
+            { name: "index", extension: "tsx" },
           ],
         },
         {
@@ -442,6 +446,10 @@ const messagesFeatureAfterAtomicDesign = {
         {
           name: "hooks",
           contents: [{ name: "use-message-actions", extension: "ts" }],
+        },
+        {
+          name: "types",
+          contents: [{ name: "message-types", extension: "ts" }],
         },
       ],
     },
