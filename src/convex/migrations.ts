@@ -34,3 +34,17 @@ export const createEmptyReactionArray = internalMutation({
     }
   },
 });
+
+export const migratePostSlugs = internalMutation({
+  handler: async (ctx) => {
+    const messages = await ctx.db
+      .query("messages")
+      .filter((q) => q.eq(q.field("slug"), "organizing-react-projects"))
+      .collect();
+    for (const message of messages) {
+      await ctx.db.patch(message._id, {
+        slug: "organize-react-projects",
+      });
+    }
+  },
+});
