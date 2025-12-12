@@ -1,9 +1,4 @@
-<br />
 <div align="center">
-  <br />
-  <br />
-  <br />
-  <br />
   <a href="https://blog.bentsignal.com" target="_blank">
     blog.bentsignal.com
   </a>
