@@ -36,7 +36,7 @@ export default async function RootLayout({
         <ReactScan />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} gradient-background antialiased`}
       >
         <GlobalProviders>
           <Toaster />

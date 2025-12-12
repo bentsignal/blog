@@ -84,6 +84,8 @@
   --good: oklch(0.57 0.25 141.87);
   --bad: oklch(0.57 0.25 27.325);
   --link: oklch(0.57 0.25 270.52);
+  --bg-gradient-top: oklch(1 0 0);
+  --bg-gradient-bottom: oklch(0.9 0 0);
 }
 
 .dark {
@@ -121,6 +123,8 @@
   --good: oklch(0.87 0.2 141.87);
   --bad: oklch(0.87 0.2 27.325);
   --link: oklch(0.87 0.2 270.52);
+  --bg-gradient-top: oklch(0 0 0);
+  --bg-gradient-bottom: oklch(0.2 0 0);
 }
 
 @layer base {
@@ -128,11 +132,19 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
 }
 
 @utility text-xxs {
   font-size: 0.625rem;
   line-height: 1rem;
+}
+
+.gradient-background {
+  background: linear-gradient(
+    to top,
+    var(--bg-gradient-bottom) 0%,
+    var(--bg-gradient-top) 100%
+  );
 }
