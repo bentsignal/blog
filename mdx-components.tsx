@@ -1,7 +1,7 @@
-import { CodeSnippet } from "@/features/code/molecules/code-snippet";
-import type { MDXComponents } from "mdx/types";
 import Image from "next/image";
 import Link from "next/link";
+import type { MDXComponents } from "mdx/types";
+import { CodeSnippet } from "@/features/code/molecules/code-snippet";
 import HashLink from "@/molecules/hash-link";
 
 const components: MDXComponents = {
@@ -30,7 +30,7 @@ const components: MDXComponents = {
     }
 
     return (
-      <Link href={href} {...props}>
+      <Link prefetch={true} href={href} {...props}>
         {children}
       </Link>
     );
