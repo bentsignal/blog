@@ -26,9 +26,9 @@ export default async function Image({
 
   return new ImageResponse(
     (
-      <div tw="bg-background flex flex-col items-center justify-center">
-        <h1 tw="text-4xl font-bold text-foreground">{post.title}</h1>
-        <p tw="text-lg text-muted-foreground">{post.description}</p>
+      <div tw="bg-black-900 flex flex-col items-center justify-center">
+        <h1 tw="text-4xl font-bold text-white">{post.title}</h1>
+        <p tw="text-lg text-gray-300">{post.description}</p>
       </div>
     ),
     {
