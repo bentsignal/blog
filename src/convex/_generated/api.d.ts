@@ -19,7 +19,6 @@ import type * as email_templates from "../email/templates.js";
 import type * as http from "../http.js";
 import type * as limiter from "../limiter.js";
 import type * as messages from "../messages.js";
-import type * as migrations from "../migrations.js";
 import type * as notifications from "../notifications.js";
 import type * as preferences from "../preferences.js";
 import type * as uploadthing from "../uploadthing.js";
@@ -51,7 +50,6 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   limiter: typeof limiter;
   messages: typeof messages;
-  migrations: typeof migrations;
   notifications: typeof notifications;
   preferences: typeof preferences;
   uploadthing: typeof uploadthing;

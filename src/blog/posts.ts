@@ -10,7 +10,7 @@ export interface Post {
 }
 
 export const posts = {
-  "organizing-react-projects": {
+  "organize-react-projects": {
     title: "How should we organize our React projects?",
     description:
       "A deep dive into rethinking how we structure the code, files, and folders of our React projects",
