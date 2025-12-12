@@ -13,9 +13,9 @@ export const posts = {
   "organizing-react-projects": {
     title: "How should we organize our React projects?",
     description:
-      "A deep dive into reevaluating how we manage the code, files, and folders in our React projects.",
+      "A deep dive into rethinking how we structure the code, files, and folders of our React projects",
     datePosted: new Date("2025-12-11"),
-    lastModified: new Date("2025-12-11"),
+    lastModified: new Date("2025-12-13"),
     readingTimeInMinutes: 7,
     tags: ["React", "Atomic Design"],
   },

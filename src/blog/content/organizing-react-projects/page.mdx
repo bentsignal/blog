@@ -1,33 +1,33 @@
 import * as folders from "./folders";
 import { FolderView } from "@/features/directory/molecules/folder-view";
 
-If you've ever worked in a modern React project before, then you've probably
-seen something like this:
+If you've worked in a modern React project before, then you've probably seen
+something like this:
 
 <FolderView directory={folders.basicProject} />
 
-Where files are categorized based on the type of code they contain. Hooks live
-with other hooks, components with other components, etc.
+Where files are sorted based on the type of code they contain. Hooks live with
+other hooks, components with other components, etc.
 
-For a simple project like the one outlined above, this tends to work fine. But
-as your codebase scales, you end up with _low feature cohesion_. Making changes
-to one area of your app requires editing multiple files scattered far and wide
-across different directories.
+For simple projects, this tends to work fine. But as your codebase scales, you
+end up with _low feature cohesion_. Making changes to one area of your app
+requires editing multiple files scattered far and wide across different
+directories.
 
 To see this in action, let's take a look at a project with a bit more
 complexity: **a messaging app**.
 
 <FolderView directory={folders.messagingAppFirstIteration} />
 
-I mentioned that this way of building leads to low feature cohesion, and now we
-can start to see why. If you want to overhaul messages, you may need to access
-components, hooks, contexts, and types. This code lives in separate files &
-folders, with the only indication that they are related being that:
+If you want to make changes to the way messages work in this app, you may need
+to access components, hooks, contexts, types, and who knows what else. These
+things all live in separate files & folders, with the only indication that they
+are related being that:
 
-1. they all _likely_ have message somewhere in their name
-2. they _probably_ import from each other.
+1. they all _hopefully_ have message somewhere in their name
+2. they _might_ import from each other.
 
-So what should we do?
+So what can we do?
 
 Let's make a new rule: if a feature has different types of code that previously
 would have been spread across our project, we will instead create a dedicated
@@ -48,9 +48,9 @@ close together will make things much easier to manage as you scale your app.
 
 But I think we can do even better.
 
-Let's take a closer look at our components folder. It's common to have a folder
-that contains prebuilt components from a [shadcn](https://ui.shadcn.com/)
-registry[^1]. These are usually found in `📁/components/ui`
+Let's take a closer look at our components folder. It's common to have a
+dedicated folder for components from shadcn registries[^1]. These are usually
+found in `📁/components/ui`
 
 [^1]:
     Most people think shadcn is a component library. While I suppose this is
@@ -65,16 +65,19 @@ registry[^1]. These are usually found in `📁/components/ui`
 <FolderView directory={folders.closerLookAtComponents} />
 
 My issue with this convention is that it doesn't draw clear lines with regard to
-where code should belong. Does having some of the component files in `📁/ui`
-mean that the others **aren't** UI? Since it's the components folder, that means
-that all of this is component code, right?
+where code should belong.
+
+- Does having some of the component files in `📁/ui`mean that the others
+  **aren't** UI?
+- Since it's the components folder, that means that all of this is component
+  code, right?
 
 Typically, the answer to both of those questions is no.
 
 Below is the first 30 lines of the
 [sidebar](https://ui.shadcn.com/docs/components/sidebar) component from the
-official shadcn registry. As we can see, it defines constants, a type, a
-context, and a hook before we get to any component code.
+official [shadcn](https://ui.shadcn.com/) registry. As we can see, it defines
+constants, a type, a context, and a hook before we get to any component code.
 
 ```tsx
 // components/ui/sidebar.tsx
@@ -111,7 +114,9 @@ export function useSidebar() {
 So then what should we do? Should we move all of this code into separate files
 and put them in a new folder in `📁/features`?
 
-We could. Is sidebar really a feature though? Looking over the
+We could.
+
+Is sidebar really a feature though? Looking over the
 [docs](https://ui.shadcn.com/docs/components/sidebar) for it, you can see that
 it's more like a collection of building blocks. These can then be used to build
 your actual sidebar tailored to the _specific needs of your app_.
@@ -160,7 +165,7 @@ outlining, strictly following the principles of Atomic Design.
     sidebar on the left side of your screen. As I continued building and
     collected more opinions on this topic, I started writing them down.
     Eventually, I decided to make this whole thing into a blog website, with
-    those opinions as the first post - and here we are.
+    those opinions as the first post. Here we are.
 
 Issues arose early on in the project. I found it difficult to decide whether
 certain components should be classified as molecules or organisms. I also didn't
@@ -170,9 +175,9 @@ Design, adjusting the definitions to better fit the needs of React.
 
 To start, I decided not to embrace his idea of _pages_ and _templates_. I think
 the best course of action here is to stick to whatever the meta-framework you're
-building in prescribes. For example, `layout.tsx` and `page.tsx` in Next.js are
-fairly analogous to templates and pages, so I think I'll just stick with those
-for now.
+building in prescribes. For example, `layout.tsx` and `page.tsx` in
+[Next](https://nextjs.org/docs/app/getting-started/layouts-and-pages) are fairly
+analogous to templates and pages, so I think I'll just stick with those for now.
 
 I also decided to get rid of organisms, leaving atoms and molecules as the units
 to measure the complexity and size of components. My updated rules aren't
@@ -194,7 +199,7 @@ that the analogy is still useful.
 - Can contain any kind of code, typically one component per file
 - ✅ **_Can_** be built with atoms
 - ✅ **_Can_** be built with other molecules
-- ex: message list, search bar, admin sidebar, dashboard sidebar
+- ex: message list, search bar, admin sidebar, analytics sidebar
 
 This modified analogy allows components from shadcn to fit perfectly into the
 category of atoms. You download atoms like button, sidebar, input, and then use
@@ -253,15 +258,14 @@ const AdminSidebar = () => {
 export { AdminSidebar };
 ```
 
-Great! We've given all of our downloaded[^4] components a new home. What about
-the components we wrote ourselves? What should we do with those?
+Great! We've given all of our shadcn[^4] components a new home. What about the
+components we wrote ourselves? What should we do with those?
 
 [^4]:
     Don't forget to modify `components.json` to have all new component code
     saved into the atoms folder.
 
-Let's take another look at the feature folder we created earlier for our
-messages code:
+Let's take another look at the feature folder we created for messages:
 
 <FolderView directory={folders.closerLookAtMessagesFeature} />
 
@@ -285,7 +289,7 @@ variants as molecules.
 [^5]:
     I won't include code snippets for any of the atoms I've built since they're
     all fairly large. If you're interested in reading through them, check out
-    the [repo](https://github.com/bentsignal/blog).
+    the [repo](https://github.com/bentsignal/blog) for this project.
 
 ```tsx
 // features/messages/molecules/user-message.tsx
@@ -314,9 +318,9 @@ const UserMessage = ({ message }: { message: EnhancedMessage }) => {
 export { UserMessage };
 ```
 
-When combining our new message atom with more general purpose atoms like _list_
-and _scroll_, it becomes trivial to compose something like the message list
-molecule shown below.
+When combining the power our new message atom with more general purpose atoms
+like _list_ and _scroll_, it becomes simple to compose something like the
+message list molecule shown below.
 
 ```tsx
 // features/messages/molecules/message-list.tsx
@@ -357,20 +361,19 @@ restructured our code:
 <FolderView directory={folders.messagesFeatureAfterAtomicDesign} />
 
 That's it! Putting atoms and molecules into feature folders is the last piece of
-the puzzle. Let's see how things look now that we've applied our new Atomic
-Design principles to every corner of the app:
+the puzzle. Let's see how things look after applying our new Atomic Design
+principles to every corner of the app:
 
 <FolderView directory={folders.messagingAppThirdIteration} />
 
 By following these principles:
 
 1. Grouping code for **features** close together
-2. Building **atoms**, and then using them to compose **molecules**.
+2. Building **atoms**, and then using them to compose **molecules**
 
-We have dramatically improved the readability, maintainability, composability —
-basically all the \*abilities of our code. Adopting this practice[^6] will put
-you on a path towards consistent UI, and improve code clarity for both humans
-and AI.
+We have dramatically improved the readability, maintainability, and
+composability of our project. Adopting this practice[^6] will put you on a path
+towards consistent UI and improved code clarity.
 
 [^6]:
     For those looking to better understand the power of building this way, I
