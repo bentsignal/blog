@@ -9,7 +9,7 @@
 <br />
 <div align="center">
 
-A space for me to share my thoughts
+A space for me to share my thoughts.
 
 Feel free to use this template to build your own site!
 

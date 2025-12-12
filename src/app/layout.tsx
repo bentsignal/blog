@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     default: "blog ❖ bentsignal",
     template: "%s ❖ bentsignal",
   },
-  description: "A space for me to share my thoughts",
+  description: "A space for me to share my thoughts.",
 };
 
 export default async function RootLayout({
