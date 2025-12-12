@@ -12,32 +12,12 @@ export const size = {
 };
 export const contentType = "image/png";
 
-export async function generateImageMetadata({
-  params,
-}: {
-  params: Promise<{ slug: PostSlug }>;
-}) {
-  const { slug } = await params;
-  const post = posts[slug];
-  return [
-    {
-      id: "default",
-      size,
-      contentType: "image/png",
-      alt: post.title,
-    },
-  ];
-}
-
 export default async function Image({
   params,
-  id,
 }: {
   params: Promise<{ slug: PostSlug }>;
-  id: Promise<string>;
 }) {
   const { slug } = await params;
-  await id;
   const post = posts[slug];
 
   const interSemiBold = await readFile(
