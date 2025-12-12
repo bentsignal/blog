@@ -25,6 +25,7 @@ export default function PostLink({
           setCurrentChannelSlug(channelSlug);
         }
       }}
+      prefetch={true}
       href={`/${slug}`}
     >
       {children}
