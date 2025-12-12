@@ -10,6 +10,7 @@ import * as Abyss from "@/atoms/abyss";
 import * as Scroll from "@/atoms/scroll";
 import { Separator } from "@/atoms/separator";
 import { TopControls } from "@/molecules/top-controls";
+import { pages } from "@/blog/pages";
 import { posts, postSlugs } from "@/blog/posts";
 
 export default async function Page({
@@ -24,17 +25,15 @@ export default async function Page({
     notFound();
   }
 
-  const post = posts[validatedSlug];
-  const { default: Post } = await import(
-    `@/blog/content/${validatedSlug}/page.mdx`
-  );
+  const postData = posts[validatedSlug];
+  const PostComponent = pages[validatedSlug];
 
-  const dateString = post.datePosted.toLocaleDateString(undefined, {
+  const dateString = postData.datePosted.toLocaleDateString(undefined, {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
-  const readingTimeString = `${post.readingTimeInMinutes} min read`;
+  const readingTimeString = `${postData.readingTimeInMinutes} min read`;
 
   return (
     <Scroll.Provider>
@@ -51,7 +50,7 @@ export default async function Page({
               <MoveLeft className="size-3" /> Back to Home
             </Link>
             <div className="my-4 flex flex-col gap-2">
-              <h1 className="text-2xl font-semibold">{post.title}</h1>
+              <h1 className="text-2xl font-semibold">{postData.title}</h1>
               <div className="flex items-center justify-between">
                 <p className="text-muted-foreground">
                   {dateString} • {readingTimeString}
@@ -65,7 +64,7 @@ export default async function Page({
                 "prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs",
               )}
             >
-              <Post />
+              <PostComponent />
             </div>
             <Separator className="my-4" />
             <div className="flex flex-col items-center gap-2">
