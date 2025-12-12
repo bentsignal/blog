@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return Object.entries(posts).map(([slug, post]) => {
     return {
       url: `${env.NEXT_PUBLIC_SITE_URL}/${slug}`,
-      lastModified: post.datePosted,
+      lastModified: post.lastModified,
       changeFrequency: "monthly",
       priority: 0.5,
     };

@@ -4,6 +4,7 @@ export interface Post {
   title: string;
   description: string;
   datePosted: Date;
+  lastModified: Date;
   readingTimeInMinutes: number;
   tags?: string[];
 }
@@ -14,6 +15,7 @@ export const posts = {
     description:
       "A deep dive into reevaluating how we manage the code, files, and folders in our React projects.",
     datePosted: new Date("2025-12-11"),
+    lastModified: new Date("2025-12-11"),
     readingTimeInMinutes: 7,
     tags: ["React", "Atomic Design"],
   },
