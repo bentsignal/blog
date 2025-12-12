@@ -1,3 +1,27 @@
-# How I Code
+<br />
+<div align="center">
+  <br />
+  <br />
+  <br />
+  <br />
+  <a href="https://blog.bentsignal.com" target="_blank">
+    blog.bentsignal.com
+  </a>
+</div>
+<br />
+<br />
+<br />
+<div align="center">
 
-### An evolving space to document my preferred methods of building software
+A space for me to share my thoughts
+
+Feel free to use this template to build your own site!
+
+<br />
+<br />
+
+me@bentsignal.com
+
+[x.com/bentsignal](https://x.com/bentsignal)
+
+</div>
