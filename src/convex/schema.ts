@@ -1,8 +1,8 @@
-import { vSlug } from "@/blog/slugs";
-import { vReaction, vSnapshot } from "@/features/messages/types";
-import { vNotificationSettings } from "@/types/notification-types";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { vReaction, vSnapshot } from "@/features/messages/types";
+import { vSlug } from "@/blog/slugs";
+import { vNotificationSettings } from "@/types/notification-types";
 
 export default defineSchema({
   messages: defineTable({

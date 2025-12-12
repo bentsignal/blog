@@ -1,13 +1,13 @@
 "use client";
 
-import { cn } from "@/utils/style-utils";
 import { Search as SearchIcon, X } from "lucide-react";
 import {
   Context as SearchContext,
   useContext as useSearch,
 } from "./search-context";
-import * as InputGroup from "@/atoms/input-group";
 import { useRequiredContext } from "@/lib/context";
+import { cn } from "@/utils/style-utils";
+import * as InputGroup from "@/atoms/input-group";
 
 const Icon = () => {
   return (

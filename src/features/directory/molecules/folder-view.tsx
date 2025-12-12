@@ -1,5 +1,5 @@
-import * as Directory from "@/features/directory/atom";
 import type { FolderType } from "../types";
+import * as Directory from "@/features/directory/atom";
 import * as Frame from "@/atoms/frame";
 
 const FolderView = ({ directory }: { directory: FolderType }) => {

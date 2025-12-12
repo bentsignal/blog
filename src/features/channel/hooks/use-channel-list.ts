@@ -1,10 +1,10 @@
 "use client";
 
-import { channels as baseChannels, channelSlugs } from "@/blog/channels";
-import { api } from "@/convex/_generated/api";
-import * as Search from "@/features/search/atom";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import * as Search from "@/features/search/atom";
+import { channels as baseChannels, channelSlugs } from "@/blog/channels";
 
 const useChannelList = () => {
   const hasSearchContext = useHasParentContext(Search.Context);

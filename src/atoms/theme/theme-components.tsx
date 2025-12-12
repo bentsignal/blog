@@ -5,8 +5,8 @@ import {
   Context as ThemeContext,
   useContext as useTheme,
 } from "./theme-context";
-import { Button } from "@/atoms/button";
 import { useRequiredContext } from "@/lib/context";
+import { Button } from "@/atoms/button";
 
 export const ToggleButton = () => {
   useRequiredContext(ThemeContext);

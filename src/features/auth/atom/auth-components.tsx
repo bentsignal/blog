@@ -1,12 +1,12 @@
 "use client";
 
-import * as SocialIcons from "@/features/socials/icons";
 import { LogIn, LogOut, UserRoundX } from "lucide-react";
 import { Context as AuthContext, useContext as useAuth } from "./auth-context";
+import { useRequiredContext } from "@/lib/context";
+import * as SocialIcons from "@/features/socials/icons";
 import { Button } from "@/atoms/button";
 import { Spinner } from "@/atoms/spinner";
 import * as Theme from "@/atoms/theme";
-import { useRequiredContext } from "@/lib/context";
 
 export const PrimaryButton = () => {
   useRequiredContext(AuthContext);

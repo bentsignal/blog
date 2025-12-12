@@ -9,8 +9,8 @@ import {
   useRef,
 } from "react";
 import type { PaginationStatus } from "convex/react";
-import * as Scroll from "@/atoms/scroll";
 import { createContext, useRequiredContext } from "@/lib/context";
+import * as Scroll from "@/atoms/scroll";
 
 const { Context, useContext } = createContext<{
   loadingStatus?: PaginationStatus;

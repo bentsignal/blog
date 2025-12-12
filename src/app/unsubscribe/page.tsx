@@ -1,8 +1,8 @@
-import { api } from "@/convex/_generated/api";
-import { validateNotificationType } from "@/convex/notifications";
 import { fetchMutation } from "convex/nextjs";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { api } from "@/convex/_generated/api";
+import { validateNotificationType } from "@/convex/notifications";
 import { Button } from "@/atoms/button";
 
 export default async function UnsubscribePage({

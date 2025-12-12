@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/utils/style-utils";
 import MainMenu from "./main-menu";
+import { cn } from "@/utils/style-utils";
 import * as Sidebar from "@/atoms/sidebar";
 
 export const TopControls = ({ className }: { className?: string }) => {

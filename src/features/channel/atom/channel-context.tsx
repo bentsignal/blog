@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { channels } from "@/blog/channels";
-import type { Channel, ChannelSlug } from "@/blog/channels";
-import { api } from "@/convex/_generated/api";
-import * as Chat from "@/features/chat/atom";
-import type { EnhancedMessage } from "@/features/messages/types";
 import { PaginationStatus, usePaginatedQuery } from "convex/react";
+import type { Channel, ChannelSlug } from "@/blog/channels";
+import type { EnhancedMessage } from "@/features/messages/types";
+import { api } from "@/convex/_generated/api";
 import { createContext, useRequiredContext } from "@/lib/context";
+import * as Chat from "@/features/chat/atom";
+import { channels } from "@/blog/channels";
 
 const INITIAL_PAGE_SIZE = 50;
 const PAGE_SIZE = 100;

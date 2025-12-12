@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { registerLanguages } from "@/features/code/languages/registry";
-import { cn } from "@/utils/style-utils";
 import {
   Check,
   Copy,
@@ -15,10 +13,12 @@ import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
 import { useCodeTheme } from "../hooks/use-code-theme";
 import { Context as CodeContext, useContext as useCode } from "./code-context";
+import { useRequiredContext } from "@/lib/context";
+import { cn } from "@/utils/style-utils";
+import { useIsClient } from "@/hooks/use-is-client";
+import { registerLanguages } from "@/features/code/languages/registry";
 import { Button } from "@/atoms/button";
 import * as Tooltip from "@/atoms/tooltip";
-import { useRequiredContext } from "@/lib/context";
-import { useIsClient } from "@/hooks/use-is-client";
 
 // init syntax highlighter
 registerLanguages();

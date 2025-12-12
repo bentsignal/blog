@@ -1,7 +1,7 @@
 "use client";
 
-import * as Code from "@/features/code/atom";
 import { Language } from "../languages/types";
+import * as Code from "@/features/code/atom";
 import * as Frame from "@/atoms/frame";
 
 const FramedCodeBlock = ({

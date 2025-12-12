@@ -1,6 +1,6 @@
-import { cn } from "@/utils/style-utils";
 import Link from "next/link";
 import { companies, socials } from "./data";
+import { cn } from "@/utils/style-utils";
 
 const SocialsBar = () => {
   return (
@@ -28,4 +28,4 @@ const SocialsBar = () => {
   );
 };
 
-export default SocialsBar;
+export { SocialsBar };

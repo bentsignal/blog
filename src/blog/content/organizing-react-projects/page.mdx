@@ -1,5 +1,5 @@
-import { FolderView } from "@/features/directory/molecules/folder-view";
 import * as folders from "./folders";
+import { FolderView } from "@/features/directory/molecules/folder-view";
 
 If you've ever worked in a modern React project before, then you've probably
 seen something like this:
@@ -290,8 +290,8 @@ variants as molecules.
 ```tsx
 // features/messages/molecules/user-message.tsx
 
-import * as Message from "@/features/messages/atom";
 import type { EnhancedMessage } from "@/features/messages/types";
+import * as Message from "@/features/messages/atom";
 
 const UserMessage = ({ message }: { message: EnhancedMessage }) => {
   return (
@@ -321,8 +321,8 @@ molecule shown below.
 ```tsx
 // features/messages/molecules/message-list.tsx
 
-import * as Message from "@/features/messages/atom";
 import type { EnhancedMessage } from "@/features/messages/types";
+import * as Message from "@/features/messages/atom";
 import * as List from "@/atoms/list";
 import * as Scroll from "@/atoms/scroll";
 

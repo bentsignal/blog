@@ -1,5 +1,5 @@
-import { Doc } from "@/convex/_generated/dataModel";
 import { Infer, v } from "convex/values";
+import { Doc } from "@/convex/_generated/dataModel";
 
 interface EnhancedMessage extends Doc<"messages"> {
   name: string;

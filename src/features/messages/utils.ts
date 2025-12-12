@@ -1,6 +1,6 @@
 import { MAX_MESSAGE_LENGTH, MIN_MESSAGE_LENGTH } from "./config";
-import type { Reaction, ReactionEmoji, Snapshot } from "./types";
 import { REACTION_EMOJIS } from "./types";
+import type { Reaction, ReactionEmoji, Snapshot } from "./types";
 
 const validateMessage = (content: string) => {
   if (!content) return "Message cannot be empty";

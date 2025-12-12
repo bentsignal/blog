@@ -1,7 +1,6 @@
 "use client";
 
 import { memo } from "react";
-import { getLanguage } from "@/features/code/languages/utils";
 import equal from "fast-deep-equal";
 import {
   File as DefaultFileIcon,
@@ -11,14 +10,15 @@ import {
   ListChevronsDownUp,
   ListChevronsUpDown,
 } from "lucide-react";
-import type { FileExtension, FileType, FolderType } from "../types";
 import {
   Context as DirectoryContext,
   useContext as useDirectory,
 } from "./directory-context";
+import type { FileExtension, FileType, FolderType } from "../types";
+import { useRequiredContext } from "@/lib/context";
+import { getLanguage } from "@/features/code/languages/utils";
 import { Button } from "@/atoms/button";
 import * as Tooltip from "@/atoms/tooltip";
-import { useRequiredContext } from "@/lib/context";
 
 const FolderIdentifier = () => {
   useRequiredContext(DirectoryContext);

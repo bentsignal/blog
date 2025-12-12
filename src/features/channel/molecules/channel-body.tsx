@@ -1,12 +1,12 @@
 "use client";
 
+import { useRequiredContext } from "@/lib/context";
 import * as Channel from "@/features/channel/atom";
 import { ChannelComposer } from "@/features/composer/molecules/channel-composer";
 import * as Message from "@/features/messages/atom";
 import { MessageList } from "@/features/messages/molecules/message-list";
 import * as List from "@/atoms/list";
 import * as Scroll from "@/atoms/scroll";
-import { useRequiredContext } from "@/lib/context";
 
 const Skeletons = () => {
   return (

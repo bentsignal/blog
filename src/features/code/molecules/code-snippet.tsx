@@ -1,8 +1,8 @@
 "use client";
 
-import { getLanguage } from "@/features/code/languages/utils";
 import { FramedCodeBlock } from "./framed-code-block";
 import { InlineCode } from "./inline-code";
+import { getLanguage } from "@/features/code/languages/utils";
 
 const CodeSnippet = ({
   children,

@@ -1,12 +1,12 @@
 "use node";
 
-import { env } from "@/convex/convex.env";
 import { Inbound } from "@inboundemail/sdk";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
 import { Id } from "../_generated/dataModel";
 import { ActionCtx, internalAction } from "../_generated/server";
 import renderReplyNotificationEmail from "./templates";
+import { env } from "@/convex/convex.env";
 
 const inbound = new Inbound(env.INBOUND_API_KEY);
 

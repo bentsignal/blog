@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import * as Auth from "@/features/auth/atom";
-import { useMessageActions } from "@/features/messages/hooks/use-message-actions";
+import { Pencil, Reply, Trash, UserRound } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  Context as MessageContext,
+  useContext as useMessage,
+} from "./message-context";
 import type { ReactionEmoji } from "@/features/messages/types";
-import { REACTION_EMOJIS } from "@/features/messages/types";
-import { getReactionCounts } from "@/features/messages/utils";
+import { useRequiredContext } from "@/lib/context";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { cn } from "@/utils/style-utils";
 import {
@@ -13,18 +17,14 @@ import {
   getTimeString,
   isOverOneDayAgo,
 } from "@/utils/time-utils";
-import { Pencil, Reply, Trash, UserRound } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { Button } from "../../../atoms/button";
-import * as ButtonGroup from "../../../atoms/button-group";
-import * as Shapes from "../../../atoms/shapes";
-import * as ToolTip from "../../../atoms/tooltip";
-import {
-  Context as MessageContext,
-  useContext as useMessage,
-} from "./message-context";
-import { useRequiredContext } from "@/lib/context";
+import * as Auth from "@/features/auth/atom";
+import { useMessageActions } from "@/features/messages/hooks/use-message-actions";
+import { REACTION_EMOJIS } from "@/features/messages/types";
+import { getReactionCounts } from "@/features/messages/utils";
+import { Button } from "@/atoms/button";
+import * as ButtonGroup from "@/atoms/button-group";
+import * as Shapes from "@/atoms/shapes";
+import * as ToolTip from "@/atoms/tooltip";
 
 const Container = ({
   className,

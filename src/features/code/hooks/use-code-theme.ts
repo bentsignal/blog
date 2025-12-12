@@ -2,8 +2,8 @@ import {
   base16AteliersulphurpoolLight,
   nord,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
-import * as Theme from "@/atoms/theme";
 import { useRequiredContext } from "@/lib/context";
+import * as Theme from "@/atoms/theme";
 
 const useCodeTheme = () => {
   useRequiredContext(Theme.Context);

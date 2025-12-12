@@ -1,6 +1,6 @@
+import { useRequiredContext } from "@/lib/context";
 import * as Search from "@/features/search/atom";
 import * as InputGroup from "@/atoms/input-group";
-import { useRequiredContext } from "@/lib/context";
 
 const SearchBar = ({ placeholder }: { placeholder: string }) => {
   useRequiredContext(Search.Context);

@@ -1,17 +1,17 @@
 "use client";
 
 import { Fragment } from "react";
-import * as Message from "@/features/messages/atom";
-import type { EnhancedMessage } from "@/features/messages/types";
-import { cn } from "@/utils/style-utils";
-import { areSameDay } from "@/utils/time-utils";
 import { ChainedMessage } from "./chained-message";
 import { ReplyMessage } from "./reply-message";
 import { StandardMessage } from "./standard-message";
+import type { EnhancedMessage } from "@/features/messages/types";
+import { useRequiredContext } from "@/lib/context";
+import { cn } from "@/utils/style-utils";
+import { areSameDay } from "@/utils/time-utils";
+import * as Message from "@/features/messages/atom";
 import * as List from "@/atoms/list";
 import * as Scroll from "@/atoms/scroll";
 import { DateMarker } from "@/molecules/date-marker";
-import { useRequiredContext } from "@/lib/context";
 
 const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
   useRequiredContext(List.Context);

@@ -1,20 +1,20 @@
 "use client";
 
 import { useEffect } from "react";
-import * as Auth from "@/features/auth/atom";
-import {
-  MAX_MESSAGE_LENGTH,
-  MIN_MESSAGE_LENGTH,
-} from "@/features/messages/config";
-import { cn } from "@/utils/style-utils";
 import * as Icons from "lucide-react";
 import {
   Context as ComposerContext,
   useContext as useComposer,
 } from "./composer-context";
+import { useRequiredContext } from "@/lib/context";
+import { cn } from "@/utils/style-utils";
+import * as Auth from "@/features/auth/atom";
+import {
+  MAX_MESSAGE_LENGTH,
+  MIN_MESSAGE_LENGTH,
+} from "@/features/messages/config";
 import { Button } from "@/atoms/button";
 import * as ToolTip from "@/atoms/tooltip";
-import { useRequiredContext } from "@/lib/context";
 
 const Container = ({
   className,

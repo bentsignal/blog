@@ -1,12 +1,12 @@
-import pfp from "@/assets/pfp.webp";
-import { posts, postSlugs } from "@/blog/posts";
-import SocialsBar from "@/features/socials/socials-bar";
 import Image from "next/image";
+import { SocialsBar } from "@/features/socials/socials-bar";
 import * as Abyss from "@/atoms/abyss";
 import * as Scroll from "@/atoms/scroll";
 import { Separator } from "@/atoms/separator";
 import PostLink from "@/molecules/post-link";
 import { TopControls } from "@/molecules/top-controls";
+import pfp from "@/assets/pfp.webp";
+import { posts, postSlugs } from "@/blog/posts";
 
 export default function HomePage() {
   return (

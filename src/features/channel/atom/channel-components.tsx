@@ -1,12 +1,12 @@
 "use client";
 
-import * as Chat from "@/features/chat/atom";
 import { ChevronLeft } from "lucide-react";
 import {
   Context as ChannelContext,
   useContext as useChannel,
 } from "./channel-context";
 import { useRequiredContext } from "@/lib/context";
+import * as Chat from "@/features/chat/atom";
 
 const Identifier = () => {
   useRequiredContext(ChannelContext);

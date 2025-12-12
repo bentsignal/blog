@@ -1,5 +1,5 @@
-import { defaultNotificationSettings } from "@/types/notification-types";
 import { internalMutation } from "./_generated/server";
+import { defaultNotificationSettings } from "@/types/notification-types";
 
 export const unreadAll = internalMutation({
   handler: async (ctx) => {

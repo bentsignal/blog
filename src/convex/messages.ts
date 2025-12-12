@@ -1,12 +1,3 @@
-import { channelSlugs } from "@/blog/channels";
-import { vSlug } from "@/blog/slugs";
-import type { EnhancedMessage } from "@/features/messages/types";
-import { vReactionEmoji } from "@/features/messages/types";
-import {
-  getMessageContent,
-  getReactionsSignature,
-  validateMessage,
-} from "@/features/messages/utils";
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { Id } from "./_generated/dataModel";
@@ -15,7 +6,17 @@ import { authedMutation } from "./convex_helpers";
 import { rateLimiter } from "./limiter";
 import { notifyUserOfReplyToTheirMessage } from "./notifications";
 import { getFileURL } from "./uploadthing";
-import { getProfileByUserId, type Profile } from "./user";
+import { getProfileByUserId } from "./user";
+import type { Profile } from "./user";
+import type { EnhancedMessage } from "@/features/messages/types";
+import { vReactionEmoji } from "@/features/messages/types";
+import {
+  getMessageContent,
+  getReactionsSignature,
+  validateMessage,
+} from "@/features/messages/utils";
+import { channelSlugs } from "@/blog/channels";
+import { vSlug } from "@/blog/slugs";
 
 export const getPage = query({
   args: {

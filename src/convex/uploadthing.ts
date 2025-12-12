@@ -1,10 +1,10 @@
 "use node";
 
-import { env } from "@/convex/convex.env";
 import { v } from "convex/values";
 import { UTApi, UTFile } from "uploadthing/server";
 import { internal } from "./_generated/api";
 import { internalAction } from "./_generated/server";
+import { env } from "@/convex/convex.env";
 
 export const utapi = new UTApi({
   token: env.UPLOADTHING_TOKEN,

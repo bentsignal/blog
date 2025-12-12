@@ -1,7 +1,7 @@
 "use client";
 
-import * as Scroll from "@/atoms/scroll";
 import { useRequiredContext } from "@/lib/context";
+import * as Scroll from "@/atoms/scroll";
 
 const HashLink = ({
   href,

@@ -1,8 +1,8 @@
+import { cookies, headers } from "next/headers";
 import { Provider as ConvexProvider } from "@/context/convex-context";
 import * as Auth from "@/features/auth/atom";
 import { getServersideToken } from "@/features/auth/lib/auth-server";
 import * as Chat from "@/features/chat/atom";
-import { cookies, headers } from "next/headers";
 import * as Sidebar from "@/atoms/sidebar";
 import * as Theme from "@/atoms/theme";
 

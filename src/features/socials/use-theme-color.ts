@@ -1,7 +1,7 @@
 "use client";
 
-import * as Theme from "@/atoms/theme";
 import { useRequiredContext } from "@/lib/context";
+import * as Theme from "@/atoms/theme";
 
 const useThemeColor = () => {
   useRequiredContext(Theme.Context);

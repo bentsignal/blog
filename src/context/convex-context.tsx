@@ -1,12 +1,12 @@
 "use client";
 
 import { ReactNode } from "react";
-import { env } from "@/env";
-import { authClient } from "@/features/auth/lib/auth-client";
 import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConvexReactClient } from "convex/react";
+import { authClient } from "@/features/auth/lib/auth-client";
+import { env } from "@/env";
 
 const convex = new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL, {});
 

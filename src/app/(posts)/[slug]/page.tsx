@@ -1,15 +1,16 @@
-import { posts, postSlugs, type PostSlug } from "@/blog/posts";
-import SocialsBar from "@/features/socials/socials-bar";
-import { findPostWithSlug } from "@/utils/slug-utils";
-import { cn } from "@/utils/style-utils";
 import { MoveLeft } from "lucide-react";
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { PostSlug } from "@/blog/posts";
+import type { Metadata } from "next";
+import { findPostWithSlug } from "@/utils/slug-utils";
+import { cn } from "@/utils/style-utils";
+import { SocialsBar } from "@/features/socials/socials-bar";
 import * as Abyss from "@/atoms/abyss";
 import * as Scroll from "@/atoms/scroll";
 import { Separator } from "@/atoms/separator";
 import { TopControls } from "@/molecules/top-controls";
+import { posts, postSlugs } from "@/blog/posts";
 
 export default async function Page({
   params,

@@ -1,6 +1,6 @@
-import { channelSlugs } from "@/blog/channels";
 import type { ChannelSlug } from "@/blog/channels";
 import type { PostSlug } from "@/blog/posts";
+import { channelSlugs } from "@/blog/channels";
 import { postSlugs } from "@/blog/posts";
 
 export const getSlugFromPathname = (pathname: string) => {

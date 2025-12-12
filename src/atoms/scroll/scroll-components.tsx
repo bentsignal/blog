@@ -1,13 +1,13 @@
 "use client";
 
-import { cn } from "@/utils/style-utils";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import {
   Context as ScrollContext,
   useContext as useScroll,
 } from "./scroll-context";
-import { Button } from "@/atoms/button";
 import { useRequiredContext } from "@/lib/context";
+import { cn } from "@/utils/style-utils";
+import { Button } from "@/atoms/button";
 
 const Wrapper = ({
   children,

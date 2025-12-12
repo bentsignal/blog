@@ -1,5 +1,3 @@
-import { env } from "@/convex/convex.env";
-import type { EnhancedMessage } from "@/features/messages/types";
 import {
   Body,
   Button,
@@ -15,6 +13,8 @@ import {
 } from "@react-email/components";
 import { pretty, render } from "@react-email/render";
 import type { NotificationType } from "../../types/notification-types";
+import type { EnhancedMessage } from "@/features/messages/types";
+import { env } from "@/convex/convex.env";
 
 const MAX_MESSAGES_TO_SHOW = 5;
 

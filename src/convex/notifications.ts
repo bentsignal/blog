@@ -1,13 +1,3 @@
-import type { EnhancedMessage } from "@/features/messages/types";
-import {
-  getMessageContent,
-  getReactionsSignature,
-} from "@/features/messages/utils";
-import {
-  NotificationType,
-  vNotificationType,
-} from "@/types/notification-types";
-import { getTimeInMs } from "@/utils/time-utils";
 import { validate } from "convex-helpers/validators";
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
@@ -18,6 +8,16 @@ import {
   MutationCtx,
 } from "./_generated/server";
 import { getFileURL } from "./uploadthing";
+import type { EnhancedMessage } from "@/features/messages/types";
+import { getTimeInMs } from "@/utils/time-utils";
+import {
+  getMessageContent,
+  getReactionsSignature,
+} from "@/features/messages/utils";
+import {
+  NotificationType,
+  vNotificationType,
+} from "@/types/notification-types";
 
 export const validateNotificationType = (value: string) => {
   const valueIsValid = validate(vNotificationType, value);

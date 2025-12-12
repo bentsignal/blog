@@ -5,12 +5,19 @@
   ],
   "importOrder": [
     "^react$",
+    "<BUILTIN_MODULES>",
     "<THIRD_PARTY_MODULES>",
     "^[.]",
+    "<TYPES>",
+    "@/convex/(.*)$",
+    "@/context/(.*)$",
+    "@/lib/(.*)$",
+    "@/utils/(.*)$",
+    "@/hooks/(.*)$",
+    "@/features/(.*)$",
     "@/atoms/(.*)$",
     "@/molecules(.*)$",
-    "@/lib/(.*)$",
-    "@/hooks/(.*)$"
+    "@/(.*)$"
   ],
   "proseWrap": "always"
 }

@@ -1,7 +1,7 @@
-import * as Message from "@/features/messages/atom";
 import { EditComposer } from "./edit-composer";
 import { ReplyComposer } from "./reply-composer";
 import { useRequiredContext } from "@/lib/context";
+import * as Message from "@/features/messages/atom";
 
 const InlineComposer = () => {
   useRequiredContext(Message.Context);

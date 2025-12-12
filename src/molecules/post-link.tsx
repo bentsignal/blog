@@ -1,10 +1,10 @@
 "use client";
 
-import type { PostSlug } from "@/blog/posts";
-import * as Chat from "@/features/chat/atom";
-import { findChannelWithSlug } from "@/utils/slug-utils";
 import Link from "next/link";
+import type { PostSlug } from "@/blog/posts";
 import { useRequiredContext } from "@/lib/context";
+import { findChannelWithSlug } from "@/utils/slug-utils";
+import * as Chat from "@/features/chat/atom";
 
 export default function PostLink({
   slug,

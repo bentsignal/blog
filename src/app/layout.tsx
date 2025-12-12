@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata } from "next";
 import { Providers as GlobalProviders } from "@/context/global-context";
 import { ChatWindow } from "@/features/chat/molecules/chat-window";
 import * as Search from "@/features/search/atom";

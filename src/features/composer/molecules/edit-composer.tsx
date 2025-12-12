@@ -1,11 +1,11 @@
 import { useState } from "react";
+import { toast } from "sonner";
+import { useRequiredContext } from "@/lib/context";
 import * as Composer from "@/features/composer/atom";
 import * as Message from "@/features/messages/atom";
 import { useMessageActions } from "@/features/messages/hooks/use-message-actions";
 import { validateMessage } from "@/features/messages/utils";
-import { toast } from "sonner";
 import * as ButtonGroup from "@/atoms/button-group";
-import { useRequiredContext } from "@/lib/context";
 
 const EditComposer = () => {
   useRequiredContext(Message.Context);

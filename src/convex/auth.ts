@@ -1,10 +1,4 @@
-import { env } from "@/convex/convex.env";
-import { defaultNotificationSettings } from "@/types/notification-types";
-import {
-  AuthFunctions,
-  createClient,
-  type GenericCtx,
-} from "@convex-dev/better-auth";
+import { AuthFunctions, createClient } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
 import { betterAuth } from "better-auth";
 import { components, internal } from "./_generated/api";
@@ -14,6 +8,9 @@ import { deleteAllFromUser as deleteAllMessagesFromUser } from "./messages";
 import { deleteAllForUser as deleteAllNotificationsForUser } from "./notifications";
 import { deleteForUser as deletePreferencesForUser } from "./preferences";
 import { getProfileByUserId } from "./user";
+import type { GenericCtx } from "@convex-dev/better-auth";
+import { env } from "@/convex/convex.env";
+import { defaultNotificationSettings } from "@/types/notification-types";
 
 const authFunctions: AuthFunctions = internal.auth;
 

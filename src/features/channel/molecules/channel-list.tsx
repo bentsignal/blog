@@ -1,14 +1,14 @@
 "use client";
 
-import * as Chat from "@/features/chat/atom";
+import { useRouter } from "next/navigation";
+import { useChannelList } from "../hooks/use-channel-list";
+import { useRequiredContext } from "@/lib/context";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
-import { useRouter } from "next/navigation";
-import { useChannelList } from "../hooks/use-channel-list";
+import * as Chat from "@/features/chat/atom";
 import * as Scroll from "@/atoms/scroll";
 import * as Shapes from "@/atoms/shapes";
-import { useRequiredContext } from "@/lib/context";
 
 export const ChannelList = () => {
   useRequiredContext(Chat.Context);

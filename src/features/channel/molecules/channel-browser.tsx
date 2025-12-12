@@ -1,7 +1,7 @@
 "use client";
 
-import { SearchBar } from "@/features/search/molecules/search-bar";
 import { ChannelList } from "./channel-list";
+import { SearchBar } from "@/features/search/molecules/search-bar";
 import { TopControls } from "@/molecules/top-controls";
 
 export const ChannelBrowser = () => {

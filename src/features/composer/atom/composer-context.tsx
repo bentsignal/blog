@@ -1,7 +1,7 @@
 "use client";
 
-import { validateMessage } from "@/features/messages/utils";
 import { createContext } from "@/lib/context";
+import { validateMessage } from "@/features/messages/utils";
 
 interface ComposerInputProps {
   inputRef: React.RefObject<HTMLTextAreaElement | null>;

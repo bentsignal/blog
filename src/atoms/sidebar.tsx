@@ -1,17 +1,18 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "@/utils/style-utils";
 import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
+import type { VariantProps } from "class-variance-authority";
+import { cn } from "@/utils/style-utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/atoms/button";
 import { Input as BaseInput } from "@/atoms/input";
 import { Separator as BaseSeparator } from "@/atoms/separator";
 import * as Sheet from "@/atoms/sheet";
 import { Skeleton } from "@/atoms/skeleton";
 import * as Tooltip from "@/atoms/tooltip";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;

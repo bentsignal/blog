@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import * as Auth from "@/features/auth/atom";
-import * as Chat from "@/features/chat/atom";
 import type {
   EnhancedMessage,
   MessageInteractionState,
 } from "@/features/messages/types";
 import { createContext, useRequiredContext } from "@/lib/context";
+import * as Auth from "@/features/auth/atom";
+import * as Chat from "@/features/chat/atom";
 
 interface MessageContextType extends EnhancedMessage {
   interactionState: MessageInteractionState;
