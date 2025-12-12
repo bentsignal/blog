@@ -19,7 +19,7 @@ const authFunctions: AuthFunctions = internal.auth;
 
 // The component client has methods needed for integrating Convex with Better Auth,
 // as well as helper methods for general use.
-export const authComponent = createClient<DataModel, typeof authSchema>(
+const authComponent = createClient<DataModel, typeof authSchema>(
   components.betterAuth,
   {
     authFunctions,
@@ -70,7 +70,7 @@ export const authComponent = createClient<DataModel, typeof authSchema>(
   },
 );
 
-export const createAuth = (
+const createAuth = (
   ctx: GenericCtx<DataModel>,
   { optionsOnly } = { optionsOnly: false },
 ) => {
@@ -119,3 +119,4 @@ export const createAuth = (
 };
 
 export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
+export { createAuth, authComponent };
