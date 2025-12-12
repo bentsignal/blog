@@ -45,6 +45,7 @@ export default async function Page({
           <Scroll.Content className="mx-auto flex max-w-xl flex-col gap-2 px-4 py-16">
             <Link
               href="/"
+              prefetch={true}
               className="text-muted-foreground hover:text-primary flex cursor-pointer items-center gap-2 text-sm transition-colors duration-100"
             >
               <MoveLeft className="size-3" /> Back to Home
