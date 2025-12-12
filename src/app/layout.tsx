@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Roboto_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import { Providers as GlobalProviders } from "@/context/global-context";
 import { ChatWindow } from "@/features/chat/molecules/chat-window";
@@ -7,13 +7,14 @@ import * as Search from "@/features/search/atom";
 import * as Sidebar from "@/atoms/sidebar";
 import { Toaster } from "@/atoms/toast";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
+  weight: "variable",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const robotoMono = Roboto_Mono({
+  variable: "--font-roboto-mono",
   subsets: ["latin"],
 });
 
@@ -36,7 +37,7 @@ export default async function RootLayout({
         <ReactScan />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} gradient-background antialiased`}
+        className={`${inter.variable} ${robotoMono.variable} gradient-background antialiased`}
       >
         <GlobalProviders>
           <Toaster />
