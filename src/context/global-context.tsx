@@ -23,10 +23,8 @@ export const Providers = async ({
 
   const shouldShowSidebar =
     sidebarCookie?.value === undefined
-      ? true
-      : sidebarCookie.value === "true"
-        ? true
-        : false;
+      ? undefined
+      : sidebarCookie.value === "true";
 
   return (
     <ConvexProvider>
