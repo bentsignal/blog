@@ -1,9 +1,10 @@
 import rateLimiter from "@convex-dev/rate-limiter/convex.config";
+import { verifyEnv } from "convex-env";
 import { defineApp } from "convex/server";
 import betterAuth from "./betterAuth/convex.config";
-import { verifyEnv } from "./convex.env";
+import { schema } from "./convex.env";
 
-verifyEnv();
+verifyEnv(schema);
 
 const app = defineApp();
 app.use(betterAuth);

@@ -1,27 +1,20 @@
-export const vars = [
-  "CONVEX_SITE_URL",
-  "SITE_URL",
-  "BETTER_AUTH_SECRET",
-  "GITHUB_CLIENT_ID",
-  "GITHUB_CLIENT_SECRET",
-  "UPLOADTHING_TOKEN",
-  "UPLOADTHING_ORG_ID",
-  "INBOUND_API_KEY",
-] as const;
+import { createEnv } from "convex-env";
+import { v } from "convex/values";
 
-export const env = vars.reduce(
-  (acc, name) => {
-    acc[name] = process.env[name]!;
-    return acc;
-  },
-  {} as Record<(typeof vars)[number], string>,
-);
-
-export const verifyEnv = () => {
-  vars.forEach((name) => {
-    const value = process.env[name];
-    if (value === undefined) {
-      throw new Error("Missing environment variable: " + name);
-    }
-  });
+export const schema = {
+  CONVEX_SITE_URL: v.string(),
+  SITE_URL: v.string(),
+  BETTER_AUTH_SECRET: v.string(),
+  GITHUB_CLIENT_ID: v.string(),
+  GITHUB_CLIENT_SECRET: v.string(),
+  UPLOADTHING_TOKEN: v.string(),
+  UPLOADTHING_ORG_ID: v.string(),
+  INBOUND_API_KEY: v.string(),
 };
+
+export const env = createEnv({
+  schema,
+  options: {
+    skipValidation: true,
+  },
+});
