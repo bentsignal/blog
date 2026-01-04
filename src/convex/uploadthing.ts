@@ -27,8 +27,8 @@ export const uploadPFP = internalAction({
 });
 
 export const getFileURL = (key: string) => {
-  const orgID = env.UPLOADTHING_ORG_ID;
-  return `https://${orgID}.ufs.sh/f/${key}`;
+  const appID = env.UPLOADTHING_APP_ID;
+  return `https://${appID}.ufs.sh/f/${key}`;
 };
 
 export const downloadImage = async (url: string) => {

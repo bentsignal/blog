@@ -78,8 +78,8 @@ importers:
         specifier: ^1.31.2
         version: 1.31.2(@clerk/clerk-react@5.49.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4))(react@19.1.4)
       convex-env:
-        specifier: ^2.2.0
-        version: 2.2.0(@standard-schema/spec@1.0.0)(convex@1.31.2(@clerk/clerk-react@5.49.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4))(react@19.1.4))(react@19.1.4)(typescript@5.9.2)(zod@4.1.11)
+        specifier: ^2.3.0
+        version: 2.3.0(@standard-schema/spec@1.0.0)(convex@1.31.2(@clerk/clerk-react@5.49.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4))(react@19.1.4))(react@19.1.4)(typescript@5.9.2)(zod@4.1.11)
       convex-helpers:
         specifier: ^0.1.104
         version: 0.1.104(@standard-schema/spec@1.0.0)(convex@1.31.2(@clerk/clerk-react@5.49.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4))(react@19.1.4))(react@19.1.4)(typescript@5.9.2)(zod@4.1.11)
@@ -1981,8 +1981,8 @@ packages:
     resolution: {integrity: sha512-5IKcdX0nnYavi6G7TtOhwkYzyjfJlatbjMjuLSfE2kYT5pMDOilZ4OvMhi637CcDICTmz3wARPoyhqyX1Y+XvA==}
     engines: {node: ^14.18.0 || >=16.10.0}
 
-  convex-env@2.2.0:
-    resolution: {integrity: sha512-fuZAFFX0Mtk2LTb6E2vzjfD5lt4Xpz5to3o1K/Ds1yh3ymDAJKbOOXZ/PdMKWtpS9V63y6EQUtW41lqoV4BL1A==}
+  convex-env@2.3.0:
+    resolution: {integrity: sha512-cjOKQfKyhTz7majdnJeFoF/bUWVqT3ECwE6tbQUNRAm8sYlZMJwh10Xn/biokFkvJXotg7tqlKLxp5cMypUBWQ==}
     peerDependencies:
       convex: '>=1.20.0'
 
@@ -5088,7 +5088,7 @@ snapshots:
 
   consola@3.4.2: {}
 
-  convex-env@2.2.0(@standard-schema/spec@1.0.0)(convex@1.31.2(@clerk/clerk-react@5.49.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4))(react@19.1.4))(react@19.1.4)(typescript@5.9.2)(zod@4.1.11):
+  convex-env@2.3.0(@standard-schema/spec@1.0.0)(convex@1.31.2(@clerk/clerk-react@5.49.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4))(react@19.1.4))(react@19.1.4)(typescript@5.9.2)(zod@4.1.11):
     dependencies:
       convex: 1.31.2(@clerk/clerk-react@5.49.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4))(react@19.1.4)
       convex-helpers: 0.1.108(@standard-schema/spec@1.0.0)(convex@1.31.2(@clerk/clerk-react@5.49.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4))(react@19.1.4))(react@19.1.4)(typescript@5.9.2)(zod@4.1.11)

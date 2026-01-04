@@ -1,13 +1,12 @@
 import { createEnv } from "convex-env";
+import { betterAuth, oAuth, uploadthing } from "convex-env/presets";
 import { v } from "convex/values";
 
 export const schema = {
+  ...betterAuth,
+  ...oAuth.github,
+  ...uploadthing,
   SITE_URL: v.string(),
-  BETTER_AUTH_SECRET: v.string(),
-  GITHUB_CLIENT_ID: v.string(),
-  GITHUB_CLIENT_SECRET: v.string(),
-  UPLOADTHING_TOKEN: v.string(),
-  UPLOADTHING_ORG_ID: v.string(),
   INBOUND_API_KEY: v.string(),
 };
 
