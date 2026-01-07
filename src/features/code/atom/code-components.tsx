@@ -48,7 +48,7 @@ const Block = () => {
       PreTag={({ children }) => (
         <pre
           className={cn(
-            "text-card-foreground text-xs",
+            "text-card-foreground overflow-y-hidden text-xs",
             wrapLines
               ? "overflow-x-auto whitespace-pre-wrap"
               : "overflow-x-auto whitespace-pre",
