@@ -16,3 +16,9 @@ export const channels = {
 export type ChannelSlug = keyof typeof channels;
 
 export const channelSlugs = Object.keys(channels) as ChannelSlug[];
+
+export type EnhancedChannel = {
+  name: string;
+  slug: ChannelSlug;
+  previewString: string | null | undefined;
+};

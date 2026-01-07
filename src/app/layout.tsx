@@ -2,6 +2,7 @@ import "./globals.css";
 import { Inter, Roboto_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import { Providers as GlobalProviders } from "@/context/global-context";
+import { ChannelListProvider } from "@/features/channel/molecules/channel-list";
 import { ChatWindow } from "@/features/chat/molecules/chat-window";
 import * as Search from "@/features/search/atom";
 import * as Sidebar from "@/atoms/sidebar";
@@ -44,7 +45,9 @@ export default async function RootLayout({
           <Sidebar.Frame className="max-w-screen sm:max-w-lg">
             <Sidebar.Content className="flex items-center">
               <Search.Provider>
-                <ChatWindow />
+                <ChannelListProvider>
+                  <ChatWindow />
+                </ChannelListProvider>
               </Search.Provider>
             </Sidebar.Content>
           </Sidebar.Frame>

@@ -1,20 +1,66 @@
 "use client";
 
+import { useHasParentContext } from "@fluentui/react-context-selector";
+import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
-import { useChannelList } from "../hooks/use-channel-list";
-import { useRequiredContext } from "@/lib/context";
+import { api } from "@/convex/_generated/api";
+import { createContext, useRequiredContext } from "@/lib/context";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
 import * as Chat from "@/features/chat/atom";
+import * as Search from "@/features/search/atom";
 import * as Scroll from "@/atoms/scroll";
 import * as Shapes from "@/atoms/shapes";
+import {
+  channels as baseChannels,
+  channelSlugs,
+  EnhancedChannel,
+} from "@/blog/channels";
+
+const { Context: ChannelListContext, useContext: useChannelList } =
+  createContext<{
+    channels: EnhancedChannel[];
+  }>({ displayName: "ChannelListContext" });
+
+export const ChannelListProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const hasSearchContext = useHasParentContext(Search.Context);
+  const searchTerm = Search.useContext((c) => c.searchTerm);
+
+  const slugsWithPreviews = useQuery(api.messages.getPreviewsForChannels);
+
+  const channels = channelSlugs
+    .map((slug) => {
+      return {
+        ...baseChannels[slug],
+        slug,
+        previewString: slugsWithPreviews?.find(
+          (preview) => preview.slug === slug,
+        )?.previewString,
+      };
+    })
+    .filter((channel) =>
+      hasSearchContext
+        ? channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+        : true,
+    );
+  return (
+    <ChannelListContext.Provider value={{ channels }}>
+      {children}
+    </ChannelListContext.Provider>
+  );
+};
 
 export const ChannelList = () => {
   useRequiredContext(Chat.Context);
+  useRequiredContext(ChannelListContext);
 
   const setCurrentChannelSlug = Chat.useContext((c) => c.setCurrentChannelSlug);
-  const channels = useChannelList();
+  const channels = useChannelList((c) => c.channels);
   const router = useRouter();
 
   if (channels.length === 0) {
