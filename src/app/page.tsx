@@ -20,17 +20,16 @@ export default function HomePage() {
               <Image
                 src={pfp}
                 alt="Profile Picture"
-                width={100}
-                height={100}
+                width={80}
+                height={80}
                 className="rounded-full"
                 priority
               />
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-center">
                 <span className="font-semibold">shawn</span>
-                <span className="text-muted-foreground mb-3 text-sm">
+                <span className="text-muted-foreground text-sm">
                   @bentsignal
                 </span>
-                <SocialsBar />
               </div>
             </div>
             <span>
@@ -57,6 +56,7 @@ export default function HomePage() {
                 );
               })}
             </div>
+            <SocialsBar className="my-2 justify-center" />
           </Scroll.Content>
         </Scroll.Container>
         <Abyss.Bottom />
