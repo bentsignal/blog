@@ -22,7 +22,7 @@ const EditComposer = () => {
   const { editMessage } = useMessageActions();
 
   return (
-    <Composer.Provider
+    <Composer.Store
       inputValue={inputValue}
       setInputValue={setInputValue}
       inputRef={inputRef}
@@ -52,7 +52,7 @@ const EditComposer = () => {
           <Composer.Save />
         </ButtonGroup.Frame>
       </Composer.Container>
-    </Composer.Provider>
+    </Composer.Store>
   );
 };
 

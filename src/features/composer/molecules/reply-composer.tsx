@@ -29,7 +29,7 @@ const ReplyComposer = () => {
   const { sendMessage } = useMessageActions();
 
   return (
-    <Composer.Provider
+    <Composer.Store
       inputValue={inputValue}
       setInputValue={setInputValue}
       inputRef={inputRef}
@@ -65,7 +65,7 @@ const ReplyComposer = () => {
           <Composer.Send />
         </ButtonGroup.Frame>
       </Composer.Container>
-    </Composer.Provider>
+    </Composer.Store>
   );
 };
 
