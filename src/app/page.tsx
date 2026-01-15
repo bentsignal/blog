@@ -10,7 +10,7 @@ import { posts, postSlugs } from "@/blog/posts";
 
 export default function HomePage() {
   return (
-    <Scroll.Provider>
+    <Scroll.Store>
       <Scroll.Wrapper>
         <TopControls className="absolute top-0 left-0 z-6" />
         <Abyss.Top />
@@ -61,6 +61,6 @@ export default function HomePage() {
         </Scroll.Container>
         <Abyss.Bottom />
       </Scroll.Wrapper>
-    </Scroll.Provider>
+    </Scroll.Store>
   );
 }
