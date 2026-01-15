@@ -10,7 +10,6 @@ import {
 } from "react";
 import { createStore } from "rostra";
 import type { PaginationStatus } from "convex/react";
-import { createContext, useRequiredContext } from "@/lib/context";
 import * as Scroll from "@/atoms/scroll";
 
 type StoreProps = {

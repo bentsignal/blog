@@ -2,7 +2,6 @@
 
 import { ChevronLeft } from "lucide-react";
 import { useStore as useChannelStore } from "./channel-store";
-import { useRequiredContext } from "@/lib/context";
 import * as Chat from "@/features/chat/atom";
 
 const Identifier = () => {

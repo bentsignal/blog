@@ -1,6 +1,5 @@
 "use client";
 
-import { useHasParentContext } from "@fluentui/react-context-selector";
 import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { createStore } from "rostra";
@@ -12,11 +11,7 @@ import * as Chat from "@/features/chat/atom";
 import * as Search from "@/features/search/atom";
 import * as Scroll from "@/atoms/scroll";
 import * as Shapes from "@/atoms/shapes";
-import {
-  channels as baseChannels,
-  channelSlugs,
-  EnhancedChannel,
-} from "@/blog/channels";
+import { channels as baseChannels, channelSlugs } from "@/blog/channels";
 
 function useInternalStore() {
   const searchTerm = Search.useStore((s) => s.searchTerm, { optional: true });

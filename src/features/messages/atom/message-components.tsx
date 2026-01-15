@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useStore as useMessageStore } from "./message-store";
 import type { ReactionEmoji } from "@/features/messages/types";
-import { useRequiredContext } from "@/lib/context";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { cn } from "@/utils/style-utils";
 import {
