@@ -2,35 +2,31 @@
 
 import { useEffect, useMemo } from "react";
 import { PaginationStatus, usePaginatedQuery } from "convex/react";
+import { createStore } from "rostra";
 import type { Channel, ChannelSlug } from "@/blog/channels";
 import type { EnhancedMessage } from "@/features/messages/types";
 import { api } from "@/convex/_generated/api";
-import { createContext, useRequiredContext } from "@/lib/context";
 import * as Chat from "@/features/chat/atom";
 import { channels } from "@/blog/channels";
 
 const INITIAL_PAGE_SIZE = 50;
 const PAGE_SIZE = 100;
 
-const { Context, useContext } = createContext<{
+type StoreType = {
   slug: ChannelSlug;
   channel: Channel;
   messages: EnhancedMessage[];
   loadingStatus: PaginationStatus;
   loadMoreMessages: () => void;
   numberOfPages: number;
-}>({ displayName: "ChannelContext" });
+};
 
-const Provider = ({
-  slug,
-  children,
-}: {
+type StoreProps = {
   slug: ChannelSlug;
-  children: React.ReactNode;
-}) => {
-  useRequiredContext(Chat.Context);
+};
 
-  const chatWindowComposer = Chat.useContext((c) => c.composerInputRef);
+function useInternalStore({ slug }: StoreProps) {
+  const chatWindowComposer = Chat.useStore((s) => s.composerInputRef);
 
   useEffect(() => {
     setTimeout(() => {
@@ -59,19 +55,16 @@ const Provider = ({
     [results.length],
   );
 
-  const contextValue = useMemo(
-    () => ({
-      slug,
-      channel,
-      loadingStatus: status,
-      loadMoreMessages: () => loadMore(PAGE_SIZE),
-      messages: orderedResults,
-      numberOfPages,
-    }),
-    [slug, channel, orderedResults, status, loadMore, numberOfPages],
-  );
+  return {
+    slug,
+    channel,
+    loadingStatus: status,
+    loadMoreMessages: () => loadMore(PAGE_SIZE),
+    messages: orderedResults,
+    numberOfPages,
+  };
+}
 
-  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
-};
-
-export { Provider, Context, useContext };
+export const { Store, useStore } = createStore<StoreType, StoreProps>(
+  useInternalStore,
+);

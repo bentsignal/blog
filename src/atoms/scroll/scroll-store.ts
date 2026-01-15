@@ -1,18 +1,22 @@
 "use client";
 
 import {
-  ReactNode,
   RefObject,
   useCallback,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
-import { createContext } from "@/lib/context";
+import { createStore } from "rostra";
 
 type VagueScrollPosition = "top" | "middle" | "bottom";
 
-const { Context, useContext } = createContext<{
+type StoreProps = {
+  startAt?: "bottom" | "top";
+  nearTopOrBottomThreshold?: number;
+};
+
+type StoreType = {
   containerRef: RefObject<HTMLDivElement | null>;
   contentRef: RefObject<HTMLDivElement | null>;
   scrollToBottom: (behavior?: "instant" | "smooth") => void;
@@ -30,17 +34,12 @@ const { Context, useContext } = createContext<{
     distanceFromBottom: number;
   };
   handleScroll: () => void;
-}>({ displayName: "ScrollContext" });
+};
 
-const Provider = ({
-  children,
+function useInternalStore({
   startAt = "top",
   nearTopOrBottomThreshold = 10, // px
-}: {
-  children: ReactNode;
-  startAt?: "bottom" | "top";
-  nearTopOrBottomThreshold?: number;
-}) => {
+}: StoreProps) {
   // this is the scrollable container
   const containerRef = useRef<HTMLDivElement>(null);
   // this is the content inside the scrollable container
@@ -143,7 +142,7 @@ const Provider = ({
     }
   }, [startAt, scrollToBottom]);
 
-  const contextValue = {
+  return {
     containerRef,
     contentRef,
     scrollToBottom,
@@ -156,8 +155,8 @@ const Provider = ({
     getScrollMeasurements,
     handleScroll,
   };
+}
 
-  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
-};
-
-export { Provider, Context, useContext };
+export const { Store, useStore } = createStore<StoreType, StoreProps>(
+  useInternalStore,
+);

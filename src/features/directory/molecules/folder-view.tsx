@@ -4,7 +4,7 @@ import * as Frame from "@/atoms/frame";
 
 const FolderView = ({ directory }: { directory: FolderType }) => {
   return (
-    <Directory.Provider initialRoot={directory}>
+    <Directory.Store initialRoot={directory}>
       <Frame.Container>
         <Frame.Header>
           <Directory.FolderIdentifier />
@@ -17,7 +17,7 @@ const FolderView = ({ directory }: { directory: FolderType }) => {
           <Directory.List />
         </Frame.Body>
       </Frame.Container>
-    </Directory.Provider>
+    </Directory.Store>
   );
 };
 

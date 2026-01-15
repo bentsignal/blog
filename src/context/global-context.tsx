@@ -28,20 +28,20 @@ export const Providers = async ({
 
   return (
     <ConvexProvider>
-      <Auth.Provider isAuthenticatedServerSide={authed}>
-        <Theme.Provider
+      <Auth.Store isAuthenticatedServerSide={authed}>
+        <Theme.Store
           attribute="class"
           defaultTheme="dark"
           disableTransitionOnChange
           themeCookieValue={themeCookie?.value}
         >
-          <Chat.Provider slugFromHeaders={slug}>
+          <Chat.Store slugFromHeaders={slug}>
             <Sidebar.Provider defaultOpen={shouldShowSidebar}>
               {children}
             </Sidebar.Provider>
-          </Chat.Provider>
-        </Theme.Provider>
-      </Auth.Provider>
+          </Chat.Store>
+        </Theme.Store>
+      </Auth.Store>
     </ConvexProvider>
   );
 };

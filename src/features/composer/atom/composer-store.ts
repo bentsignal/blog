@@ -1,9 +1,9 @@
 "use client";
 
-import { createContext } from "@/lib/context";
+import { createStore } from "rostra";
 import { validateMessage } from "@/features/messages/utils";
 
-interface ComposerInputProps {
+interface StoreProps {
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
   inputValue: string;
   setInputValue: (value: string) => void;
@@ -11,26 +11,21 @@ interface ComposerInputProps {
   onCancel?: () => void;
 }
 
-interface ComposerContextType extends ComposerInputProps {
+interface StoreType extends StoreProps {
   submitDisabled: boolean;
 }
 
-const { Context, useContext } = createContext<ComposerContextType>({
-  displayName: "ComposerContext",
-});
-
-const Provider = ({
+function useInternalStore({
   onSubmit,
   inputValue,
   setInputValue,
   inputRef,
   onCancel,
-  children,
-}: ComposerInputProps & { children: React.ReactNode }) => {
+}: StoreProps) {
   const inputIsValid = validateMessage(inputValue) === "Valid";
   const submitDisabled = !inputIsValid;
 
-  const contextValue = {
+  return {
     inputRef,
     inputValue,
     setInputValue,
@@ -38,8 +33,8 @@ const Provider = ({
     onCancel,
     submitDisabled,
   };
+}
 
-  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
-};
-
-export { Provider, Context, useContext };
+export const { Store, useStore } = createStore<StoreType, StoreProps>(
+  useInternalStore,
+);

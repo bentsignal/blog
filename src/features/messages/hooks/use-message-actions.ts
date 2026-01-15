@@ -3,17 +3,14 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useRequiredContext } from "@/lib/context";
 import * as Auth from "@/features/auth/atom";
 import { getReactionsSignature } from "@/features/messages/utils";
 
 const useMessageActions = () => {
-  useRequiredContext(Auth.Context);
-
-  const image = Auth.useContext((c) => c.image);
-  const name = Auth.useContext((c) => c.name);
-  const username = Auth.useContext((c) => c.username);
-  const myProfileId = Auth.useContext((c) => c.myProfileId);
+  const image = Auth.useStore((s) => s.image);
+  const name = Auth.useStore((s) => s.name);
+  const username = Auth.useStore((s) => s.username);
+  const myProfileId = Auth.useStore((s) => s.myProfileId);
 
   const toastError = (error: Error) => {
     console.error(error);

@@ -6,7 +6,7 @@ import * as Message from "@/features/messages/atom";
 const ChainedMessage = memo(
   ({ message }: { message: EnhancedMessage }) => {
     return (
-      <Message.Provider message={message}>
+      <Message.Store message={message}>
         <Message.Container>
           <div className="flex items-center">
             <Message.SideTime />
@@ -18,7 +18,7 @@ const ChainedMessage = memo(
           <Message.Actions />
         </Message.Container>
         <InlineComposer />
-      </Message.Provider>
+      </Message.Store>
     );
   },
   (prev, next) => {

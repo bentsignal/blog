@@ -1,16 +1,12 @@
 "use client";
 
 import { ChevronLeft } from "lucide-react";
-import {
-  Context as ChannelContext,
-  useContext as useChannel,
-} from "./channel-context";
+import { useStore as useChannelStore } from "./channel-store";
 import { useRequiredContext } from "@/lib/context";
 import * as Chat from "@/features/chat/atom";
 
 const Identifier = () => {
-  useRequiredContext(ChannelContext);
-  const channelName = useChannel((c) => c.channel.name);
+  const channelName = useChannelStore((s) => s.channel.name);
   return (
     <div className="flex flex-1 flex-col justify-center">
       <span className="text-sm font-bold">{channelName}</span>
@@ -20,8 +16,7 @@ const Identifier = () => {
 };
 
 const BackButton = () => {
-  useRequiredContext(Chat.Context);
-  const setCurrentChannelSlug = Chat.useContext((c) => c.setCurrentChannelSlug);
+  const setCurrentChannelSlug = Chat.useStore((s) => s.setCurrentChannelSlug);
   return (
     <button
       onClick={() => setCurrentChannelSlug(undefined)}

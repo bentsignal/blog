@@ -1,35 +1,23 @@
 "use client";
 
-import { RefObject, useCallback, useEffect, useRef, useState } from "react";
-import type { ChannelSlug } from "@/blog/channels";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createStore } from "rostra";
 import { Id } from "@/convex/_generated/dataModel";
-import { createContext, useRequiredContext } from "@/lib/context";
 import { findChannelWithSlug } from "@/utils/slug-utils";
 import * as Auth from "@/features/auth/atom";
 import { useMessageActions } from "@/features/messages/hooks/use-message-actions";
 
-const { Context, useContext } = createContext<{
-  currentChannelSlug?: ChannelSlug;
-  setCurrentChannelSlug: (slug?: ChannelSlug) => void;
-  composerInputRef: RefObject<HTMLTextAreaElement | null>;
-  iJustRead: (messageId: Id<"messages">) => void;
-}>({ displayName: "ChatWindowContext" });
-
-const Provider = ({
-  slugFromHeaders,
-  children,
-}: {
+type StoreProps = {
   slugFromHeaders: string | null;
-  children: React.ReactNode;
-}) => {
-  useRequiredContext(Auth.Context);
+};
 
+function useInternalStore({ slugFromHeaders }: StoreProps) {
   const validatedSlug = findChannelWithSlug(slugFromHeaders);
   const [currentChannelSlug, setCurrentChannelSlug] = useState(validatedSlug);
   const composerInputRef = useRef<HTMLTextAreaElement>(null);
 
   const { markAsRead } = useMessageActions();
-  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
+  const imNotSignedIn = Auth.useStore((s) => !s.imSignedIn);
 
   // periodically check if the user has read new messages, if so mark them as read
   const intervalTime = 1000 * 5; // check every 5 seconds
@@ -61,14 +49,12 @@ const Provider = ({
     [messageIdsAlreadyMarkedAsRead],
   );
 
-  const contextValue = {
+  return {
     currentChannelSlug,
     setCurrentChannelSlug,
     composerInputRef,
     iJustRead,
   };
+}
 
-  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
-};
-
-export { Provider, Context, useContext };
+export const { Store, useStore } = createStore(useInternalStore);

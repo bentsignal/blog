@@ -1,23 +1,20 @@
 "use client";
 
 import { LogIn, LogOut, UserRoundX } from "lucide-react";
-import { Context as AuthContext, useContext as useAuth } from "./auth-context";
-import { useRequiredContext } from "@/lib/context";
+import { useStore as useAuthStore } from "./auth-store";
 import * as SocialIcons from "@/features/socials/icons";
 import { Button } from "@/atoms/button";
 import { Spinner } from "@/atoms/spinner";
 import * as Theme from "@/atoms/theme";
 
 export const PrimaryButton = () => {
-  useRequiredContext(AuthContext);
-  const imSignedIn = useAuth((c) => c.imSignedIn);
+  const imSignedIn = useAuthStore((s) => s.imSignedIn);
   return imSignedIn ? <SignOutButton /> : <SignInButton />;
 };
 
 export const SignInButton = () => {
-  useRequiredContext(AuthContext);
-  const signIn = useAuth((c) => c.signIn);
-  const inProgress = useAuth((c) => c.inProgress);
+  const signIn = useAuthStore((s) => s.signIn);
+  const inProgress = useAuthStore((s) => s.inProgress);
   return (
     <Button
       variant="link"
@@ -32,9 +29,8 @@ export const SignInButton = () => {
 };
 
 export const SignOutButton = () => {
-  useRequiredContext(AuthContext);
-  const signOut = useAuth((c) => c.signOut);
-  const inProgress = useAuth((c) => c.inProgress);
+  const signOut = useAuthStore((s) => s.signOut);
+  const inProgress = useAuthStore((s) => s.inProgress);
   return (
     <Button
       variant="link"
@@ -49,10 +45,9 @@ export const SignOutButton = () => {
 };
 
 export const DeleteAccountButton = () => {
-  useRequiredContext(AuthContext);
-  const deleteAccount = useAuth((c) => c.deleteAccount);
-  const imNotSignedIn = useAuth((c) => !c.imSignedIn);
-  const inProgress = useAuth((c) => c.inProgress);
+  const deleteAccount = useAuthStore((s) => s.deleteAccount);
+  const imNotSignedIn = useAuthStore((s) => !s.imSignedIn);
+  const inProgress = useAuthStore((s) => s.inProgress);
 
   if (imNotSignedIn) return null;
 
@@ -70,12 +65,9 @@ export const DeleteAccountButton = () => {
 };
 
 export const JoinButton = () => {
-  useRequiredContext(AuthContext);
-  useRequiredContext(Theme.Context);
-
-  const inProgress = useAuth((c) => c.inProgress);
-  const signIn = useAuth((c) => c.signIn);
-  const theme = Theme.useContext((c) => c.theme);
+  const inProgress = useAuthStore((s) => s.inProgress);
+  const signIn = useAuthStore((s) => s.signIn);
+  const theme = Theme.useStore((s) => s.theme);
   const color = theme === "dark" ? "black" : "white";
 
   return (

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { toast } from "sonner";
-import { useRequiredContext } from "@/lib/context";
 import * as Auth from "@/features/auth/atom";
 import * as Channel from "@/features/channel/atom";
 import * as Chat from "@/features/chat/atom";
@@ -11,19 +10,15 @@ import { validateMessage } from "@/features/messages/utils";
 import * as Scroll from "@/atoms/scroll";
 
 const ChannelComposer = () => {
-  useRequiredContext(Channel.Context);
-  useRequiredContext(Chat.Context);
-  useRequiredContext(Auth.Context);
-
-  const hasScrollContext = useHasParentContext(Scroll.Context);
-
   const [inputValue, setInputValue] = useState("");
 
-  const slug = Channel.useContext((c) => c.slug);
-  const composerInputRef = Chat.useContext((c) => c.composerInputRef);
-  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
-  const signIn = Auth.useContext((c) => c.signIn);
-  const scrollToBottom = Scroll.useContext((c) => c.scrollToBottom);
+  const slug = Channel.useStore((s) => s.slug);
+  const composerInputRef = Chat.useStore((s) => s.composerInputRef);
+  const imNotSignedIn = Auth.useStore((s) => !s.imSignedIn);
+  const signIn = Auth.useStore((s) => s.signIn);
+  const scrollToBottom = Scroll.useStore((s) => s.scrollToBottom, {
+    optional: true,
+  });
 
   const { sendMessage } = useMessageActions();
 
@@ -47,12 +42,12 @@ const ChannelComposer = () => {
       composerInputRef.current.style.height = "auto";
     }
     setTimeout(() => {
-      if (hasScrollContext) scrollToBottom();
+      scrollToBottom?.();
     }, 0);
   };
 
   return (
-    <Composer.Provider
+    <Composer.Store
       onSubmit={onSubmit}
       inputValue={inputValue}
       setInputValue={setInputValue}
@@ -62,7 +57,7 @@ const ChannelComposer = () => {
         <Composer.Input className="ml-1" />
         <Composer.Send />
       </Composer.Container>
-    </Composer.Provider>
+    </Composer.Store>
   );
 };
 

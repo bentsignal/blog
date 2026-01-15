@@ -5,7 +5,6 @@ import { ChainedMessage } from "./chained-message";
 import { ReplyMessage } from "./reply-message";
 import { StandardMessage } from "./standard-message";
 import type { EnhancedMessage } from "@/features/messages/types";
-import { useRequiredContext } from "@/lib/context";
 import { cn } from "@/utils/style-utils";
 import { areSameDay } from "@/utils/time-utils";
 import * as Message from "@/features/messages/atom";
@@ -14,9 +13,6 @@ import * as Scroll from "@/atoms/scroll";
 import { DateMarker } from "@/molecules/date-marker";
 
 const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
-  useRequiredContext(List.Context);
-  useRequiredContext(Scroll.Context);
-
   if (messages.length === 0) {
     return (
       <div className="relative flex max-h-screen flex-1 flex-col justify-end overflow-y-hidden mask-t-from-95%">

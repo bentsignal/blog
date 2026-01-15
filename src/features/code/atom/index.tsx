@@ -1,2 +1,2 @@
 export * from "./code-components";
-export * from "./code-context";
+export * from "./code-store";

@@ -2,11 +2,7 @@
 
 import { useEffect } from "react";
 import * as Icons from "lucide-react";
-import {
-  Context as ComposerContext,
-  useContext as useComposer,
-} from "./composer-context";
-import { useRequiredContext } from "@/lib/context";
+import { useStore as useComposerStore } from "./composer-store";
 import { cn } from "@/utils/style-utils";
 import * as Auth from "@/features/auth/atom";
 import {
@@ -42,15 +38,13 @@ const Input = ({
   placeholder?: string;
   className?: string;
 }) => {
-  useRequiredContext(ComposerContext);
-
-  const inputRef = useComposer((c) => c.inputRef);
-  const inputValue = useComposer((c) => c.inputValue);
-  const setInputValue = useComposer((c) => c.setInputValue);
-  const onSubmit = useComposer((c) => c.onSubmit);
-  const submitDisabled = useComposer((c) => c.submitDisabled);
-  const onCancel = useComposer((c) => c.onCancel);
-  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
+  const inputRef = useComposerStore((s) => s.inputRef);
+  const inputValue = useComposerStore((s) => s.inputValue);
+  const setInputValue = useComposerStore((s) => s.setInputValue);
+  const onSubmit = useComposerStore((s) => s.onSubmit);
+  const submitDisabled = useComposerStore((s) => s.submitDisabled);
+  const onCancel = useComposerStore((s) => s.onCancel);
+  const imNotSignedIn = Auth.useStore((s) => !s.imSignedIn);
 
   useEffect(() => {
     const textarea = inputRef.current;
@@ -105,11 +99,9 @@ const Input = ({
 };
 
 const Send = () => {
-  useRequiredContext(ComposerContext);
-
-  const onSubmit = useComposer((c) => c.onSubmit);
-  const submitDisabled = useComposer((c) => c.inputValue.trim() === "");
-  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
+  const onSubmit = useComposerStore((s) => s.onSubmit);
+  const submitDisabled = useComposerStore((s) => s.inputValue.trim() === "");
+  const imNotSignedIn = Auth.useStore((s) => !s.imSignedIn);
 
   if (imNotSignedIn) return <Auth.JoinButton />;
 
@@ -132,9 +124,7 @@ const Send = () => {
 };
 
 const Cancel = () => {
-  useRequiredContext(ComposerContext);
-
-  const onCancel = useComposer((c) => c.onCancel);
+  const onCancel = useComposerStore((s) => s.onCancel);
 
   return (
     <ToolTip.Frame>
@@ -149,10 +139,8 @@ const Cancel = () => {
 };
 
 const Save = () => {
-  useRequiredContext(ComposerContext);
-
-  const onSubmit = useComposer((c) => c.onSubmit);
-  const submitDisabled = useComposer((c) => c.submitDisabled);
+  const onSubmit = useComposerStore((s) => s.onSubmit);
+  const submitDisabled = useComposerStore((s) => s.submitDisabled);
 
   return (
     <ToolTip.Frame>

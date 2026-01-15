@@ -4,10 +4,7 @@ import { useState } from "react";
 import { Pencil, Reply, Trash, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Context as MessageContext,
-  useContext as useMessage,
-} from "./message-context";
+import { useStore as useMessageStore } from "./message-store";
 import type { ReactionEmoji } from "@/features/messages/types";
 import { useRequiredContext } from "@/lib/context";
 import { getRandomWidth } from "@/utils/skeleton-utils";
@@ -33,8 +30,9 @@ const Container = ({
   className?: string;
   children: React.ReactNode;
 }) => {
-  const interactionState = useMessage((c) => c.interactionState);
-  const frameRef = useMessage((c) => c.frameRef);
+  const interactionState = useMessageStore((s) => s.interactionState);
+  const frameRef = useMessageStore((s) => s.frameRef);
+  const setIsHovered = useMessageStore((s) => s.setIsHovered);
 
   const bgColor =
     interactionState === "editing"
@@ -42,8 +40,6 @@ const Container = ({
       : interactionState === "replying"
         ? "bg-blue-300/20"
         : "transparent hover:bg-muted";
-
-  const setIsHovered = useMessage((c) => c.setIsHovered);
 
   return (
     <div
@@ -62,7 +58,7 @@ const Body = ({ children }: { children: React.ReactNode }) => {
 };
 
 const PFP = () => {
-  const pfp = useMessage((c) => c.pfp);
+  const pfp = useMessageStore((s) => s.pfp);
 
   const [imageState, setImageState] = useState<"loading" | "error" | "loaded">(
     "loading",
@@ -94,8 +90,9 @@ const Time = ({ time }: { time: string }) => {
 };
 
 const Header = () => {
-  const username = useMessage((c) => c.username);
-  const _creationTime = useMessage((c) => c._creationTime);
+  const username = useMessageStore((s) => s.username);
+  const _creationTime = useMessageStore((s) => s._creationTime);
+
   const timeStamp = isOverOneDayAgo(_creationTime)
     ? getFullTimestamp(_creationTime)
     : getTimeString(_creationTime);
@@ -123,8 +120,8 @@ const EditedIndicator = () => {
 };
 
 const Content = () => {
-  const content = useMessage((c) => c.content);
-  const isEdited = useMessage((c) => c.snapshots.length > 1);
+  const content = useMessageStore((s) => s.content);
+  const isEdited = useMessageStore((s) => s.snapshots.length > 1);
 
   if (!content) {
     return (
@@ -170,7 +167,7 @@ const Skeleton = ({
 };
 
 const SideTime = () => {
-  const time = useMessage((c) => c._creationTime);
+  const time = useMessageStore((s) => s._creationTime);
   return (
     <div className="invisible w-13 flex-shrink-0 group-hover/message:visible">
       <Time time={getTimeString(time)} />
@@ -179,14 +176,11 @@ const SideTime = () => {
 };
 
 const Actions = () => {
-  useRequiredContext(Auth.Context);
-  useRequiredContext(MessageContext);
-
-  const isNotBeingHovered = useMessage((c) => !c.isHovered);
-  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
-  const myProfileId = Auth.useContext((c) => c.myProfileId);
-  const messageProfileId = useMessage((c) => c.profile);
-  const messageIsDeleted = useMessage((c) => c.content === null);
+  const imNotSignedIn = Auth.useStore((s) => !s.imSignedIn);
+  const myProfileId = Auth.useStore((s) => s.myProfileId);
+  const messageProfileId = useMessageStore((s) => s.profile);
+  const messageIsDeleted = useMessageStore((s) => s.content === null);
+  const isNotBeingHovered = useMessageStore((s) => !s.isHovered);
 
   if (isNotBeingHovered) return null;
   if (imNotSignedIn) return null;
@@ -236,8 +230,8 @@ const OtherMessageActions = () => {
 };
 
 const EditButton = () => {
-  const setInteractionState = useMessage((c) => c.setInteractionState);
-  const editComposerInputRef = useMessage((c) => c.editComposerInputRef);
+  const setInteractionState = useMessageStore((s) => s.setInteractionState);
+  const editComposerInputRef = useMessageStore((s) => s.editComposerInputRef);
   return (
     <ToolTip.Frame>
       <ToolTip.Trigger asChild>
@@ -265,8 +259,8 @@ const EditButton = () => {
 };
 
 const ReplyButton = () => {
-  const setInteractionState = useMessage((c) => c.setInteractionState);
-  const replyComposerInputRef = useMessage((c) => c.replyComposerInputRef);
+  const setInteractionState = useMessageStore((s) => s.setInteractionState);
+  const replyComposerInputRef = useMessageStore((s) => s.replyComposerInputRef);
   return (
     <ToolTip.Frame>
       <ToolTip.Trigger asChild>
@@ -289,7 +283,7 @@ const ReplyButton = () => {
 };
 
 const DeleteButton = () => {
-  const id = useMessage((c) => c._id);
+  const id = useMessageStore((s) => s._id);
   const { deleteMessage } = useMessageActions();
   return (
     <ToolTip.Frame>
@@ -309,14 +303,14 @@ const DeleteButton = () => {
 };
 
 const ReplyPreview = () => {
-  const name = useMessage((c) => c.reply?.name);
-  const pfp = useMessage((c) => c.reply?.pfp);
-  const content = useMessage((c) => c.reply?.content);
-  const isEdited = useMessage(
-    (c) =>
-      c.reply?.content !== null &&
-      c.reply?.snapshots.length &&
-      c.reply?.snapshots.length > 1,
+  const name = useMessageStore((s) => s.reply?.name);
+  const pfp = useMessageStore((s) => s.reply?.pfp);
+  const content = useMessageStore((s) => s.reply?.content);
+  const isEdited = useMessageStore(
+    (s) =>
+      s.reply?.content !== null &&
+      s.reply?.snapshots.length &&
+      s.reply?.snapshots.length > 1,
   );
 
   const isDeleted = content === null;
@@ -342,13 +336,10 @@ const ReplyPreview = () => {
 };
 
 const ReactionButtons = () => {
-  useRequiredContext(Auth.Context);
-  useRequiredContext(MessageContext);
-
-  const reactions = useMessage((c) => c.reactions);
-  const messageId = useMessage((c) => c._id);
-  const myProfileId = Auth.useContext((c) => c.myProfileId);
-  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
+  const reactions = useMessageStore((s) => s.reactions);
+  const messageId = useMessageStore((s) => s._id);
+  const myProfileId = Auth.useStore((s) => s.myProfileId);
+  const imNotSignedIn = Auth.useStore((s) => !s.imSignedIn);
 
   const { reactToMessage } = useMessageActions();
 
@@ -378,14 +369,11 @@ const ReactionButtons = () => {
 };
 
 const Reactions = () => {
-  useRequiredContext(Auth.Context);
-  useRequiredContext(MessageContext);
+  const messageId = useMessageStore((s) => s._id);
+  const reactions = useMessageStore((s) => s.reactions);
 
-  const messageId = useMessage((c) => c._id);
-  const reactions = useMessage((c) => c.reactions);
-
-  const myProfileId = Auth.useContext((c) => c.myProfileId);
-  const imSignedIn = Auth.useContext((c) => c.imSignedIn);
+  const myProfileId = Auth.useStore((s) => s.myProfileId);
+  const imSignedIn = Auth.useStore((s) => s.imSignedIn);
   const imNotSignedIn = !imSignedIn;
 
   const { reactToMessage } = useMessageActions();

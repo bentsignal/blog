@@ -12,7 +12,7 @@ const FramedCodeBlock = ({
   language: Language;
 }) => {
   return (
-    <Code.Provider code={code} language={language}>
+    <Code.Store code={code} language={language}>
       <Frame.Container>
         <Frame.Header>
           <div className="flex items-center gap-2">
@@ -28,7 +28,7 @@ const FramedCodeBlock = ({
           <Code.Block />
         </Frame.Body>
       </Frame.Container>
-    </Code.Provider>
+    </Code.Store>
   );
 };
 

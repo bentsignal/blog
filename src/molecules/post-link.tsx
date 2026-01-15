@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import type { PostSlug } from "@/blog/posts";
-import { useRequiredContext } from "@/lib/context";
 import { findChannelWithSlug } from "@/utils/slug-utils";
 import * as Chat from "@/features/chat/atom";
 
@@ -13,9 +12,7 @@ export default function PostLink({
   slug: PostSlug;
   children: React.ReactNode;
 }) {
-  useRequiredContext(Chat.Context);
-
-  const setCurrentChannelSlug = Chat.useContext((c) => c.setCurrentChannelSlug);
+  const setCurrentChannelSlug = Chat.useStore((s) => s.setCurrentChannelSlug);
 
   return (
     <Link

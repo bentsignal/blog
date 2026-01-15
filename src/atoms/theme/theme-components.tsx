@@ -1,18 +1,12 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import {
-  Context as ThemeContext,
-  useContext as useTheme,
-} from "./theme-context";
-import { useRequiredContext } from "@/lib/context";
+import { useStore as useThemeStore } from "./theme-store";
 import { Button } from "@/atoms/button";
 
 export const ToggleButton = () => {
-  useRequiredContext(ThemeContext);
-
-  const theme = useTheme((c) => c.theme);
-  const setTheme = useTheme((c) => c.setTheme);
+  const theme = useThemeStore((s) => s.theme);
+  const setTheme = useThemeStore((s) => s.setTheme);
 
   const oppositeTheme = theme === "dark" ? "light" : "dark";
 

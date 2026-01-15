@@ -3,13 +3,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { usePathname } from "next/navigation";
+import { createStore } from "rostra";
 import { toast } from "sonner";
 import { authClient } from "../lib/auth-client";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { createContext } from "@/lib/context";
 
-const { Context, useContext } = createContext<{
+type StoreProps = {
+  isAuthenticatedServerSide: boolean;
+};
+
+type StoreType = {
   image: string | null | undefined;
   name: string | undefined;
   username: string | undefined;
@@ -19,15 +23,9 @@ const { Context, useContext } = createContext<{
   signOut: () => Promise<void>;
   signIn: () => Promise<void>;
   deleteAccount: () => Promise<void>;
-}>({ displayName: "AuthContext" });
+};
 
-const Provider = ({
-  isAuthenticatedServerSide,
-  children,
-}: {
-  isAuthenticatedServerSide: boolean;
-  children: React.ReactNode;
-}) => {
+function useInternalStore({ isAuthenticatedServerSide }: StoreProps) {
   const pathname = usePathname();
 
   // either a sign in or sign out is in progress
@@ -100,32 +98,19 @@ const Provider = ({
     );
   }, [inProgress, pathname]);
 
-  const contextValue = useMemo(
-    () => ({
-      image,
-      username,
-      imSignedIn,
-      myProfileId,
-      name,
-      inProgress,
-      signOut,
-      signIn,
-      deleteAccount,
-    }),
-    [
-      imSignedIn,
-      inProgress,
-      signOut,
-      signIn,
-      deleteAccount,
-      image,
-      name,
-      username,
-      myProfileId,
-    ],
-  );
+  return {
+    image,
+    username,
+    imSignedIn,
+    myProfileId,
+    name,
+    inProgress,
+    signOut,
+    signIn,
+    deleteAccount,
+  };
+}
 
-  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
-};
-
-export { Provider, Context, useContext };
+export const { Store, useStore } = createStore<StoreType, StoreProps>(
+  useInternalStore,
+);

@@ -1,8 +1,7 @@
 "use client";
 
 import { cloneElement, isValidElement } from "react";
-import { Context as ListContext, useContext as useList } from "./list-context";
-import { useRequiredContext } from "@/lib/context";
+import { useStore as useListStore } from "./list-store";
 import { cn } from "@/utils/style-utils";
 import * as Scroll from "@/atoms/scroll";
 
@@ -13,9 +12,7 @@ const Items = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  useRequiredContext(Scroll.Context);
-
-  const contentRef = Scroll.useContext((c) => c.contentRef);
+  const contentRef = Scroll.useStore((s) => s.contentRef);
 
   return (
     <div className={cn(className)} ref={contentRef}>
@@ -33,13 +30,13 @@ const Skeletons = ({
   position?: "aboveContent" | "belowContent" | null;
   className?: string;
 }) => {
-  useRequiredContext(ListContext);
-
-  const skeletonComponent = useList((c) => c.skeletonComponent);
-  const loadingStatus = useList((c) => c.loadingStatus);
-  const topSkeletonContainerRef = useList((c) => c.topSkeletonContainerRef);
-  const bottomSkeletonContainerRef = useList(
-    (c) => c.bottomSkeletonContainerRef,
+  const skeletonComponent = useListStore((s) => s.skeletonComponent);
+  const loadingStatus = useListStore((s) => s.loadingStatus);
+  const topSkeletonContainerRef = useListStore(
+    (s) => s.topSkeletonContainerRef,
+  );
+  const bottomSkeletonContainerRef = useListStore(
+    (s) => s.bottomSkeletonContainerRef,
   );
 
   const showSkeleton =

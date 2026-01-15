@@ -1,11 +1,7 @@
 "use client";
 
 import { ArrowDown, ArrowUp } from "lucide-react";
-import {
-  Context as ScrollContext,
-  useContext as useScroll,
-} from "./scroll-context";
-import { useRequiredContext } from "@/lib/context";
+import { useStore as useScrollStore } from "./scroll-store";
 import { cn } from "@/utils/style-utils";
 import { Button } from "@/atoms/button";
 
@@ -34,11 +30,11 @@ const Container = ({
   children: React.ReactNode;
   fade?: "sm" | "md" | "lg";
 }) => {
-  useRequiredContext(ScrollContext);
-
-  const containerRef = useScroll((c) => c.containerRef);
-  const showScrollbar = useScroll((c) => c.vagueScrollPosition === "middle");
-  const handleScroll = useScroll((c) => c.handleScroll);
+  const containerRef = useScrollStore((s) => s.containerRef);
+  const showScrollbar = useScrollStore(
+    (s) => s.vagueScrollPosition === "middle",
+  );
+  const handleScroll = useScrollStore((s) => s.handleScroll);
   const scrollbarClass = showScrollbar
     ? "scrollbar-thumb-muted-foreground/10"
     : "scrollbar-thumb-transparent";
@@ -75,9 +71,7 @@ const Content = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  useRequiredContext(ScrollContext);
-
-  const contentRef = useScroll((c) => c.contentRef);
+  const contentRef = useScrollStore((s) => s.contentRef);
 
   return (
     <div className={cn(className)} ref={contentRef}>
@@ -93,17 +87,15 @@ const ScrollToBottomButton = ({
   className?: string;
   hideWhenAtBottom?: boolean;
 }) => {
-  useRequiredContext(ScrollContext);
-
-  const disableScrollToBottomButton = useScroll(
-    (c) => c.vagueScrollPosition === "bottom",
+  const disableScrollToBottomButton = useScrollStore(
+    (s) => s.vagueScrollPosition === "bottom",
   );
-  const hideScrollToBottomButton = useScroll(
-    (c) =>
-      (hideWhenAtBottom && c.vagueScrollPosition === "bottom") ||
-      c.contentFitsInContainer,
+  const hideScrollToBottomButton = useScrollStore(
+    (s) =>
+      (hideWhenAtBottom && s.vagueScrollPosition === "bottom") ||
+      s.contentFitsInContainer,
   );
-  const scrollToBottom = useScroll((c) => c.scrollToBottom);
+  const scrollToBottom = useScrollStore((s) => s.scrollToBottom);
 
   if (hideScrollToBottomButton) return null;
 
@@ -129,17 +121,15 @@ const ScrollToTopButton = ({
   className?: string;
   hideWhenAtTop?: boolean;
 }) => {
-  useRequiredContext(ScrollContext);
-
-  const disableScrollToTopButton = useScroll(
-    (c) => c.vagueScrollPosition === "top",
+  const disableScrollToTopButton = useScrollStore(
+    (s) => s.vagueScrollPosition === "top",
   );
-  const hideScrollToTopButton = useScroll(
-    (c) =>
-      (hideWhenAtTop && c.vagueScrollPosition === "top") ||
-      c.contentFitsInContainer,
+  const hideScrollToTopButton = useScrollStore(
+    (s) =>
+      (hideWhenAtTop && s.vagueScrollPosition === "top") ||
+      s.contentFitsInContainer,
   );
-  const scrollToTop = useScroll((c) => c.scrollToTop);
+  const scrollToTop = useScrollStore((s) => s.scrollToTop);
 
   if (hideScrollToTopButton) return null;
 
@@ -159,9 +149,7 @@ const ScrollToTopButton = ({
 };
 
 const ProgressBar = () => {
-  useRequiredContext(ScrollContext);
-
-  const percentToBottom = useScroll((c) => c.percentToBottom);
+  const percentToBottom = useScrollStore((s) => s.percentToBottom);
 
   return (
     <div className="absolute top-0 right-0 z-6 w-full">

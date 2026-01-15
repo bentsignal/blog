@@ -3,8 +3,8 @@
 import { useHasParentContext } from "@fluentui/react-context-selector";
 import { useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
+import { createStore } from "rostra";
 import { api } from "@/convex/_generated/api";
-import { createContext, useRequiredContext } from "@/lib/context";
 import { getRandomWidth } from "@/utils/skeleton-utils";
 import { findPostWithSlug } from "@/utils/slug-utils";
 import { cn } from "@/utils/style-utils";
@@ -18,18 +18,8 @@ import {
   EnhancedChannel,
 } from "@/blog/channels";
 
-const { Context: ChannelListContext, useContext: useChannelList } =
-  createContext<{
-    channels: EnhancedChannel[];
-  }>({ displayName: "ChannelListContext" });
-
-export const ChannelListProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const hasSearchContext = useHasParentContext(Search.Context);
-  const searchTerm = Search.useContext((c) => c.searchTerm);
+function useInternalStore() {
+  const searchTerm = Search.useStore((s) => s.searchTerm, { optional: true });
 
   const slugsWithPreviews = useQuery(api.messages.getPreviewsForChannels);
 
@@ -44,23 +34,19 @@ export const ChannelListProvider = ({
       };
     })
     .filter((channel) =>
-      hasSearchContext
+      searchTerm
         ? channel.name.toLowerCase().includes(searchTerm.toLowerCase())
         : true,
     );
-  return (
-    <ChannelListContext.Provider value={{ channels }}>
-      {children}
-    </ChannelListContext.Provider>
-  );
-};
+  return { channels };
+}
+
+export const { Store: ChannelListStore, useStore: useChannelListStore } =
+  createStore(useInternalStore);
 
 export const ChannelList = () => {
-  useRequiredContext(Chat.Context);
-  useRequiredContext(ChannelListContext);
-
-  const setCurrentChannelSlug = Chat.useContext((c) => c.setCurrentChannelSlug);
-  const channels = useChannelList((c) => c.channels);
+  const setCurrentChannelSlug = Chat.useStore((s) => s.setCurrentChannelSlug);
+  const channels = useChannelListStore((s) => s.channels);
   const router = useRouter();
 
   if (channels.length === 0) {
@@ -72,7 +58,7 @@ export const ChannelList = () => {
   }
 
   return (
-    <Scroll.Provider>
+    <Scroll.Store>
       <Scroll.Wrapper>
         <Scroll.Container>
           <Scroll.Content className="flex flex-col gap-2 py-4">
@@ -104,7 +90,7 @@ export const ChannelList = () => {
           </Scroll.Content>
         </Scroll.Container>
       </Scroll.Wrapper>
-    </Scroll.Provider>
+    </Scroll.Store>
   );
 };
 

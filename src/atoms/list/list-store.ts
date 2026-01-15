@@ -8,48 +8,45 @@ import {
   useLayoutEffect,
   useRef,
 } from "react";
+import { createStore } from "rostra";
 import type { PaginationStatus } from "convex/react";
 import { createContext, useRequiredContext } from "@/lib/context";
 import * as Scroll from "@/atoms/scroll";
 
-const { Context, useContext } = createContext<{
+type StoreProps = {
+  isBottomSticky?: boolean;
+  loadingStatus?: PaginationStatus;
+  skeletonComponent?: ReactNode;
+  loadMore?: () => void;
+  loadMoreWhenThisCloseToTop?: number;
+  numberOfPages?: number;
+};
+
+type StoreType = {
   loadingStatus?: PaginationStatus;
   skeletonComponent?: ReactNode;
   topSkeletonContainerRef: RefObject<HTMLDivElement | null>;
   bottomSkeletonContainerRef: RefObject<HTMLDivElement | null>;
-}>({ displayName: "ListContext" });
+};
 
-const Provider = ({
-  children,
+function useInternalStore({
   isBottomSticky,
   loadingStatus,
   loadMoreWhenThisCloseToTop = 700, // px
   skeletonComponent,
   loadMore,
   numberOfPages,
-}: {
-  children: ReactNode;
-  isBottomSticky?: boolean;
-  loadingStatus?: PaginationStatus;
-  skeletonComponent?: ReactNode;
-  loadMoreWhenThisCloseToTop?: number;
-  loadMore?: () => void;
-  numberOfPages?: number;
-}) => {
-  useRequiredContext(Scroll.Context);
-
-  const getScrollMeasurements = Scroll.useContext(
-    (c) => c.getScrollMeasurements,
+}: StoreProps) {
+  const getScrollMeasurements = Scroll.useStore((s) => s.getScrollMeasurements);
+  const scrollToBottom = Scroll.useStore((s) => s.scrollToBottom);
+  const scrollToTop = Scroll.useStore((s) => s.scrollToTop);
+  const containerRef = Scroll.useStore((s) => s.containerRef);
+  const contentRef = Scroll.useStore((s) => s.contentRef);
+  const vagueScrollPositionRef = Scroll.useStore(
+    (s) => s.vagueScrollPositionRef,
   );
-  const scrollToBottom = Scroll.useContext((c) => c.scrollToBottom);
-  const scrollToTop = Scroll.useContext((c) => c.scrollToTop);
-  const containerRef = Scroll.useContext((c) => c.containerRef);
-  const contentRef = Scroll.useContext((c) => c.contentRef);
-  const vagueScrollPositionRef = Scroll.useContext(
-    (c) => c.vagueScrollPositionRef,
-  );
-  const setContentFitsInContainer = Scroll.useContext(
-    (c) => c.setContentFitsInContainer,
+  const setContentFitsInContainer = Scroll.useStore(
+    (s) => s.setContentFitsInContainer,
   );
 
   // optional, to put skeletons on top or below content (or both)
@@ -187,7 +184,7 @@ const Provider = ({
     setContentFitsInContainer,
   ]);
 
-  const contextValue = {
+  return {
     topSkeletonContainerRef,
     bottomSkeletonContainerRef,
     scrollToBottom,
@@ -195,8 +192,8 @@ const Provider = ({
     loadingStatus,
     skeletonComponent,
   };
+}
 
-  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
-};
-
-export { Provider, Context, useContext };
+export const { Store, useStore } = createStore<StoreType, StoreProps>(
+  useInternalStore,
+);

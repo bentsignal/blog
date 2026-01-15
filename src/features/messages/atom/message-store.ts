@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createStore } from "rostra";
 import type {
   EnhancedMessage,
   MessageInteractionState,
 } from "@/features/messages/types";
-import { createContext, useRequiredContext } from "@/lib/context";
 import * as Auth from "@/features/auth/atom";
 import * as Chat from "@/features/chat/atom";
 
-interface MessageContextType extends EnhancedMessage {
+interface StoreType extends EnhancedMessage {
   interactionState: MessageInteractionState;
   setInteractionState: (interactionState: MessageInteractionState) => void;
   editComposerInputRef: React.RefObject<HTMLTextAreaElement | null>;
@@ -19,20 +19,11 @@ interface MessageContextType extends EnhancedMessage {
   setIsHovered: (isHovered: boolean) => void;
 }
 
-const { Context, useContext } = createContext<MessageContextType>({
-  displayName: "MessageContext",
-});
-
-const Provider = ({
-  message,
-  children,
-}: {
+interface StoreProps {
   message: EnhancedMessage;
-  children: React.ReactNode;
-}) => {
-  useRequiredContext(Auth.Context);
-  useRequiredContext(Chat.Context);
+}
 
+function useInternalStore({ message }: StoreProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [interactionState, setInteractionState] =
     useState<MessageInteractionState>("idle");
@@ -40,14 +31,14 @@ const Provider = ({
   const editComposerInputRef = useRef<HTMLTextAreaElement>(null);
   const replyComposerInputRef = useRef<HTMLTextAreaElement>(null);
 
-  const myProfileId = Auth.useContext((c) => c.myProfileId);
-  const imNotSignedIn = Auth.useContext((c) => !c.imSignedIn);
+  const myProfileId = Auth.useStore((s) => s.myProfileId);
+  const imNotSignedIn = Auth.useStore((s) => !s.imSignedIn);
 
   const frameRef = useRef<HTMLDivElement>(null);
 
   // determine if user has seen message
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const iJustRead = Chat.useContext((c) => c.iJustRead);
+  const iJustRead = Chat.useStore((s) => s.iJustRead);
   useEffect(() => {
     if (imNotSignedIn) return;
 
@@ -75,53 +66,18 @@ const Provider = ({
     return () => observer.unobserve(frame);
   }, [myProfileId, message, iJustRead, imNotSignedIn]);
 
-  const contextValue = useMemo(
-    () => ({
-      _id: message._id,
-      _creationTime: message._creationTime,
-      profile: message.profile,
-      name: message.name,
-      pfp: message.pfp,
-      username: message.username,
-      content: message.content,
-      snapshots: message.snapshots,
-      reply: message.reply,
-      slug: message.slug,
-      seenBy: message.seenBy,
-      reactions: message.reactions,
-      reactionSignature: message.reactionSignature,
-      editComposerInputRef,
-      replyComposerInputRef,
-      interactionState,
-      setInteractionState,
-      frameRef,
-      isHovered,
-      setIsHovered,
-    }),
-    [
-      message._id,
-      message._creationTime,
-      message.profile,
-      message.name,
-      message.pfp,
-      message.username,
-      message.snapshots,
-      message.reply,
-      message.slug,
-      message.seenBy,
-      message.reactions,
-      message.reactionSignature,
-      editComposerInputRef,
-      replyComposerInputRef,
-      interactionState,
-      setInteractionState,
-      message.content,
-      isHovered,
-      setIsHovered,
-    ],
-  );
+  return {
+    ...message,
+    editComposerInputRef,
+    replyComposerInputRef,
+    interactionState,
+    setInteractionState,
+    frameRef,
+    isHovered,
+    setIsHovered,
+  };
+}
 
-  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
-};
-
-export { Provider, Context, useContext };
+export const { Store, useStore } = createStore<StoreType, StoreProps>(
+  useInternalStore,
+);

@@ -6,7 +6,7 @@ import * as Message from "@/features/messages/atom";
 const ReplyMessage = memo(
   ({ message }: { message: EnhancedMessage }) => {
     return (
-      <Message.Provider message={message}>
+      <Message.Store message={message}>
         <Message.Container className="mt-3">
           <div className="flex flex-col">
             <Message.ReplyPreview />
@@ -22,7 +22,7 @@ const ReplyMessage = memo(
           <Message.Actions />
         </Message.Container>
         <InlineComposer />
-      </Message.Provider>
+      </Message.Store>
     );
   },
   (prev, next) => {

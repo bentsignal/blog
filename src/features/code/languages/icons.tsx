@@ -1,11 +1,9 @@
 "use client";
 
-import { useRequiredContext } from "@/lib/context";
 import * as Theme from "@/atoms/theme";
 
 export const React = ({ className }: { className?: string }) => {
-  useRequiredContext(Theme.Context);
-  const theme = Theme.useContext((c) => c.theme);
+  const theme = Theme.useStore((s) => s.theme);
   const color = theme === "dark" ? "#61DAFB" : "#0098b8";
   return (
     <svg

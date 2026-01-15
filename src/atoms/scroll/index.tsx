@@ -1,2 +1,2 @@
 export * from "./scroll-components";
-export * from "./scroll-context";
+export * from "./scroll-store";

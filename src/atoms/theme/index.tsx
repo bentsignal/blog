@@ -1,2 +1,2 @@
-export * from "./theme-context";
+export * from "./theme-store";
 export * from "./theme-components";

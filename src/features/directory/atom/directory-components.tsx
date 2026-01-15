@@ -10,20 +10,14 @@ import {
   ListChevronsDownUp,
   ListChevronsUpDown,
 } from "lucide-react";
-import {
-  Context as DirectoryContext,
-  useContext as useDirectory,
-} from "./directory-context";
+import { useStore as useDirectoryStore } from "./directory-store";
 import type { FileExtension, FileType, FolderType } from "../types";
-import { useRequiredContext } from "@/lib/context";
 import { getLanguage } from "@/features/code/languages/utils";
 import { Button } from "@/atoms/button";
 import * as Tooltip from "@/atoms/tooltip";
 
 const FolderIdentifier = () => {
-  useRequiredContext(DirectoryContext);
-
-  const rootName = useDirectory((c) => c.root.name);
+  const rootName = useDirectoryStore((s) => s.root.name);
 
   return (
     <div className="ml-1 flex items-center gap-1.5">
@@ -37,8 +31,7 @@ const FolderIdentifier = () => {
 
 const Folder = memo(
   ({ folder, path }: { folder: FolderType; path: Array<string> }) => {
-    useRequiredContext(DirectoryContext);
-    const openOrCloseFolder = useDirectory((c) => c.openOrCloseFolder);
+    const openOrCloseFolder = useDirectoryStore((s) => s.openOrCloseFolder);
     return (
       <div className="flex flex-col">
         <button
@@ -121,8 +114,7 @@ const FileIcon = ({ extension }: { extension: FileExtension }) => {
 };
 
 const List = () => {
-  useRequiredContext(DirectoryContext);
-  const root = useDirectory((c) => c.root);
+  const root = useDirectoryStore((s) => s.root);
   return root.contents.map((content) => {
     if ("contents" in content) {
       return (
@@ -138,8 +130,7 @@ const List = () => {
 };
 
 const CloseAllButton = () => {
-  useRequiredContext(DirectoryContext);
-  const closeAll = useDirectory((c) => c.closeAll);
+  const closeAll = useDirectoryStore((s) => s.closeAll);
   return (
     <Tooltip.Frame>
       <Tooltip.Trigger asChild>
@@ -153,8 +144,7 @@ const CloseAllButton = () => {
 };
 
 const OpenAllButton = () => {
-  useRequiredContext(DirectoryContext);
-  const openAll = useDirectory((c) => c.openAll);
+  const openAll = useDirectoryStore((s) => s.openAll);
   return (
     <Tooltip.Frame>
       <Tooltip.Trigger asChild>

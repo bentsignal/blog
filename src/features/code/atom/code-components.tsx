@@ -12,8 +12,7 @@ import {
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
 import { useCodeTheme } from "../hooks/use-code-theme";
-import { Context as CodeContext, useContext as useCode } from "./code-context";
-import { useRequiredContext } from "@/lib/context";
+import { useStore as useCodeStore } from "./code-store";
 import { cn } from "@/utils/style-utils";
 import { useIsClient } from "@/hooks/use-is-client";
 import { registerLanguages } from "@/features/code/languages/registry";
@@ -24,13 +23,11 @@ import * as Tooltip from "@/atoms/tooltip";
 registerLanguages();
 
 const Block = () => {
-  useRequiredContext(CodeContext);
-
   const codeTheme = useCodeTheme();
-  const code = useCode((c) => c.code);
-  const language = useCode((c) => c.language);
-  const showLineNumbers = useCode((c) => c.showLineNumbers);
-  const wrapLines = useCode((c) => c.wrapLines);
+  const code = useCodeStore((s) => s.code);
+  const language = useCodeStore((s) => s.language);
+  const showLineNumbers = useCodeStore((s) => s.showLineNumbers);
+  const wrapLines = useCodeStore((s) => s.wrapLines);
 
   return (
     <SyntaxHighlighter
@@ -64,9 +61,7 @@ const Block = () => {
 };
 
 const LanguageIdentifier = () => {
-  useRequiredContext(CodeContext);
-
-  const language = useCode((c) => c.language);
+  const language = useCodeStore((s) => s.language);
 
   const { label, icon: Icon } = language;
 
@@ -81,9 +76,7 @@ const LanguageIdentifier = () => {
 };
 
 const CopyButton = () => {
-  useRequiredContext(CodeContext);
-
-  const code = useCode((c) => c.code);
+  const code = useCodeStore((s) => s.code);
 
   const [copied, setCopied] = useState(false);
   const isClient = useIsClient();
@@ -125,10 +118,8 @@ const CopyButton = () => {
 };
 
 const LineNumbersButton = () => {
-  useRequiredContext(CodeContext);
-
-  const showLineNumbers = useCode((c) => c.showLineNumbers);
-  const toggleLineNumbers = useCode((c) => c.toggleLineNumbers);
+  const showLineNumbers = useCodeStore((s) => s.showLineNumbers);
+  const toggleLineNumbers = useCodeStore((s) => s.toggleLineNumbers);
 
   return (
     <Tooltip.Frame>
@@ -155,10 +146,8 @@ const LineNumbersButton = () => {
 };
 
 const LineWrappingButton = () => {
-  useRequiredContext(CodeContext);
-
-  const wrapLines = useCode((c) => c.wrapLines);
-  const toggleLineWrapping = useCode((c) => c.toggleLineWrapping);
+  const wrapLines = useCodeStore((s) => s.wrapLines);
+  const toggleLineWrapping = useCodeStore((s) => s.toggleLineWrapping);
 
   return (
     <Tooltip.Frame>

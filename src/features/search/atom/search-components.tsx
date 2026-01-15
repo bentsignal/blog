@@ -1,11 +1,7 @@
 "use client";
 
 import { Search as SearchIcon, X } from "lucide-react";
-import {
-  Context as SearchContext,
-  useContext as useSearch,
-} from "./search-context";
-import { useRequiredContext } from "@/lib/context";
+import { useStore as useSearchStore } from "./search-store";
 import { cn } from "@/utils/style-utils";
 import * as InputGroup from "@/atoms/input-group";
 
@@ -18,9 +14,8 @@ const Icon = () => {
 };
 
 const Input = ({ placeholder }: { placeholder: string }) => {
-  useRequiredContext(SearchContext);
-  const searchTerm = useSearch((c) => c.searchTerm);
-  const setSearchTerm = useSearch((c) => c.setSearchTerm);
+  const searchTerm = useSearchStore((s) => s.searchTerm);
+  const setSearchTerm = useSearchStore((s) => s.setSearchTerm);
   return (
     <InputGroup.Input
       value={searchTerm}
@@ -31,14 +26,13 @@ const Input = ({ placeholder }: { placeholder: string }) => {
 };
 
 const ClearButton = () => {
-  useRequiredContext(SearchContext);
-  const searchTerm = useSearch((c) => c.searchTerm);
-  const setSearchTerm = useSearch((c) => c.setSearchTerm);
+  const showClearButton = useSearchStore((s) => s.searchTerm.length > 0);
+  const setSearchTerm = useSearchStore((s) => s.setSearchTerm);
   return (
     <InputGroup.Addon
       align="inline-end"
       className={cn(
-        searchTerm.length > 0 ? "cursor-pointer select-none" : "opacity-0",
+        showClearButton ? "cursor-pointer select-none" : "opacity-0",
       )}
     >
       <button onClick={() => setSearchTerm("")} className="cursor-pointer p-1">

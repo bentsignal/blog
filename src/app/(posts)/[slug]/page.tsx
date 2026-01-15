@@ -36,7 +36,7 @@ export default async function Page({
   const readingTimeString = `${postData.readingTimeInMinutes} min read`;
 
   return (
-    <Scroll.Provider>
+    <Scroll.Store>
       <Scroll.Wrapper>
         <Scroll.ProgressBar />
         <TopControls className="absolute top-0 left-0 z-6" />
@@ -82,7 +82,7 @@ export default async function Page({
         </div>
         <Abyss.Bottom />
       </Scroll.Wrapper>
-    </Scroll.Provider>
+    </Scroll.Store>
   );
 }
 
