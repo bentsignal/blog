@@ -34,7 +34,7 @@ function useInternalStore({ themeCookieValue }: StoreProps) {
   return { theme: theme as Theme, setTheme };
 }
 
-const { Store: InternalStore, useStore } = createStore<StoreType, StoreProps>(
+const { Store: InternalStore, useStore } = createStore<StoreProps, StoreType>(
   useInternalStore,
 );
 

@@ -111,8 +111,8 @@ importers:
         specifier: ^11.1.2
         version: 11.1.2
       rostra:
-        specifier: ^0.3.0
-        version: 0.3.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4)
+        specifier: ^1.0.0
+        version: 1.0.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4)
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.1.4(react@19.1.4))(react@19.1.4)
@@ -3066,8 +3066,8 @@ packages:
     resolution: {integrity: sha512-oMA2dcrw6u0YfxJQXm342bFKX/E4sG9rbTzO9ptUcR/e8A33cHuvStiYOwH7fszkZlZ1z/ta9AAoPk2F4qIOHA==}
     engines: {node: '>=18'}
 
-  rostra@0.3.0:
-    resolution: {integrity: sha512-I5UKhc2gRcKT2g5mA83ZaeXVDJWJXbsXBOK6jLDIdvTRJRFtDX8O4Ox7NafGer/qGUYJrPQgcW5ktK9xZuRTuw==}
+  rostra@1.0.0:
+    resolution: {integrity: sha512-DSyEoT+IZ4ec4QBhwmUvsVma3JHVT8/EdjfTzdpd1r8L9jZlGdAiwf2veQtWtydY6501n+VmsF+aDC7sIJqBqw==}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -6405,7 +6405,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  rostra@0.3.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4):
+  rostra@1.0.0(react-dom@19.1.4(react@19.1.4))(react@19.1.4):
     dependencies:
       react: 19.1.4
       react-dom: 19.1.4(react@19.1.4)

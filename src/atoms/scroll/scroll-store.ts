@@ -157,6 +157,6 @@ function useInternalStore({
   };
 }
 
-export const { Store, useStore } = createStore<StoreType, StoreProps>(
+export const { Store, useStore } = createStore<StoreProps, StoreType>(
   useInternalStore,
 );
