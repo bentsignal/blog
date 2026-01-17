@@ -9,7 +9,7 @@ export const HorizontalBar = ({
 }) => {
   return (
     <div
-      className={cn("bg-border dark:bg-muted h-3 rounded-md", className)}
+      className={cn("bg-border dark:bg-muted/30 h-3 rounded-md", className)}
       style={{ width: `${width}px` }}
     />
   );
@@ -25,7 +25,7 @@ export const Circle = ({
   return (
     <div
       className={cn(
-        "bg-border dark:bg-muted flex flex-shrink-0 items-center justify-center rounded-full",
+        "bg-border dark:bg-muted/30 flex flex-shrink-0 items-center justify-center rounded-full",
         className,
       )}
     >

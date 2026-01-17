@@ -10,7 +10,7 @@ const InlineCode = ({ code }: { code: string }) => {
       style={codeTheme}
       codeTagProps={{ className: "bg-transparent" }}
       PreTag={({ children }) => (
-        <code className="not-prose bg-card dark:bg-muted inline-flex overflow-x-auto rounded-md px-1.5 py-0.5 font-mono text-sm">
+        <code className="not-prose bg-card/60 dark:bg-muted/60 inline-flex overflow-x-auto rounded-md px-1.5 py-0.5 mr-1 font-mono text-sm">
           {children}
         </code>
       )}

@@ -22,7 +22,7 @@ const Container = ({
   return (
     <div
       className={cn(
-        "bg-muted flex items-center justify-center rounded-2xl p-3",
+        "bg-muted/80 flex items-center justify-center rounded-2xl p-3",
         className,
       )}
     >

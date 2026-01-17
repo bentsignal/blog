@@ -17,7 +17,7 @@ const Header = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       className={cn(
-        "dark:bg-border bg-input flex h-14 w-full items-center justify-between px-4",
+        "dark:bg-border/60 bg-input flex h-14 w-full items-center justify-between px-4",
       )}
     >
       {children}

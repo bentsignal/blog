@@ -23,7 +23,7 @@ const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
           <div
             className={cn(
               "flex h-[50%] w-full flex-col items-center justify-center gap-1",
-              "bg-background/30 mask-t-from-75% mask-b-from-75% backdrop-blur-xs",
+              "bg-background/10 mask-t-from-75% mask-b-from-75% backdrop-blur-xs",
               "animate-in fade-in blur-in duration-500",
             )}
           >
@@ -50,7 +50,7 @@ const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
             const shouldChainMessages =
               previousMessage?.profile === message.profile &&
               message._creationTime - previousMessage._creationTime <
-                1000 * 60 * 5;
+              1000 * 60 * 5;
             // if neighboring messages are not sent on the same day, show the date to mark
             // the start of a new day
             const isSameDay = areSameDay(

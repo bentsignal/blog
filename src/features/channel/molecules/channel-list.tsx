@@ -69,7 +69,7 @@ export const ChannelList = () => {
                   }
                 }}
                 className={cn(
-                  "dark:bg-card dark:hover:bg-muted bg-accent hover:bg-muted transition-colors duration-100",
+                  "dark:bg-card/60 dark:hover:bg-muted/60 bg-accent/60 hover:bg-muted/60 transition-colors duration-100",
                   "mx-4 flex cursor-pointer items-center gap-3 rounded-2xl p-3 px-4 select-none",
                 )}
               >

@@ -38,7 +38,7 @@ const Container = ({
       ? "bg-red-300/20"
       : interactionState === "replying"
         ? "bg-blue-300/20"
-        : "transparent hover:bg-muted";
+        : "transparent hover:bg-muted/40";
 
   return (
     <div
