@@ -11,7 +11,8 @@
     "build:convex": "convex deploy",
     "build:auth": "cd src/convex/betterAuth && pnpx @better-auth/cli generate --output undefined -y && cd ../../..",
     "lint": "oxlint",
-    "format": "prettier --write ./src",
+    "format": "prettier ./src --check",
+    "format:fix": "prettier ./src --write",
     "scan": "next dev & pnpx react-scan@latest http://localhost:3000"
   },
   "dependencies": {
