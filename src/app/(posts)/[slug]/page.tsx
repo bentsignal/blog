@@ -69,7 +69,7 @@ export default async function Page({
             </div>
             <Separator className="my-4" />
             <div className="flex flex-col items-center gap-2">
-              <span className="text-muted-foreground text-sm">
+              <span className="text-foreground text-sm">
                 @bentsignal on everything
               </span>
               <SocialsBar />

@@ -2,11 +2,11 @@ import {
   base16AteliersulphurpoolLight,
   nord,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
-import * as Theme from "@/atoms/theme";
+import * as Theme from "@/features/theme/atom";
 
 const useCodeTheme = () => {
-  const theme = Theme.useStore((s) => s.theme);
-  return theme === "dark" ? nord : base16AteliersulphurpoolLight;
+  const inDarkMode = Theme.useStore((s) => s.theme.mode === "dark");
+  return inDarkMode ? nord : base16AteliersulphurpoolLight;
 };
 
 export { useCodeTheme };

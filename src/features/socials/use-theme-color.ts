@@ -1,10 +1,10 @@
 "use client";
 
-import * as Theme from "@/atoms/theme";
+import * as Theme from "@/features/theme/atom";
 
 const useThemeColor = () => {
-  const theme = Theme.useStore((s) => s.theme);
-  return theme === "light" ? "black" : "white";
+  const inLightMode = Theme.useStore((s) => s.theme.mode === "light");
+  return inLightMode ? "black" : "white";
 };
 
 export { useThemeColor };

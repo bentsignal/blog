@@ -1,10 +1,10 @@
 "use client";
 
-import * as Theme from "@/atoms/theme";
+import * as Theme from "@/features/theme/atom";
 
 export const React = ({ className }: { className?: string }) => {
-  const theme = Theme.useStore((s) => s.theme);
-  const color = theme === "dark" ? "#61DAFB" : "#0098b8";
+  const inDarkMode = Theme.useStore((s) => s.theme.mode === "dark");
+  const color = inDarkMode ? "#61DAFB" : "#0098b8";
   return (
     <svg
       role="img"

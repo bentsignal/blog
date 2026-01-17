@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import * as Auth from "@/features/auth/atom";
+import * as Theme from "@/features/theme/atom";
 import * as Popover from "@/atoms/popover";
 import { Separator } from "@/atoms/separator";
-import * as Theme from "@/atoms/theme";
 
 export default function MainMenu() {
   const [open, setOpen] = useState(false);
@@ -24,7 +24,7 @@ export default function MainMenu() {
           <Auth.PrimaryButton />
           {/* <Auth.DeleteAccountButton /> */}
           <Separator className="my-1" />
-          <Theme.ToggleButton />
+          <Theme.Switcher />
         </Popover.Content>
       </Popover.Frame>
     </div>

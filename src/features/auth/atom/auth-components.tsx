@@ -3,9 +3,9 @@
 import { LogIn, LogOut, UserRoundX } from "lucide-react";
 import { useStore as useAuthStore } from "./auth-store";
 import * as SocialIcons from "@/features/socials/icons";
+import * as Theme from "@/features/theme/atom";
 import { Button } from "@/atoms/button";
 import { Spinner } from "@/atoms/spinner";
-import * as Theme from "@/atoms/theme";
 
 export const PrimaryButton = () => {
   const imSignedIn = useAuthStore((s) => s.imSignedIn);
@@ -67,8 +67,8 @@ export const DeleteAccountButton = () => {
 export const JoinButton = () => {
   const inProgress = useAuthStore((s) => s.inProgress);
   const signIn = useAuthStore((s) => s.signIn);
-  const theme = Theme.useStore((s) => s.theme);
-  const color = theme === "dark" ? "black" : "white";
+  const inDarkMode = Theme.useStore((s) => s.theme.mode === "dark");
+  const color = inDarkMode ? "black" : "white";
 
   return (
     <Button className="min-w-52 font-bold" onClick={signIn}>
