@@ -50,7 +50,7 @@ const MessageList = ({ messages }: { messages: EnhancedMessage[] }) => {
             const shouldChainMessages =
               previousMessage?.profile === message.profile &&
               message._creationTime - previousMessage._creationTime <
-              1000 * 60 * 5;
+                1000 * 60 * 5;
             // if neighboring messages are not sent on the same day, show the date to mark
             // the start of a new day
             const isSameDay = areSameDay(

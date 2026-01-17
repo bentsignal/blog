@@ -37,4 +37,4 @@ const ThemeButton = ({ theme }: { theme: Theme }) => {
       <span>{theme.name}</span>
     </Button>
   );
-}
+};
