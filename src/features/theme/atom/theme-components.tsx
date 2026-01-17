@@ -24,8 +24,8 @@ const ThemeButton = ({ theme }: { theme: Theme }) => {
       onClick={() => {
         changeTheme(theme);
       }}
-      variant="ghost"
-      className="w-full justify-start p-0"
+      variant="link"
+      className="pl-0"
     >
       <div
         className={cn(
