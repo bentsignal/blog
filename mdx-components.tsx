@@ -3,10 +3,18 @@ import Link from "next/link";
 import type { MDXComponents } from "mdx/types";
 import { CodeSnippet } from "@/features/code/molecules/code-snippet";
 import HashLink from "@/molecules/hash-link";
+import { Callout, extractCalloutInfo } from "@/atoms/callout";
 
 const components: MDXComponents = {
   code: CodeSnippet,
   pre: ({ children }) => <>{children}</>,
+  blockquote: ({ children, ...props }) => {
+    const calloutInfo = extractCalloutInfo(children);
+    if (calloutInfo) {
+      return <Callout type={calloutInfo.type}>{calloutInfo.content}</Callout>;
+    }
+    return <blockquote {...props}>{children}</blockquote>;
+  },
   a: ({ href, children, ...props }) => {
     const isHashLink = href?.startsWith("#");
     if (isHashLink) {
