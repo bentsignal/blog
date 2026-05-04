@@ -31,6 +31,7 @@ export default function HomePage() {
                   @bentsignal
                 </span>
               </div>
+              <SocialsBar className="ml-auto hidden sm:flex" />
             </div>
             <span>
               This is a space for me to discuss software, photography,
@@ -56,7 +57,7 @@ export default function HomePage() {
                 );
               })}
             </div>
-            <SocialsBar className="my-2 justify-center" />
+            <SocialsBar className="my-2 justify-center sm:hidden" />
           </Scroll.Content>
         </Scroll.Container>
         <Abyss.Bottom />
