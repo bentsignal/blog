@@ -43,7 +43,7 @@ export function useSidebar() {
 }
 
 export function Provider({
-  defaultOpen = true,
+  defaultOpen = false,
   open: openProp,
   onOpenChange: setOpenProp,
   className,
