@@ -13,6 +13,7 @@
     "lint": "oxlint",
     "format": "prettier ./src --check",
     "format:fix": "prettier ./src --write",
+    "typecheck": "tsc",
     "scan": "next dev & pnpx react-scan@latest http://localhost:3000"
   },
   "dependencies": {
