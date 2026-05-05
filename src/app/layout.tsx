@@ -3,6 +3,7 @@ import { Inter, Roboto_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import * as Theme from "@/features/theme/atom";
 import { defaultTheme } from "@/features/theme/themes";
+import { Stars } from "@/atoms/stars";
 import { Toaster } from "@/atoms/toast";
 
 const inter = Inter({
@@ -43,6 +44,7 @@ export default function RootLayout({
           disableTransitionOnChange
           initialTheme={defaultTheme}
         >
+          <Stars />
           <Toaster />
           {children}
         </Theme.Store>

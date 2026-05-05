@@ -181,6 +181,16 @@
     linear-gradient(to top, #05133dff 0%, #01010eff 44%);
 }
 
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: var(--twinkle-min);
+  }
+  50% {
+    opacity: var(--twinkle-max);
+  }
+}
+
 .theme-afternoon {
   background:
     linear-gradient(to top, #ffffff00 0%, #090934ff 100%),
