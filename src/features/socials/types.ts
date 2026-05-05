@@ -10,6 +10,7 @@ type Company =
 type Metadata = {
   url: string;
   icon: React.ComponentType;
+  label: string;
   className?: string;
 };
 
