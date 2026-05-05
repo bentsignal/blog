@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SocialsBar } from "@/features/socials/socials-bar";
+import { SocialsSheet } from "@/features/socials/socials-sheet";
 import * as Abyss from "@/atoms/abyss";
 import * as Scroll from "@/atoms/scroll";
 import { Separator } from "@/atoms/separator";
@@ -30,6 +31,7 @@ export default function HomePage() {
                 </span>
               </div>
               <SocialsBar className="ml-auto hidden sm:flex" />
+              <SocialsSheet className="ml-auto sm:hidden" />
             </div>
             <span>
               This is a space for me to discuss software, photography,
@@ -55,7 +57,6 @@ export default function HomePage() {
                 );
               })}
             </div>
-            <SocialsBar className="my-2 justify-center sm:hidden" />
           </Scroll.Content>
         </Scroll.Container>
         <Abyss.Bottom />
