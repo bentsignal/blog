@@ -11,12 +11,8 @@
 
 A space for me to share my thoughts.
 
-Feel free to use this template to build your own site!
-
 <br />
 <br />
-
-me@bentsignal.com
 
 [x.com/bentsignal](https://x.com/bentsignal)
 
