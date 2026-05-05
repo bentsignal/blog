@@ -1,0 +1,149 @@
+During my time at [Gardener's](https://www.gardeners.com), one of my primary
+goals was to improve the performance of the site. When I joined every metric in
+our lighthouse report was on fire, but in the year and a half I was there, the
+team and I made great progress. We sped up page load, reduced layout shift, and
+optimized SEO. Unfortunately, all of these changes got thrown away when the
+company was acquired[^1].
+
+[^1]:
+    Gardener's Supply Company
+    [declared bankruptcy](https://www.wcax.com/2025/08/13/indiana-company-finalizes-purchase-vermonts-gardeners-supply/)
+    in August 2025 and was acquired by a company called
+    [Garden's Alive](https://en.wikipedia.org/wiki/Gardens_Alive!), who decided
+    to move our catalog over to Shopify. Their other subsidiaries were all on
+    Shopify, so having everything under one roof makes plenty of sense. Though
+    it was unfortunate for me and the other engineers working on the site, as we
+    were laid off during the acquisition.
+
+Since the work we did is gone, I wanted to create a project that encapsulated
+all of the things we learned along the way. This is what lead me to build
+[Start Faster](https://www.start-faster.com). The purpose of this shop isn't to
+make money, its to demonstrate how fast an e-commerce platform can be.
+
+The project is open source and MIT licensed, feel free to check it out on
+[GitHub](https://github.com/bentsignal/start-faster). You're welcome to use it
+for your own storefront. I don't currently plan on writing out documentation for
+getting it set up, but I'm happy to help out if you message me on
+[twitter](https://www.x.com/bentsignal).
+
+Enough yap, lets get into the more exciting details.
+
+## What is it?
+
+Start faster is an evolving suite of tools for building an online shop. It
+includes a custom storefront for your Shopify catalog, a CMS for managing site
+content, and an admin portal for managing user permissions.
+
+## What is the stack?
+
+- [TanStack Start](https://www.tanstack.com/start/latest) + React
+- [Convex](https://www.convex.dev) for the CMS and admin portal
+- [Shopify](https://www.shopify.com)
+- [Vercel](https://www.vercel.com)
+
+## Why use your own site in front of Shopify? Why not just use Shopify's site?
+
+Shopify is an excellent product. They have built an incredible set of tools that
+allows you to get selling in no time. Order management and payment processing
+are difficult problems to solve, and I don't think it makes sense to re-invent
+the wheel. That said, I do think there is still merit to building your own
+custom storefront for web/mobile. Having greater control over the user
+experience and performance of your storefront allows you to deliver your
+customers the exact experience you want them to have. And while Shopify's
+provided storefront's and custimization tools are good, they will never match
+the freedom of owning the code yourself. The Start Faster storefront is a
+TanStack Start + React web app making calls to Shopify's
+[Storefront API](https://shopify.dev/docs/api/storefront/latest).
+
+## What makes the project so great?
+
+There isn't one thing that makes it great, its a homogenous mix of good stack
+components and carefully thought out decisions surrounding code architecture.
+Lets dive deep into a few of the things that shine the brightest:
+
+### Storing state in the URL
+
+If you want to:
+
+- Persist state between page reloads
+- Persist state when sharing links between users
+- Persist state for bookmarked URLs
+- Apply filters or sorting options on navigation
+
+Then the URL might be the perfect place for you to store your state. The issue
+is that most meta-frameworks don't provide a way to access and set URL params in
+a type-safe manner. In Next.js, accesses are always typed `string | undefined`,
+and you can set them to be whatever string you'd like. When it comes to
+validating their types and values, the ball is in your court.
+
+One of the reasons Tanner Linsley built TanStack Router (the core of TanStack
+Start) is becuase he wanted a way to treat the URL as a predictable
+[state management solution](https://tanstack.com/blog/search-params-are-state)
+with good DX. In Start, you define your URL params at the Route level with the
+validator of your choosing[^2]. When you access them, they will be typed as the
+return type of their validator. When you set them, you will get a type error if
+the value you provide does not match the validator return type. If the values in
+the user's URL don't pass validation, they will hit the error boundary.
+
+[^2]:
+    As long as it meets the [Standard Schema](https://standardschema.dev/schema)
+    spec.
+
+```tsx
+import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
+
+export const Route = createFileRoute("/dashboard")({
+  component: DashboardRoute,
+  validateSearch: z.object({
+    q: z.string(),
+    tab: z.enum(["General", "Sales", "Marketing"]).default("General"),
+  }),
+});
+
+function DashboardRoute() {
+  // typed as string
+  const queryParam = Route.useSearch({ select: (search) => search.q });
+
+  // typed as "General" | "Sales" | "Marketing"
+  const currentTab = Route.useSearch({ select: (search) => search.tab });
+}
+```
+
+When you access one of these parameter values, you know exactly what the type of
+the data will look like, no surprises. If the value of the param changes, the
+component will re-render in true React fashion.
+
+> [!tip] You should always use the `select` option when using the `useSearch`
+> hook. This way, the state variable will only change and cause a re-render when
+> the selector expressions changes, not when any single URL param changes.
+
+If you check out
+[this page](https://www.start-faster.com/search?q=alien&sortBy=price&sortDirection=asc&filters=%5B%7B"price"%3A%7B"max"%3A50%7D%7D%5D)
+on Start Faster, you can see these principles in action. When you open the page,
+the search bar contains the search term I entered, and the filters and sorting
+are preserved. Go ahead and change them, refresh, and see for yourself!
+
+### Aggressive caching and preloading
+
+When you navigate between pages on Start Faster, you'll notice that most of the
+time you instantly land at the destination page. This is due to:
+
+1. Route caching
+2. The
+   ["Quick Link"](https://github.com/bentsignal/start-faster/blob/main/packages/features/src/quick-link/quick-link.tsx)
+   component
+
+Route caching comes out of the box with TanStack Start. You can configure till
+your hearts content, but the defaults are great so I didn't.
+
+### Images
+
+Vercel image optimization with ts start custom image component for custom
+loading states
+
+### Optimistic Updates
+
+Biggest focus should be cart
+
+### Notes
