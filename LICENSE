@@ -19,6 +19,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Ayyyy wg. Ok so basically you can use the code however you want, just not the
-posts. Anything in an mdx file is off limits. Everything else do what ya want
-tho idc. Ok sick thanks for taking tha time 2 read. :D
+Modification: You can use this codebase to build your own blog, you just can't
+use the contents of the posts I've written. All files in ./blog/content,
+specifically .md and .mdx files are off limits. Everything else is in the
+codebase is fair game.
