@@ -1,7 +1,5 @@
 # AGENTS.md
 
-Guidance for coding agents working in `/Users/shawn/dev/projects/blog`.
-
 ## Repository Summary
 
 - This is my blog, built with Next.js

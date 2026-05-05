@@ -1,14 +1,15 @@
 import type { MetadataRoute } from "next";
-import { posts } from "@/blog/posts";
-import { env } from "@/env";
+import { posts, slugs } from "@/blog/posts";
+import { siteUrl } from "@/urls";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return Object.entries(posts).map(([slug, post]) => {
+export default function sitemap() {
+  return slugs.map((slug) => {
+    const post = posts[slug];
     return {
-      url: `${env.NEXT_PUBLIC_SITE_URL}/${slug}`,
+      url: `${siteUrl}/${slug}`,
       lastModified: post.lastModified,
       changeFrequency: "monthly",
       priority: 0.5,
     };
-  });
+  }) satisfies MetadataRoute.Sitemap;
 }

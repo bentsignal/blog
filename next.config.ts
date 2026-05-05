@@ -1,7 +1,6 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
-import { env } from "@/env";
 
 const nextConfig: NextConfig = {
   typedRoutes: true,
@@ -12,7 +11,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: `${env.UPLOADTHING_APP_ID}.ufs.sh`,
+        hostname: `wr5t080c48.ufs.sh`,
         port: "",
         pathname: "/f/**",
         search: "",
