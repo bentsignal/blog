@@ -7,7 +7,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { cn } from "@/utils/style-utils";
+import { cn } from "@/utils";
 
 const calloutTypes = [
   "note",

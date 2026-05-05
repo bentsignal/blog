@@ -1,7 +1,8 @@
-import type { PostSlug } from "@/blog/posts";
+import Pages from "./content";
+import { Slug } from "./posts";
 import type { ComponentType } from "react";
-import OrganizeReactProjects from "@/blog/content/organize-react-projects/page.mdx";
 
-export const pages: Record<PostSlug, ComponentType> = {
-  "organize-react-projects": OrganizeReactProjects,
-};
+export const pages = {
+  "start-faster": Pages.StartFaster,
+  "organize-react-projects": Pages.OrganizeReactProjects,
+} as const satisfies Record<Slug, ComponentType>;

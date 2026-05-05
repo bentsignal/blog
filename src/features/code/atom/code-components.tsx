@@ -13,11 +13,11 @@ import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import { toast } from "sonner";
 import { useCodeTheme } from "../hooks/use-code-theme";
 import { useStore as useCodeStore } from "./code-store";
-import { cn } from "@/utils/style-utils";
 import { useIsClient } from "@/hooks/use-is-client";
 import { registerLanguages } from "@/features/code/languages/registry";
 import { Button } from "@/atoms/button";
 import * as Tooltip from "@/atoms/tooltip";
+import { cn } from "@/utils";
 
 // init syntax highlighter
 registerLanguages();

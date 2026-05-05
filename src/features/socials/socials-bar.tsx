@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { companies, socials } from "./data";
-import { cn } from "@/utils/style-utils";
+import { cn } from "@/utils";
 
 const SocialsBar = ({ className }: { className?: string }) => {
   return (

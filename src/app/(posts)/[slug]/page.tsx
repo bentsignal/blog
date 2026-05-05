@@ -1,39 +1,31 @@
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import type { PostSlug } from "@/blog/posts";
 import type { Metadata } from "next";
-import { findPostWithSlug } from "@/utils/slug-utils";
-import { cn } from "@/utils/style-utils";
 import { SocialsBar } from "@/features/socials/socials-bar";
 import * as Abyss from "@/atoms/abyss";
 import * as Scroll from "@/atoms/scroll";
 import { Separator } from "@/atoms/separator";
 import { TopControls } from "@/molecules/top-controls";
 import { pages } from "@/blog/pages";
-import { posts, postSlugs } from "@/blog/posts";
+import { posts, Slug, slugs } from "@/blog/posts";
+import { cn } from "@/utils";
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: Slug }>;
 }) {
   const { slug } = await params;
 
-  const validatedSlug = findPostWithSlug(slug);
-  if (!validatedSlug) {
-    notFound();
-  }
+  const post = posts[slug];
+  const Page = pages[slug];
 
-  const postData = posts[validatedSlug];
-  const PostComponent = pages[validatedSlug];
-
-  const dateString = postData.datePosted.toLocaleDateString(undefined, {
+  const dateString = post.datePosted.toLocaleDateString(undefined, {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
-  const readingTimeString = `${postData.readingTimeInMinutes} min read`;
+  const readingTimeString = `${post.readingTimeInMinutes} min read`;
 
   return (
     <Scroll.Store>
@@ -51,7 +43,7 @@ export default async function Page({
               <MoveLeft className="size-3" /> Back to Home
             </Link>
             <div className="my-4 flex flex-col gap-2">
-              <h1 className="text-2xl font-semibold">{postData.title}</h1>
+              <h1 className="text-2xl font-semibold">{post.title}</h1>
               <div className="flex items-center justify-between">
                 <p className="text-muted-foreground">
                   {dateString} • {readingTimeString}
@@ -65,7 +57,7 @@ export default async function Page({
                 "prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs",
               )}
             >
-              <PostComponent />
+              <Page />
             </div>
             <Separator className="my-4" />
             <div className="flex flex-col items-center gap-2">
@@ -89,7 +81,7 @@ export default async function Page({
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: PostSlug }>;
+  params: Promise<{ slug: Slug }>;
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = posts[slug];
@@ -102,7 +94,7 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  return postSlugs.map((slug) => ({ slug }));
+  return slugs.map((slug) => ({ slug }));
 }
 
 export const dynamicParams = false;

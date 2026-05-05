@@ -1,4 +1,4 @@
-import { cn } from "@/utils/style-utils";
+import { cn } from "@/utils";
 
 const shared = "bg-background/10 absolute z-5 flex pointer-events-none";
 

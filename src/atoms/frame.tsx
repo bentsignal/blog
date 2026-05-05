@@ -1,4 +1,4 @@
-import { cn } from "@/utils/style-utils";
+import { cn } from "@/utils";
 
 const Container = ({ children }: { children: React.ReactNode }) => {
   return (

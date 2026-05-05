@@ -1,13 +1,11 @@
 "use client";
 
 import MainMenu from "./main-menu";
-import { cn } from "@/utils/style-utils";
-import * as Sidebar from "@/atoms/sidebar";
+import { cn } from "@/utils";
 
 export const TopControls = ({ className }: { className?: string }) => {
   return (
-    <div className={cn("flex w-full justify-between p-2", className)}>
-      <Sidebar.Trigger />
+    <div className={cn("flex w-full justify-end p-2", className)}>
       <MainMenu />
     </div>
   );

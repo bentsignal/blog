@@ -2,8 +2,8 @@
 
 import { Theme, themes } from "../themes";
 import { useStore as useThemeStore } from "./theme-store";
-import { cn } from "@/utils/style-utils";
 import { Button } from "@/atoms/button";
+import { cn } from "@/utils";
 
 export const Switcher = () => {
   return (

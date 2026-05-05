@@ -1,12 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 import { SocialsBar } from "@/features/socials/socials-bar";
 import * as Abyss from "@/atoms/abyss";
 import * as Scroll from "@/atoms/scroll";
 import { Separator } from "@/atoms/separator";
-import PostLink from "@/molecules/post-link";
 import { TopControls } from "@/molecules/top-controls";
 import pfp from "@/assets/pfp.webp";
-import { posts, postSlugs } from "@/blog/posts";
+import { posts, slugs } from "@/blog/posts";
 
 export default function HomePage() {
   return (
@@ -39,10 +39,10 @@ export default function HomePage() {
             </span>
             <Separator className="my-1" />
             <div className="flex flex-col gap-3">
-              {postSlugs.map((slug) => {
+              {slugs.map((slug) => {
                 const post = posts[slug];
                 return (
-                  <PostLink slug={slug} key={slug}>
+                  <Link href={`/${slug}`} key={slug}>
                     <div className="text-muted-foreground hover:text-primary flex flex-col items-start justify-between gap-1 rounded-md transition-colors duration-100 lg:flex-row lg:items-center">
                       <h2 className="font-semibold">{post.title}</h2>
                       <p className="hidden text-sm sm:block">
@@ -53,7 +53,7 @@ export default function HomePage() {
                         })}
                       </p>
                     </div>
-                  </PostLink>
+                  </Link>
                 );
               })}
             </div>

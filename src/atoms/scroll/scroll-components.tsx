@@ -2,8 +2,8 @@
 
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useStore as useScrollStore } from "./scroll-store";
-import { cn } from "@/utils/style-utils";
 import { Button } from "@/atoms/button";
+import { cn } from "@/utils";
 
 const Wrapper = ({
   children,

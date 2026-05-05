@@ -1,7 +1,7 @@
+import fs from "fs";
+import path from "path";
 import { ImageResponse } from "next/og";
-import type { PostSlug } from "@/blog/posts";
-import { loadAvatar, loadGoogleFont } from "@/utils/og-utils";
-import { posts } from "@/blog/posts";
+import { posts, Slug } from "@/blog/posts";
 
 export const runtime = "nodejs";
 
@@ -10,6 +10,33 @@ export const size = {
   height: 630,
 };
 export const contentType = "image/png";
+
+const loadGoogleFont = async (font: string, weight: number, text: string) => {
+  const url = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}&text=${encodeURIComponent(text)}`;
+
+  const data = await fetch(url);
+  const css = await data.text();
+  const resource = css.match(
+    /src: url\((.+)\) format\('(opentype|truetype)'\)/,
+  );
+
+  if (resource) {
+    const response = await fetch(resource[1]);
+    if (response.status === 200) {
+      const buffer = await response.arrayBuffer();
+      return buffer;
+    }
+  }
+
+  throw new Error(`Failed to load font: ${font} ${weight}`);
+};
+
+const loadAvatar = async () => {
+  const avatarPath = path.join(process.cwd(), "src/assets/pfp.jpg");
+  const avatarBuffer = fs.readFileSync(avatarPath);
+  const base64 = avatarBuffer.toString("base64");
+  return `data:image/jpeg;base64,${base64}`;
+};
 
 const atmosphereHeight = 265;
 
@@ -30,7 +57,7 @@ const atmosphere =
 export default async function Image({
   params,
 }: {
-  params: Promise<{ slug: PostSlug }>;
+  params: Promise<{ slug: Slug }>;
 }) {
   const { slug } = await params;
   const post = posts[slug];
