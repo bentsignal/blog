@@ -1,9 +1,8 @@
 import "./globals.css";
 import { Inter, Roboto_Mono } from "next/font/google";
-import { cookies } from "next/headers";
 import type { Metadata } from "next";
 import * as Theme from "@/features/theme/atom";
-import { getTheme } from "@/features/theme/utils";
+import { defaultTheme } from "@/features/theme/themes";
 import { Toaster } from "@/atoms/toast";
 
 const inter = Inter({
@@ -25,28 +24,24 @@ export const metadata: Metadata = {
   description: "A space for me to share my thoughts.",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const themeCookie = cookieStore.get("theme");
-  const theme = getTheme(themeCookie?.value);
-
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <ReactScan />
       </head>
       <body
-        className={`${inter.variable} ${robotoMono.variable} ${theme.className} flex min-h-svh w-full overflow-y-hidden antialiased`}
+        className={`${inter.variable} ${robotoMono.variable} ${defaultTheme.className} flex min-h-svh w-full overflow-y-hidden antialiased`}
       >
         <Theme.Store
           attribute="class"
           defaultTheme="dark"
           disableTransitionOnChange
-          initialTheme={theme}
+          initialTheme={defaultTheme}
         >
           <Toaster />
           {children}

@@ -5,7 +5,6 @@ import { SocialsBar } from "@/features/socials/socials-bar";
 import * as Abyss from "@/atoms/abyss";
 import * as Scroll from "@/atoms/scroll";
 import { Separator } from "@/atoms/separator";
-import { TopControls } from "@/molecules/top-controls";
 import { pages } from "@/blog/pages";
 import { posts, Slug, slugs } from "@/blog/posts";
 import { cn } from "@/utils";
@@ -31,7 +30,6 @@ export default async function Page({
     <Scroll.Store>
       <Scroll.Wrapper>
         <Scroll.ProgressBar />
-        <TopControls className="absolute top-0 left-0 z-6" />
         <Abyss.Top />
         <Scroll.Container fade="md">
           <Scroll.Content className="mx-auto flex max-w-xl flex-col gap-2 px-4 py-16">

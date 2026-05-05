@@ -4,7 +4,6 @@ import { SocialsBar } from "@/features/socials/socials-bar";
 import * as Abyss from "@/atoms/abyss";
 import * as Scroll from "@/atoms/scroll";
 import { Separator } from "@/atoms/separator";
-import { TopControls } from "@/molecules/top-controls";
 import pfp from "@/assets/pfp.webp";
 import { posts, slugs } from "@/blog/posts";
 
@@ -12,7 +11,6 @@ export default function HomePage() {
   return (
     <Scroll.Store>
       <Scroll.Wrapper>
-        <TopControls className="absolute top-0 left-0 z-6" />
         <Abyss.Top />
         <Scroll.Container fade="md">
           <Scroll.Content className="mx-auto my-16 flex max-w-xl flex-col gap-4 px-4">

@@ -25,7 +25,6 @@ function useInternalStore({ initialTheme }: StoreProps) {
     const previousTheme = theme;
     document.body.classList.remove(previousTheme.className);
     document.body.classList.add(newTheme.className);
-    document.cookie = `theme=${newTheme.name}; path=/; max-age=${60 * 60 * 24 * 30}`;
     setNextTheme(newTheme.mode);
     setTheme(newTheme);
   };
