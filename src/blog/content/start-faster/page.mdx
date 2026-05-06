@@ -221,6 +221,12 @@ This might not sound new, but what makes convex special is:
 
 That last one is enormous. Requesting the value from a query that hasn't changed
 since its last call doesn't run the query again, you just get the cached value.
+This reduces cost for you (since convex doesn't charge for cache hits), and
+reduces latency for your users. No more headaches over cache invalidation, lets
+them handle it for you.
+
+I could spend all day talking about why I love Convex, but we'll save that for
+another day.
 
 ---
 
