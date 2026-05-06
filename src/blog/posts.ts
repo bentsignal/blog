@@ -11,12 +11,11 @@ export interface Post {
 export const posts = {
   "start-faster": {
     title: "Start Faster",
-    description: "The fastest shopping experience you've ever seen.",
+    description: "How to build an online shop that never slows down.",
     datePosted: new Date("2026-05-03"),
     lastModified: new Date("2026-05-03"),
     readingTimeInMinutes: 7,
     tags: ["E-commerce", "TanStack Start", "Convex", "Shopify"],
-    hide: true,
   },
   "organize-react-projects": {
     title: "How should we organize our React projects?",
