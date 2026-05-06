@@ -66,7 +66,7 @@ export default async function Page({
             </div>
           </Scroll.Content>
         </Scroll.Container>
-        <div className="absolute right-0 bottom-0 z-6 flex flex-col gap-2 p-4">
+        <div className="absolute right-0 bottom-0 z-6 hidden flex-col gap-2 p-4 md:flex">
           <Scroll.ScrollToTopButton />
           <Scroll.ScrollToBottomButton />
         </div>

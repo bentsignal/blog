@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Inter, Roboto_Mono } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import * as Theme from "@/features/theme/atom";
 import { defaultTheme } from "@/features/theme/themes";
 import { Toaster } from "@/atoms/toast";
@@ -24,6 +24,10 @@ export const metadata: Metadata = {
   description: "A space for me to share my thoughts.",
 };
 
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,11 +35,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <head>
-        <ReactScan />
-      </head>
       <body
-        className={`${inter.variable} ${robotoMono.variable} ${defaultTheme.className} flex min-h-svh w-full overflow-y-hidden antialiased`}
+        className={`${inter.variable} ${robotoMono.variable} ${defaultTheme.className} w-full antialiased md:flex md:min-h-svh md:overflow-y-hidden`}
       >
         <Theme.Store
           attribute="class"
@@ -50,18 +51,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-const ReactScan = () => {
-  if (process.env.NODE_ENV !== "development") {
-    return null;
-  }
-  return (
-    <>
-      {/* eslint-disable-next-line next/no-sync-scripts */}
-      <script
-        crossOrigin="anonymous"
-        src="//unpkg.com/react-scan/dist/auto.global.js"
-      />
-    </>
-  );
-};

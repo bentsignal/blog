@@ -133,6 +133,7 @@
   }
   body {
     @apply text-foreground font-sans;
+    min-height: 100vh;
   }
   code {
     @apply font-mono;
@@ -152,7 +153,24 @@
   );
 }
 
-.theme-space {
+html:has(.theme-space) {
+  background-color: #01010e;
+}
+
+html:has(.theme-afternoon) {
+  background-color: #090934;
+}
+
+body.theme-space::before,
+body.theme-afternoon::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.theme-space::before {
   background:
     0% 99% / auto 50% no-repeat
       radial-gradient(
@@ -181,7 +199,7 @@
     linear-gradient(to top, #05133dff 0%, #01010eff 44%);
 }
 
-.theme-afternoon {
+body.theme-afternoon::before {
   background:
     linear-gradient(to top, #ffffff00 0%, #090934ff 100%),
     linear-gradient(to top, #b2d0f5ff 0%, #528bd1ff 30%, #091e2aff 70%);
