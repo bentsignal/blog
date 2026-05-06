@@ -133,6 +133,7 @@
   }
   body {
     @apply text-foreground font-sans;
+    min-height: 100vh;
   }
   code {
     @apply font-mono;
@@ -152,7 +153,24 @@
   );
 }
 
-.theme-space {
+html:has(.theme-space) {
+  background-color: #01010e;
+}
+
+html:has(.theme-afternoon) {
+  background-color: #090934;
+}
+
+body.theme-space::before,
+body.theme-afternoon::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.theme-space::before {
   background:
     0% 99% / auto 50% no-repeat
       radial-gradient(

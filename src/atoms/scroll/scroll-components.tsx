@@ -15,7 +15,7 @@ const Wrapper = ({
   return (
     <div
       className={cn(
-        "relative flex max-h-screen flex-1 flex-col overflow-y-hidden",
+        "relative md:flex md:max-h-screen md:flex-1 md:flex-col md:overflow-y-hidden",
         className,
       )}
     >
@@ -41,18 +41,18 @@ const Container = ({
 
   const fadeClass =
     fade === "sm"
-      ? "mask-t-from-99% mask-b-from-99%"
+      ? "md:mask-t-from-99% md:mask-b-from-99%"
       : fade === "md"
-        ? "mask-t-from-97% mask-b-from-97%"
+        ? "md:mask-t-from-97% md:mask-b-from-97%"
         : fade === "lg"
-          ? "mask-t-from-95% mask-b-from-95%"
+          ? "md:mask-t-from-95% md:mask-b-from-95%"
           : undefined;
 
   return (
     <div
       className={cn(
-        "overflow-y-auto overscroll-contain",
-        "scrollbar-thin scrollbar-thumb-muted-foreground/10 scrollbar-track-transparent",
+        "md:overflow-y-auto md:overscroll-contain",
+        "md:scrollbar-thin md:scrollbar-thumb-muted-foreground/10 md:scrollbar-track-transparent",
         fadeClass,
         scrollbarClass,
       )}
@@ -152,7 +152,7 @@ const ProgressBar = () => {
   const percentToBottom = useScrollStore((s) => s.percentToBottom);
 
   return (
-    <div className="absolute top-0 right-0 z-6 w-full">
+    <div className="absolute top-0 right-0 z-6 hidden w-full md:block">
       <div
         className="bg-primary h-1"
         style={{ width: `${percentToBottom}%` }}

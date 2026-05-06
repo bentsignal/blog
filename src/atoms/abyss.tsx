@@ -1,6 +1,7 @@
 import { cn } from "@/utils";
 
-const shared = "bg-background/10 absolute z-5 flex pointer-events-none";
+const shared =
+  "bg-background/10 absolute z-5 hidden pointer-events-none md:flex";
 
 const verticalShared = "left-0 w-full h-16";
 const horizontalShared = "top-0 h-full w-16";
