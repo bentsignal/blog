@@ -1,5 +1,5 @@
 During my time at [Gardener's](https://www.gardeners.com), one of my primary
-goals was to improve the performance of the site. When I joined every metric in
+goals was to improve the performance of the site. When I joined, every metric in
 our lighthouse report was on fire, but in the year and a half I was there, the
 team and I made great progress. We sped up page load, reduced layout shift, and
 optimized SEO. Unfortunately, all of these changes got thrown away when the
@@ -20,15 +20,7 @@ all of the things we learned along the way. This is what lead me to build
 [Start Faster](https://www.start-faster.com). The purpose of this shop isn't to
 make money, its to demonstrate how fast an e-commerce platform can be.
 
-The project is open source and MIT licensed, feel free to check it out on
-[GitHub](https://github.com/bentsignal/start-faster). You're welcome to use it
-for your own storefront. I don't currently plan on writing out documentation for
-getting it set up, but I'm happy to help out if you message me on
-[twitter](https://www.x.com/bentsignal).
-
-Enough yap, lets get into the more exciting details.
-
-## What is it?
+## What is Start Faster?
 
 Start faster is an evolving suite of tools for building an online shop. It
 includes a custom storefront for your Shopify catalog, a CMS for managing site
@@ -70,11 +62,16 @@ If you want to:
 - Persist state for bookmarked URLs
 - Apply filters or sorting options on navigation
 
-Then the URL might be the perfect place for you to store your state. The issue
-is that most meta-frameworks don't provide a way to access and set URL params in
-a type-safe manner. In Next.js, accesses are always typed `string | undefined`,
-and you can set them to be whatever string you'd like. When it comes to
-validating their types and values, the ball is in your court.
+Then the URL might be the perfect place for you to store your state. This is
+especially the case for e-commerce platforms. When a customer bookmarks a shirt
+in a specific size and color, that bookmark should open the page to that exact
+product variant. If they're on a search page and refresh the page, their filters
+should persist.
+
+The issue is that most meta-frameworks don't provide a way to access and set URL
+params in a type-safe manner. In Next.js, accesses are always typed
+`string | undefined`, and you can set them to be whatever string you'd like.
+When it comes to validating their types and values, the ball is in your court.
 
 One of the reasons Tanner Linsley built TanStack Router (the core of TanStack
 Start) is becuase he wanted a way to treat the URL as a predictable
@@ -135,15 +132,110 @@ time you instantly land at the destination page. This is due to:
    component
 
 Route caching comes out of the box with TanStack Start. You can configure till
-your hearts content, but the defaults are great so I didn't.
+your hearts content, but the defaults are great.
+
+The quick link component does not come with Start. It a custom component[^3]
+that replaces the TanStack Start `<Link>` component. It makes it so that
+navigation happens on mouse down instead of mouse up, which provides faster INP.
+It also sets a dynamic default for preloading behavior. On screens with a mouse
+cursor, links are preloaded when they're hovered. On touch screens, they're
+preloaded when they enter the viewport. This ensures that navigations happen as
+quick as possible, no matter what platform you're browsing on.
+
+[^3]:
+    This component is heavily inspired by
+    [Next Faster](https://github.com/ethanniser/NextFaster), an e-commerce
+    template created by [Ethan Niser](https://x.com/ethanniser) and
+    [Rhys Sullivan](https://x.com/RhysSullivan). Their project was a huge
+    inspiration for the name "Start Faster", as well as the creation of the
+    project itself.
 
 ### Images
 
-Vercel image optimization with ts start custom image component for custom
-loading states
+E-commerce sites demand large high quality images, so its important to load them
+with speed and grace.
+
+To handle speed, I just used Vercel's
+[Image Optimization](https://vercel.com/docs/image-optimization). Shopify
+already puts a CDN in front of their images, but I found that the load times
+felt significantly faster when putting Vercel between the images from Shopify
+and the user. It took a bit of extra configuration since I'm not using Next.js,
+but it wasn't too bad.
+
+Getting images to load gracefully was more difficult. Most browsers have decent
+image loading behavior, but some (firefox) do not. The solution I arrived at was
+to avoid the default browser behavior at all costs. The philosopy is as follows:
+
+1. If the image has not yet been loaded, show nothing at first. Then fade the
+   image in after it loads
+2. If the image has previously been loaded in this session, show it immediately.
+
+I found this to be the best possible configuration. Navigating back and forth
+between pages avoids replaying the loading animation, while first time page
+loads have no flicker.
 
 ### Optimistic Updates
 
-Biggest focus should be cart
+Whenever possible, I try to make sure that something happens immediately when
+the user performs an action. There should always be some sort of indication that
+the action they attempted to take was receieved. Ideally, you can even show them
+the anticipated response immediately, even if the server hasn't confirmed it
+yet, i.e. an _Optimistic_ update.
+
+The place I think benefitted most from Optimistic Updates is the cart. You click
+"Add to Cart" on an item, it immediately appears in your cart list, even though
+the server hasn't sent back the new cart data yet. You can spam the buttons to
+increase or decrease quantity as fast as you'd like, the final amount shown will
+always be right.
+
+The key to doing this was to not show the cart data last sent from the server,
+but to show what it would look like if all of the outgoing mutations were
+applied to it. Since the mutation is no longer pending as soon as the new
+response data comes back, it stays perfectly in sync. The user has no idea that
+they don't actually have their current cart data, they just see what they expect
+to see.
+
+The are some places where Optimistic updates don't make sense or are impossible.
+You can't really use them when applying filters to the search page for example.
+But when they can be used, I believe they usually should.
+
+#### End to end reactivity
+
+One of my favorite features in the CMS is being able to quickly change between
+the editor, and the live preview as you work. When you write a new paragraph in
+the WYSIWYG editor and switch to the preview, it will show up instantly.
+
+This is all thanks to [Convex](https://www.convex.dev).
+
+The basis of Convex is queries & mutations, which are similar to pub/sub. When a
+mutation is performed, the affect subscriber query in the client immediately
+gets the new value. When you type into the editor in the CMS, the content is
+saved to the db. The preview page then gets the new value and shows it
+immediately.
+
+This might not sound new, but what makes convex special is:
+
+1. How few lines of code are required to do this
+2. The speed at which everything happens
+3. The fact that they handle query caching for you
+
+That last one is enormous. Requesting the value from a query that hasn't changed
+since its last call doesn't run the query again, you just get the cached value.
+
+---
+
+That's about it. I'm very happy with what I was able to achieve with this
+project, and just wanted to nerd out over the details.
+
+The project is open source and MIT licensed, feel free to check it out on
+[GitHub](https://github.com/bentsignal/start-faster). You're welcome to use it
+for your own storefront. I don't currently plan on writing out documentation for
+getting it set up, but if you have any questions I'm happy to answer them if you
+message me on [twitter](https://www.x.com/bentsignal).
+
+It pains me that while every site has the potential to be this fast, most
+aren't, and never will be. Site builder platforms have created a world where
+most sites are "fine". But in a world where the best is possible, I think "fine"
+is unacceptable.
 
 ### Notes
