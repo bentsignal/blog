@@ -16,9 +16,9 @@ company was acquired[^1].
     were laid off during the acquisition.
 
 Since the work we did is gone, I wanted to create a project that encapsulated
-all of the things we learned along the way. This is what lead me to build
+all of the things we learned along the way. This is what led me to build
 [Start Faster](https://www.start-faster.com). The purpose of this shop isn't to
-make money, its to demonstrate how fast an e-commerce platform can be.
+make money, it's to demonstrate how fast an e-commerce platform can be.
 
 ## What is Start Faster?
 
@@ -41,8 +41,8 @@ payment processing are difficult problems to solve, and I don't think it makes
 sense to re-invent the wheel, I do think there is still merit to building your
 own custom storefront. Having full control over the user experience and
 performance of your site allows you to deliver your customers the exact
-experience you want them to have. And while Shopify's provided storefront's and
-custimization tools are fine, they will never match the freedom of owning the
+experience you want them to have. And while Shopify's provided storefronts and
+customization tools are fine, they will never match the freedom of owning the
 code yourself.
 
 The Start Faster storefront is a TanStack Start + React web app making calls to
@@ -50,9 +50,9 @@ Shopify's [Storefront API](https://shopify.dev/docs/api/storefront/latest).
 
 ## What makes the project so great?
 
-There isn't one thing that makes it great, its a homogenous mix of good stack
-decisions and carefully thought out code architecture. Lets dive deep into a few
-of the things that shine the brightest:
+There isn't one thing that makes it great, it's a homogeneous mix of good stack
+decisions and carefully thought out code architecture. Let's dive deep into a
+few of the things that shine the brightest:
 
 ### Storing state in the URL
 
@@ -133,9 +133,9 @@ time you instantly land at the destination page. This is due to:
    component
 
 Route caching comes out of the box with TanStack Start. You can configure till
-your hearts content, but the defaults are great.
+your heart's content, but the defaults are great.
 
-The quick link component does not come with Start. It a custom component[^3]
+The quick link component does not come with Start. It's a custom component[^3]
 that replaces TanStack Start's `<Link>`. It makes it so that navigation happens
 on mouse down instead of mouse up, which provides faster _perceived_[^4] INP. It
 also sets a dynamic default for preloading behavior. On screens with a mouse
@@ -158,8 +158,8 @@ quick as possible, no matter what platform you're browsing on.
 
 ### Images
 
-E-commerce sites demand large high quality images, so its important to load them
-with speed and grace.
+E-commerce sites demand large high quality images, so it's important to load
+them with speed and grace.
 
 To improve speed, I used Vercel's
 [Image Optimization](https://vercel.com/docs/image-optimization). Shopify
@@ -169,7 +169,8 @@ took extra configuration since I'm not using Next.js, but it wasn't too bad.
 
 Getting images to load gracefully was more difficult. Most browsers have decent
 image loading behavior, but some (firefox) do not. The solution I arrived at was
-to avoid the default browser behavior at all costs. The philosopy is as follows:
+to avoid the default browser behavior at all costs. The philosophy is as
+follows:
 
 1. If the image has not yet been loaded, show nothing at first. Then fade the
    image in after it loads
@@ -182,7 +183,7 @@ loads have no flicker.
 ### Optimistic Updates
 
 Whenever the user performs an action, I try to make sure that there is some sort
-of indication that the action they attempted to take was receieved. Ideally, you
+of indication that the action they attempted to take was received. Ideally, you
 can even show them the anticipated response immediately, even if the server
 hasn't confirmed it yet, in other words, an _Optimistic_ update.
 
@@ -198,9 +199,9 @@ applied to it. Since the mutation is no longer pending as soon as the new
 response data comes back, the value you get from computing **latest server
 response** + **all outgoing mutations** stays perfectly in balance.
 
-The are some places where Optimistic updates don't make sense or are impossible.
-You can't really use them when applying filters to the search page for example.
-But when they can be used, I believe they usually should.
+There are some places where Optimistic updates don't make sense or are
+impossible. You can't really use them when applying filters to the search page
+for example. But when they can be used, I believe they usually should.
 
 #### End to end reactivity
 
@@ -222,7 +223,7 @@ While pub/sub isn't new, what makes Convex special is:
 
 That last one is enormous. Requesting the value from a query that hasn't changed
 since its last call doesn't run the query again, it just sends back the last
-computed value. This reduces cost for you (since convex doesn't charge for cache
+computed value. This reduces cost for you (since Convex doesn't charge for cache
 hits), and reduces latency for your users. No more headaches over cache
 invalidation, they handle it for you.
 
