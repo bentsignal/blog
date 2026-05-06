@@ -199,7 +199,17 @@ body.theme-space::before {
     linear-gradient(to top, #05133dff 0%, #01010eff 44%);
 }
 
-body.theme-afternoon::before {
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: var(--twinkle-min);
+  }
+  50% {
+    opacity: var(--twinkle-max);
+  }
+}
+
+.theme-afternoon {
   background:
     linear-gradient(to top, #ffffff00 0%, #090934ff 100%),
     linear-gradient(to top, #b2d0f5ff 0%, #528bd1ff 30%, #091e2aff 70%);
