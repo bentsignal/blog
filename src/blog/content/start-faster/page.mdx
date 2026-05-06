@@ -33,25 +33,26 @@ content, and an admin portal for managing user permissions.
 - [Shopify](https://www.shopify.com)
 - [Vercel](https://www.vercel.com)
 
-## Why use your own site in front of Shopify? Why not just use Shopify's site?
+## Why use your own site in front of Shopify? Why not just use the site Shopify provides for me?
 
 Shopify is an excellent product. They have built an incredible set of tools that
-allows you to get selling in no time. Order management and payment processing
-are difficult problems to solve, and I don't think it makes sense to re-invent
-the wheel. That said, I do think there is still merit to building your own
-custom storefront for web/mobile. Having greater control over the user
-experience and performance of your storefront allows you to deliver your
-customers the exact experience you want them to have. And while Shopify's
-provided storefront's and custimization tools are good, they will never match
-the freedom of owning the code yourself. The Start Faster storefront is a
-TanStack Start + React web app making calls to Shopify's
-[Storefront API](https://shopify.dev/docs/api/storefront/latest).
+allow you to get your shop up and selling in no time. While order management and
+payment processing are difficult problems to solve, and I don't think it makes
+sense to re-invent the wheel, I do think there is still merit to building your
+own custom storefront. Having full control over the user experience and
+performance of your site allows you to deliver your customers the exact
+experience you want them to have. And while Shopify's provided storefront's and
+custimization tools are fine, they will never match the freedom of owning the
+code yourself.
+
+The Start Faster storefront is a TanStack Start + React web app making calls to
+Shopify's [Storefront API](https://shopify.dev/docs/api/storefront/latest).
 
 ## What makes the project so great?
 
 There isn't one thing that makes it great, its a homogenous mix of good stack
-components and carefully thought out decisions surrounding code architecture.
-Lets dive deep into a few of the things that shine the brightest:
+decisions and carefully thought out code architecture. Lets dive deep into a few
+of the things that shine the brightest:
 
 ### Storing state in the URL
 
@@ -62,25 +63,25 @@ If you want to:
 - Persist state for bookmarked URLs
 - Apply filters or sorting options on navigation
 
-Then the URL might be the perfect place for you to store your state. This is
-especially the case for e-commerce platforms. When a customer bookmarks a shirt
-in a specific size and color, that bookmark should open the page to that exact
-product variant. If they're on a search page and refresh the page, their filters
-should persist.
+Then the URL might be the perfect place for you to store your state. Many of the
+cases I mention show up when building e-commerce platforms. When a customer
+bookmarks a shirt in a specific size and color, that bookmark should open the
+page to that exact product variant. If they're on a search page and refresh,
+their filters should persist.
 
 The issue is that most meta-frameworks don't provide a way to access and set URL
 params in a type-safe manner. In Next.js, accesses are always typed
 `string | undefined`, and you can set them to be whatever string you'd like.
 When it comes to validating their types and values, the ball is in your court.
 
-One of the reasons Tanner Linsley built TanStack Router (the core of TanStack
-Start) is becuase he wanted a way to treat the URL as a predictable
-[state management solution](https://tanstack.com/blog/search-params-are-state)
-with good DX. In Start, you define your URL params at the Route level with the
-validator of your choosing[^2]. When you access them, they will be typed as the
-return type of their validator. When you set them, you will get a type error if
-the value you provide does not match the validator return type. If the values in
-the user's URL don't pass validation, they will hit the error boundary.
+One of the reasons TanStack Router (the core of TanStack Start) was built was to
+provide a way to treat the URL as a predictable
+[state management solution](https://tanstack.com/blog/search-params-are-state).
+In Start, you define your URL params at the Route level with the validator of
+your choosing[^2]. When you access them, they will be typed as the return type
+of their validator. When you set them, you will get a type error if the value
+you provide does not match the validator return type. If the values in the
+user's URL don't pass validation, they will hit the error boundary.
 
 [^2]:
     As long as it meets the [Standard Schema](https://standardschema.dev/schema)
@@ -135,9 +136,9 @@ Route caching comes out of the box with TanStack Start. You can configure till
 your hearts content, but the defaults are great.
 
 The quick link component does not come with Start. It a custom component[^3]
-that replaces the TanStack Start `<Link>` component. It makes it so that
-navigation happens on mouse down instead of mouse up, which provides faster INP.
-It also sets a dynamic default for preloading behavior. On screens with a mouse
+that replaces TanStack Start's `<Link>`. It makes it so that navigation happens
+on mouse down instead of mouse up, which provides faster _perceived_[^4] INP. It
+also sets a dynamic default for preloading behavior. On screens with a mouse
 cursor, links are preloaded when they're hovered. On touch screens, they're
 preloaded when they enter the viewport. This ensures that navigations happen as
 quick as possible, no matter what platform you're browsing on.
@@ -150,17 +151,21 @@ quick as possible, no matter what platform you're browsing on.
     inspiration for the name "Start Faster", as well as the creation of the
     project itself.
 
+[^4]:
+    To be honest, I'm not sure if it would actually decrease INP inside of any
+    benchmark, but the time between the user's brain sending the signal to click
+    and the event actually completing is certainly shorter.
+
 ### Images
 
 E-commerce sites demand large high quality images, so its important to load them
 with speed and grace.
 
-To handle speed, I just used Vercel's
+To improve speed, I used Vercel's
 [Image Optimization](https://vercel.com/docs/image-optimization). Shopify
 already puts a CDN in front of their images, but I found that the load times
-felt significantly faster when putting Vercel between the images from Shopify
-and the user. It took a bit of extra configuration since I'm not using Next.js,
-but it wasn't too bad.
+felt significantly faster when putting Vercel between Shopify and the user. It
+took extra configuration since I'm not using Next.js, but it wasn't too bad.
 
 Getting images to load gracefully was more difficult. Most browsers have decent
 image loading behavior, but some (firefox) do not. The solution I arrived at was
@@ -176,24 +181,22 @@ loads have no flicker.
 
 ### Optimistic Updates
 
-Whenever possible, I try to make sure that something happens immediately when
-the user performs an action. There should always be some sort of indication that
-the action they attempted to take was receieved. Ideally, you can even show them
-the anticipated response immediately, even if the server hasn't confirmed it
-yet, i.e. an _Optimistic_ update.
+Whenever the user performs an action, I try to make sure that there is some sort
+of indication that the action they attempted to take was receieved. Ideally, you
+can even show them the anticipated response immediately, even if the server
+hasn't confirmed it yet, in other words, an _Optimistic_ update.
 
-The place I think benefitted most from Optimistic Updates is the cart. You click
-"Add to Cart" on an item, it immediately appears in your cart list, even though
-the server hasn't sent back the new cart data yet. You can spam the buttons to
-increase or decrease quantity as fast as you'd like, the final amount shown will
-always be right.
+The place that benefitted most from Optimistic Updates is the cart. When you
+click "Add to Cart" on an item, it immediately appears in your cart list, even
+though the server hasn't sent back the new cart data yet. You can spam the
+buttons to increase or decrease quantity as fast as you'd like, the final amount
+shown will always be right, and it will always show immediately.
 
 The key to doing this was to not show the cart data last sent from the server,
 but to show what it would look like if all of the outgoing mutations were
 applied to it. Since the mutation is no longer pending as soon as the new
-response data comes back, it stays perfectly in sync. The user has no idea that
-they don't actually have their current cart data, they just see what they expect
-to see.
+response data comes back, the value you get from computing **latest server
+response** + **all outgoing mutations** stays perfectly in balance.
 
 The are some places where Optimistic updates don't make sense or are impossible.
 You can't really use them when applying filters to the search page for example.
@@ -202,46 +205,44 @@ But when they can be used, I believe they usually should.
 #### End to end reactivity
 
 One of my favorite features in the CMS is being able to quickly change between
-the editor, and the live preview as you work. When you write a new paragraph in
-the WYSIWYG editor and switch to the preview, it will show up instantly.
+the editor and the live preview as you work. When you write a new paragraph in
+the WYSIWYG editor and switch to preview mode, it will show up instantly.
 
 This is all thanks to [Convex](https://www.convex.dev).
 
-The basis of Convex is queries & mutations, which are similar to pub/sub. When a
-mutation is performed, the affect subscriber query in the client immediately
-gets the new value. When you type into the editor in the CMS, the content is
-saved to the db. The preview page then gets the new value and shows it
-immediately.
+The core of Convex is queries and mutations. When a mutation is performed, any
+query who's value is changed by the new mutation in automatically recomputed,
+and the new value is sent down to any client subscribing to the query.
 
-This might not sound new, but what makes convex special is:
+While pub/sub isn't new, what makes Convex special is:
 
 1. How few lines of code are required to do this
 2. The speed at which everything happens
 3. The fact that they handle query caching for you
 
 That last one is enormous. Requesting the value from a query that hasn't changed
-since its last call doesn't run the query again, you just get the cached value.
-This reduces cost for you (since convex doesn't charge for cache hits), and
-reduces latency for your users. No more headaches over cache invalidation, lets
-them handle it for you.
+since its last call doesn't run the query again, it just sends back the last
+computed value. This reduces cost for you (since convex doesn't charge for cache
+hits), and reduces latency for your users. No more headaches over cache
+invalidation, they handle it for you.
 
 I could spend all day talking about why I love Convex, but we'll save that for
 another day.
 
 ---
 
-That's about it. I'm very happy with what I was able to achieve with this
+That's about it. I'm very pleased with what I was able to achieve with this
 project, and just wanted to nerd out over the details.
 
-The project is open source and MIT licensed, feel free to check it out on
-[GitHub](https://github.com/bentsignal/start-faster). You're welcome to use it
+Start Faster is open source and MIT licensed. Feel free to check it out on
+[GitHub](https://github.com/bentsignal/start-faster), you're welcome to use it
 for your own storefront. I don't currently plan on writing out documentation for
 getting it set up, but if you have any questions I'm happy to answer them if you
 message me on [twitter](https://www.x.com/bentsignal).
 
 It pains me that while every site has the potential to be this fast, most
 aren't, and never will be. Site builder platforms have created a world where
-most sites are "fine". But in a world where the best is possible, I think "fine"
-is unacceptable.
+most sites are "fine". But in a world where great is possible, I think "fine" is
+unacceptable.
 
 ### Notes

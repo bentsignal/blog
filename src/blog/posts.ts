@@ -14,7 +14,7 @@ export const posts = {
     description: "The fastest shopping experience you've ever seen.",
     datePosted: new Date("2026-05-03"),
     lastModified: new Date("2026-05-03"),
-    readingTimeInMinutes: 5,
+    readingTimeInMinutes: 7,
     tags: ["E-commerce", "TanStack Start", "Convex", "Shopify"],
     hide: true,
   },
@@ -24,7 +24,7 @@ export const posts = {
       "A deep dive into rethinking how we structure the code, files, and folders of our React projects",
     datePosted: new Date("2025-12-11"),
     lastModified: new Date("2026-05-03"),
-    readingTimeInMinutes: 7,
+    readingTimeInMinutes: 10,
     tags: ["React", "Atomic Design"],
   },
 } as const satisfies Record<string, Post>;
