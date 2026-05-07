@@ -1,9 +1,12 @@
 During my time at [Gardener's](https://www.gardeners.com), one of my primary
-goals was to improve the performance of the site. When I joined, every metric in
-our lighthouse report was on fire, but in the year and a half I was there, the
-team and I made great progress. We sped up page load, reduced layout shift, and
-optimized SEO. Unfortunately, all of these changes got thrown away when the
-company was acquired[^1].
+goals was to improve the performance of the site. In the year and a half I was
+there, the team and I made great progress. We sped up page load, reduced layout
+shift, and optimized SEO.
+
+Unfortunately, the site we worked on has since been taken down[^1]. I still want
+to be able to show off what I learned working there, so I decided to build
+[Start Faster](https://www.start-faster.com). The purpose of this shop isn't to
+make money, it's to demonstrate how performant an e-commerce platform can be.
 
 [^1]:
     Gardener's Supply Company
@@ -15,54 +18,43 @@ company was acquired[^1].
     it was unfortunate for me and the other engineers working on the site, as we
     were laid off during the acquisition.
 
-Since the work we did is gone, I wanted to create a project that encapsulated
-all of the things we learned along the way. This is what led me to build
-[Start Faster](https://www.start-faster.com). The purpose of this shop isn't to
-make money, it's to demonstrate how fast an e-commerce platform can be.
-
 ## What is Start Faster?
 
-Start faster is an evolving suite of tools for building an online shop. It
-includes a custom storefront for your Shopify catalog, a CMS for creating site
-content, and an admin portal for managing user permissions.
+Start Faster is a suite of tools for building an online shop. It includes a
+custom storefront for your Shopify catalog, a CMS for creating site content, and
+an admin portal for managing user permissions.
 
 ## What is the stack?
 
-- [TanStack Start](https://www.tanstack.com/start/latest) + React
-- [Convex](https://www.convex.dev) for the CMS and admin portal
+- [TanStack Start](https://www.tanstack.com/start/latest) +
+  [React](https://react.dev/)
+- [Convex](https://www.convex.dev)
 - [Shopify](https://www.shopify.com)
 - [Vercel](https://www.vercel.com)
 
-## Why use my own site in front of Shopify? Why not just use the site Shopify provides for me?
+## Why use your own site in front of Shopify? Why not just use the site Shopify provides for you?
 
 Shopify is an excellent product. They have built an incredible set of tools that
-allow you to get your shop up and selling in no time. Order management and
-payment processing are difficult problems to solve and, I don't think it makes
-sense to re-invent the wheel. That said, I do think there is still merit to
-building your own custom storefront. Having full control over your site allows
-you to deliver your customers the exact user experience you want them to have.
-And while Shopify's provided storefronts and customization tools are fine, they
-will never match the freedom of owning the code yourself[^2].
+allow you to get your shop up and selling in no time. While order management and
+payment processing are difficult problems to solve, and I don't think it makes
+sense to re-invent the wheel, I do think there is still merit to building your
+own custom storefront. Having full control over your site allows you to deliver
+the exact user experience you want your customers to have.
 
-[^2]:
-    The Start Faster storefront is a TanStack Start + React web app making calls
-    to Shopify's
-    [Storefront API](https://shopify.dev/docs/api/storefront/latest).
+## What makes this project so great?
 
-## What makes the project so great?
-
-There isn't one thing that makes it great, it's a mix of good stack decisions
-and carefully thought out architecture. Let's dive deep into a few of the things
-that shine the brightest:
+There isn't one thing that makes it great. It's a healthy balance of appropriate
+stack decisions and thoughtful architecture. Let's dive deep into a few of the
+things that shine the brightest.
 
 ### Storing state in the URL
 
 If you want to:
 
 - Persist state between page reloads
-- Persist state when sharing links between users
-- Persist state for bookmarked URLs
-- Apply filters or sorting options on navigation
+- Persist state when sharing links
+- Persist state when bookmarking a page
+- Apply state to a destination page during navigation
 
 Then the URL might be the perfect place for you to store state.
 
@@ -79,16 +71,15 @@ When it comes to validating their types and values, the ball is in your court.
 One of the reasons TanStack Router (the core of TanStack Start) was built was to
 provide a way to treat the URL as a predictable
 [state management solution](https://tanstack.com/blog/search-params-are-state).
-In Start, you define your URL params at the Route level with the validator of
-your choosing[^3]. When you access them, they will be typed as the return type
-of their validator. When you set them, you will get a type error if the value
-you provide does not match the validator return type. If the user's URL param
-values don't pass validation, an error will be thrown and the route component
-will not be rendered.
+In Start, you define your URL params at the Route level[^3]. When you access
+them, they will be typed as the return type of their validator. When you set
+them, you will get a type error if the value you provide does not match the
+validator return type. If the user's URL param values don't pass validation, an
+error will be thrown and the route component will not be rendered.
 
 [^3]:
-    As long as it meets the [Standard Schema](https://standardschema.dev/schema)
-    spec.
+    You can use any validator that meets the
+    [Standard Schema](https://standardschema.dev/schema) spec.
 
 ```tsx
 import { createFileRoute } from "@tanstack/react-router";
@@ -111,25 +102,25 @@ function DashboardRoute() {
 }
 ```
 
-When you access one of these parameter values, you know exactly what the shpae
+When you access one of these parameter values, you know exactly what the shape
 of the data will be, no surprises. If the value of the param changes, the
 component will re-render in true React fashion.
 
 > [!tip] You should always use the `select` option when using the `useSearch`
 > hook. This way, the state variable will only change and cause a re-render when
-> the selector expressions changes, not when any single URL param changes.
+> the selector expression's output changes, not when an unrelated URL param
+> changes.
 
 If you check out
 [this page](https://www.start-faster.com/search?q=alien&sortBy=price&sortDirection=asc&filters=%5B%7B"price"%3A%7B"max"%3A50%7D%7D%5D)
 on Start Faster, you can see these principles in action. When you open the page,
-the search bar contains the search term I entered, and the filters and sorting
-are preserved. Go ahead and change them, refresh, and see for yourself!
+the search bar, filters, will look exactly the same as they do on my screen. If
+you change them and refresh the page, they will start at their new values.
 
 ### Aggressive caching and preloading
 
 When you navigate between pages on Start Faster, you'll notice that most of the
-time you instantly land at the destination page, faster than you might normally
-on other sites.
+time the destination page loads instantly.
 
 This is due to:
 
@@ -138,16 +129,21 @@ This is due to:
    ["Quick Link"](https://github.com/bentsignal/start-faster/blob/main/packages/features/src/quick-link/quick-link.tsx)
    component
 
-Route caching comes out of the box with TanStack Start. You can configure till
-your heart's content, but the defaults are great.
+Route caching comes out of the box with TanStack Start. When you define a route,
+you can specify a
+[loader function](https://tanstack.com/router/v1/docs/guide/data-loading#using-the-router-cache)
+that will load data to be consumed in the route component. This data is stored
+in the router cache, so if you navigate away and back to a page, it won't be
+refetched unless its stale. You can configure the cache timings to your hearts
+content, but the defaults are quite good.
 
 The quick link component does not come with Start. It's a custom component[^4]
 that replaces TanStack Start's `<Link>`. It makes it so that navigation happens
 on mouse down instead of mouse up, which provides faster _perceived_[^5] INP. It
-also sets a dynamic default for preloading behavior. On screens with a mouse
-cursor, links are preloaded when they're hovered by default. On touch screens,
-they're preloaded when they enter the viewport. This ensures that navigations
-happen as quick as possible, no matter what platform the user is browsing on.
+also sets a dynamic default for preloading behavior. On screens with a cursor,
+links are preloaded when they're hovered. On touch screens, they're preloaded
+when they enter the viewport. This ensures that navigations happen as quickly as
+possible, no matter what platform the user is browsing on.
 
 [^4]:
     This component is heavily inspired by
@@ -164,49 +160,50 @@ happen as quick as possible, no matter what platform the user is browsing on.
 
 ### Images
 
-E-commerce sites demand large high quality images, so it's important to load
+E-commerce sites demand large high quality images and it's important to load
 them with speed and grace.
 
-To improve speed, I used Vercel's
-[Image Optimization](https://vercel.com/docs/image-optimization). Shopify
-already puts a CDN in front of their images, but I found that the load times
-felt significantly faster when putting Vercel between Shopify and the user.
+Shopify puts a CDN in front of their images, but I found that the load times
+felt faster when putting Vercel's
+[Image Optimization](https://vercel.com/docs/image-optimization) between Shopify
+and the user.
 
-Getting images to load gracefully was more difficult. Most browsers have decent
-image loading behavior, but some (firefox) do not. The solution I arrived at was
-to avoid the default browser behavior at all costs. The philosophy is as
-follows:
+Getting images to load gracefully was trickt. Most browsers have decent image
+loading behavior, but some (firefox) do not. The solution I arrived at was to
+avoid the default browser behavior at all costs. The philosophy is as follows:
 
 1. If the image has not yet been loaded, show nothing at first. Then fade the
    image in after it loads
-2. If the image has previously been loaded in this session, show it immediately.
+2. If the image has previously been loaded in the current session, show it
+   immediately.
 
 I found this to be the best possible configuration. Navigating back and forth
-between pages avoids replaying the loading animation, while first time page
-loads have no flicker.
+between pages avoids replaying the fade in animation, while first page loads
+fade in smoothly with no flicker.
 
 ### Optimistic Updates
 
-Whenever the user performs an action, I try to make sure that there is some sort
-of indication that the action they attempted to take was received. Ideally, you
-can even show them the anticipated response immediately, even if the server
-hasn't confirmed it yet, in other words, an _Optimistic_ update.
+Whenever the user performs an action, I try to quickly make sure that there is
+an indication that the action they attempted to take was received. Ideally, I
+even show the anticipated response, even if the server hasn't sent it yet. In
+other words, an _Optimistic_ update.
 
-The cart benefits immensely from this. When you click "Add to Cart" on an
-product page, the product immediately appears in your cart list, even though the
-server hasn't sent back the new cart data yet. You can spam the buttons to
-increase or decrease quantity as fast as you'd like, the final amount shown will
-always be right, and it will always show immediately.
+The cart benefits immensely from this. When you click "Add to Cart" on a product
+page, the product immediately appears in your cart list, even though the server
+hasn't sent back the new cart data yet. You can spam the buttons to increase or
+decrease quantity as fast as you'd like, and the final amount shown will always
+be right, and will always show immediately.
 
 The key to doing this was to not show the cart data last sent from the server,
 but to show what it would look like if all of the outgoing mutations were
-applied to it. Since the mutation is no longer pending as soon as the new
-response data comes back, the value you get from computing **latest server
-response** + **all outgoing mutations** stays perfectly in balance.
+applied to it. Since a mutation is no longer pending as soon as the new response
+data comes back, the value you get from computing **latest server response** +
+**all pending mutations** stays perfectly in balance.
 
-There are some places where Optimistic updates don't make sense or are
-impossible. You can't really use them when applying filters to the search page
-for example. But when they can be used, I believe they usually should.
+There are some places where optimistic updates don't make sense or are
+impossible. Fore example, you can't really use them when applying filters to the
+search page, since you don't know what the new order of results will be. But
+when they can be used, I believe they usually should.
 
 #### End to end reactivity
 
@@ -214,13 +211,14 @@ One of my favorite features in the CMS is being able to quickly change between
 the editor and the live preview as you work. When you write a new paragraph in
 the WYSIWYG editor and switch to preview mode, it will show up instantly.
 
-This is due to the combination of [Convex](https://www.convex.dev) and React.
+This is due to the excellent pairing of [Convex](https://www.convex.dev) and
+React.
 
-The core of Convex is queries and mutations. When a mutation is performed, any
-query who's value is changed by the new mutation in automatically recomputed,
-and the new value is sent down to any client subscribing to the query. When the
-subscribing React component sees the value change, it re-renders, showing the
-user the new value.
+The core primitives of Convex are queries and mutations. When a mutation is
+performed, any query whose value is changed is automatically recomputed, and the
+new value is sent down to any client subscribing to that query. When the
+subscribing React component sees the query value change, it re-renders, showing
+the user the new value.
 
 While pub/sub isn't new, what makes Convex special is:
 
@@ -228,19 +226,16 @@ While pub/sub isn't new, what makes Convex special is:
 2. The speed at which everything happens
 3. The fact that they handle query caching for you
 
-That last one cannot be understated. Requesting the value from a query that
+That last one cannot be overstated. Requesting the value from a query that
 hasn't changed since its last call doesn't run the query again, it just sends
-back the last computed value. This reduces cost for you (since Convex doesn't
-charge for cache hits), and reduces latency for your users. No more headaches
-over cache invalidation, they handle it for you.
-
-I could spend all day talking about why I love Convex, but we'll save that for
-another day.
+back the last computed value. No more headaches over cache invalidation, they
+handle it for you. It reduces costs (since Convex doesn't charge for cache
+hits), and reduces latency for users.
 
 ---
 
-That's about it. I'm very pleased with what I was able to achieve with this
-project, and just wanted to nerd out over the details.
+That's about it. I'm very happy with how this project turned out, and just
+wanted to nerd out over the details.
 
 Start Faster is open source and MIT licensed. Feel free to check it out on
 [GitHub](https://github.com/bentsignal/start-faster), you're welcome to use it
