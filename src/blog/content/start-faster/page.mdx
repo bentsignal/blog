@@ -25,11 +25,10 @@ custom storefront for your Shopify catalog, a CMS for creating site content, and
 an admin portal for managing user permissions.
 
 The project is open source and MIT licensed, feel free to check it out on
-[GitHub](https://github.com/bentsignal/start-faster). If you have any questions
-I'm happy to answer them, feel free to message me on
-[Twitter](https://www.x.com/bentsignal).
+[GitHub](https://github.com/bentsignal/start-faster). If you have any questions,
+feel free to message me on [Twitter](https://www.x.com/bentsignal).
 
-## What is the stack?
+## What's the stack?
 
 - [TanStack Start](https://www.tanstack.com/start/latest) +
   [React](https://react.dev/)
@@ -48,9 +47,9 @@ deliver the exact user experience you want your customers to have.
 
 ## What makes this project so great?
 
-There isn't one thing that makes it great. It's a healthy balance of appropriate
-stack decisions and thoughtful architecture. Let's dive deep into a few of the
-things that shine the brightest.
+There isn't one thing that makes it great. It's a healthy balance of good stack
+decisions and thoughtful architecture. Let's dive deep into a few of the things
+that shine the brightest.
 
 ### Storing state in the URL
 
@@ -64,11 +63,11 @@ If you want to:
 Then the URL might be the perfect place for you to store state.
 
 All of these cases show up when building an online shop. If a customer bookmarks
-a shirt in a specific size and color, that bookmark should open the page to that
+a shirt in a specific size and color, the bookmark should open the page to that
 exact variant. If they're on a search page and refresh, their filters should
-persist:
+persist.
 
-`/search?q=alien&sortBy=price&sortDirection=asc`
+`/search?q=alien&sortBy=price`
 
 The issue is that most meta-frameworks don't provide a way to access and set URL
 params in a type-safe manner. In Next.js, accesses are always typed
@@ -109,9 +108,9 @@ function DashboardRoute() {
 }
 ```
 
-When you access one of these parameter values, you know exactly what the shape
-of the data will be, no surprises. If the value of the param changes, the
-component will re-render in true React fashion.
+When you access one of these parameter values, you know **for certain**% what
+the shape of the data will be, no surprises. If the value of the param changes,
+the component will re-render in true React fashion.
 
 > [!tip] You should always use the `select` option when using the `useSearch`
 > hook. This way, the state variable will only change and cause a re-render when
@@ -121,8 +120,8 @@ component will re-render in true React fashion.
 If you check out
 [this page](https://www.start-faster.com/search?q=alien&sortBy=price&sortDirection=asc&filters=%5B%7B"price"%3A%7B"max"%3A50%7D%7D%5D)
 on Start Faster, you can see these principles in action. When you open the page,
-the search bar, filters, will look exactly the same as they do on my screen. If
-you change them and refresh the page, they will start at their new values.
+the search bar and filters will be exactly as they were when I copied the link
+to put it in this post.
 
 ### Aggressive caching and preloading
 
@@ -177,14 +176,13 @@ felt faster when putting Vercel's
 [Image Optimization](https://vercel.com/docs/image-optimization) between Shopify
 and the user.
 
-Getting images to load gracefully was trickt. Most browsers have decent image
+Getting images to load gracefully was tricky. Most browsers have decent image
 loading behavior, but some (firefox) do not. The solution I arrived at was to
 avoid the default browser behavior at all costs. The philosophy is as follows:
 
-1. If the image has not yet been loaded, show nothing at first. Then fade the
+1. If the image has not been loaded yet, show nothing at first. Then fade the
    image in after it loads
-2. If the image has previously been loaded in the current session, show it
-   immediately.
+2. If the image has been loaded in the current session, show it immediately.
 
 I found this to be the best possible configuration. Navigating back and forth
 between pages avoids replaying the fade in animation, while first page loads
@@ -212,7 +210,7 @@ data comes back, the value you get from computing **latest server response** +
 **all pending mutations** stays perfectly in balance.
 
 There are some places where optimistic updates don't make sense or are
-impossible. Fore example, you can't really use them when applying filters to the
+impossible. For example, you can't really use them when applying filters to the
 search page, since you don't know what the new order of results will be. But
 when they can be used, I believe they usually should.
 
@@ -224,8 +222,7 @@ the WYSIWYG editor and switch to preview mode, it will show up instantly.
 
 ![Demo of CMS draft editor](https://bsx-main.b-cdn.net/editing-draft-in-cms.mp4)
 
-This is due to the excellent pairing of [Convex](https://www.convex.dev) and
-React.
+This is due to the pairing of [Convex](https://www.convex.dev) and React.
 
 The core primitives of Convex are queries and mutations. When a mutation is
 performed, any query whose value is changed is automatically recomputed, and the
@@ -233,9 +230,9 @@ new value is sent down to any client subscribing to that query. When the
 subscribing React component sees the query value change, it re-renders, showing
 the user the new value.
 
-While pub/sub isn't new, what makes Convex special is:
+While pub/sub isn't new, what makes this special is:
 
-1. How few lines of code are required to do this
+1. How few lines of code are required
 2. The speed at which everything happens
 3. The fact that they handle query caching for you
 
@@ -251,8 +248,7 @@ That's about it. I'm very happy with how this project turned out, and just
 wanted to nerd out over the details.
 
 It troubles me that while every site has the potential to be this fast, most
-aren't, and never will be. Site builder platforms have created a world where
-most sites are fine, but I think fine is unacceptable in a world where great is
-possible.
+aren't, and never will be. Most sites these days are "fine", but I think fine is
+unacceptable in a world where great is possible.
 
 ### Notes
