@@ -24,6 +24,11 @@ Start Faster is a suite of tools for building an online shop. It includes a
 custom storefront for your Shopify catalog, a CMS for creating site content, and
 an admin portal for managing user permissions.
 
+The project is open source and MIT licensed, feel free to check it out on
+[GitHub](https://github.com/bentsignal/start-faster). If you have any questions
+I'm happy to answer them, feel free to message me on
+[Twitter](https://www.x.com/bentsignal).
+
 ## What is the stack?
 
 - [TanStack Start](https://www.tanstack.com/start/latest) +
@@ -35,11 +40,11 @@ an admin portal for managing user permissions.
 ## Why use your own site in front of Shopify? Why not just use the site Shopify provides for you?
 
 Shopify is an excellent product. They have built an incredible set of tools that
-allow you to get your shop up and selling in no time. While order management and
-payment processing are difficult problems to solve, and I don't think it makes
-sense to re-invent the wheel, I do think there is still merit to building your
-own custom storefront. Having full control over your site allows you to deliver
-the exact user experience you want your customers to have.
+allow you to get your shop up and selling in no time. While problems like order
+management and payment processing are difficult to solve, and I don't think it
+makes sense to re-invent the wheel, I do think there is still merit to building
+your own custom storefront. Having full control over your site allows you to
+deliver the exact user experience you want your customers to have.
 
 ## What makes this project so great?
 
@@ -61,7 +66,9 @@ Then the URL might be the perfect place for you to store state.
 All of these cases show up when building an online shop. If a customer bookmarks
 a shirt in a specific size and color, that bookmark should open the page to that
 exact variant. If they're on a search page and refresh, their filters should
-persist.
+persist:
+
+`/search?q=alien&sortBy=price&sortDirection=asc`
 
 The issue is that most meta-frameworks don't provide a way to access and set URL
 params in a type-safe manner. In Next.js, accesses are always typed
@@ -121,6 +128,8 @@ you change them and refresh the page, they will start at their new values.
 
 When you navigate between pages on Start Faster, you'll notice that most of the
 time the destination page loads instantly.
+
+![Demo of navigating the shop](https://bsx-main.b-cdn.net/browsing-shop-web.mp4)
 
 This is due to:
 
@@ -194,6 +203,8 @@ hasn't sent back the new cart data yet. You can spam the buttons to increase or
 decrease quantity as fast as you'd like, and the final amount shown will always
 be right, and will always show immediately.
 
+![Spamming cart quantity buttons to show that everything updates immediately](https://bsx-main.b-cdn.net/shop-spamming-cart-3.mp4)
+
 The key to doing this was to not show the cart data last sent from the server,
 but to show what it would look like if all of the outgoing mutations were
 applied to it. Since a mutation is no longer pending as soon as the new response
@@ -210,6 +221,8 @@ when they can be used, I believe they usually should.
 One of my favorite features in the CMS is being able to quickly change between
 the editor and the live preview as you work. When you write a new paragraph in
 the WYSIWYG editor and switch to preview mode, it will show up instantly.
+
+![Demo of CMS draft editor](https://bsx-main.b-cdn.net/editing-draft-in-cms.mp4)
 
 This is due to the excellent pairing of [Convex](https://www.convex.dev) and
 React.
@@ -237,15 +250,9 @@ hits), and reduces latency for users.
 That's about it. I'm very happy with how this project turned out, and just
 wanted to nerd out over the details.
 
-Start Faster is open source and MIT licensed. Feel free to check it out on
-[GitHub](https://github.com/bentsignal/start-faster), you're welcome to use it
-for your own storefront. I don't currently plan on writing out documentation for
-getting it set up, but if you have any questions I'm happy to answer them if you
-message me on [twitter](https://www.x.com/bentsignal).
-
-It pains me that while every site has the potential to be this fast, most
+It troubles me that while every site has the potential to be this fast, most
 aren't, and never will be. Site builder platforms have created a world where
-most sites are "fine". But in a world where great is possible, I think "fine" is
-unacceptable.
+most sites are fine, but I think fine is unacceptable in a world where great is
+possible.
 
 ### Notes

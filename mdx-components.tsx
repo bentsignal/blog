@@ -2,8 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import type { MDXComponents } from "mdx/types";
 import { CodeSnippet } from "@/features/code/molecules/code-snippet";
-import HashLink from "@/molecules/hash-link";
 import { Callout, extractCalloutInfo } from "@/atoms/callout";
+import { VideoPlayer } from "@/atoms/video-player";
+import HashLink from "@/molecules/hash-link";
+
+const VIDEO_EXTENSIONS = [".mp4", ".webm", ".mov"];
 
 const components: MDXComponents = {
   code: CodeSnippet,
@@ -44,6 +47,9 @@ const components: MDXComponents = {
     );
   },
   img: ({ src, alt, ...props }) => {
+    if (src && VIDEO_EXTENSIONS.some((ext) => src.endsWith(ext))) {
+      return <VideoPlayer src={src} alt={alt ?? ""} />;
+    }
     return (
       <Image
         src={src}

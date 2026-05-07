@@ -2,7 +2,7 @@ import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   typedRoutes: true,
   experimental: {
     reactCompiler: true,
@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
         pathname: "/f/**",
         search: "",
       },
+      {
+        protocol: "https",
+        hostname: "bsx-main.b-cdn.net",
+        port: "",
+        search: "",
+      },
     ],
     localPatterns: [
       {
@@ -26,7 +32,7 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   pageExtensions: ["ts", "tsx", "md", "mdx"],
-};
+} satisfies NextConfig;
 
 const withMDX = createMDX({
   options: {
