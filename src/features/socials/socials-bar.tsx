@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { companies, socials } from "./data";
 import { cn } from "@/utils";
 
@@ -9,7 +8,7 @@ const SocialsBar = ({ className }: { className?: string }) => {
         const social = socials[company];
         const Icon = social.icon;
         return (
-          <Link
+          <a
             key={company}
             href={social.url}
             target="_blank"
@@ -21,7 +20,7 @@ const SocialsBar = ({ className }: { className?: string }) => {
                 (social as { className?: string }).className,
               )}
             />
-          </Link>
+          </a>
         );
       })}
     </div>

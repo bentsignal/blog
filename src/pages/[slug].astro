@@ -1,0 +1,82 @@
+---
+import { getCollection, render } from "astro:content";
+import { SocialsBar } from "@/features/socials/socials-bar";
+import CodeBlockEnhancer from "@/components/CodeBlockEnhancer.astro";
+import ScrollWrapper from "@/components/ScrollWrapper.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts
+    .filter((post) => !post.data.hide || import.meta.env.DEV)
+    .map((post) => ({
+      params: { slug: post.id.replace(/\/index$/, "") },
+      props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const dateString = post.data.datePosted.toLocaleDateString(undefined, {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+const readingTimeString = `${post.data.readingTimeInMinutes} min read`;
+
+const siteUrl = Astro.site?.origin ?? "https://blog.bentsignal.com";
+const ogImageUrl = `${siteUrl}/og/${post.id.replace(/\/index$/, "")}.png`;
+---
+
+<BaseLayout
+  title={`${post.data.title} ❖ bentsignal`}
+  description={post.data.description}
+  ogImage={ogImageUrl}
+>
+  <ScrollWrapper showProgressBar showScrollButtons>
+    <div class="mx-auto flex max-w-xl flex-col gap-2 px-4 py-16">
+      <a
+        href="/"
+        class="text-muted-foreground hover:text-primary flex cursor-pointer items-center gap-2 text-sm transition-colors duration-100"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          ><path d="M6 8L2 12L6 16"></path><path d="M2 12H22"></path></svg
+        >
+        Back to Home
+      </a>
+      <div class="my-4 flex flex-col gap-2">
+        <h1 class="text-2xl font-semibold">{post.data.title}</h1>
+        <div class="flex items-center justify-between">
+          <p class="text-muted-foreground">
+            {dateString} • {readingTimeString}
+          </p>
+        </div>
+      </div>
+      <div
+        class:list={[
+          "prose dark:prose-invert",
+          "prose-headings:mt-8 prose-headings:font-semibold",
+          "prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs",
+        ]}
+      >
+        <Content />
+      </div>
+      <CodeBlockEnhancer />
+      <hr class="bg-border my-4 h-px w-full border-0" />
+      <div class="flex flex-col items-center gap-2">
+        <span class="text-foreground text-sm">@bentsignal on everything</span>
+        <SocialsBar />
+      </div>
+    </div>
+  </ScrollWrapper>
+</BaseLayout>
