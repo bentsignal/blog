@@ -31,13 +31,6 @@ async function loadGoogleFont(
   throw new Error(`Failed to load font: ${font} ${weight}`);
 }
 
-function loadAvatar(): string {
-  const avatarPath = path.join(process.cwd(), "src/assets/pfp.jpg");
-  const avatarBuffer = fs.readFileSync(avatarPath);
-  const base64 = avatarBuffer.toString("base64");
-  return `data:image/jpeg;base64,${base64}`;
-}
-
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection("blog");
   return posts
@@ -53,16 +46,14 @@ export const GET: APIRoute = async ({ props }) => {
 
   const allText = `${post.data.title} ${post.data.description} blog.bentsignal.com`;
 
-  const [interRegular, interSemiBold, avatar] = await Promise.all([
+  const [interRegular, interSemiBold] = await Promise.all([
     loadGoogleFont("Inter", 400, allText),
     loadGoogleFont("Inter", 700, allText),
-    Promise.resolve(loadAvatar()),
   ]);
 
   const element = OgImage({
     title: post.data.title,
     description: post.data.description,
-    avatar,
   });
 
   const svg = await satori(element, {

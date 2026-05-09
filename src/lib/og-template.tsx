@@ -19,11 +19,9 @@ const WIDTH = 1200;
 export function OgImage({
   title,
   description,
-  avatar,
 }: {
   title: string;
   description: string;
-  avatar: string;
 }) {
   return (
     <div
@@ -105,7 +103,7 @@ export function OgImage({
           }}
         >
           <img
-            src={avatar}
+            src="https://bsx-main.b-cdn.net/pfp.webp"
             alt="Avatar"
             width={64}
             height={64}
