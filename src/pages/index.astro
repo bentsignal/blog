@@ -1,11 +1,14 @@
 ---
+import { getCollection } from "astro:content";
 import { SocialsBar } from "@/features/socials/socials-bar";
 import { SocialsSheet } from "@/features/socials/socials-sheet";
 import { Separator } from "@/atoms/separator";
-import pfp from "@/assets/pfp.webp";
-import { posts, slugs } from "@/blog/posts";
 import ScrollWrapper from "@/components/ScrollWrapper.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const posts = (await getCollection("blog"))
+  .filter((post) => !post.data.hide || import.meta.env.DEV)
+  .sort((a, b) => b.data.datePosted.getTime() - a.data.datePosted.getTime());
 ---
 
 <BaseLayout>
@@ -33,14 +36,14 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
       <Separator className="my-1" client:load />
       <div class="flex flex-col gap-3">
         {
-          slugs.map((slug) => {
-            const post = posts[slug];
+          posts.map((post) => {
+            const slug = post.id.replace(/\/index$/, "");
             return (
               <a href={`/${slug}`}>
                 <div class="text-muted-foreground hover:text-primary flex flex-col items-start justify-between gap-1 rounded-md transition-colors duration-100 lg:flex-row lg:items-center">
-                  <h2 class="font-semibold">{post.title}</h2>
+                  <h2 class="font-semibold">{post.data.title}</h2>
                   <p class="hidden text-sm sm:block">
-                    {post.datePosted.toLocaleDateString(undefined, {
+                    {post.data.datePosted.toLocaleDateString(undefined, {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
