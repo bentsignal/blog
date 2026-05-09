@@ -7,9 +7,11 @@ import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import remarkCallouts from "./src/lib/remark-callouts";
 import remarkVideo from "./src/lib/remark-video";
+import rehypeExternalLinks from "./src/lib/rehype-external-links";
+import { siteOrigin } from "./src/lib/site";
 
 export default defineConfig({
-  site: "https://blog.bentsignal.com",
+  site: siteOrigin,
   prefetch: true,
   integrations: [react(), mdx(), sitemap()],
   vite: {
@@ -20,7 +22,7 @@ export default defineConfig({
   },
   markdown: {
     remarkPlugins: [remarkGfm, remarkCallouts, remarkVideo],
-    rehypePlugins: [rehypeSlug],
+    rehypePlugins: [rehypeSlug, rehypeExternalLinks],
     shikiConfig: {
       theme: "nord",
     },

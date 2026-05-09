@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import { siteOrigin } from "@/lib/site";
 import { SocialsBar } from "@/features/socials/socials-bar";
 import CodeBlockEnhancer from "@/components/CodeBlockEnhancer.astro";
 import ScrollWrapper from "@/components/ScrollWrapper.astro";
@@ -25,7 +26,7 @@ const dateString = post.data.datePosted.toLocaleDateString(undefined, {
 });
 const readingTimeString = `${post.data.readingTimeInMinutes} min read`;
 
-const siteUrl = Astro.site?.origin ?? "https://blog.bentsignal.com";
+const siteUrl = Astro.site?.origin ?? siteOrigin;
 const ogImageUrl = `${siteUrl}/og/${post.id.replace(/\/index$/, "")}.png`;
 ---
 

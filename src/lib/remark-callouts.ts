@@ -1,4 +1,5 @@
 import { visit } from "unist-util-visit";
+import { isInternalUrl } from "./site";
 import type { Blockquote, Html, Root, Text } from "mdast";
 
 const CALLOUT_TYPES = ["NOTE", "TIP", "IMPORTANT", "WARNING", "CAUTION"];
@@ -54,8 +55,11 @@ function blockquoteChildrenToHtml(
           const text = inline.children
             .map((c) => ("value" in c ? c.value : ""))
             .join("");
+          const externalAttrs = isInternalUrl(inline.url)
+            ? ""
+            : ' target="_blank" rel="noopener noreferrer"';
           inlineParts.push(
-            `<a href="${escapeHtml(inline.url)}">${escapeHtml(text)}</a>`,
+            `<a href="${escapeHtml(inline.url)}"${externalAttrs}>${escapeHtml(text)}</a>`,
           );
         }
       }
