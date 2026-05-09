@@ -1,11 +1,11 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
 import { SocialsBar } from "@/features/socials/socials-bar";
 import { SocialsSheet } from "@/features/socials/socials-sheet";
 import { Separator } from "@/atoms/separator";
-import { posts, slugs } from "@/blog/posts";
 import pfp from "@/assets/pfp.webp";
+import { posts, slugs } from "@/blog/posts";
 import ScrollWrapper from "@/components/ScrollWrapper.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
 <BaseLayout>
@@ -13,7 +13,7 @@ import ScrollWrapper from "@/components/ScrollWrapper.astro";
     <div class="mx-auto my-16 flex max-w-xl flex-col gap-4 px-4">
       <div class="flex items-center gap-4">
         <img
-          src={pfp.src}
+          src="https://bsx-main.b-cdn.net/pfp.webp"
           alt="Profile Picture"
           width={80}
           height={80}

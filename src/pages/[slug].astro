@@ -1,9 +1,9 @@
 ---
 import { getCollection, render } from "astro:content";
-import BaseLayout from "@/layouts/BaseLayout.astro";
 import { SocialsBar } from "@/features/socials/socials-bar";
-import ScrollWrapper from "@/components/ScrollWrapper.astro";
 import CodeBlockEnhancer from "@/components/CodeBlockEnhancer.astro";
+import ScrollWrapper from "@/components/ScrollWrapper.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -40,7 +40,18 @@ const ogImageUrl = `${siteUrl}/og/${post.id.replace(/\/index$/, "")}.png`;
         href="/"
         class="text-muted-foreground hover:text-primary flex cursor-pointer items-center gap-2 text-sm transition-colors duration-100"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8L2 12L6 16"/><path d="M2 12H22"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          ><path d="M6 8L2 12L6 16"></path><path d="M2 12H22"></path></svg
+        >
         Back to Home
       </a>
       <div class="my-4 flex flex-col gap-2">
