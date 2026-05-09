@@ -10,6 +10,7 @@ import remarkVideo from "./src/lib/remark-video";
 
 export default defineConfig({
   site: "https://blog.bentsignal.com",
+  prefetch: true,
   integrations: [react(), mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
