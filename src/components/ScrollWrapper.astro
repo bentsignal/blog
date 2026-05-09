@@ -1,0 +1,121 @@
+---
+interface Props {
+  showProgressBar?: boolean;
+  showScrollButtons?: boolean;
+}
+
+const { showProgressBar = false, showScrollButtons = false } = Astro.props;
+---
+
+<div class="relative md:flex md:max-h-screen md:flex-1 md:flex-col md:overflow-y-hidden">
+  {showProgressBar && (
+    <div class="absolute top-0 right-0 z-6 hidden w-full md:block">
+      <div class="bg-primary h-1 transition-[width] duration-75" id="progress-bar" style="width: 0%" />
+    </div>
+  )}
+  <div class="bg-background/10 absolute z-5 hidden pointer-events-none md:flex left-0 w-full h-16 top-0 mask-b-from-35% backdrop-blur-sm" />
+  <div
+    class="md:overflow-y-auto md:overscroll-contain md:scrollbar-thin md:scrollbar-thumb-muted-foreground/10 md:scrollbar-track-transparent md:mask-t-from-97% md:mask-b-from-97%"
+    id="scroll-container"
+  >
+    <slot />
+  </div>
+  {showScrollButtons && (
+    <div class="absolute right-0 bottom-0 z-6 hidden flex-col gap-2 p-4 md:flex" id="scroll-buttons">
+      <button
+        class="border bg-background/60 shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-muted/60 dark:border-input dark:hover:bg-muted/70 inline-flex items-center justify-center rounded-md size-9 hover:cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50"
+        id="scroll-to-top-btn"
+        aria-label="Scroll to top button"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+      </button>
+      <button
+        class="border bg-background/60 shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-muted/60 dark:border-input dark:hover:bg-muted/70 inline-flex items-center justify-center rounded-md size-9 hover:cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50"
+        id="scroll-to-bottom-btn"
+        aria-label="Scroll to bottom button"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+    </div>
+  )}
+  <div class="bg-background/10 absolute z-5 hidden pointer-events-none md:flex left-0 w-full h-16 bottom-0 mask-t-from-35% backdrop-blur-sm" />
+</div>
+
+<script>
+  function initScrollWrapper() {
+    const container = document.getElementById("scroll-container");
+    const progressBar = document.getElementById("progress-bar");
+    const scrollToTopBtn = document.getElementById("scroll-to-top-btn");
+    const scrollToBottomBtn = document.getElementById("scroll-to-bottom-btn");
+
+    if (!container) return;
+
+    function updateScroll() {
+      if (!container) return;
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const maxScroll = scrollHeight - clientHeight;
+
+      if (progressBar && maxScroll > 0) {
+        const percent = Math.min(100, Math.max(0, (scrollTop / maxScroll) * 100));
+        progressBar.style.width = `${percent}%`;
+      }
+
+      if (scrollToTopBtn) {
+        if (scrollTop <= 10) {
+          scrollToTopBtn.setAttribute("disabled", "");
+        } else {
+          scrollToTopBtn.removeAttribute("disabled");
+        }
+      }
+
+      if (scrollToBottomBtn) {
+        if (maxScroll - scrollTop <= 10) {
+          scrollToBottomBtn.setAttribute("disabled", "");
+        } else {
+          scrollToBottomBtn.removeAttribute("disabled");
+        }
+      }
+    }
+
+    container.addEventListener("scroll", updateScroll);
+    updateScroll();
+
+    scrollToTopBtn?.addEventListener("click", () => {
+      container.scrollTo({ top: 0, behavior: "instant" });
+    });
+
+    scrollToBottomBtn?.addEventListener("click", () => {
+      container.scrollTo({
+        top: container.scrollHeight - container.clientHeight,
+        behavior: "instant",
+      });
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", (e) => {
+        const href = link.getAttribute("href");
+        if (!href) return;
+        const target = document.querySelector(href) as HTMLElement | null;
+        if (!target) return;
+
+        e.preventDefault();
+
+        const scrollTop = container.scrollTop;
+        const targetRect = target.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const targetInContainer = scrollTop + (targetRect.top - containerRect.top);
+
+        if (targetInContainer < 300) {
+          container.scrollTo({ top: 0 });
+        } else {
+          const maxScroll = container.scrollHeight - container.clientHeight;
+          container.scrollTo({
+            top: Math.min(maxScroll, targetInContainer - 100),
+          });
+        }
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initScrollWrapper);
+</script>

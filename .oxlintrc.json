@@ -5,7 +5,6 @@
     "typescript",
     "unicorn",
     "react",
-    "nextjs",
     "import",
     "jsx-a11y"
   ],
@@ -13,5 +12,5 @@
     "react/rules-of-hooks": "error",
     "react/exhaustive-deps": "warn"
   },
-  "ignorePatterns": ["convex/**/_generated/**"]
+  "ignorePatterns": ["convex/**/_generated/**", "dist/**", ".astro/**"]
 }

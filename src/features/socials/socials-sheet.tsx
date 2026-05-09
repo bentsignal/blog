@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { companies, socials } from "./data";
 import { Button } from "@/atoms/button";
 import {
@@ -27,7 +26,7 @@ const SocialsSheet = ({ className }: { className?: string }) => {
               const social = socials[company];
               const Icon = social.icon;
               return (
-                <Link
+                <a
                   key={company}
                   href={social.url}
                   target="_blank"
@@ -48,7 +47,7 @@ const SocialsSheet = ({ className }: { className?: string }) => {
                       {social.label}
                     </span>
                   </div>
-                </Link>
+                </a>
               );
             })}
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Language } from "../languages/types";
+import type { Language } from "../languages/types";
 import * as Code from "@/features/code/atom";
 import * as Frame from "@/atoms/frame";
 
