@@ -2,7 +2,7 @@
 
 ## Repository Summary
 
-- This is my blog, built with Next.js
+- This is my blog.
 
 ## Required Validation After Changes
 
