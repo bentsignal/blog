@@ -348,6 +348,10 @@ body::before {
   content: none;
 }
 
+.code-frame .astro-code.show-line-numbers {
+  padding-left: 0.25rem;
+}
+
 .astro-code.show-line-numbers code {
   counter-reset: line;
 }
@@ -357,7 +361,7 @@ body::before {
   content: counter(line);
   display: inline-block;
   width: 2rem;
-  margin-right: 1rem;
+  margin-right: 0.75rem;
   text-align: right;
   color: oklch(1 0 0 / 20%);
   user-select: none;
