@@ -31,9 +31,9 @@ const socials = {
     className: "size-6",
   },
   linkedin: {
-    url: "https://www.linkedin.com/in/bentsignal/",
+    url: "https://www.linkedin.com/in/srodg/",
     icon: Icons.LinkedIn,
-    label: "bentsignal",
+    label: "srodg",
   },
   email: {
     url: "mailto:me@bentsignal.com",
